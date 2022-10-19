@@ -1,0 +1,31 @@
+.town-link a{
+    font-size: 20px;
+    border-bottom: 0;
+    text-decoration: none;
+    color: black;
+    font-weight: 100;
+    margin-bottom: 15px;
+    display: inline-block;
+    border-bottom: 1px dashed transparent;
+}
+.town-link:last-child a{
+    margin-bottom: 0;
+}
+.town-link a:hover{
+    color: black;
+    border-bottom: 1px dashed;
+}
+.choosenTown{
+    color: var(--main-color);
+    cursor: pointer;
+}
+.mobile-menu--choose-town {
+    display: flex;
+    padding: 20px;
+    border-top: 1px solid #333;
+    align-items: center;
+    margin-bottom: 0;
+}
+.mobile-menu--choose-town svg {
+    margin-right: 10px;
+}

@@ -1,0 +1,227 @@
+/* foot bonuses menu */
+
+.footer-bonuses {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 10;
+    width: 100%;
+    height: 40px;
+    background-color: #333333;
+}
+.footer-bonuses__container {
+    margin: 0 auto;
+    display: flex!important;
+    position: relative;
+}
+.footer-bonuses__info {
+    height: 40px;
+    width: 150px;
+    padding-right: 50px;
+    display: flex;
+    white-space: nowrap;
+    align-items: center;
+    color: white;
+    position: relative;
+    z-index: 1;
+    cursor: pointer;
+}
+.footer-bonuses__info:after {
+    position: absolute;
+    right: 0;
+    background: var(--main-color);
+    display: block;
+    content: ' ';
+    bottom: 0;
+    width: 10px;
+    top: 0;
+    z-index: -1;
+    width: 1000px;
+}
+.footer-bonuses__points {
+    width: 100%;
+    position: relative;
+}
+.footer-bonuses__points-bg {
+    position: absolute;
+    top: 0px;
+    left: 0;
+    height: 40px;
+    max-width: 100%;
+    background-color: var(--main-color);
+    -webkit-transition: width 1s;
+    transition: width 1s;
+}
+
+.footer-bonuses__point {
+    width: 4px;
+    height: 40px;
+    background: #fff;
+    position: absolute;
+}
+.footer-bonuses__point-block {
+    white-space: nowrap;
+    display: inline-block;
+    line-height: 1;
+    padding: 5px 10px;
+    background: #fff;
+    border-radius: 5px;
+    color: #000;
+    margin-top: 7px;
+    transform: translateX(-50%);
+    font-size: 14px;
+    letter-spacing: -.3px;
+}
+.footer-bonuses__point-valute {
+    margin-left: 3px;
+}
+@media (max-width: 899px) {
+    .footer-bonuses__point-block {
+        width: 34px;
+        padding: 3px;
+        top: 8px;
+        position: relative;
+        font-size: 12px;
+        transform: rotate(-90deg);
+        text-align: center;
+        margin-left: -17px;
+        margin-top: 0;
+    }
+    .footer-bonuses__point-valute {
+        display: none;
+    }
+}
+.bonuses-modal__header {
+    display: flex;
+    justify-content: space-between;
+}
+.bonuses-modal__title {
+    font-size: 20px;
+    font-weight: 600;
+    padding: 35px 0 0 40px;
+}
+.bonuses-modal__cart {
+    border: 3px solid transparent;
+}
+.bonuses-modal__cart-active {
+    position: relative;
+    border: 3px solid var(--main-color);
+}
+.bonuses-modal__img-wrapper {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+}
+.bonuses-modal__img {
+    width: 100%;
+    height: 100%;
+}
+.bonuses-modal__carts .product{
+    width: 100%;
+}
+.bonuses-modal__cart-title {
+    overflow: hidden;
+    font-size: 20px;
+    white-space: nowrap;
+    margin-bottom: 10px;
+    font-weight: bolder;
+    text-overflow: ellipsis;
+}
+.bonuses-modal__cart-content {
+    font-size: 13px;
+    color: #666;
+    height: 35px;
+    overflow: hidden;
+    position: relative;
+}
+.bonuses-modal__cart-content--mod {
+    height: inherit;
+    min-height: 35px;
+}
+.bonuses-modal__cart-gradient {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 25px;
+    background: linear-gradient(rgba(0, 0, 0, 0), #fff);
+}
+.bonuses-modal__cart-info {
+    margin-top: 5px;
+    display: flex;
+    justify-content: space-between;
+}
+.bonuses-modal__cart-price {
+    margin-top: 10px;
+}
+.bonuses-modal__cart-cost {
+    font-size: 14px;
+    font-weight: 700;
+}
+.bonuses-modal__detail-wrapper {
+    position: relative;
+    width: 100px;
+}
+.bonuses-modal__cart-detail {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 10;
+    border-bottom: 1px dashed #ff5722;
+    color: #ff5722;
+    font-size: 14px;
+    cursor: pointer;
+    text-align: right;
+}
+.bonuses-modal__btn-wrapper {
+    width: 100%;
+    height: 38px;
+    position: relative;
+    margin-top: 10px;
+}
+
+.bonuses-modal__btn {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    background-color: #ff5722;
+    width: 100%;
+    border: none;
+    height: 38px;
+    width: 100%;
+    color: #fff;
+    font-size: 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.bonuses-modal__btn-lack {
+    border: 1px solid #ff5722;
+    background-color: #fff;
+    color: #ff5722;
+}
+@media (max-width: 899px) {
+    .bonuses-modal__carts .product{
+        width: 100%;
+        display: block;
+        padding: 20px;
+        border-radius: 15px;
+    }
+    .bonuses-modal__carts .product .product--image{
+        width: 100%;
+    }
+    .bonuses-modal {
+        width: 100%;
+        max-width: 600px;
+        margin: 0;
+    }
+    .bonuses-modal__carts {
+        display: block;
+        width: 100%;
+        margin: 40px auto 50px;
+    }
+    .bonuses-modal__cart {
+        width: 90%;
+        margin: 0 auto 20px;
+    }
+}

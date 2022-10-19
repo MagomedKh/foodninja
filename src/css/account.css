@@ -1,0 +1,103 @@
+.user-bonuses-info h2{
+    margin-top: 0;
+}
+.account-menu {
+    display: block;
+    padding: 0 0;
+    margin-bottom: 1.5rem;
+}
+.account-menu a{
+    margin-right: 15px;
+}
+.account-menu a.active{
+    color: black;
+}
+.account-menu a.btn.btn--action {
+    padding: 7px 21px!important;
+}
+.account--user-order{
+    border: 1px solid #f1f1f1;
+    font-size: 15px;
+    box-shadow: 0 0 10px rgb(0 0 0 / 10%);
+    padding: 25px 25px 75px;
+    border-radius: 10px;
+    transition: 0.5s;
+    backface-visibility: hidden;
+    height: 100%;
+    position: relative;
+}
+.account--user-order--total, .account--user-order--header, .account--user-order--delivery{
+    display: flex;
+    justify-content: space-between;
+}
+.account--user-order--time {
+    color: #aaa;
+    font-size: 13px;
+}
+.account--user-order--delivery {
+    margin-top: 5px;
+}
+.ccount--user-order--delivery-type {
+    color: var(--main-color);
+}
+.account--user-order--products{
+    padding: 10px 0;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    margin-top: 15px;
+}
+.account--user-order--product{
+    display: flex;
+    font-size: 14px;
+    justify-content: space-between;
+}
+.account--user-order--product-price {
+    white-space: nowrap;
+}
+.account--user-order--product-price .default-price{
+    text-decoration: line-through;
+    margin-right: 5px;
+}
+.account--user-order--product-price .default-price{
+    color: var(--main-color);
+}
+.account--user-order--promocode {
+    margin-bottom: -15px;
+    display: flex;
+    justify-content: space-between;
+}
+.account--user-order--subtotal {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+}
+.account--user-order .repeat-order{
+    position: absolute;
+    bottom:25px;
+    left: 25px; 
+    right: 25px;
+    text-transform: none;
+}
+.account--user-order--product-toggle-more {
+    text-align: right;
+    text-decoration: underline;
+    font-size: 12px;
+    cursor: pointer;
+    margin-top: 5px;
+}
+.account--user-order--total {
+    margin-top: 15px;
+}
+.user-order-skeleton {
+    box-shadow: 0 0 10px rgb(0 0 0 / 10%);
+    border-radius: 10px;
+}
+.deleting-account{
+    margin-top: 15px;
+    font-size: 14px;
+}
+.account-separator{
+    margin-top: 30px;
+    border: 0;
+    border-top: 1px solid #ccc;
+}

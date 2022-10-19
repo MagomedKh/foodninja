@@ -1,0 +1,221 @@
+.standart-header{
+    display: flex;
+    width: 100%;
+}
+.header-work, .header-phone{
+    color: black;
+    display: flex;
+    margin-left: 1.5rem!important;
+    margin-right: 1.5rem!important
+}
+.header-work .icn, .header-phone .icn {
+    width: 28px;
+    fill: var(--main-color);
+    margin-right: 1rem!important;
+}
+.header-phone .title, .header-work .title {
+    color: #666;
+}
+.header-phone .info, .header-work .info {
+    font-weight: bold;
+    font-size: 19px;
+}
+.header-phone .info{
+    color: #000;
+    text-decoration: none;
+}
+.header-phone .info:hover{
+    text-decoration: underline;
+}
+@media( max-width: 991px ) {
+    .header-phone, .header-work{
+        display: none;
+    }
+}
+.header-logo{
+    width: auto;
+    height: 50px;
+    margin-right: 1.5rem!important
+}
+#root .header-bar{
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+    background: white;
+    box-shadow: 0 0 20px rgb(0 0 0 / 20%);
+    position: relative;
+}
+.header-login{
+    margin-left: 15px;
+}
+.header--right-col {
+    display: flex;
+    margin-left: auto;
+}
+.header-phone .title .MuiSkeleton-text {
+    display: inline-block!important;
+    min-width: 50px!important;
+    vertical-align: middle;
+}
+
+
+
+/* Верхнее меню */
+.header-bar .MuiToolbar-root{
+    padding-right: 0!important;
+    padding-left: 0!important;
+}
+.top-menu ul{
+    margin: 0;
+    padding: 20px 25px 20px 0px;
+    list-style: none;
+}
+.top-menu ul li{
+    display: inline-block;
+    padding: 0;
+    margin: 0 22px 0 0;
+}
+.top-menu ul li a.active {
+    color: var(--main-color);
+}
+.top-menu ul li a:hover {
+    color: var(--main-color);
+}
+.top-menu ul li a {
+    display: block;
+    line-height: 1;
+    color: #333;
+    font-size: 16px;
+    text-decoration: none;
+    padding-bottom: 2px;
+    border-bottom: 1px dashed;
+}
+.top-menu .MuiSkeleton-text {
+    margin: 20px 0 15px 0;
+    height: 19px;
+    display: block;
+}
+
+
+/* Шаги заказа */
+.stepper-header{
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+}
+.MuiStepper-root {
+    min-width: 470px!important;
+}
+.step-label svg.Mui-active, .step-label .Mui-completed {
+    color: var(--main-color)!important;
+}
+.step-label .MuiStepLabel-label{
+    margin-top: 2px!important;
+    font-family: 'Cera';
+}
+
+
+/* Мобильная шапка */
+.mobile-menu .MuiDrawer-paper {
+    background: black;
+    color: white;
+}
+.mobile-menu-wrapper{
+    width: 350px;
+}
+.mobile-menu-wrapper ul{
+    list-style: none;
+    padding: 0;
+    margin: 0 0 0 0;
+    background: black;
+    padding: 20px 20px 0;
+    border-top: 1px solid #333;
+}
+.mobile-menu--user-account-button{
+    margin: 0 0 20px 0;
+    border-bottom: 1px solid #333;
+    padding: 20px;
+}
+.mobile-menu-wrapper li:not(:last-child) {
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+.mobile-menu-wrapper li a {
+    font-size: 22px;
+    color: #fff;
+    padding-left: 3px;
+    text-decoration: none;
+}
+.mobile-menu-wrapper li a:hover {
+    color: var(--main-color);
+}
+.mobile-menu-wrapper{
+    padding: 20px;
+}
+.mobile-menu--header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 40px;
+}
+.mobile-menu-wrapper .header-work, .mobile-menu-wrapper .header-phone {
+    color: #fff;
+    display: flex;
+    margin: 0 0 20px!important;
+    padding: 0 20px 20px;
+}
+.mobile-menu--contacts{
+    display: flex;
+    color: white;
+    padding: 0 20px 20px;
+}
+.mobile-menu--contacts svg {
+    width: 28px;
+    fill: var(--main-color);
+    margin-right: 1rem!important;
+}
+.mobile-menu--contacts a{
+    text-decoration: none;
+    font-size: 20px;
+    color: white;
+}
+.modal-alert--wrapper.choose-town .modal-alert--inner button{
+    width: 100%;
+    padding: 0px!important;
+}
+.button--choose-town.mobile{
+    display: none;
+}
+@media(max-width: 899px){
+    .header-mobile-menu{
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    .header-mobile-menu svg{
+        width: 2rem;
+        height: 2rem;
+        color: black;
+    }
+    .header-wrapper {
+        display: block!important;
+        width: 100%;
+        text-align: right;
+    }
+    .mobile-menu-wrapper .header-logo, .header-wrapper .header-logo{
+        margin-right: 0!important;
+    }
+    .modal-alert--wrapper.choose-town .modal-alert--inner {
+        min-width: 300px;
+    }
+    .modal-alert--wrapper.choose-town .modal-alert--title{
+        text-align: center;
+    }
+    .button--choose-town.mobile {
+        display: block;
+        top: 7px;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}

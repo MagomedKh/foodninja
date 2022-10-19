@@ -1,0 +1,36 @@
+.cart--bonuses-products .bonus-product{
+    width: 100%;
+    display: flex;
+}
+.bonus-product-choose{
+    display: flex;
+    align-items: center;
+}
+.bonus-product-choose:hover{
+    cursor: pointer;
+}
+.bonus-product-choose[disabled]{
+    opacity: 0.5;
+    filter: grayscale(1);
+}
+.cart--bonuses-products .bonus-product img {
+    width: 70px;
+    max-width: initial;
+    margin-right: 15px;
+}
+.bonus-product--info{
+    display: flex;
+    font-weight: 400;
+    white-space: nowrap;
+    line-height: 1;
+    font-size: 12px;
+}
+.bonus-product--info .weight {
+    position: relative;
+    color: #aaa!important;
+    margin-right: 10px;
+}
+.bonus-product--info .count-rolls {
+    position: relative;
+    color: #aaa!important;
+}

@@ -1,0 +1,15 @@
+.deliveryClosed{
+    padding: 15px;
+    color: #fff;
+    background-color: #000;
+    text-align: center;
+}
+@media (max-width: 899px) {
+    .deliveryClosed {
+        padding: 8px;
+       
+    }
+    .deliveryClosed span{
+        display:block;
+    }
+}

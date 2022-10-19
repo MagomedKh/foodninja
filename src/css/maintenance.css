@@ -1,0 +1,26 @@
+.maintenance-wrapper{
+    width: 100%;
+    height: 100vh;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+.maintenance-logo{
+    margin: 0 auto 40px auto;
+}
+.maintenance-logo img{
+    width: 100%;
+    max-width: 350px;
+    height: auto;
+}
+.maintenance-title{
+    color: var(--main-color);
+    font-size: 48px;
+    margin-bottom: 40px;
+}
+.maintenance-description{
+    color: black;
+    font-size: 26px;
+}

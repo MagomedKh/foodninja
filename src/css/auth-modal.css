@@ -1,0 +1,79 @@
+
+.auth-modal{
+    padding: 2rem 2rem 1rem;
+    position: relative;
+    width: 400px;
+}
+.auth-modal .auth-modal--title{
+    margin: 0 0 20px 0;
+    line-height: 1;
+}
+.recall-timout{
+    margin-left: 5px;
+}
+.auth-modal--footer {
+    padding: 0.75rem 2rem 0;
+    border-top: 1px solid #dee2e6;
+    margin-left: -2rem;
+    margin-right: -2rem;
+    font-size: 14px;
+}
+.phone-input {
+    width: 100%!important;
+}
+.phone-input label{
+    font-family: "Cera"!important;
+}
+label.Mui-focused{
+    color: var(--main-color)!important;
+}
+div.Mui-focused fieldset {
+    border-color: var(--main-color)!important;
+}
+.auth-btn {
+    display: block;
+    width: 100%;
+    margin: 15px 0!important;
+    height: 55px;
+}
+.auth-modal--info{
+    font-size: 14px;
+    font-weight: 400;
+    margin-top: 16px;
+    text-align: center;
+}
+.phone-auth-wrapper{
+    position: relative;
+}
+.phone-auth--code {
+    margin: 15px 0;
+    display: flex;
+    justify-content: center;
+}
+.phone-auth--code > .verify-code{
+    width: 55px;
+    height: 55px;
+    margin: 0 5px 0 5px;
+    font-size: 32px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 12px
+}
+.phone-auth--code > .verify-code:focus {
+    border: 2px solid var(--main-color)!important;
+    outline: none;
+}
+.phone-auth--change-number{
+    position: absolute!important;
+    top: 8px;
+    right: 10px;
+}
+@media (max-width: 899px) {
+    .auth-modal{
+        padding: 20px;
+        width: auto;
+    }
+    .auth-modal .auth-modal--title{
+        text-align: center;
+    }
+}

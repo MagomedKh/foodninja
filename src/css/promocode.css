@@ -1,0 +1,25 @@
+.promocode-wrapper .MuiOutlinedInput-root{
+    border-top-right-radius: 0!important;
+    border-bottom-right-radius: 0!important;
+}
+.promocode-wrapper input.Mui-disabled {
+    border-radius: 12px 0 0 12px;
+}
+.promocode-wrapper .btn--action{
+    border-radius: 12px!important;
+    border-top-left-radius: 0!important;
+    border-bottom-left-radius: 0!important;
+    margin-left: -1px;
+    min-width: 130px;
+}
+.cart--addon-products__minicart-promo--wrapper .btn--action {
+    width: 100px;
+}
+@media(max-width: 899px) {
+    .promocode--input-wrapper{
+        display: flex;
+    }
+    .promocode--input-wrapper > div{
+        width: 100%;
+    }
+}

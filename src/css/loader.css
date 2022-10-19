@@ -1,0 +1,17 @@
+.mainloader{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+.loader-inner{
+    text-align: center;
+}
+.loader-logo{
+    margin-bottom: 20px;
+    max-width: 200px;
+}
+.loader-text{
+    font-size: 20px;
+    margin-top: 15px;
+}

@@ -1,0 +1,40 @@
+.contacts--block{
+    box-shadow: 0 0 20px rgb(0 0 0 / 10%);
+    padding: 25px;
+    border-radius: 10px;
+    position: relative;
+    margin-bottom: 2rem;
+}
+.contacts--block:last-child {
+    margin-bottom: 0;
+}
+.contacts--custom-map{
+    box-shadow: 0 0 20px rgb(0 0 0 / 10%);
+    border-radius: 10px;
+    position: relative;
+    margin-bottom: 2rem;
+    overflow: hidden;
+    max-height: 400px;
+}
+
+.contacts--main-address, .contacts--main-phone, .contacts--email, .contacts--vk, .contacts--fb, .contacts--instagram, .contacts--ok{
+    margin-top: 10px;
+}
+.contacts--main-address svg, .contacts--main-phone svg, .contacts--email svg, .contacts--vk svg, .contacts--fb svg, .contacts--instagram svg, .contacts--ok svg {
+    width: 25px;
+    height: 25px;
+    margin-right: 10px;
+    vertical-align: middle;
+    color: #555;
+}
+.contacts--today-work{
+    font-size: 16px;
+}
+.today-work--status{
+    font-size: 13px;
+    margin-top: 5px;
+    color: red;
+}
+.today-work--status.open{
+    color: green;
+}

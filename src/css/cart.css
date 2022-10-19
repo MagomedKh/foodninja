@@ -1,0 +1,190 @@
+.MuiContainer-root.cart-container{
+    max-width: 850px;
+}
+.cart-product-list{
+    margin-top: 3rem;
+}
+.cart--product{
+    display: flex;
+    align-items: center;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 5px;
+}
+.collapse-cart-product:first-child .cart--product{
+    border-top: 1px solid #eee;
+}
+.cart--product-image{
+    width: 80px;
+    margin-right: 20px;
+} 
+.cart--product-image img{
+    width: 100%;
+    vertical-align: middle;
+}
+.cart--product-name{
+    flex-grow: 1;
+    width: 100%;
+}
+.cart--product-inner {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+.cart--product .product--quantity{
+    margin: 0 10px;
+    width: 160px;
+}
+.cart--free-addons .product--quantity{
+    font-size: 15px;
+}
+.cart--product-result{
+    margin: 0 10px;
+    width: 160px;
+    text-align: left;
+    font-weight: bold;
+    white-space: nowrap;
+}
+.cart--product-remove{
+    margin: 0  0 0 10px;
+    line-height: 1;
+    color: black;
+}
+.cart--product .cart--product-remove svg {
+    width: 1.2rem;
+    height: 1.2rem;
+}
+.cart--product .product--quantity, .cart--product .product--info{
+    position: relative;
+}
+.cart--product-name{
+    font-size: 22px;
+    font-weight: bold;
+}
+.cart--product .product--info{
+    margin-top: 5px;
+}
+.cart--product-attributes{
+    font-size: 12px;
+    color: #aaa;
+}
+.cart--product .product--info .weight, 
+.cart--product .product--info .count-rolls{
+    font-size: 12px;
+}
+.before-promocode-price {
+    text-decoration: line-through;
+}
+.recommend-products--title, .addon-products--title, .bonuses-products--title{
+    margin: 3rem 0 10px;
+    font-size: 28px;
+    font-weight: 500;
+}
+.bonuses-products--title, .recommend-products--title{
+    margin: 3rem 0 30px;
+}
+.swiper.addon-products-swiper{
+    padding: 0 20px 0 20px;
+    margin-left: -20px;
+    margin-right: -20px;
+}
+.swiper.addon-products-swiper .swiper-button-prev, .swiper.addon-products-swiper .swiper-rtl .swiper-button-next {
+    left: 30px;
+}
+.swiper.addon-products-swiper .swiper-button-next, .swiper.addon-products-swiper .swiper-rtl .swiper-button-prev {
+    right: 30px;
+}
+.swiper-button-next, .swiper-button-prev{
+    color: var(--main-color)!important;
+}
+
+
+.cart--subtotal-price{
+    margin: 3rem 0 -2rem;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: right;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+}
+.cart--total-price{
+    margin: 3rem 0 15px;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: right;
+}
+.cart--total-price .money,
+.cart--subtotal-price .money
+{
+    display: inline-block;
+    width: 100px;
+    color: var(--main-color);
+}
+.cart--bottom-buttons{
+    display: flex;
+    justify-content: space-between;
+}
+
+
+
+.cart-product-list .promocode-wrapper{
+    margin-top: 2rem;
+}
+
+
+.cart--empty img {
+    max-width:  150px;
+    margin-bottom: 20px;
+}
+
+.cart--empty h4 {
+    font-size: 26px;
+}
+.old-price{
+    text-decoration: line-through;
+}
+.new-price{
+    color: var(--main-color);
+}
+@media (max-width: 899px) {
+    .cart--product .product--quantity {
+        margin: 10px 0;
+        width: 100px;
+    }
+    .cart--product-result {
+        position: absolute;
+        bottom: 8px;
+        right: 0;
+        width: auto;
+        font-size: 16px;
+    }
+    .cart--product-name {
+        padding-right: 25px;
+    }
+    .cart--product-inner {
+        display: block;
+    }
+    .cart--product-remove {
+        position: absolute;
+        top: 4px;
+        right: 0;
+    }
+    .promocode-product .cart--product-remove{
+        display: none;
+    }
+    .promocode-product .cart--product-result{
+        top: 5px;
+    }
+    .promocode-product .cart--product-result br{
+        display: none;
+    }
+    .promocode-product .cart--product-result .before-promocode-price{
+        margin-right: 10px;
+    }
+    .promocode-product .cart--product-result {
+        top: 50%;
+        transform: translateY(-50%);
+    }
+}
