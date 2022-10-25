@@ -113,6 +113,16 @@ a.btn{
     background: #000!important;
     color: white!important;
 }
+.btn--gray{
+    background: #f1f1f1!important;
+    color: black!important;
+    text-transform: none!important;
+    border: 0;
+    border-radius: 20px!important;
+}
+.btn--gray:hover{
+    background: #dbdbdb!important;
+}
 .btn--dark:hover{
     background: var(--main-color)!important;
     color: white!important;

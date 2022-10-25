@@ -8,7 +8,7 @@
     margin: 0 0 20px 0;
     line-height: 1;
 }
-.recall-timout{
+.recall-timout, .resms-timout{
     margin-left: 5px;
 }
 .auth-modal--footer {
@@ -16,6 +16,7 @@
     border-top: 1px solid #dee2e6;
     margin-left: -2rem;
     margin-right: -2rem;
+    margin-top: 16px;
     font-size: 14px;
 }
 .phone-input {

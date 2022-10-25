@@ -40,6 +40,9 @@
     position: relative;
     font-size: 16px;
 }
+.sticked-top-bar ul.categories-menu ul.flexmenu--dropdown li{
+    display: block;
+}
 .sticked-top-bar ul.categories-menu li a{
     color: white;
     cursor: pointer;

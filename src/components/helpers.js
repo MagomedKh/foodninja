@@ -162,7 +162,9 @@ export const _checkPromocode = (promocode, items, cartTotal, typeDelivery) => {
         if( promocode.type === 'fixed_product' )
             cartTotal -= promocode.promocodeProducts.options._price;
 
-        if( promocode.minimumPrice >= cartTotal ) {
+        if( parseInt(promocode.minimumPrice) && parseInt(promocode.minimumPrice) > cartTotal ) {
+            console.log(parseInt(promocode.minimumPrice));
+            console.log(cartTotal);
             return {
                 status: 'error',
                 message: 'Промокод отменен, т.к. действует при заказе на сумму от '+promocode.minimumPrice+' ₽.'

@@ -752,7 +752,7 @@ export default function Checkout() {
 						) }
 
 						<LoadingButton loading={loading} sx={{ width: 1, mt: 1.5 }} variant="button" className="btn--action" onClick={handleMakeOrder}>Подтвердить заказ</LoadingButton>
-					
+
 						{ error && 
 							<Alert 
 								action={

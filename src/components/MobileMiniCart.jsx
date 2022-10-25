@@ -25,11 +25,12 @@ function MobileMiniCart() {
 	const drawerBleeding = 56;
     const dispatch = useDispatch();
 
-    const { cartProducts, cartTotalPrice, cartCountItems } = useSelector( ({cart}) => {
+    const { cartProducts, cartTotalPrice, cartCountItems, bonuses_items } = useSelector( ({cart, products}) => {
         return {
-          cartProducts: cart.items,
-          cartTotalPrice: cart.totalPrice,
-          cartCountItems: cart.countItems,
+			bonuses_items: products.bonuses_items,
+        	cartProducts: cart.items,
+        	cartTotalPrice: cart.totalPrice,
+        	cartCountItems: cart.countItems,
         }
     });
 
@@ -49,7 +50,7 @@ function MobileMiniCart() {
 	}
 
     return (
-		<div className="mobile-minicart">
+		<div className={ (bonuses_items !== undefined && bonuses_items.length) ? 'minicart--wrapper active-bonuses' : 'minicart--wrapper' }>
 
 			<Link className="minicart-mobile" onClick={handleClickToCart} to={'/cart'}>		
 			

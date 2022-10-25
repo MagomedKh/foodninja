@@ -30,9 +30,13 @@ export default function AuthModal() {
 	const [authPhoneCode, setAuthPhoneCode] = React.useState(false);
 	const [verifyPhone, setVerifyPhone] = React.useState(false);
 
+
 	const [recallInterval, setRecallInterval] = React.useState(false);
+	const [resmsInterval, setResmsInterval] = React.useState(false);
 	const [recallTimer, setRecallTimer] = React.useState(30);
-	const [recallActive, setRecallActive] = React.useState(false); ;
+	const [resmsTimer, setResmsTimer] = React.useState(30);
+	const [recallActive, setRecallActive] = React.useState(false);
+	const [resmsActive, setResmsActive] = React.useState(false);
 
 
 	const startRecallTimer = () => {
@@ -50,7 +54,26 @@ export default function AuthModal() {
 	}
 	if( recallActive && recallTimer < 1 ) {
 		stopRecallTimer();
+	}	
+	
+	
+	const startResmsTimer = () => {
+		stopResmsTimer();
+		setResmsActive(true);
+		setResmsInterval(setInterval(() => {
+			setResmsTimer(prevTimer => --prevTimer);
+		} , 1000));
 	}
+	const stopResmsTimer = () => {
+		setResmsActive(false);
+		setResmsTimer(30);
+		if( resmsInterval ) 
+		clearInterval(resmsInterval);
+	}
+	if( resmsActive && resmsTimer < 1 ) {
+		stopResmsTimer();
+	}
+
 
 	const {openModalAuth, currentPage} = useSelector( ({user, pages}) => {
 		return {
@@ -112,6 +135,26 @@ export default function AuthModal() {
 
 		}
 	};	
+		
+	
+	const handleResms = (e) => {
+		if( verifyPhone ) {
+			const phone = getNumbersValue(authPhone);
+			setLoading(true);
+			setError('');
+			axios.get(
+				'https://'+_getDomain()+'/?rest-api=verifyCodeSms&phone='+phone,
+				{ mode: 'no-cors'}
+				).then((resp) => {
+					setLoading(false);
+					startResmsTimer();
+					resp.data.status === 'error' && setError(resp.data.text);
+				}
+			);
+		} else {
+
+		}
+	};	
 	
 
 
@@ -125,7 +168,6 @@ export default function AuthModal() {
 	}; 
 	
 	const handleEnterCode = (e, field) => {
-		console.log(111);
 		const codeInputs = document.querySelectorAll('.phone-auth-wrapper .verify-code');
 		const code = Array.from(codeInputs).reduce( (codeSum, element) => codeSum + element.value.toString(), '');
 
@@ -282,7 +324,7 @@ export default function AuthModal() {
 									disabled={recallActive}
 									onClick={handleRecall} 
 									className="phone-auth--recall btn--action"
-									sx={{width: 1, mb: 2}}>
+									sx={{width: 1}}>
 									
 										Повторный звонок 
 										{ recallActive && (
@@ -291,6 +333,23 @@ export default function AuthModal() {
 											</span>
 										) }
 								</Button>
+
+								{/* <div className="auth-modal--info"><b>Не поступил звонок?</b><br/>Проверьте правильность номера телефона.</div>
+
+								<Button
+									variant="button" 
+									disabled={resmsActive}
+									onClick={handleResms} 
+									className="phone-auth--resms btn--gray"
+									sx={{width: 1, mt: 2}}>
+									
+										Запросить смс 
+										{ resmsActive && (
+											<span className="resms-timout">
+												через {resmsTimer} сек.
+											</span>
+										) }
+								</Button> */}
 							</div>
 						) }
 					</div>

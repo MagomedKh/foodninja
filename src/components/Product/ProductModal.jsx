@@ -187,8 +187,9 @@ export default function ProductModal() {
                   { activeVariant ? activeVariant.price : productModal.options._price} &#8381;
                 </div>
                 <div className="product-modal--stats">
-                  { productModal.type !== 'variations' &&
-                    <>
+                  { productModal.type === 'variations' ? <>
+                      { (activeVariant && activeVariant.weight) ? <div className="weight">{activeVariant.weight} гр.</div> : '' }
+                  </> : <>
                       { productModal.options.weight ? <div className="weight">{productModal.options.weight} гр.</div> : '' }
                       { productModal.options.count_rolls ? <div className="count-rolls">{productModal.options.count_rolls} шт.</div> : '' }
                     </>

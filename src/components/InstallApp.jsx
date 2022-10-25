@@ -24,7 +24,7 @@ export default function InstallApp( {initStatus = false} ) {
         setOpen(!open);
     }
     let linkApp;
-    console.log(mobileType);
+
     if( mobileType == 'android' && linkAndroid ) {
         linkApp = linkAndroid;
     } else if( mobileType == 'ios' && linkIos ) {
@@ -40,7 +40,7 @@ export default function InstallApp( {initStatus = false} ) {
                 className="install-app--panel">
                 <div className="install-app--inner">
                     <img className="install-app--icon" src={icon} />
-                    <h4 className="install-app--title">Скачай мобильное приложение {mobileType}</h4>
+                    <h4 className="install-app--title">Скачай мобильное приложение</h4>
                     <CloseIcon className="install-app--close" onClick={handleClose}/>
                     { installText ? (
                         <div className="install-app--text" dangerouslySetInnerHTML={{__html: installText}}></div>

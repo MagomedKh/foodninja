@@ -31,11 +31,12 @@ function MiniCart() {
     const [miniCartOpen, setMiniCartState] = React.useState(false);
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { config, cart, items, cartProducts, cartSubTotalPrice, promocode, cartTotalPrice, cartCountItems, promocodeProducts, recommend_items, addon_items, userCartBonusProduct, user } = useSelector( ({config, cart, products, user}) => {
+    const { config, cart, items, bonuses_items, cartProducts, cartSubTotalPrice, promocode, cartTotalPrice, cartCountItems, promocodeProducts, recommend_items, addon_items, userCartBonusProduct, user } = useSelector( ({config, cart, products, user}) => {
         return {
             config: config.data, 
             cart: cart,
             items: products.items,
+            bonuses_items: products.bonuses_items,
             cartProducts: cart.items,
             promocode: cart.promocode,
             cartTotalPrice: cart.totalPrice,
@@ -90,7 +91,7 @@ function MiniCart() {
     }
 
     return (
-        <div className="minicart--wrapper">
+        <div className={ (bonuses_items !== undefined && bonuses_items.length) ? 'minicart--wrapper active-bonuses' : 'minicart--wrapper' }>
             <button className="btn--action minicart" onClick={toggleMiniCartState} >
                 <ShoppingCartIcon className="minicart--cart-icon" />
                 <div className="minicart--separator"></div>

@@ -5,16 +5,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { setCurrentPage } from '../../redux/actions/pages';
 import { setOpenModalAuth } from '../../redux/actions/user';
-import { addProductToCart, addPromocode, clearCart } from '../../redux/actions/cart';
+import { addBonusProductToCart, addProductToCart, addPromocode, clearCart } from '../../redux/actions/cart';
 import Grid from '@mui/material/Grid';
 import axios from 'axios';
 import {_getDomain} from '../../components/helpers.js';
 
 export default function Orders() {
     const dispatch = useDispatch();
-	const {user, mainLoading, products} = useSelector( ({user, config, products}) => {
+	const {user, mainLoading, products, bonuses_products} = useSelector( ({user, config, products}) => {
 		return {
             products: products.items,
+            bonuses_products: products.bonuses_items,
 			user: user.user,
             mainLoading: config.status
 		}
@@ -55,6 +56,13 @@ export default function Orders() {
             if( products[item.id] !== undefined && item.price === item.total_price  )
                 dispatch(addProductToCart(products[item.id]));
         } );
+
+        if( order.bonusProduct.id !== undefined ) {
+            Object.values(bonuses_products).forEach( ( item ) => {
+                if( item.id === order.bonusProduct.id )
+                    dispatch(addBonusProductToCart(item));
+            } );
+        }
 
         if( order.promocode.code !== undefined ) 
             dispatch(addPromocode(order.promocode));
@@ -167,7 +175,17 @@ export default function Orders() {
                                                                 )
                                                             }
                                                         } ) }
+
+                                                        { ( order.bonusProduct.id !== undefined ) && ( 
+                                                            <div className="account--user-order--product" key={order.bonusProduct.id} >
+                                                                <div className="account--user-order--product-name">{order.bonusProduct.name}</div>
+                                                                <div className="account--user-order--product-price main-color">
+                                                                    Подарок
+                                                                </div>
+                                                            </div> 
+                                                        ) }
                                                     </div> ) }
+
                                                     { Object.values(order.products).length > 3 && (
                                                         <div className="account--user-order--product-toggle-more" onClick={() => handleToggleOrderInfo(order.ID)}>{ order.fullInfo !== undefined && order.fullInfo ? 'Скрыть' : 'Подробнее'}</div>
                                                     ) }
