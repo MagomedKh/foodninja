@@ -7,7 +7,9 @@ const initialState = {
         email: '',
         vk: '',
         token: '',
-        bonuses: 0
+        bonuses: 0,
+        dayBirthday: null,
+        monthBirthday: null
     }
 }
 

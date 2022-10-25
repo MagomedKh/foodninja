@@ -1,5 +1,5 @@
-import React from 'react'
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { saveLogin, logout, setOpenModalAuth } from '../../redux/actions/user';
 import { Alert, Container } from '@mui/material'
 import {Link, useNavigate} from 'react-router-dom';
@@ -59,29 +59,50 @@ const getNumbersValue = function (input) {
 }
 
 export default function Account() {
-    
 	const dispatch = useDispatch();
 	const {user, config} = useSelector( ({user, config}) => {
 		return {
 			user: user.user,
             config: config.data
 		}
-	});
+	}, shallowEqual);
 
     const [value, setValue] = React.useState('settings');
     const [loading, setLoading] = React.useState(false);
     const [loadingDelete, setLoadingDelete] = React.useState(false);
     const [validate, setValidate] = React.useState( true );
-	const [userName, setUserName] = React.useState( user.name ? user.name : '' );
+	const [userName, setUserName] = React.useState('');
 	const [userEmail, setUserEmail] = React.useState( user.email ? user.email : '' );
-	const [userBirthday, setUserBirthday] = React.useState(user.birthday ? new Date(user.birthday) : null);
+	const [dayBirthday, setDayBirthday] = React.useState(null);
+	const [monthBirthday, setMonthBirthday] = React.useState(null);
 	const [userVK, setUserVK] = React.useState( user.vk ? user.vk : '' );
 	const [openModal, setOpenModal] = React.useState( false );
-	const [userPhone, setUserPhone] = React.useState( user.phone ? formatingStrPhone(user.phone) : '' );
-
+	const [userPhone, setUserPhone] = React.useState('');
     const handleChangeTab = (event, value) => {
       setValue(value);
     };
+
+
+	useEffect(()=> {	
+		if (user.dayBirthday) {
+			setDayBirthday(user.dayBirthday)
+		}
+		if (user.monthBirthday) {
+			setMonthBirthday(user.monthBirthday)
+		}
+	},[user.dayBirthday, user.monthBirthday])
+
+	useEffect(()=> {	
+		if (user.phone) {
+			setUserPhone(formatingStrPhone(user.phone))
+		}
+	},[user.phone])
+
+	useEffect(()=> {	
+		if (user.name) {
+			setUserName(user.name)
+		}
+	},[user.name])
 
 	const handleChangeName = (e) => {
 		setUserName(e.target.value);
@@ -130,11 +151,17 @@ export default function Account() {
 	}	
 
 	const handleBirthDayChange = (e) => {
-		setUserBirthday(new Date(2022, userBirthday? userBirthday.getMonth() : 0, e.target.value))
+		setDayBirthday(e.target.value)
+		if (!monthBirthday) {
+			setMonthBirthday(0)
+		}
 	}
 
 	const handleBirthMonthChange = (e) => {
-		setUserBirthday(new Date(2022, e.target.value, userBirthday? userBirthday.getDate() : 1))
+		setMonthBirthday(e.target.value)
+		if (!dayBirthday) {
+			setDayBirthday(1)
+		}
 	}
 
     const handleVKInput = (e) => {
@@ -142,6 +169,15 @@ export default function Account() {
 	}
     
     const handleSaveUser = () => {
+		console.log({
+			name: userName,
+			phone: getNumbersValue(userPhone),
+			email: userEmail,
+			vk: userVK,
+			token: user.token,
+			dayBirthday,
+			monthBirthday,
+		});
 		setValidate(true);
 		( !userName || getNumbersValue(userPhone).length != 11 ) && setValidate(false);
 
@@ -155,8 +191,10 @@ export default function Account() {
 				email: userEmail,
 				vk: userVK,
 				token: user.token,
-				birthday: userBirthday.getTime(),
+				dayBirthday,
+				monthBirthday,
 			}).then((resp) => {
+				console.log(resp);
 				setLoading(false);
 				setLoadingDelete(false);
 				dispatch(saveLogin(resp.data.user));
@@ -212,16 +250,22 @@ export default function Account() {
         dialogProps.scroll = "body";
     }
 
-	function getAllDaysInMonth(year, month = 0) {
+	function getAllDaysInMonth(year, month=0) {
+
+		
 		const date = new Date(year, month, 1);
-	  
+		
 		const dates = [];
-	  
-		while (date.getMonth() === month) {
-		  dates.push(date.getDate());
-		  date.setDate(date.getDate() + 1);
+		
+		while (date.getMonth() == month) {
+			dates.push(date.getDate());
+			date.setDate(date.getDate() + 1);
 		}
-	  
+		
+		if (!user.dayBirthday && monthBirthday && !dates.includes(dayBirthday)) {
+			setDayBirthday(1)
+		}
+
 		return dates;
 	  }
 
@@ -271,23 +315,23 @@ export default function Account() {
                                     <Box sx={{ display: "flex", flexWrap: "nowrap"}}>
                                         <TextField
                                             id="userBirthDay"
-											disabled={user?.birthday}
-											value={userBirthday? userBirthday.getDate() : ""}
+											value={dayBirthday ? dayBirthday : ""}
                                             select
+											disabled={!!user.dayBirthday}
                                             label="День"
                                             sx={{ width: 0.3, minWidth: "80px",border: "none", mr: "10px"}}
 											SelectProps={{ MenuProps: {PaperProps: { sx: { maxHeight: "200px" } }} }}
 											onChange={handleBirthDayChange}
                                             >
-												{getAllDaysInMonth(1994, userBirthday?.getMonth())
+												{getAllDaysInMonth(2022, monthBirthday? monthBirthday : 0)
 												.map((el)=> <MenuItem key={el} value={el}>{el}</MenuItem>
 												)}
                                         </TextField>
                                         <TextField
                                             id="userBirthMonth"
-											disabled={user?.birthday}
-											value={userBirthday? userBirthday.getMonth() : ""}
+											value={monthBirthday || monthBirthday == 0 ? monthBirthday : ""}
                                             select
+											disabled={!!user.monthBirthday}
                                             label="Месяц"
                                             sx={{ width: 0.7}}
 											onChange={handleBirthMonthChange}
