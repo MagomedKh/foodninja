@@ -5,6 +5,10 @@ import { Alert, Container } from '@mui/material'
 import {Link, useNavigate} from 'react-router-dom';
 import { Dialog } from '@material-ui/core';
 import Slide from '@mui/material/Slide';
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
@@ -70,6 +74,7 @@ export default function Account() {
     const [validate, setValidate] = React.useState( true );
 	const [userName, setUserName] = React.useState( user.name ? user.name : '' );
 	const [userEmail, setUserEmail] = React.useState( user.email ? user.email : '' );
+	const [userBirthday, setUserBirthday] = React.useState(user.birthday ? new Date(user.birthday) : null);
 	const [userVK, setUserVK] = React.useState( user.vk ? user.vk : '' );
 	const [openModal, setOpenModal] = React.useState( false );
 	const [userPhone, setUserPhone] = React.useState( user.phone ? formatingStrPhone(user.phone) : '' );
@@ -123,6 +128,15 @@ export default function Account() {
     const handleEmailInput = (e) => {
 		setUserEmail(e.target.value);
 	}	
+
+	const handleBirthDayChange = (e) => {
+		setUserBirthday(new Date(2022, userBirthday? userBirthday.getMonth() : 0, e.target.value))
+	}
+
+	const handleBirthMonthChange = (e) => {
+		setUserBirthday(new Date(2022, e.target.value, userBirthday? userBirthday.getDate() : 1))
+	}
+
     const handleVKInput = (e) => {
 		setUserVK(e.target.value);
 	}
@@ -141,6 +155,7 @@ export default function Account() {
 				email: userEmail,
 				vk: userVK,
 				token: user.token,
+				birthday: userBirthday.getTime(),
 			}).then((resp) => {
 				setLoading(false);
 				setLoadingDelete(false);
@@ -197,6 +212,19 @@ export default function Account() {
         dialogProps.scroll = "body";
     }
 
+	function getAllDaysInMonth(year, month = 0) {
+		const date = new Date(year, month, 1);
+	  
+		const dates = [];
+	  
+		while (date.getMonth() === month) {
+		  dates.push(date.getDate());
+		  date.setDate(date.getDate() + 1);
+		}
+	  
+		return dates;
+	  }
+
     return (
         <Container>
             <h1>Личный кабинет</h1>
@@ -236,6 +264,52 @@ export default function Account() {
 								onInput={handleEmailInput} 
 								value={ userEmail }
 								sx={{ width: 1, mb: 4 }} />                     */}
+
+								<FormControl
+                                sx={{ width: 1, mb: 4}}
+                                >
+                                    <Box sx={{ display: "flex", flexWrap: "nowrap"}}>
+                                        <TextField
+                                            id="userBirthDay"
+											disabled={user?.birthday}
+											value={userBirthday? userBirthday.getDate() : ""}
+                                            select
+                                            label="День"
+                                            sx={{ width: 0.3, minWidth: "80px",border: "none", mr: "10px"}}
+											SelectProps={{ MenuProps: {PaperProps: { sx: { maxHeight: "200px" } }} }}
+											onChange={handleBirthDayChange}
+                                            >
+												{getAllDaysInMonth(1994, userBirthday?.getMonth())
+												.map((el)=> <MenuItem key={el} value={el}>{el}</MenuItem>
+												)}
+                                        </TextField>
+                                        <TextField
+                                            id="userBirthMonth"
+											disabled={user?.birthday}
+											value={userBirthday? userBirthday.getMonth() : ""}
+                                            select
+                                            label="Месяц"
+                                            sx={{ width: 0.7}}
+											onChange={handleBirthMonthChange}
+											SelectProps={{ MenuProps: {PaperProps: { sx: { maxHeight: "200px" } }} }}
+                                            >
+                                                <MenuItem value={0}>Январь</MenuItem>
+												<MenuItem value={1}>Февраль</MenuItem>
+												<MenuItem value={2}>Март</MenuItem>
+												<MenuItem value={3}>Апрель</MenuItem>
+												<MenuItem value={4}>Май</MenuItem>
+												<MenuItem value={5}>Июнь</MenuItem>
+												<MenuItem value={6}>Июль</MenuItem>
+												<MenuItem value={7}>Август</MenuItem>
+												<MenuItem value={8}>Сентябрь</MenuItem>
+												<MenuItem value={9}>Октябрь</MenuItem>
+												<MenuItem value={10}>Ноябрь</MenuItem>
+												<MenuItem value={11}>Декабрь</MenuItem>
+
+                                        </TextField>
+                                    </Box>
+                                    <FormHelperText id="userBirthday-helper-text">Выберите ваш день рождения.</FormHelperText>
+                            </FormControl>
 								
 							<TextField 
 								id="userPhone" 
