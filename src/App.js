@@ -1,6 +1,6 @@
 import React from 'react';
 import {Route, Routes} from 'react-router-dom';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch, useSelector, shallowEqual} from 'react-redux';
 import {setProducts, setCategories, setAddonProducts, setRecommendProducts, setBonusesProducts} from './redux/actions/products';
 import {setConfig, setMainLoading} from './redux/actions/config';
 import {setOrderTime} from './redux/actions/orderTime';
@@ -20,13 +20,17 @@ import {_getDomain, _getPlatform, _isMobile} from './components/helpers';
 
 
 function App () {
+	
 	const dispatch = useDispatch();
-	const {user, config} = useSelector( ({user, config}) => {
+	
+
+	const {user} = useSelector( (state) => state.user);
+	const {config} = useSelector( ({config}) => {
 		return {
-			user: user.user,
 			config: config.data
 		}
-	});
+	},shallowEqual);
+	
 
   	React.useEffect(() => {
 		dispatch(setCurrentPage(window.location.pathname));
@@ -57,6 +61,8 @@ function App () {
 				dispatch(setMainLoading(true));	
 		});
 	}, []);
+
+	
 
 	const mainColor = config ? config.CONFIG_main_color !== undefined ?  config.CONFIG_main_color : '#000' : '#000';
 	const secondColor = config ? config.CONFIG_second_color !== undefined ? config.CONFIG_second_color : '#000' : '#000';
