@@ -57,12 +57,28 @@ export const _checkPromocode = (promocode, items, cartTotal, typeDelivery) => {
         const currentTime = parseInt(new Date().getTime()/1000);
 
         // Проверка даты
+        
         if( (promocode.startDate && promocode.startDate > currentTime) || (promocode.endDate && currentTime > promocode.endDate) )
             return {
                 status: 'error',
                 message: 'Промокод отменен, т.к. время действия истекло.'
             }
 
+        // Проверка дня рождения
+        
+        if (promocode.birthdayDayLimitBefore && promocode.birthdayDayLimitAfter)
+            {
+            const currentDate = new Date()
+            const backDate = new Date(currentTime);
+            backDate.setDate(currentDate.getDate() - promocode.birthdayDayLimitBefore);
+            const futureDate = new Date(currentTime)
+            futureDate.setDate(currentDate.getDate() + promocode.birthdayDayLimitAfter);
+            if ( currentTime > futureDate.getTime() || currentTime < backDate.getTime()) {
+            return {
+                status: 'error',
+                message: `Промокод отменен, т.к. действует только ${promocode.birthdayDayLimitBefore} день до и ${promocode.birthdayDayLimitAfter} день после дня рождения.`
+            }}
+}
         // Проверка времени
         if( promocode.startTime-(60*60*5) > currentTime || currentTime > promocode.endTime-(60*60*5) )
             return {
