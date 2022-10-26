@@ -88,7 +88,7 @@ export default function Account() {
 			setDayBirthday(user.dayBirthday)
 		}
 		if (user.monthBirthday) {
-			setMonthBirthday(user.monthBirthday)
+			setMonthBirthday(user.monthBirthday-1)
 		}
 	},[user.dayBirthday, user.monthBirthday])
 
@@ -176,7 +176,7 @@ export default function Account() {
 			vk: userVK,
 			token: user.token,
 			dayBirthday,
-			monthBirthday,
+			monthBirthday: monthBirthday+1,
 		});
 		setValidate(true);
 		( !userName || getNumbersValue(userPhone).length != 11 ) && setValidate(false);
