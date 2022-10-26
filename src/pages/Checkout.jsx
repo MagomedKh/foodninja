@@ -1,35 +1,40 @@
 import React, {useCallback} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addPromocode, removePromocode } from '../redux/actions/cart';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-import { Link } from 'react-router-dom';
-import TextField from '@mui/material/TextField';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
-import Slider from '@mui/material/Slider';
-import Alert from '@mui/material/Alert';
-import { Button } from '@mui/material';
-import LoadingButton from '@mui/lab/LoadingButton';
+import { Link, useNavigate } from 'react-router-dom';
+import { 
+	Alert, 
+	Button,
+	Container,
+	Collapse, 
+	Dialog,
+	FormControlLabel,
+	IconButton,
+	Grid, 
+	Grow,
+	MenuItem, 
+	Radio, 
+	RadioGroup, 
+	Switch, 
+	Select, 
+	Slider,
+	Slide,
+	TextField } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import Dialog from '@mui/material/Dialog';
 import CloseIcon from '@mui/icons-material/Close';
-import IconButton from '@mui/material/IconButton';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import LoadingButton from '@mui/lab/LoadingButton';
 import {CheckoutProduct} from '../components';
 import {_checkPromocode, _declension} from '../components/helpers.js';
 import {_isMobile, _getDomain} from '../components/helpers.js';
-import Slide from '@mui/material/Slide';
 import axios from 'axios';
 import {setCurrentPage} from '../redux/actions/pages';
 import {clearCart} from '../redux/actions/cart';
-import {useNavigate} from 'react-router-dom';
 import '../css/checkout.css';
 import CheckoutFreeAddons from '../components/Product/CheckoutFreeAddons';
 import { updateAlerts } from '../redux/actions/systemAlerts';
+import PreorderForm from '../components/Product/PreorderForm';
+import {getUnixTime, set} from 'date-fns'
 
 const formatingStrPhone = ( inputNumbersValue ) => {
 	var formattedPhone = "";
@@ -93,6 +98,9 @@ export default function Checkout() {
 	const [activeGateway, setActiveGateway] = React.useState( 'card' );
 	const [openOrderTimeModal, setOpenOrderTimeModal] = React.useState( false );
 	const [openAlert, setOpenAlert] = React.useState( false );
+	const [preorderChecked, setPreorderChecked] = React.useState(false);
+	const [preorderDate, setPreorderDate] = React.useState(null)
+	const [preorderTime, setPreorderTime] = React.useState("")
 	const [orderDeliveryTime, setOrderDeliveryTime] = React.useState( 0 );
 	const [newUserAddressStreet, setNewUserAddressStreet] = React.useState('');
 	const [newUserAddressHome, setNewUserAddressHome] = React.useState('');
@@ -113,6 +121,29 @@ export default function Checkout() {
 	const handleClickOpenOrderTimeModal = () => {
 		setOpenOrderTimeModal(true);
 	}
+
+	const handlePreorderCheck = () => {
+		setPreorderDate(null)
+		setPreorderTime(null)
+		setOrderDeliveryTime(0)
+		setPreorderChecked(!preorderChecked)
+	}
+
+	const handlePreorderDateChange = (date) => {
+		if (preorderTime) {
+			setPreorderDate(set(date, {hours: preorderTime, minutes: 0, seconds: 0}))
+		} else {
+			setPreorderDate(set(date, {hours: 14, minutes: 0, seconds: 0}))
+			setPreorderTime(14)
+		}
+	}
+
+	const handlePreorderTimeChange = (time) => {
+		setPreorderTime(time)
+		const updatedPreorderDate = set(preorderDate, {hours: time, minutes: 0, seconds: 0})
+		setPreorderDate(updatedPreorderDate)
+	}
+
 	const handleChangeName = (e) => {
 		setUserName(e.target.value);
 	}	
@@ -216,7 +247,8 @@ export default function Checkout() {
 				newUserAddressPorch: newUserAddressPorch,
 				newUserAddressFloor: newUserAddressFloor,
 				newUserAddressApartment: newUserAddressApartment,
-				orderTime: availableOrderTime[orderDeliveryTime].timestamp,
+				orderTime: getUnixTime(preorderDate) || availableOrderTime[orderDeliveryTime].timestamp,
+				preorder: preorderDate ? true: false,
 				commentOrder: commentOrder,
 				activeGateway: activeGateway,
 				countUsers: countUsers,
@@ -574,33 +606,48 @@ export default function Checkout() {
 					{ availableOrderTime && ( 
 					<div className="checkout--order-time">
 						<h3>К какому времени приготовить заказ?</h3>
-						<Button 
-							className="btn btn--outline-dark"
-							endIcon={<ArrowDropDownIcon />}
-							onClick={handleClickOpenOrderTimeModal}
-							sx={{ width: 1 }}
-							>{availableOrderTime[orderDeliveryTime].title}</Button>
-						    <Dialog
-								maxWidth="md"
-								{...dialogTimeOrderingProps}>
-								<div className="time-order-modal-wrapper">
-									<IconButton
-									edge="start"
-									color="inherit"
-									onClick={handleOrderTimeModalClose}
-									aria-label="close"
-									className="modal-close"
-									><CloseIcon /></IconButton>	
-									<h2 className="auth-modal--title">Время доставки</h2>
-									<div className="time-order-modal-scroll">
-										<Grid container spacing={3}>
-										{ Object.values(availableOrderTime).map( (element, index) => 
-											<ButtonOrderTime key={index} timestamp={element} timestampId={index}/>
-										) }
-										</Grid>
-									</div>
+
+						<FormControlLabel control={<Switch checked={preorderChecked} onChange={handlePreorderCheck}/>} label="Заказать к определенной дате?" sx={{mb: 1}}/>
+						
+						<Collapse in={preorderChecked} timeout={200}>
+							<PreorderForm 
+								preorderDate={preorderDate} 
+								preorderTime={preorderTime} 
+								handlePreorderDateChange={handlePreorderDateChange}
+								handlePreorderTimeChange={handlePreorderTimeChange}
+								/>
+						</Collapse>
+						<Collapse in={!preorderChecked} timeout={200}>
+							<Button 
+								className="btn btn--outline-dark"
+								endIcon={<ArrowDropDownIcon />}
+								onClick={handleClickOpenOrderTimeModal}
+								sx={{ width: 1 }}
+								>{availableOrderTime[orderDeliveryTime].title}
+							</Button>
+						</Collapse>
+						<Dialog
+							maxWidth="md"
+							{...dialogTimeOrderingProps}>
+							<div className="time-order-modal-wrapper">
+								<IconButton
+								edge="start"
+								color="inherit"
+								onClick={handleOrderTimeModalClose}
+								aria-label="close"
+								className="modal-close"
+								><CloseIcon /></IconButton>	
+								<h2 className="auth-modal--title">Время доставки</h2>
+								<div className="time-order-modal-scroll">
+									<Grid container spacing={3}>
+									{ Object.values(availableOrderTime).map( (element, index) => 
+										<ButtonOrderTime key={index} timestamp={element} timestampId={index}/>
+									) }
+									</Grid>
 								</div>
-							</Dialog>
+							</div>
+						</Dialog>
+						
 					</div>					
 					) }
 
