@@ -122,8 +122,21 @@ function MiniCart() {
                                 ) }
                                 { Object.keys(cartProducts).map( (key, index) => 
                                     items[key] && items[key].type !== undefined && items[key].type === 'variations' ? cartProducts[key].items.map( (keyVariantProduct, indexVariantProduct) => 
-                                        <MiniCartProduct key={indexVariantProduct} productIndex={indexVariantProduct} productCart={cartProducts[key].items[indexVariantProduct]} productCount={1} productTotalPrice={cartProducts[key].items[indexVariantProduct].options._price} /> 
-                                    ) : <MiniCartProduct key={cartProducts[key].items[0].id} productIndex={0} productCart={cartProducts[key].items[0]} productCount={cartProducts[key].items.length} productTotalPrice={cartProducts[key].totalPrice} /> 
+                                        <MiniCartProduct
+                                            disabled={cartProducts[key].disabled} 
+                                            key={indexVariantProduct} 
+                                            productIndex={indexVariantProduct} 
+                                            productCart={cartProducts[key].items[indexVariantProduct]} 
+                                            productCount={1} 
+                                            productTotalPrice={cartProducts[key].items[indexVariantProduct].options._price} 
+                                        /> 
+                                    ) : <MiniCartProduct 
+                                            disabled={cartProducts[key].disabled} 
+                                            key={cartProducts[key].items[0].id} 
+                                            productIndex={0} 
+                                            productCart={cartProducts[key].items[0]} productCount={cartProducts[key].items.length} 
+                                            productTotalPrice={cartProducts[key].totalPrice} 
+                                        /> 
                                 ) }
 
                                 {/* { Object.keys(promocodeProducts).map( (key, index) => items[key] !== undefined &&

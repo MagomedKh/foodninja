@@ -1,18 +1,29 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import {useDispatch, useSelector} from 'react-redux';
-import {addProductToCart, decreaseProductInCart} from '../../redux/actions/cart';
+import {addProductToCart, decreaseProductInCart, removeProductFromCart} from '../../redux/actions/cart';
 import {setModalProduct, setOpenModal} from '../../redux/actions/productModal';
-import Button from '@material-ui/core/Button';
+import {Button} from '@material-ui/core';
 import '../../css/product.css';
 import LazyLoad from 'react-lazyload';
-import { _getPlatform } from '../helpers';
+import { _getPlatform, _checkCartProduct } from '../helpers';
 import PlaceholderImageProduct from './PlaceholderImageProduct';
 import GroupIcon from '@mui/icons-material/Group';
 import soon from '../../img/photo-soon.svg';
 
-export default function Product({product}) {
+export default function Product({product, category}) {
 
   const dispatch = useDispatch();
+
+  const [disabled, setDisabled] = useState(false)
+
+  useEffect(()=>{
+    if (!_checkCartProduct(product, category)) {
+      setDisabled(true)
+      dispatch(removeProductFromCart(product))
+    } else {
+      setDisabled(false)
+    }
+  },[category.disabled])
 
   const { cartProducts, lazyloadImg, categoryNew, categoryHit, logoImg} = useSelector( ({cart, config}) => {
     return {
@@ -24,8 +35,9 @@ export default function Product({product}) {
     }
   });
 
+  
   const openModalBtnClick = () => {
-    dispatch(setModalProduct(product));
+    dispatch(setModalProduct({...product, disabled: disabled}));
     dispatch(setOpenModal(true));
   };
   
@@ -37,7 +49,7 @@ export default function Product({product}) {
   }
 
   return (
-      <div className="product product-item">
+      <div className="product product-item" >
         <div className="product--labels-wrapper">
           { product.options._count_peoples && 
             <div className="product--label peoples"><GroupIcon />{product.options._count_peoples}</div>
@@ -63,7 +75,7 @@ export default function Product({product}) {
         <div className="product--image" onClick={openModalBtnClick}>
           { _getPlatform() === 'vk' ? <img alt={product.title} src={product.img} />
           : <LazyLoad height={210} placeholder={<PlaceholderImageProduct />} debounce={100}>
-              <img alt={product.title} src={ product.img ? product.img : soon } />
+              <img alt={product.title} src={ product.img ? product.img : soon } style={{ filter: disabled ? "grayscale(1)":""}}/>
             </LazyLoad> }
         </div>
     
@@ -91,14 +103,14 @@ export default function Product({product}) {
               { product.options.count_rolls ? <div className="count-rolls">{product.options.count_rolls} шт.</div> : '' }
             </div>
             { product.type === 'variations' ? (
-              <Button variant="button" className="btn--action btn-buy" onClick={openModalBtnClick}>Выбрать</Button>
+              <Button variant="button" className="btn--action btn-buy" onClick={openModalBtnClick} disabled={disabled}>Выбрать</Button>
             ) : !cartProducts[product.id] ? (
-              <Button variant="button" className="btn--action btn-buy" onClick={handleAddProduct}>Хочу</Button>
+              <Button variant="button" className="btn--action btn-buy" onClick={handleAddProduct} disabled={disabled}>Хочу</Button>
             ) : (
               <div className="product--quantity">
-                <Button className="btn--default product-decrease" onClick={handleDecreaseProduct}>-</Button>
+                <Button className="btn--default product-decrease" onClick={handleDecreaseProduct} disabled={disabled}>-</Button>
                 <input className="quantity" type="text" readOnly value={cartProducts[product.id].items.length} data-product_id={product.id} />
-                <Button className="btn--default product-add" onClick={handleAddProduct}>+</Button>
+                <Button className="btn--default product-add" onClick={handleAddProduct} disabled={disabled}>+</Button>
               </div>
             ) }
           </div>

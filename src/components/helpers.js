@@ -190,3 +190,8 @@ export const _checkPromocode = (promocode, items, cartTotal, typeDelivery) => {
 
     return true;
 }
+
+export const _checkCartProduct = (product, category) => {
+    if (category.disabled) return false
+    return true
+}

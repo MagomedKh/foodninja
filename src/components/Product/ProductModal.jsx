@@ -138,10 +138,11 @@ export default function ProductModal() {
           onClick={handleClose}
           aria-label="close"
           className="modal-close"
+          sx={{ zIndex: 1}}
         ><CloseIcon /></IconButton>
         <div className="product-modal">
           <div className="product-modal--image">
-            <Zoom in={true}><img src={ activeVariant ? activeVariant.img : productModal.img ? productModal.img : soon } alt={productModal.title}/></Zoom>
+            <Zoom in={true}><img src={ activeVariant ? activeVariant.img : productModal.img ? productModal.img : soon } alt={productModal.title} style={{ filter: productModal.disabled ? "grayscale(1)":""}}/></Zoom>
           </div>
           <div className="product-modal--info">
             <div className="product-modal--scrolling">
@@ -181,6 +182,14 @@ export default function ProductModal() {
                 </Collapse>
               ) : '' }
 
+              { productModal.disabled ? (
+                  <Collapse sx={{mt: 1}} in={true}>
+                    <Alert severity="error" className="alert--wrong-variant">
+                        Товар недоступен в данный момент
+                    </Alert>
+                </Collapse>
+              ) : '' }
+
               { !wrongVariant ? (
               <div className="product-modal--buying">
                 <div className="product-modal--price">
@@ -196,14 +205,25 @@ export default function ProductModal() {
                   }
                 </div>
                 { productModal.type === 'variations' ? (
-                  <Button variant="button" className="btn--action btn-buy" onClick={handleAddVariantProduct}>Хочу</Button>
+                  <Button variant="button" className="btn--action btn-buy" onClick={handleAddVariantProduct} disabled={productModal.disabled}>Хочу</Button>
                 ) : !cartProducts[productModal.id] ? (
-                  <Button variant="button" className="btn--action btn-buy" onClick={() => handleAddProduct(productModal)}>Хочу</Button>
+                  <Button variant="button" className="btn--action btn-buy" onClick={() => handleAddProduct(productModal)} disabled={productModal.disabled}>Хочу</Button>
                 ) : (
                   <div className="product-modal--quantity">
-                    <Button className="btn--default product-decrease" onClick={() => handleDecreaseProduct(productModal)}>-</Button>
-                    <input className="quantity" type="text" readOnly value={cartProducts[productModal.id].items.length} data-product_id={productModal.id} />
-                    <Button className="btn--default product-add" onClick={() => handleAddProduct(productModal)}>+</Button>
+                    <Button 
+                      className="btn--default product-decrease" 
+                      onClick={() => handleDecreaseProduct(productModal)} 
+                      disabled={productModal.disabled}>
+                      -
+                    </Button>
+                    <input 
+                      className="quantity" 
+                      type="text" 
+                      readOnly 
+                      value={cartProducts[productModal.id].items.length} 
+                      data-product_id={productModal.id} 
+                    />
+                    <Button className="btn--default product-add" onClick={() => handleAddProduct(productModal)} disabled={productModal.disabled}>+</Button>
                   </div>
                 )  }
               </div>

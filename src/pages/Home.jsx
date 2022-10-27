@@ -1,11 +1,10 @@
 import React from 'react';
 import {useSelector} from 'react-redux';
 import {Product, MobileMiniCart, Banners, FooterBonuses } from '../components';
-import Container from '@mui/material/Container';
-import Skeleton from '@mui/material/Skeleton';
-import {_clone, _isMobile} from '../components/helpers.js';
 import TopCategoriesMenu from '../components/TopCategoriesMenu';
-import { Button } from '@mui/material';
+import { Alert, Button, Container, Skeleton } from '@mui/material';
+import {_clone, _isMobile} from '../components/helpers.js';
+import { getTime, set } from 'date-fns'
 
 export default function Home() {
 
@@ -18,6 +17,28 @@ export default function Home() {
     });
 
     const [activeCategoryTags, setActiveCategoryTags] = React.useState({});
+
+    const activeCategories = categories?.map((el)=>{
+
+        if (!el.timeLimitStart || !el.timeLimitEnd) {return el}
+        const currentTime = getTime(new Date())
+
+        const timeLimitStart = set(new Date(),{
+            hours: el.timeLimitStart.slice(0,2), 
+            minutes: el.timeLimitStart.slice(3,5),
+            seconds: 0
+        })
+
+        const timeLimitEnd = set(new Date(),{
+            hours: el.timeLimitEnd.slice(0,2), 
+            minutes: el.timeLimitEnd.slice(3,5), 
+            seconds: 0})
+        
+            if ( currentTime < timeLimitStart || currentTime > timeLimitEnd ) {
+                return {...el, disabled: true}
+            }
+        return el
+    })
 
     const handleClickCategoryTag = (categoryID, tagID) => {
         let tmpArray = _clone(activeCategoryTags);
@@ -39,9 +60,16 @@ export default function Home() {
             <TopCategoriesMenu />
 
             { categories ? (
-                categories.map( (item, index) => 
+                activeCategories.map( (item, index) => 
                 <Container key={`container-category-${item.term_id}`} id={`category-${item.term_id}`} className={`category-${item.term_id}`}>
                     <h2 key={`title-${item.term_id}`}>{item.name}</h2>
+
+                    { item.disabled? 
+                    <Alert severity="error" sx={{width: "fit-content", mb: 1}}>
+                        Товары из данной категории доступны с {item.timeLimitStart} до {item.timeLimitEnd}
+                    </Alert> 
+                    : null
+                    }
                     
 
                     { item.tags && Object.values(item.tags).map( (tag, tagIndex) =>  (
@@ -63,7 +91,7 @@ export default function Home() {
                                 activeCategoryTags.hasOwnProperty(item.term_id) && activeCategoryTags[item.term_id].length ? 
                                     Object.values(product.tags).filter( productTag => activeCategoryTags[item.term_id].includes(productTag.term_id) ).length ? <Product key={product.id} product={product} />  
                                     : '' 
-                                : <Product key={product.id} product={product} /> 
+                                : <Product key={product.id} product={product} category={item}/> 
                             : ''
                          ) ) : <Skeleton variant="text" animation="wave" /> }
                     </div>

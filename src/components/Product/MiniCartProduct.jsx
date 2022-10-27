@@ -1,13 +1,13 @@
 import React from 'react'
 import {useDispatch, useSelector} from 'react-redux';
 import {addProductToCart, decreaseProductInCart, removeProductFromCart} from '../../redux/actions/cart';
-import Button from '@material-ui/core/Button';
+import {Button, Alert} from '@material-ui/core/';
 import CloseIcon from '@mui/icons-material/Close';
 import '../../css/cart.css';
 import soon from '../../img/photo-soon.svg';
 import { updateAlerts } from '../../redux/actions/systemAlerts';
 
-export default function MiniCartProduct({productCart, productCount, productTotalPrice, productIndex}) {
+export default function MiniCartProduct({productCart, productCount, productTotalPrice, productIndex, disabled}) {
 
     const dispatch = useDispatch();
     const { promocodeProducts, promocode } = useSelector( ({cart}) => {
@@ -64,8 +64,12 @@ export default function MiniCartProduct({productCart, productCount, productTotal
                 </div>
             </div>
             <div className="minicart--product-result">
-               
-                { ( promocodeProducts.id !== undefined && promocodeProducts.id === productCart.id ) ?
+                
+                { disabled ? 
+                    <Alert severity="error" sx={{width: "100%"}}>
+                        Товар недоступен в данный момент
+                    </Alert> : 
+                    (( promocodeProducts.id !== undefined && promocodeProducts.id === productCart.id ) ?
                     ( productCart.type === 'variations' && promocodeProducts.type === 'variations' && productCart.variant.variant_id == promocodeProducts.variant.variant_id && !productIndex ) ? <>
                         <span>
                             <span className="old-price">{parseInt(productTotalPrice).toLocaleString('ru-RU')} &#8381;</span>&nbsp;<span className="main-color">{parseInt(productTotalPrice-(productCart.options._price-promocode.productPrice)).toLocaleString('ru-RU')} &#8381;</span>
@@ -102,7 +106,7 @@ export default function MiniCartProduct({productCart, productCount, productTotal
                                 <Button className="btn--default product-add" onClick={handleAddProduct}>+</Button>
                             </div>
                         ) }
-                    </> 
+                    </> )
                 }
             </div>
         </div> 
