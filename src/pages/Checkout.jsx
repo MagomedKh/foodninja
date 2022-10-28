@@ -1,828 +1,1237 @@
-import React, {useCallback} from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { addPromocode, removePromocode } from '../redux/actions/cart';
-import { Link, useNavigate } from 'react-router-dom';
-import { 
-	Alert, 
-	Button,
-	Container,
-	Collapse, 
-	Dialog,
-	FormControlLabel,
-	IconButton,
-	Grid, 
-	Grow,
-	MenuItem, 
-	Radio, 
-	RadioGroup, 
-	Switch, 
-	Select, 
-	Slider,
-	Slide,
-	TextField } from '@mui/material';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import CloseIcon from '@mui/icons-material/Close';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import LoadingButton from '@mui/lab/LoadingButton';
-import {CheckoutProduct} from '../components';
-import {_checkPromocode, _declension} from '../components/helpers.js';
-import {_isMobile, _getDomain} from '../components/helpers.js';
-import axios from 'axios';
-import {setCurrentPage} from '../redux/actions/pages';
-import {clearCart} from '../redux/actions/cart';
-import '../css/checkout.css';
-import CheckoutFreeAddons from '../components/Product/CheckoutFreeAddons';
-import { updateAlerts } from '../redux/actions/systemAlerts';
-import PreorderForm from '../components/Product/PreorderForm';
-import {getUnixTime, set} from 'date-fns'
+import React, { useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addPromocode, removePromocode } from "../redux/actions/cart";
+import { Link, useNavigate } from "react-router-dom";
+import {
+    Alert,
+    Button,
+    Container,
+    Collapse,
+    Dialog,
+    FormControlLabel,
+    IconButton,
+    Grid,
+    Grow,
+    MenuItem,
+    Radio,
+    RadioGroup,
+    Switch,
+    Select,
+    Slider,
+    Slide,
+    TextField,
+} from "@mui/material";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import CloseIcon from "@mui/icons-material/Close";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import LoadingButton from "@mui/lab/LoadingButton";
+import { CheckoutProduct, Footer } from "../components";
+import { _checkPromocode, _declension } from "../components/helpers.js";
+import { _isMobile, _getDomain } from "../components/helpers.js";
+import axios from "axios";
+import { setCurrentPage } from "../redux/actions/pages";
+import { clearCart } from "../redux/actions/cart";
+import "../css/checkout.css";
+import CheckoutFreeAddons from "../components/Product/CheckoutFreeAddons";
+import { updateAlerts } from "../redux/actions/systemAlerts";
+import PreorderForm from "../components/Product/PreorderForm";
+import { getUnixTime, set } from "date-fns";
 
-const formatingStrPhone = ( inputNumbersValue ) => {
-	var formattedPhone = "";
-	if (["7", "8", "9"].indexOf(inputNumbersValue[0]) > -1) {
-		if (inputNumbersValue[0] === "9") inputNumbersValue = "7" + inputNumbersValue;
-		var firstSymbols = (inputNumbersValue[0] === "8") ? "8" : "+7";
-		formattedPhone = firstSymbols + " ";
-		if (inputNumbersValue.length > 1) {
-			formattedPhone += '(' + inputNumbersValue.substring(1, 4);
-		}
-		if (inputNumbersValue.length >= 5) {
-			formattedPhone += ') ' + inputNumbersValue.substring(4, 7);
-		}
-		if (inputNumbersValue.length >= 8) {
-			formattedPhone += '-' + inputNumbersValue.substring(7, 9);
-		}
-		if (inputNumbersValue.length >= 10) {
-			formattedPhone += '-' + inputNumbersValue.substring(9, 11);
-		}
-	} else {
-		formattedPhone = '+' + inputNumbersValue.substring(0, 16);
-	}
-	return formattedPhone;
-}
+const formatingStrPhone = (inputNumbersValue) => {
+    var formattedPhone = "";
+    if (["7", "8", "9"].indexOf(inputNumbersValue[0]) > -1) {
+        if (inputNumbersValue[0] === "9")
+            inputNumbersValue = "7" + inputNumbersValue;
+        var firstSymbols = inputNumbersValue[0] === "8" ? "8" : "+7";
+        formattedPhone = firstSymbols + " ";
+        if (inputNumbersValue.length > 1) {
+            formattedPhone += "(" + inputNumbersValue.substring(1, 4);
+        }
+        if (inputNumbersValue.length >= 5) {
+            formattedPhone += ") " + inputNumbersValue.substring(4, 7);
+        }
+        if (inputNumbersValue.length >= 8) {
+            formattedPhone += "-" + inputNumbersValue.substring(7, 9);
+        }
+        if (inputNumbersValue.length >= 10) {
+            formattedPhone += "-" + inputNumbersValue.substring(9, 11);
+        }
+    } else {
+        formattedPhone = "+" + inputNumbersValue.substring(0, 16);
+    }
+    return formattedPhone;
+};
 const getNumbersValue = function (input) {
-	return input.replace(/\D/g, '');
-}
+    return input.replace(/\D/g, "");
+};
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-
 export default function Checkout() {
-	const dispatch = useDispatch();
-	const {user, config, cart, cartProducts, items, promocode, promocodeProducts, userCartBonusProduct, cartSubTotalPrice, cartTotalPrice, gateways, availableOrderTime} = useSelector( ({user, config, cart, gateways, orderTime, products}) => {
-		return {
-			user: user.user,
-			config: config.data,
-			gateways: gateways.gateways,
-			cart: cart,
-			cartProducts: cart.items,
-			items: products.items,
+    const dispatch = useDispatch();
+    const {
+        user,
+        config,
+        cart,
+        cartProducts,
+        items,
+        promocode,
+        promocodeProducts,
+        userCartBonusProduct,
+        cartSubTotalPrice,
+        cartTotalPrice,
+        gateways,
+        availableOrderTime,
+    } = useSelector(({ user, config, cart, gateways, orderTime, products }) => {
+        return {
+            user: user.user,
+            config: config.data,
+            gateways: gateways.gateways,
+            cart: cart,
+            cartProducts: cart.items,
+            items: products.items,
             promocode: cart.promocode,
             promocodeProducts: cart.promocodeProducts,
-			userCartBonusProduct: cart.bonusProduct,
-			cartTotalPrice: cart.totalPrice,
-			cartSubTotalPrice: cart.subTotalPrice,
-			availableOrderTime: orderTime.availableTime
-		}
-	});
-	const navigate = useNavigate();
-	const [loading, setLoading] = React.useState( false );
-	const [validate, setValidate] = React.useState( true );
-	const [error, setError] = React.useState();
-	const [userName, setUserName] = React.useState( user.name ? user.name : '' );
-	const [userPhone, setUserPhone] = React.useState( user.phone ? formatingStrPhone(user.phone) : '' );
-	const [typeDelivery, setTypeDelivery] = React.useState( config.CONFIG_order_receiving === 'selfdelivery' ? 'self' : ( promocode && promocode.typeDelivery === 'self' ) ? 'self' : 'delivery' );
-	const [deliveryAddress, setDeliveryAddress] = React.useState( user.addresses ? 0 : 'new' );
-	const [selfDeliveryAddress, setSelfDeliveryAddress] = React.useState( 'main' );
-	const [activeGateway, setActiveGateway] = React.useState( 'card' );
-	const [openOrderTimeModal, setOpenOrderTimeModal] = React.useState( false );
-	const [openAlert, setOpenAlert] = React.useState( false );
-	const [preorderChecked, setPreorderChecked] = React.useState(false);
-	const [preorderDate, setPreorderDate] = React.useState(null)
-	const [preorderTime, setPreorderTime] = React.useState("")
-	const [orderDeliveryTime, setOrderDeliveryTime] = React.useState( 0 );
-	const [newUserAddressStreet, setNewUserAddressStreet] = React.useState('');
-	const [newUserAddressHome, setNewUserAddressHome] = React.useState('');
-	const [newUserAddressPorch, setNewUserAddressPorch] = React.useState('');
-	const [newUserAddressFloor, setNewUserAddressFloor] = React.useState('');
-	const [newUserAddressApartment, setNewUserAddressApartment] = React.useState('');
-	const [commentOrder, setCommentOrder] = React.useState('');
-	const [usedBonuses, setUsedBonuses] = React.useState(0);
-	const [countUsers, setCountUsers] = React.useState(1);
-	const [moneyBack, setMoneyBack] = React.useState('');
+            userCartBonusProduct: cart.bonusProduct,
+            cartTotalPrice: cart.totalPrice,
+            cartSubTotalPrice: cart.subTotalPrice,
+            availableOrderTime: orderTime.availableTime,
+        };
+    });
+    const navigate = useNavigate();
+    const [loading, setLoading] = React.useState(false);
+    const [validate, setValidate] = React.useState(true);
+    const [error, setError] = React.useState();
+    const [userName, setUserName] = React.useState(user.name ? user.name : "");
+    const [userPhone, setUserPhone] = React.useState(
+        user.phone ? formatingStrPhone(user.phone) : ""
+    );
+    const [typeDelivery, setTypeDelivery] = React.useState(
+        config.CONFIG_order_receiving === "selfdelivery"
+            ? "self"
+            : promocode && promocode.typeDelivery === "self"
+            ? "self"
+            : "delivery"
+    );
+    const [deliveryAddress, setDeliveryAddress] = React.useState(
+        user.addresses ? 0 : "new"
+    );
+    const [selfDeliveryAddress, setSelfDeliveryAddress] =
+        React.useState("main");
+    const [activeGateway, setActiveGateway] = React.useState("card");
+    const [openOrderTimeModal, setOpenOrderTimeModal] = React.useState(false);
+    const [openAlert, setOpenAlert] = React.useState(false);
+    const [preorderChecked, setPreorderChecked] = React.useState(false);
+    const [preorderDate, setPreorderDate] = React.useState(null);
+    const [preorderTime, setPreorderTime] = React.useState("");
+    const [orderDeliveryTime, setOrderDeliveryTime] = React.useState(0);
+    const [newUserAddressStreet, setNewUserAddressStreet] = React.useState("");
+    const [newUserAddressHome, setNewUserAddressHome] = React.useState("");
+    const [newUserAddressPorch, setNewUserAddressPorch] = React.useState("");
+    const [newUserAddressFloor, setNewUserAddressFloor] = React.useState("");
+    const [newUserAddressApartment, setNewUserAddressApartment] =
+        React.useState("");
+    const [commentOrder, setCommentOrder] = React.useState("");
+    const [usedBonuses, setUsedBonuses] = React.useState(0);
+    const [countUsers, setCountUsers] = React.useState(1);
+    const [moneyBack, setMoneyBack] = React.useState("");
 
-	const handleOrderTimeModalClose = () => {
-		setOpenOrderTimeModal(false);
-	}		
-	const handleAlertClose = () => {
-		setOpenAlert(false);
-	}	
-	const handleClickOpenOrderTimeModal = () => {
-		setOpenOrderTimeModal(true);
-	}
+    const handleOrderTimeModalClose = () => {
+        setOpenOrderTimeModal(false);
+    };
+    const handleAlertClose = () => {
+        setOpenAlert(false);
+    };
+    const handleClickOpenOrderTimeModal = () => {
+        setOpenOrderTimeModal(true);
+    };
 
-	const handlePreorderCheck = () => {
-		setPreorderDate(null)
-		setPreorderTime(null)
-		setOrderDeliveryTime(0)
-		setPreorderChecked(!preorderChecked)
-	}
+    const handlePreorderCheck = () => {
+        setPreorderDate(null);
+        setPreorderTime(null);
+        setOrderDeliveryTime(0);
+        setPreorderChecked(!preorderChecked);
+    };
 
-	const handlePreorderDateChange = (date) => {
-		if (preorderTime) {
-			setPreorderDate(set(date, {hours: preorderTime, minutes: 0, seconds: 0}))
-		} else {
-			setPreorderDate(set(date, {hours: 14, minutes: 0, seconds: 0}))
-			setPreorderTime(14)
-		}
-	}
+    const handlePreorderDateChange = (date) => {
+        if (preorderTime) {
+            setPreorderDate(
+                set(date, { hours: preorderTime, minutes: 0, seconds: 0 })
+            );
+        } else {
+            setPreorderDate(set(date, { hours: 14, minutes: 0, seconds: 0 }));
+            setPreorderTime(14);
+        }
+    };
 
-	const handlePreorderTimeChange = (time) => {
-		setPreorderTime(time)
-		const updatedPreorderDate = set(preorderDate, {hours: time, minutes: 0, seconds: 0})
-		setPreorderDate(updatedPreorderDate)
-	}
+    const handlePreorderTimeChange = (time) => {
+        setPreorderTime(time);
+        const updatedPreorderDate = set(preorderDate, {
+            hours: time,
+            minutes: 0,
+            seconds: 0,
+        });
+        setPreorderDate(updatedPreorderDate);
+    };
 
-	const handleChangeName = (e) => {
-		setUserName(e.target.value);
-	}	
-	const handleChooseSelfDeliveryAddress = (e, value) => {
-		setSelfDeliveryAddress(value);
-	}		
-	const handleChooseDeliveryAddress = (e, value) => {
-		setDeliveryAddress(value);
-	}	
-	const handleChangeNewUserAddress = (e) => {
-		switch (e.target.id) {
-			case 'street':
-				setNewUserAddressStreet(e.target.value);
-				break;			
-			case 'home':
-				setNewUserAddressHome(e.target.value);
-				break;			
-			case 'porch':
-				setNewUserAddressPorch(e.target.value);
-				break;			
-			case 'floor':
-				setNewUserAddressFloor(e.target.value);
-				break;			
-			case 'apartment':
-				setNewUserAddressApartment(e.target.value);
-				break;
-			default:
-				break;
-		}
-	}	
-	const handleChangeCommentOrder = (e, value) => {
-		setCommentOrder(e.target.value);
-	}
-	const handleSetActiveGateway = (e, value) => {
-		setActiveGateway(value);
-	}	
-	const handleChangeCountUsers = (e, value) => {
-		setCountUsers(e.target.value);
-	}	
-	const handleChangeMoneyBack = (e, value) => {
-		setMoneyBack(e.target.value);
-	}	
-	const handlePhonePaste = function (e) {
-		var input = e.target,
-			inputNumbersValue = getNumbersValue(input.value);
-		var pasted = e.clipboardData || window.clipboardData;
-		if (pasted) {
-			var pastedText = pasted.getData('Text');
-			if (/\D/g.test(pastedText)) {
-				input.value = inputNumbersValue;
-				return;
-			}
-		}
-	}
-	const handlePhoneInput = function (e) {
-		var input = e.target,
-			inputNumbersValue = getNumbersValue(input.value),
-			selectionStart = input.selectionStart,
-			formattedInputValue = "";
+    const handleChangeName = (e) => {
+        setUserName(e.target.value);
+    };
+    const handleChooseSelfDeliveryAddress = (e, value) => {
+        setSelfDeliveryAddress(value);
+    };
+    const handleChooseDeliveryAddress = (e, value) => {
+        setDeliveryAddress(value);
+    };
+    const handleChangeNewUserAddress = (e) => {
+        switch (e.target.id) {
+            case "street":
+                setNewUserAddressStreet(e.target.value);
+                break;
+            case "home":
+                setNewUserAddressHome(e.target.value);
+                break;
+            case "porch":
+                setNewUserAddressPorch(e.target.value);
+                break;
+            case "floor":
+                setNewUserAddressFloor(e.target.value);
+                break;
+            case "apartment":
+                setNewUserAddressApartment(e.target.value);
+                break;
+            default:
+                break;
+        }
+    };
+    const handleChangeCommentOrder = (e, value) => {
+        setCommentOrder(e.target.value);
+    };
+    const handleSetActiveGateway = (e, value) => {
+        setActiveGateway(value);
+    };
+    const handleChangeCountUsers = (e, value) => {
+        setCountUsers(e.target.value);
+    };
+    const handleChangeMoneyBack = (e, value) => {
+        setMoneyBack(e.target.value);
+    };
+    const handlePhonePaste = function (e) {
+        var input = e.target,
+            inputNumbersValue = getNumbersValue(input.value);
+        var pasted = e.clipboardData || window.clipboardData;
+        if (pasted) {
+            var pastedText = pasted.getData("Text");
+            if (/\D/g.test(pastedText)) {
+                input.value = inputNumbersValue;
+                return;
+            }
+        }
+    };
+    const handlePhoneInput = function (e) {
+        var input = e.target,
+            inputNumbersValue = getNumbersValue(input.value),
+            selectionStart = input.selectionStart,
+            formattedInputValue = "";
 
-		if (!inputNumbersValue) {
-			return input.value = "";
-		}
+        if (!inputNumbersValue) {
+            return (input.value = "");
+        }
 
-		if (input.value.length !== selectionStart) {
-			if (e.data && /\D/g.test(e.data)) {
-				input.value = inputNumbersValue;
-			}
-			return;
-		}
+        if (input.value.length !== selectionStart) {
+            if (e.data && /\D/g.test(e.data)) {
+                input.value = inputNumbersValue;
+            }
+            return;
+        }
 
-		formattedInputValue = formatingStrPhone(inputNumbersValue);
-		input.value = formattedInputValue;
-		setUserPhone(formattedInputValue);
-	}
-	const handlePhoneKeyDown = function (e) {
-		var inputValue = e.target.value.replace(/\D/g, '');
-		if (e.keyCode === 8 && inputValue.length === 1) {
-			e.target.value = "";
-		}
-	}
+        formattedInputValue = formatingStrPhone(inputNumbersValue);
+        input.value = formattedInputValue;
+        setUserPhone(formattedInputValue);
+    };
+    const handlePhoneKeyDown = function (e) {
+        var inputValue = e.target.value.replace(/\D/g, "");
+        if (e.keyCode === 8 && inputValue.length === 1) {
+            e.target.value = "";
+        }
+    };
 
-	
-	const handleMakeOrder = () => {
-		setValidate(true);
-		( !userName || getNumbersValue(userPhone).length !== 11 ) && setValidate(false);
-		( deliveryAddress === 'new' && ( !newUserAddressStreet || !newUserAddressHome ) ) && setValidate(false);
+    const handleMakeOrder = () => {
+        setValidate(true);
+        (!userName || getNumbersValue(userPhone).length !== 11) &&
+            setValidate(false);
+        deliveryAddress === "new" &&
+            (!newUserAddressStreet || !newUserAddressHome) &&
+            setValidate(false);
 
-		if( validate ) {
-			setLoading(true);
-			axios.post('https://'+_getDomain()+'/?rest-api=makeOrder',
-			{
-				name: userName,
-				phone: getNumbersValue(userPhone),
-				token: user.token,
-				typeDelivery: typeDelivery,
-				deliveryAddress: deliveryAddress,
-				selfDeliveryAddress: selfDeliveryAddress,
-				newUserAddressStreet: newUserAddressStreet,
-				newUserAddressHome: newUserAddressHome,
-				newUserAddressPorch: newUserAddressPorch,
-				newUserAddressFloor: newUserAddressFloor,
-				newUserAddressApartment: newUserAddressApartment,
-				orderTime: getUnixTime(preorderDate) || availableOrderTime[orderDeliveryTime].timestamp,
-				preorder: preorderDate ? true: false,
-				commentOrder: commentOrder,
-				activeGateway: activeGateway,
-				countUsers: countUsers,
-				promocode: promocode.code,
-				promocodeProducts: promocodeProducts,
-				moneyBack: moneyBack,
-				products: cartProducts,
-				bonusProduct: userCartBonusProduct,
-				bonuses: usedBonuses
-			}).then((resp) => {
-				setLoading(false);
-				if( resp.data.status === 'success' ) {
-					dispatch(clearCart());
-					dispatch(setCurrentPage('/order-complete'));
-					window.scrollTo(0, 0);
-					navigate('/order-complete', {replace: true});
-				} else if( resp.data.status === 'need_payment' ) { 
-					window.location.href = resp.data.redirect;
-					dispatch(clearCart());
-				} else {
-					// Всплывающй алерт
-					setError(resp.data.text);
-				}
-			});
-		}
-	}
-	
-	const handleChangeTypeDelivery = (e, value) => {
-		if( value === 'self' ) {
-			if( config.selfDeliveryCoupon && cart.discount )
-				setOpenAlert(true);
-			else {
-				if( config.selfDeliveryCoupon )
-					dispatch(addPromocode(config.selfDeliveryCoupon));
+        if (validate) {
+            setLoading(true);
+            axios
+                .post("https://" + _getDomain() + "/?rest-api=makeOrder", {
+                    name: userName,
+                    phone: getNumbersValue(userPhone),
+                    token: user.token,
+                    typeDelivery: typeDelivery,
+                    deliveryAddress: deliveryAddress,
+                    selfDeliveryAddress: selfDeliveryAddress,
+                    newUserAddressStreet: newUserAddressStreet,
+                    newUserAddressHome: newUserAddressHome,
+                    newUserAddressPorch: newUserAddressPorch,
+                    newUserAddressFloor: newUserAddressFloor,
+                    newUserAddressApartment: newUserAddressApartment,
+                    orderTime:
+                        getUnixTime(preorderDate) ||
+                        availableOrderTime[orderDeliveryTime].timestamp,
+                    preorder: preorderDate ? true : false,
+                    commentOrder: commentOrder,
+                    activeGateway: activeGateway,
+                    countUsers: countUsers,
+                    promocode: promocode.code,
+                    promocodeProducts: promocodeProducts,
+                    moneyBack: moneyBack,
+                    products: cartProducts,
+                    bonusProduct: userCartBonusProduct,
+                    bonuses: usedBonuses,
+                })
+                .then((resp) => {
+                    setLoading(false);
+                    if (resp.data.status === "success") {
+                        dispatch(clearCart());
+                        dispatch(setCurrentPage("/order-complete"));
+                        window.scrollTo(0, 0);
+                        navigate("/order-complete", { replace: true });
+                    } else if (resp.data.status === "need_payment") {
+                        window.location.href = resp.data.redirect;
+                        dispatch(clearCart());
+                    } else {
+                        // Всплывающй алерт
+                        setError(resp.data.text);
+                    }
+                });
+        }
+    };
 
-				setTypeDelivery(value);
-			}
-		} else {
-			if( config.selfDeliveryCoupon && cart.promocode && config.selfDeliveryCoupon.code === cart.promocode.code )
-				dispatch(removePromocode());
-			setTypeDelivery(value);
-		}
-	}
-	if( config.selfDeliveryCoupon && cart.promocode && config.selfDeliveryCoupon.code === cart.promocode.code && typeDelivery !== 'self' )
-		setTypeDelivery('self');
+    const handleChangeTypeDelivery = (e, value) => {
+        if (value === "self") {
+            if (config.selfDeliveryCoupon && cart.discount) setOpenAlert(true);
+            else {
+                if (config.selfDeliveryCoupon)
+                    dispatch(addPromocode(config.selfDeliveryCoupon));
 
-		
-	const renderTypeOrdering = () => {
-		if( typeof config.CONFIG_order_receiving !== 'undefined' ) {
-			switch (config.CONFIG_order_receiving) {
-				case 'delivery':
-					return (
-						<RadioGroup
-							row
-							value="delivery"
-							aria-labelledby="typeDelivery-label"
-							name="typeDelivery"
-						>
-							<FormControlLabel className="custom-radio" value="delivery" control={<Radio />} label="Доставка" />
-						</RadioGroup>	
-					)				
-				case 'selfdelivery':{
-					return (
-						<RadioGroup
-							row
-							value="self"
-							aria-labelledby="typeDelivery-label"
-							name="typeDelivery"
-						>
-							<FormControlLabel className="custom-radio" value="self" control={<Radio />} label="Самовывоз" />
-						</RadioGroup>	
-					)	
-				}			
-				case 'both': {
-					const selfDeliveryLabel = config.selfDeliveryCoupon ? 'Самовывоз (Скидка -'+config.selfDeliveryCoupon.amount+'%)' : 'Самовывоз' ;
-					return (
-						<div>
-						<ModalAlert />
-						<RadioGroup
-							row
-							value={typeDelivery}
-							aria-labelledby="typeDelivery-label"
-							name="typeDelivery"
-							onChange={handleChangeTypeDelivery}
-						>
-							<FormControlLabel className="custom-radio" value="delivery" control={<Radio />} label="Доставка" />
-							<FormControlLabel className="custom-radio" value="self" control={<Radio />} label={selfDeliveryLabel} />
-						</RadioGroup>
-						</div>
-						)
-					}
-				default:
-					return
-			}
-		} else return;
-	}
+                setTypeDelivery(value);
+            }
+        } else {
+            if (
+                config.selfDeliveryCoupon &&
+                cart.promocode &&
+                config.selfDeliveryCoupon.code === cart.promocode.code
+            )
+                dispatch(removePromocode());
+            setTypeDelivery(value);
+        }
+    };
+    if (
+        config.selfDeliveryCoupon &&
+        cart.promocode &&
+        config.selfDeliveryCoupon.code === cart.promocode.code &&
+        typeDelivery !== "self"
+    )
+        setTypeDelivery("self");
 
-	let dialogAlertProps = {"open": openAlert };
-	if( _isMobile() ) {
-	  dialogAlertProps.TransitionComponent = Transition;
-	  dialogAlertProps.fullScreen = true;
-	}
-	const ModalAlert = () => {
-		return (
-			<Dialog
-				maxWidth="md"
-				className="selfelivery-promocode-alert"
-				open={openAlert}>
-				<div className="modal-alert--wrapper">
-					<IconButton
-					edge="start"
-					color="inherit"
-					onClick={handleAlertClose}
-					aria-label="close"
-					className="modal-close"
-					><CloseIcon /></IconButton>	
-					<h2 className="modal-alert--title">Внимание</h2>
-					<div className="modal-alert--inner">
-						<p>Скидка на самовывоз отменит ваш текущий промокод.</p>
+    const renderTypeOrdering = () => {
+        if (typeof config.CONFIG_order_receiving !== "undefined") {
+            switch (config.CONFIG_order_receiving) {
+                case "delivery":
+                    return (
+                        <RadioGroup
+                            row
+                            value="delivery"
+                            aria-labelledby="typeDelivery-label"
+                            name="typeDelivery"
+                        >
+                            <FormControlLabel
+                                className="custom-radio"
+                                value="delivery"
+                                control={<Radio />}
+                                label="Доставка"
+                            />
+                        </RadioGroup>
+                    );
+                case "selfdelivery": {
+                    return (
+                        <RadioGroup
+                            row
+                            value="self"
+                            aria-labelledby="typeDelivery-label"
+                            name="typeDelivery"
+                        >
+                            <FormControlLabel
+                                className="custom-radio"
+                                value="self"
+                                control={<Radio />}
+                                label="Самовывоз"
+                            />
+                        </RadioGroup>
+                    );
+                }
+                case "both": {
+                    const selfDeliveryLabel = config.selfDeliveryCoupon
+                        ? "Самовывоз (Скидка -" +
+                          config.selfDeliveryCoupon.amount +
+                          "%)"
+                        : "Самовывоз";
+                    return (
+                        <div>
+                            <ModalAlert />
+                            <RadioGroup
+                                row
+                                value={typeDelivery}
+                                aria-labelledby="typeDelivery-label"
+                                name="typeDelivery"
+                                onChange={handleChangeTypeDelivery}
+                            >
+                                <FormControlLabel
+                                    className="custom-radio"
+                                    value="delivery"
+                                    control={<Radio />}
+                                    label="Доставка"
+                                />
+                                <FormControlLabel
+                                    className="custom-radio"
+                                    value="self"
+                                    control={<Radio />}
+                                    label={selfDeliveryLabel}
+                                />
+                            </RadioGroup>
+                        </div>
+                    );
+                }
+                default:
+                    return;
+            }
+        } else return;
+    };
 
-						<div className="modal-alert--buttons">
-							<Button variant="button" className="btn--action" onClick={handleConfirmSelfDeliveryPromocode}>Я согласен</Button>
-							<Button variant="button" className="btn--outline-dark" onClick={handleAlertClose}>Отмена</Button>
-						</div>
-					</div>
-				</div>
-			</Dialog>
-		)
-	}
-	const handleConfirmSelfDeliveryPromocode = () => {
-		handleAlertClose();
-		dispatch(addPromocode(config.selfDeliveryCoupon));
-		setTypeDelivery('self');
-	}
+    let dialogAlertProps = { open: openAlert };
+    if (_isMobile()) {
+        dialogAlertProps.TransitionComponent = Transition;
+        dialogAlertProps.fullScreen = true;
+    }
+    const ModalAlert = () => {
+        return (
+            <Dialog
+                maxWidth="md"
+                className="selfelivery-promocode-alert"
+                open={openAlert}
+            >
+                <div className="modal-alert--wrapper">
+                    <IconButton
+                        edge="start"
+                        color="inherit"
+                        onClick={handleAlertClose}
+                        aria-label="close"
+                        className="modal-close"
+                    >
+                        <CloseIcon />
+                    </IconButton>
+                    <h2 className="modal-alert--title">Внимание</h2>
+                    <div className="modal-alert--inner">
+                        <p>Скидка на самовывоз отменит ваш текущий промокод.</p>
 
-	const handleChageDeliveryOrderTime = (timestamp) => {
-		setOrderDeliveryTime(timestamp);
-		handleOrderTimeModalClose();
-	}
+                        <div className="modal-alert--buttons">
+                            <Button
+                                variant="button"
+                                className="btn--action"
+                                onClick={handleConfirmSelfDeliveryPromocode}
+                            >
+                                Я согласен
+                            </Button>
+                            <Button
+                                variant="button"
+                                className="btn--outline-dark"
+                                onClick={handleAlertClose}
+                            >
+                                Отмена
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            </Dialog>
+        );
+    };
+    const handleConfirmSelfDeliveryPromocode = () => {
+        handleAlertClose();
+        dispatch(addPromocode(config.selfDeliveryCoupon));
+        setTypeDelivery("self");
+    };
 
-	const ButtonOrderTime = ({timestamp, timestampId}) => {
-		const buttonProps = {
-			endIcon: timestamp.timestamp === availableOrderTime[orderDeliveryTime].timestamp ? <CheckCircleOutlineIcon /> : false,
-			className: timestamp.timestamp === availableOrderTime[orderDeliveryTime].timestamp ? 'btn--action btn--empty' : 'btn btn--empty',
-		}
-		return (
-			<Grid item sm={12} md={4} sx={{ width: 1 }}>
-				<Button sx={{width: 1}} key={timestamp.timestamp} variant="button" {...buttonProps} onClick={() => handleChageDeliveryOrderTime(timestampId)}>{timestamp.title}</Button>
-			</Grid>
-		)
-	}
-	
-	const handleChangeCheckoutBonus = (e, value) => {
-		setUsedBonuses(value);
-	}
+    const handleChageDeliveryOrderTime = (timestamp) => {
+        setOrderDeliveryTime(timestamp);
+        handleOrderTimeModalClose();
+    };
 
-    const handleBackToMenu = useCallback(() => { 
-        dispatch(setCurrentPage('/'));
+    const ButtonOrderTime = ({ timestamp, timestampId }) => {
+        const buttonProps = {
+            endIcon:
+                timestamp.timestamp ===
+                availableOrderTime[orderDeliveryTime].timestamp ? (
+                    <CheckCircleOutlineIcon />
+                ) : (
+                    false
+                ),
+            className:
+                timestamp.timestamp ===
+                availableOrderTime[orderDeliveryTime].timestamp
+                    ? "btn--action btn--empty"
+                    : "btn btn--empty",
+        };
+        return (
+            <Grid item sm={12} md={4} sx={{ width: 1 }}>
+                <Button
+                    sx={{ width: 1 }}
+                    key={timestamp.timestamp}
+                    variant="button"
+                    {...buttonProps}
+                    onClick={() => handleChageDeliveryOrderTime(timestampId)}
+                >
+                    {timestamp.title}
+                </Button>
+            </Grid>
+        );
+    };
+
+    const handleChangeCheckoutBonus = (e, value) => {
+        setUsedBonuses(value);
+    };
+
+    const handleBackToMenu = useCallback(() => {
+        dispatch(setCurrentPage("/"));
         window.scrollTo(0, 0);
-        navigate('/', {replace: true});
+        navigate("/", { replace: true });
     }, [navigate]);
 
-    if( promocode ) {
-        const resultCheckPromocode = _checkPromocode(promocode, cartProducts, cartSubTotalPrice, typeDelivery);
-        if( resultCheckPromocode.status === 'error' ) {
+    if (promocode) {
+        const resultCheckPromocode = _checkPromocode(
+            promocode,
+            cartProducts,
+            cartSubTotalPrice,
+            typeDelivery
+        );
+        if (resultCheckPromocode.status === "error") {
             dispatch(removePromocode());
-            dispatch(updateAlerts({
-                open: true,
-                message: resultCheckPromocode.message
-            }));
+            dispatch(
+                updateAlerts({
+                    open: true,
+                    message: resultCheckPromocode.message,
+                })
+            );
         }
     }
 
-	const userNameProps = {
-		error: ( !userName && !validate ) ? true : false,
-		helperText: ( !userName && !validate ) ? "Поле обязательно для заполнения" : "Как к вам обращаться?",
-	}
-	const userPhoneProps = {
-		error: ( getNumbersValue(userPhone).length !== 11 && !validate ) ? true : false,
-		helperText: ( getNumbersValue(userPhone).length !== 11 && !validate ) ? "Номер указан неверно" : "С вами свяжется оператор для уточнения заказа"
-	}	
-	const streetProps = {
-		error: ( !newUserAddressStreet && deliveryAddress === 'new' && !validate ) ? true : false,
-		helperText: ( !newUserAddressStreet && deliveryAddress === 'new' && !validate ) ? "Поле обязательно для заполнения" : ""
-	}	
-	const homeProps = {
-		error: ( !newUserAddressHome && deliveryAddress === 'new' && !validate ) ? true : false,
-		helperText: ( !newUserAddressHome && deliveryAddress === 'new' && !validate ) ? "Поле обязательно для заполнения" : ""
-	}
+    const userNameProps = {
+        error: !userName && !validate ? true : false,
+        helperText:
+            !userName && !validate
+                ? "Поле обязательно для заполнения"
+                : "Как к вам обращаться?",
+    };
+    const userPhoneProps = {
+        error:
+            getNumbersValue(userPhone).length !== 11 && !validate
+                ? true
+                : false,
+        helperText:
+            getNumbersValue(userPhone).length !== 11 && !validate
+                ? "Номер указан неверно"
+                : "С вами свяжется оператор для уточнения заказа",
+    };
+    const streetProps = {
+        error:
+            !newUserAddressStreet && deliveryAddress === "new" && !validate
+                ? true
+                : false,
+        helperText:
+            !newUserAddressStreet && deliveryAddress === "new" && !validate
+                ? "Поле обязательно для заполнения"
+                : "",
+    };
+    const homeProps = {
+        error:
+            !newUserAddressHome && deliveryAddress === "new" && !validate
+                ? true
+                : false,
+        helperText:
+            !newUserAddressHome && deliveryAddress === "new" && !validate
+                ? "Поле обязательно для заполнения"
+                : "",
+    };
 
-	if( typeof user.addresses !== 'undefined' && user.addresses.length ) {
-		user.addresses.map( (address, index) => {
-			let formateAddress = address.street+', д. '+address.home;
-			formateAddress += ( address.porch ) ? ', под. '+address.porch : '';
-			formateAddress += ( address.floor ) ? ', этаж '+address.floor : '';
-			formateAddress += ( address.apartment ) ? ', кв. '+address.apartment : '';
-			user.addresses[index].formate = formateAddress;
-		});
-	}
-	
-	let maxBonuses = ( user.bonuses >= parseInt(cartTotalPrice/100*config.CONFIG_bonus_program_order_limit)) ? parseInt(cartTotalPrice/100*config.CONFIG_bonus_program_order_limit) : user.bonuses
-	if( config.CONFIG_order_min_price !== undefined && config.CONFIG_order_min_price > 0 )
-		if( cartTotalPrice - maxBonuses < config.CONFIG_order_min_price ) {
-			maxBonuses = cartTotalPrice - config.CONFIG_order_min_price;
-			if( maxBonuses < 0 )
-				maxBonuses = 0;
-		}
+    if (typeof user.addresses !== "undefined" && user.addresses.length) {
+        user.addresses.map((address, index) => {
+            let formateAddress = address.street + ", д. " + address.home;
+            formateAddress += address.porch ? ", под. " + address.porch : "";
+            formateAddress += address.floor ? ", этаж " + address.floor : "";
+            formateAddress += address.apartment
+                ? ", кв. " + address.apartment
+                : "";
+            user.addresses[index].formate = formateAddress;
+        });
+    }
 
-	let dialogTimeOrderingProps = {"open": openOrderTimeModal };
-	if( _isMobile() ) {
-	  dialogTimeOrderingProps.TransitionComponent = Transition;
-	  dialogTimeOrderingProps.fullScreen = true;
-	}	
+    let maxBonuses =
+        user.bonuses >=
+        parseInt(
+            (cartTotalPrice / 100) * config.CONFIG_bonus_program_order_limit
+        )
+            ? parseInt(
+                  (cartTotalPrice / 100) *
+                      config.CONFIG_bonus_program_order_limit
+              )
+            : user.bonuses;
+    if (
+        config.CONFIG_order_min_price !== undefined &&
+        config.CONFIG_order_min_price > 0
+    )
+        if (cartTotalPrice - maxBonuses < config.CONFIG_order_min_price) {
+            maxBonuses = cartTotalPrice - config.CONFIG_order_min_price;
+            if (maxBonuses < 0) maxBonuses = 0;
+        }
+
+    let dialogTimeOrderingProps = { open: openOrderTimeModal };
+    if (_isMobile()) {
+        dialogTimeOrderingProps.TransitionComponent = Transition;
+        dialogTimeOrderingProps.fullScreen = true;
+    }
 
     return (
-        <Container className="checkout checkout-wrapper">
-            <h1>Оформление заказа</h1>
-			<Grid container spacing={5}>
-				<Grid item sm={12} md={7}>
-					<div className="checkout--user">
-						<Grid container spacing={4}>
-							<Grid item sm={12} md={6} sx={{ width: 1 }} >
-								<div className="checkout--user-name">
-									<TextField 
-										size="small"
-										id="userName" 
-										label="Ваше имя"  
-										onInput={handleChangeName} 
-										value={ userName }
-										sx={{ width: 1 }} 
-										{...userNameProps}
-										/>
-								</div>
-							</Grid>
-							<Grid item sm={12} md={6} sx={{ width: 1 }} >
-								<div className="checkout--user-phone">
-									<TextField 
-										size="small"
-										id="userPhone" 
-										label="Номер телефона" 
-										onKeyDown={handlePhoneKeyDown} 
-										onInput={handlePhoneInput} 
-										onPaste={handlePhonePaste}
-										value={ userPhone }
-										sx={{ width: 1 }} 
-										{...userPhoneProps} />
-								</div>
-							</Grid>
-						</Grid>	
-					</div>
+        <>
+            <Container className="checkout checkout-wrapper">
+                <h1>Оформление заказа</h1>
+                <Grid container spacing={5}>
+                    <Grid item sm={12} md={7}>
+                        <div className="checkout--user">
+                            <Grid container spacing={4}>
+                                <Grid item sm={12} md={6} sx={{ width: 1 }}>
+                                    <div className="checkout--user-name">
+                                        <TextField
+                                            size="small"
+                                            id="userName"
+                                            label="Ваше имя"
+                                            onInput={handleChangeName}
+                                            value={userName}
+                                            sx={{ width: 1 }}
+                                            {...userNameProps}
+                                        />
+                                    </div>
+                                </Grid>
+                                <Grid item sm={12} md={6} sx={{ width: 1 }}>
+                                    <div className="checkout--user-phone">
+                                        <TextField
+                                            size="small"
+                                            id="userPhone"
+                                            label="Номер телефона"
+                                            onKeyDown={handlePhoneKeyDown}
+                                            onInput={handlePhoneInput}
+                                            onPaste={handlePhonePaste}
+                                            value={userPhone}
+                                            sx={{ width: 1 }}
+                                            {...userPhoneProps}
+                                        />
+                                    </div>
+                                </Grid>
+                            </Grid>
+                        </div>
 
-					<div className="checkout--type-delivery">
-						<div className="checkout--choose-type-panel">
-							<h3>Как хотите получить заказ?</h3>
-							<p>Выберите удобный для вас способ.</p>
-							{ renderTypeOrdering() }
-						</div>
+                        <div className="checkout--type-delivery">
+                            <div className="checkout--choose-type-panel">
+                                <h3>Как хотите получить заказ?</h3>
+                                <p>Выберите удобный для вас способ.</p>
+                                {renderTypeOrdering()}
+                            </div>
 
-						{ typeDelivery === 'delivery' ? (
-							<div className="checkout--address-panel">
-								<h4>Укажите адрес</h4>
+                            {typeDelivery === "delivery" ? (
+                                <div className="checkout--address-panel">
+                                    <h4>Укажите адрес</h4>
 
-								{ ( config.CONFIG_delivery_info_text !== undefined && config.CONFIG_delivery_info_text ) && (
-								<Alert severity="info" sx={{mt: 2, mb: 2}} ><div dangerouslySetInnerHTML={{__html: config.CONFIG_delivery_info_text}}></div></Alert>
-							) }
+                                    {config.CONFIG_delivery_info_text !==
+                                        undefined &&
+                                        config.CONFIG_delivery_info_text && (
+                                            <Alert
+                                                severity="info"
+                                                sx={{ mt: 2, mb: 2 }}
+                                            >
+                                                <div
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: config.CONFIG_delivery_info_text,
+                                                    }}
+                                                ></div>
+                                            </Alert>
+                                        )}
 
-								<RadioGroup
-									value={deliveryAddress}
-									aria-labelledby="deliveryAddress-label"
-									name="deliveryAddress"
-									onChange={handleChooseDeliveryAddress}
-								>
-									{ user.addresses && ( Object.values(user.addresses).map( (address, index) =>
-										<FormControlLabel key={index} className="custom-radio" value={index} control={<Radio size="small"/>} label={address.formate} />
-									) ) }
-									<FormControlLabel className="custom-radio new-address" value="new" control={<Radio size="small"/>} label="Новый адрес" />
-								</RadioGroup>
+                                    <RadioGroup
+                                        value={deliveryAddress}
+                                        aria-labelledby="deliveryAddress-label"
+                                        name="deliveryAddress"
+                                        onChange={handleChooseDeliveryAddress}
+                                    >
+                                        {user.addresses &&
+                                            Object.values(user.addresses).map(
+                                                (address, index) => (
+                                                    <FormControlLabel
+                                                        key={index}
+                                                        className="custom-radio"
+                                                        value={index}
+                                                        control={
+                                                            <Radio size="small" />
+                                                        }
+                                                        label={address.formate}
+                                                    />
+                                                )
+                                            )}
+                                        <FormControlLabel
+                                            className="custom-radio new-address"
+                                            value="new"
+                                            control={<Radio size="small" />}
+                                            label="Новый адрес"
+                                        />
+                                    </RadioGroup>
 
-								{ deliveryAddress === 'new' && (
-									<div className="checkout--form-new-address">
-										<Grid container spacing={2}>
-											<Grid item xs={8} md={6} sx={{width: 1}}>
-												<TextField 
-													size="small"
-													id="street" 
-													label="Улица"
-													value={ newUserAddressStreet }
-													onChange={handleChangeNewUserAddress}
-													sx={{ width: 1 }} 
-													{...streetProps}/>
-											</Grid>
-											<Grid item xs={4} md={6} sx={{width: 1}}>
-												<TextField 
-													size="small"
-													id="home"
-													label="Дом"
-													value={ newUserAddressHome }
-													onChange={handleChangeNewUserAddress}
-													sx={{ width: 1 }} 
-													{...homeProps}/>
-											</Grid>										
-											<Grid item xs={4} md={4}>
-												<TextField 
-													size="small"
-													id="porch" 
-													label="Подъезд"
-													value={ newUserAddressPorch }
-													onChange={handleChangeNewUserAddress}
-													sx={{ width: 1 }} />
-											</Grid>									
-											<Grid item xs={4} md={4}>
-												<TextField 
-													size="small"
-													id="floor" 
-													label="Этаж"
-													value={ newUserAddressFloor }
-													onChange={handleChangeNewUserAddress}
-													sx={{ width: 1 }} />
-											</Grid>									
-											<Grid item xs={4} md={4}>
-												<TextField 
-													size="small"
-													id="apartment" 
-													label="Кв./Офис"
-													value={ newUserAddressApartment	}
-													onChange={handleChangeNewUserAddress}
-													sx={{ width: 1 }} />
-											</Grid>
-										</Grid>
-									</div> 
-								)}
-							</div>
-						) : typeDelivery === 'self' && (
-							<div className="checkout--self-address-panel">
-								<h4>Выберите адрес</h4>
+                                    {deliveryAddress === "new" && (
+                                        <div className="checkout--form-new-address">
+                                            <Grid container spacing={2}>
+                                                <Grid
+                                                    item
+                                                    xs={8}
+                                                    md={6}
+                                                    sx={{ width: 1 }}
+                                                >
+                                                    <TextField
+                                                        size="small"
+                                                        id="street"
+                                                        label="Улица"
+                                                        value={
+                                                            newUserAddressStreet
+                                                        }
+                                                        onChange={
+                                                            handleChangeNewUserAddress
+                                                        }
+                                                        sx={{ width: 1 }}
+                                                        {...streetProps}
+                                                    />
+                                                </Grid>
+                                                <Grid
+                                                    item
+                                                    xs={4}
+                                                    md={6}
+                                                    sx={{ width: 1 }}
+                                                >
+                                                    <TextField
+                                                        size="small"
+                                                        id="home"
+                                                        label="Дом"
+                                                        value={
+                                                            newUserAddressHome
+                                                        }
+                                                        onChange={
+                                                            handleChangeNewUserAddress
+                                                        }
+                                                        sx={{ width: 1 }}
+                                                        {...homeProps}
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={4} md={4}>
+                                                    <TextField
+                                                        size="small"
+                                                        id="porch"
+                                                        label="Подъезд"
+                                                        value={
+                                                            newUserAddressPorch
+                                                        }
+                                                        onChange={
+                                                            handleChangeNewUserAddress
+                                                        }
+                                                        sx={{ width: 1 }}
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={4} md={4}>
+                                                    <TextField
+                                                        size="small"
+                                                        id="floor"
+                                                        label="Этаж"
+                                                        value={
+                                                            newUserAddressFloor
+                                                        }
+                                                        onChange={
+                                                            handleChangeNewUserAddress
+                                                        }
+                                                        sx={{ width: 1 }}
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={4} md={4}>
+                                                    <TextField
+                                                        size="small"
+                                                        id="apartment"
+                                                        label="Кв./Офис"
+                                                        value={
+                                                            newUserAddressApartment
+                                                        }
+                                                        onChange={
+                                                            handleChangeNewUserAddress
+                                                        }
+                                                        sx={{ width: 1 }}
+                                                    />
+                                                </Grid>
+                                            </Grid>
+                                        </div>
+                                    )}
+                                </div>
+                            ) : (
+                                typeDelivery === "self" && (
+                                    <div className="checkout--self-address-panel">
+                                        <h4>Выберите адрес</h4>
+                                        <RadioGroup
+                                            value={selfDeliveryAddress}
+                                            aria-labelledby="selfDeliveryAddress-label"
+                                            name="selfDeliveryAddress"
+                                            onChange={
+                                                handleChooseSelfDeliveryAddress
+                                            }
+                                            sx={{ mb: 2 }}
+                                        >
+                                            <FormControlLabel
+                                                className="custom-radio"
+                                                value="main"
+                                                control={<Radio size="small" />}
+                                                label={config.CONFIG_address}
+                                            />
+                                            {config.CONFIG_filials &&
+                                                config.CONFIG_filials.map(
+                                                    (filial, index) => (
+                                                        <FormControlLabel
+                                                            key={index}
+                                                            className="custom-radio"
+                                                            value={index}
+                                                            control={
+                                                                <Radio size="small" />
+                                                            }
+                                                            label={
+                                                                filial.address
+                                                            }
+                                                        />
+                                                    )
+                                                )}
+                                        </RadioGroup>
+                                        <b>Режим работы:</b>{" "}
+                                        {config.CONFIG_format_start_work} -{" "}
+                                        {config.CONFIG_format_end_work}
+                                    </div>
+                                )
+                            )}
+                        </div>
 
-								<RadioGroup
-									value={selfDeliveryAddress}
-									aria-labelledby="selfDeliveryAddress-label"
-									name="selfDeliveryAddress"
-									onChange={handleChooseSelfDeliveryAddress}
-									sx={{mb: 2}}
-								>
-									<FormControlLabel className="custom-radio" value="main" control={<Radio size="small"/>} label={config.CONFIG_address} />
-									{ config.CONFIG_filials && ( config.CONFIG_filials.map( (filial, index) => 
-										<FormControlLabel key={index} className="custom-radio" value={index} control={<Radio size="small"/>} label={filial.address} />
-									) ) }
-								</RadioGroup>
+                        {availableOrderTime && (
+                            <div className="checkout--order-time">
+                                <h3>К какому времени приготовить заказ?</h3>
 
-								<b>Режим работы:</b> {config.CONFIG_format_start_work} - {config.CONFIG_format_end_work}
-							</div>
-						)}
-					</div>
+                                <FormControlLabel
+                                    control={
+                                        <Switch
+                                            checked={preorderChecked}
+                                            onChange={handlePreorderCheck}
+                                        />
+                                    }
+                                    label="Заказать к определенной дате?"
+                                    sx={{ mb: 1 }}
+                                />
 
-					{ availableOrderTime && ( 
-					<div className="checkout--order-time">
-						<h3>К какому времени приготовить заказ?</h3>
+                                <Collapse in={preorderChecked} timeout={200}>
+                                    <PreorderForm
+                                        preorderDate={preorderDate}
+                                        preorderTime={preorderTime}
+                                        handlePreorderDateChange={
+                                            handlePreorderDateChange
+                                        }
+                                        handlePreorderTimeChange={
+                                            handlePreorderTimeChange
+                                        }
+                                    />
+                                </Collapse>
+                                <Collapse in={!preorderChecked} timeout={200}>
+                                    <Button
+                                        className="btn btn--outline-dark"
+                                        endIcon={<ArrowDropDownIcon />}
+                                        onClick={handleClickOpenOrderTimeModal}
+                                        sx={{ width: 1 }}
+                                    >
+                                        {
+                                            availableOrderTime[
+                                                orderDeliveryTime
+                                            ].title
+                                        }
+                                    </Button>
+                                </Collapse>
+                                <Dialog
+                                    maxWidth="md"
+                                    {...dialogTimeOrderingProps}
+                                >
+                                    <div className="time-order-modal-wrapper">
+                                        <IconButton
+                                            edge="start"
+                                            color="inherit"
+                                            onClick={handleOrderTimeModalClose}
+                                            aria-label="close"
+                                            className="modal-close"
+                                        >
+                                            <CloseIcon />
+                                        </IconButton>
+                                        <h2 className="auth-modal--title">
+                                            Время доставки
+                                        </h2>
+                                        <div className="time-order-modal-scroll">
+                                            <Grid container spacing={3}>
+                                                {Object.values(
+                                                    availableOrderTime
+                                                ).map((element, index) => (
+                                                    <ButtonOrderTime
+                                                        key={index}
+                                                        timestamp={element}
+                                                        timestampId={index}
+                                                    />
+                                                ))}
+                                            </Grid>
+                                        </div>
+                                    </div>
+                                </Dialog>
+                            </div>
+                        )}
 
-						<FormControlLabel control={<Switch checked={preorderChecked} onChange={handlePreorderCheck}/>} label="Заказать к определенной дате?" sx={{mb: 1}}/>
-						
-						<Collapse in={preorderChecked} timeout={200}>
-							<PreorderForm 
-								preorderDate={preorderDate} 
-								preorderTime={preorderTime} 
-								handlePreorderDateChange={handlePreorderDateChange}
-								handlePreorderTimeChange={handlePreorderTimeChange}
-								/>
-						</Collapse>
-						<Collapse in={!preorderChecked} timeout={200}>
-							<Button 
-								className="btn btn--outline-dark"
-								endIcon={<ArrowDropDownIcon />}
-								onClick={handleClickOpenOrderTimeModal}
-								sx={{ width: 1 }}
-								>{availableOrderTime[orderDeliveryTime].title}
-							</Button>
-						</Collapse>
-						<Dialog
-							maxWidth="md"
-							{...dialogTimeOrderingProps}>
-							<div className="time-order-modal-wrapper">
-								<IconButton
-								edge="start"
-								color="inherit"
-								onClick={handleOrderTimeModalClose}
-								aria-label="close"
-								className="modal-close"
-								><CloseIcon /></IconButton>	
-								<h2 className="auth-modal--title">Время доставки</h2>
-								<div className="time-order-modal-scroll">
-									<Grid container spacing={3}>
-									{ Object.values(availableOrderTime).map( (element, index) => 
-										<ButtonOrderTime key={index} timestamp={element} timestampId={index}/>
-									) }
-									</Grid>
-								</div>
-							</div>
-						</Dialog>
-						
-					</div>					
-					) }
+                        <div className="checkout--comment-order">
+                            <h3>Комментарий к заказу</h3>
+                            <TextField
+                                id="commentOrder"
+                                label="Введите пожелание к заказу"
+                                multiline
+                                maxRows={8}
+                                value={commentOrder}
+                                onInput={handleChangeCommentOrder}
+                                sx={{ width: 1 }}
+                            />
+                        </div>
+                    </Grid>
 
-					<div className="checkout--comment-order">
-						<h3>Комментарий к заказу</h3>
-						<TextField
-							id="commentOrder"
-							label="Введите пожелание к заказу"
-							multiline
-							maxRows={8}
-							value={commentOrder}
-							onInput={handleChangeCommentOrder}
-							sx={{ width: 1 }}
-						/>
-					</div>
-				</Grid>
-				
-				<Grid item sm={12} md={5} sx={{ width: 1 }} >
-					<div className="checkout--total-panel">
-						<h3 className="checkout--total-panel--title">Ваш заказ <Link onClick={handleBackToMenu} to={'/'}>Изменить</Link></h3>
+                    <Grid item sm={12} md={5} sx={{ width: 1 }}>
+                        <div className="checkout--total-panel">
+                            <h3 className="checkout--total-panel--title">
+                                Ваш заказ{" "}
+                                <Link onClick={handleBackToMenu} to={"/"}>
+                                    Изменить
+                                </Link>
+                            </h3>
 
-						<div className="checkout--products">
-							{/* { Object.keys(cartProducts).map( (key, index) => 
+                            <div className="checkout--products">
+                                {/* { Object.keys(cartProducts).map( (key, index) => 
 								<CheckoutProduct key={cartProducts[key].items[0].id} productCart={cartProducts[key].items[0]} productCount={cartProducts[key].items.length} productTotalPrice={cartProducts[key].totalPrice} />
 							) } */}
 
-							{ Object.keys(cartProducts).map( (key, index) => 
-								items[key] && items[key].type !== undefined && items[key].type === 'variations' ? cartProducts[key].items.map( (keyVariantProduct, indexVariantProduct) => 
-									<CheckoutProduct key={indexVariantProduct} productIndex={indexVariantProduct} productCart={cartProducts[key].items[indexVariantProduct]} productCount={1} productTotalPrice={cartProducts[key].items[indexVariantProduct].options._price} /> 
-								) : <CheckoutProduct key={cartProducts[key].items[0].id} productIndex={0} productCart={cartProducts[key].items[0]} productCount={cartProducts[key].items.length} productTotalPrice={cartProducts[key].totalPrice} /> 
-							) }
+                                {Object.keys(cartProducts).map((key, index) =>
+                                    items[key] &&
+                                    items[key].type !== undefined &&
+                                    items[key].type === "variations" ? (
+                                        cartProducts[key].items.map(
+                                            (
+                                                keyVariantProduct,
+                                                indexVariantProduct
+                                            ) => (
+                                                <CheckoutProduct
+                                                    key={indexVariantProduct}
+                                                    productIndex={
+                                                        indexVariantProduct
+                                                    }
+                                                    productCart={
+                                                        cartProducts[key].items[
+                                                            indexVariantProduct
+                                                        ]
+                                                    }
+                                                    productCount={1}
+                                                    productTotalPrice={
+                                                        cartProducts[key].items[
+                                                            indexVariantProduct
+                                                        ].options._price
+                                                    }
+                                                />
+                                            )
+                                        )
+                                    ) : (
+                                        <CheckoutProduct
+                                            key={cartProducts[key].items[0].id}
+                                            productIndex={0}
+                                            productCart={
+                                                cartProducts[key].items[0]
+                                            }
+                                            productCount={
+                                                cartProducts[key].items.length
+                                            }
+                                            productTotalPrice={
+                                                cartProducts[key].totalPrice
+                                            }
+                                        />
+                                    )
+                                )}
 
-                            {/* { Object.keys(promocodeProducts).map( (key, index) => items[key] !== undefined &&
+                                {/* { Object.keys(promocodeProducts).map( (key, index) => items[key] !== undefined &&
                                 <PromocodeCheckoutProduct productCart={promocodeProducts[key]} productCount="1" productTotalPrice={promocodeProducts[key].options._price-promocode.amount} />
                              ) } */}
 
-							{ userCartBonusProduct.id && (
-								<CheckoutProduct productCart={userCartBonusProduct} productCount={1} productTotalPrice={0} />
-							) }
+                                {userCartBonusProduct.id && (
+                                    <CheckoutProduct
+                                        productCart={userCartBonusProduct}
+                                        productCount={1}
+                                        productTotalPrice={0}
+                                    />
+                                )}
 
-							<CheckoutFreeAddons />
-						</div>
+                                <CheckoutFreeAddons />
+                            </div>
 
-						<hr className="checkout--total-panel--separator" />
+                            <hr className="checkout--total-panel--separator" />
 
-                        { cart.discount ? (
-							<div>
-                            <div className="checkout--subtotal-price">
-                                <div className="price">Сумма заказа: <span className="money">{cart.subTotalPrice.toLocaleString('ru-RU')} &#8381;</span></div>
-								<div className="promocode">
-                                    <span>Промокод <span className="main-color">{promocode.code}</span>: </span>
-                                    
-                                    { promocode.type === 'percent' ?
-										<span className="money main-color">-{promocode.amount}%</span>
-									: <span className="money main-color">-{cart.discount.toLocaleString('ru-RU')} &#8381;</span> }
+                            {cart.discount ? (
+                                <div>
+                                    <div className="checkout--subtotal-price">
+                                        <div className="price">
+                                            Сумма заказа:{" "}
+                                            <span className="money">
+                                                {cart.subTotalPrice.toLocaleString(
+                                                    "ru-RU"
+                                                )}{" "}
+                                                &#8381;
+                                            </span>
+                                        </div>
+                                        <div className="promocode">
+                                            <span>
+                                                Промокод{" "}
+                                                <span className="main-color">
+                                                    {promocode.code}
+                                                </span>
+                                                :{" "}
+                                            </span>
+
+                                            {promocode.type === "percent" ? (
+                                                <span className="money main-color">
+                                                    -{promocode.amount}%
+                                                </span>
+                                            ) : (
+                                                <span className="money main-color">
+                                                    -
+                                                    {cart.discount.toLocaleString(
+                                                        "ru-RU"
+                                                    )}{" "}
+                                                    &#8381;
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    <hr className="checkout--total-panel--separator" />
                                 </div>
-                            </div> 
-							
-							<hr className="checkout--total-panel--separator" />
-							</div> 
-                        ) : ''}
+                            ) : (
+                                ""
+                            )}
 
-						<div className="checkout--total-panel--result">
-							<span className="price-title">Итого</span> 
-							<span className="money">{(cartTotalPrice-usedBonuses).toLocaleString('ru-RU')} &#8381;</span>
-						</div>
+                            <div className="checkout--total-panel--result">
+                                <span className="price-title">Итого</span>
+                                <span className="money">
+                                    {(
+                                        cartTotalPrice - usedBonuses
+                                    ).toLocaleString("ru-RU")}{" "}
+                                    &#8381;
+                                </span>
+                            </div>
 
-						{ config.CONFIG_bonuses_program_status === 'on' && (
-							<div className="checkout--user-bonuses">
-								<div className="checkout--user-bonuses-info">
-									У вас <span className="main-color">{`${user.bonuses} ${_declension(user.bonuses, ['бонус','бонуса','бонусов'])}`}</span>
-								</div>
+                            {config.CONFIG_bonuses_program_status === "on" && (
+                                <div className="checkout--user-bonuses">
+                                    <div className="checkout--user-bonuses-info">
+                                        У вас{" "}
+                                        <span className="main-color">{`${
+                                            user.bonuses
+                                        } ${_declension(user.bonuses, [
+                                            "бонус",
+                                            "бонуса",
+                                            "бонусов",
+                                        ])}`}</span>
+                                    </div>
 
-								<Slider 
-									onChange={handleChangeCheckoutBonus} 
-									defaultValue={0} 
-									aria-label="Default" 
-									valueLabelDisplay="auto" 
-									min={0}
-									max={ maxBonuses } />
+                                    <Slider
+                                        onChange={handleChangeCheckoutBonus}
+                                        defaultValue={0}
+                                        aria-label="Default"
+                                        valueLabelDisplay="auto"
+                                        min={0}
+                                        max={maxBonuses}
+                                    />
 
-								<div className="checkout--bonuses-payming">
-									<span className="title">Оплата бонусами</span>
-									<span className="bonuses-price"><span className="money">{usedBonuses.toLocaleString('ru-RU')}</span> &#8381;</span>
-								</div>
+                                    <div className="checkout--bonuses-payming">
+                                        <span className="title">
+                                            Оплата бонусами
+                                        </span>
+                                        <span className="bonuses-price">
+                                            <span className="money">
+                                                {usedBonuses.toLocaleString(
+                                                    "ru-RU"
+                                                )}
+                                            </span>{" "}
+                                            &#8381;
+                                        </span>
+                                    </div>
 
-								<small>Бонусами можно оплатить до <span className="main-color">{config.CONFIG_bonus_program_order_limit}%</span> от общей суммы заказа.</small>
-								{ ( config.CONFIG_order_min_price !== undefined && config.CONFIG_order_min_price > 0 ) && (
-									<div><small>Минимальная сумма заказа <b className="main-color">{config.CONFIG_order_min_price} ₽</b>.</small></div>
-								) }
-							</div>
-						)}
+                                    <small>
+                                        Бонусами можно оплатить до{" "}
+                                        <span className="main-color">
+                                            {
+                                                config.CONFIG_bonus_program_order_limit
+                                            }
+                                            %
+                                        </span>{" "}
+                                        от общей суммы заказа.
+                                    </small>
+                                    {config.CONFIG_order_min_price !==
+                                        undefined &&
+                                        config.CONFIG_order_min_price > 0 && (
+                                            <div>
+                                                <small>
+                                                    Минимальная сумма заказа{" "}
+                                                    <b className="main-color">
+                                                        {
+                                                            config.CONFIG_order_min_price
+                                                        }{" "}
+                                                        ₽
+                                                    </b>
+                                                    .
+                                                </small>
+                                            </div>
+                                        )}
+                                </div>
+                            )}
 
-						<hr className="checkout--total-panel--separator" />
+                            <hr className="checkout--total-panel--separator" />
 
-						{ gateways &&  (
-							<div className="checkout--gateways">
-								<h4>Способ оплаты</h4>
+                            {gateways && (
+                                <div className="checkout--gateways">
+                                    <h4>Способ оплаты</h4>
 
-								<RadioGroup
-									defaultValue={activeGateway}
-									aria-labelledby="activeGateway-label"
-									name="activeGateway"
-									onChange={handleSetActiveGateway}
-									sx={{mb: 2}}
-								>
-									{ gateways.map( (key, index) =>
-										<FormControlLabel key={index} className="custom-radio" value={key.id} control={<Radio size="small"/>} label={key.title} />
-									) }
-								</RadioGroup>
-								
-								<Grid container spacing={4}>
-									<Grid item sm={12} md={6} sx={{ width: 1 }} >
-										<b>Количество персон</b>
-										<Select
-											id="count_peoples"
-											value={countUsers}
-											sx={{width: 1, mt:0.5}}
-											size="small"
-											onChange={handleChangeCountUsers}
-										>
-											<MenuItem value={1}>1</MenuItem>
-											<MenuItem value={2}>2</MenuItem>
-											<MenuItem value={3}>3</MenuItem>
-											<MenuItem value={4}>4</MenuItem>
-											<MenuItem value={5}>5</MenuItem>
-											<MenuItem value={6}>6</MenuItem>
-											<MenuItem value={7}>7</MenuItem>
-											<MenuItem value={8}>8</MenuItem>
-											<MenuItem value={9}>9</MenuItem>
-											<MenuItem value={10}>10</MenuItem>
-										</Select>	
-									</Grid>									
-									
-									{ activeGateway === 'cash' && (
-										<Grid item sm={12} md={6} sx={{ width: 1 }} >
-											<b>Приготовить сдачу с</b>
-											<TextField 
-												size="small"
-												id="money_back"
-												value={moneyBack}
-												type="number"
-												onChange={handleChangeMoneyBack}
-												sx={{ width: 1, mt:0.5 }} />
-										</Grid>
-									) }
-								</Grid>
-							</div>
-						) }
+                                    <RadioGroup
+                                        defaultValue={activeGateway}
+                                        aria-labelledby="activeGateway-label"
+                                        name="activeGateway"
+                                        onChange={handleSetActiveGateway}
+                                        sx={{ mb: 2 }}
+                                    >
+                                        {gateways.map((key, index) => (
+                                            <FormControlLabel
+                                                key={index}
+                                                className="custom-radio"
+                                                value={key.id}
+                                                control={<Radio size="small" />}
+                                                label={key.title}
+                                            />
+                                        ))}
+                                    </RadioGroup>
 
-						<LoadingButton loading={loading} sx={{ width: 1, mt: 1.5 }} variant="button" className="btn--action" onClick={handleMakeOrder}>Подтвердить заказ</LoadingButton>
+                                    <Grid container spacing={4}>
+                                        <Grid
+                                            item
+                                            sm={12}
+                                            md={6}
+                                            sx={{ width: 1 }}
+                                        >
+                                            <b>Количество персон</b>
+                                            <Select
+                                                id="count_peoples"
+                                                value={countUsers}
+                                                sx={{ width: 1, mt: 0.5 }}
+                                                size="small"
+                                                onChange={
+                                                    handleChangeCountUsers
+                                                }
+                                            >
+                                                <MenuItem value={1}>1</MenuItem>
+                                                <MenuItem value={2}>2</MenuItem>
+                                                <MenuItem value={3}>3</MenuItem>
+                                                <MenuItem value={4}>4</MenuItem>
+                                                <MenuItem value={5}>5</MenuItem>
+                                                <MenuItem value={6}>6</MenuItem>
+                                                <MenuItem value={7}>7</MenuItem>
+                                                <MenuItem value={8}>8</MenuItem>
+                                                <MenuItem value={9}>9</MenuItem>
+                                                <MenuItem value={10}>
+                                                    10
+                                                </MenuItem>
+                                            </Select>
+                                        </Grid>
 
-						{ error && 
-							<Alert 
-								action={
-									<IconButton
-										aria-label="close"
-										color="inherit"
-										size="small"
-										onClick={() => {
-											setError('');
-										}}
-									>
-									<CloseIcon fontSize="inherit" />
-									</IconButton>
-								}
-								severity="error" sx={{mt: 2}}>{error}</Alert>
-						}
-					</div>
-				</Grid>
-			</Grid>
+                                        {activeGateway === "cash" && (
+                                            <Grid
+                                                item
+                                                sm={12}
+                                                md={6}
+                                                sx={{ width: 1 }}
+                                            >
+                                                <b>Приготовить сдачу с</b>
+                                                <TextField
+                                                    size="small"
+                                                    id="money_back"
+                                                    value={moneyBack}
+                                                    type="number"
+                                                    onChange={
+                                                        handleChangeMoneyBack
+                                                    }
+                                                    sx={{ width: 1, mt: 0.5 }}
+                                                />
+                                            </Grid>
+                                        )}
+                                    </Grid>
+                                </div>
+                            )}
 
-			<div className="">
+                            <LoadingButton
+                                loading={loading}
+                                sx={{ width: 1, mt: 1.5 }}
+                                variant="button"
+                                className="btn--action"
+                                onClick={handleMakeOrder}
+                            >
+                                Подтвердить заказ
+                            </LoadingButton>
 
-			</div>
-        </Container>
-    )
+                            {error && (
+                                <Alert
+                                    action={
+                                        <IconButton
+                                            aria-label="close"
+                                            color="inherit"
+                                            size="small"
+                                            onClick={() => {
+                                                setError("");
+                                            }}
+                                        >
+                                            <CloseIcon fontSize="inherit" />
+                                        </IconButton>
+                                    }
+                                    severity="error"
+                                    sx={{ mt: 2 }}
+                                >
+                                    {error}
+                                </Alert>
+                            )}
+                        </div>
+                    </Grid>
+                </Grid>
+
+                <div className=""></div>
+            </Container>
+            <Footer />
+        </>
+    );
 }
