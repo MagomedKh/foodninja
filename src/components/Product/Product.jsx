@@ -22,14 +22,14 @@ export default function Product({ product, category }) {
 
     const [disabled, setDisabled] = useState(false);
 
-    // useEffect(() => {
-    //     if (!_checkCartProduct(product, category)) {
-    //         setDisabled(true);
-    //         dispatch(removeProductFromCart(product));
-    //     } else {
-    //         setDisabled(false);
-    //     }
-    // }, [category.disabled]);
+    useEffect(() => {
+        if (category && !_checkCartProduct(product, category)) {
+            setDisabled(true);
+            dispatch(removeProductFromCart(product));
+        } else {
+            setDisabled(false);
+        }
+    }, []);
 
     const { cartProducts, lazyloadImg, categoryNew, categoryHit, logoImg } =
         useSelector(({ cart, config }) => {
