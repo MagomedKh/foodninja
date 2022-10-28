@@ -16,9 +16,8 @@ export default function WeClosed( {initStatus = false} ) {
         <div className="deliveryStatus">
             { status == 'closed' && (
                 <div className="deliveryClosed">
-                    <span className="main-color">Сейчас мы закрыты.</span> Откроемся через {config._timerOpened}
-                    <br />
-                    Вы можете оформить предзаказ ко времени.
+                    <div className="main-color">Сейчас мы закрыты.</div>
+                    <div>Вы можете оформить предзаказ ко времени.</div>
                 </div>
             )  }
         </div>

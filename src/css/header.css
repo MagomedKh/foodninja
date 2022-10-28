@@ -56,7 +56,11 @@
     min-width: 50px!important;
     vertical-align: middle;
 }
-
+.header-work .info-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
 
 
 /* Верхнее меню */
