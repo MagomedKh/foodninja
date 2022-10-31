@@ -8,7 +8,7 @@ import {
     Stack,
     Autocomplete,
     Button,
-} from "@material-ui/core";
+} from "@mui/material";
 import { Product } from "../components";
 import { setStoredInputValue } from "../redux/actions/search";
 

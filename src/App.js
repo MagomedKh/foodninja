@@ -49,7 +49,7 @@ import "./fonts/cera/CeraRoundProMedium.woff2";
 import "./fonts/cera/CeraRoundProBold.woff2";
 import "./App.css";
 import { createGlobalStyle } from "styled-components";
-import { createTheme, ThemeProvider } from "@material-ui/core/styles";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { _getDomain, _getPlatform, _isMobile } from "./components/helpers";
 
 function App() {
