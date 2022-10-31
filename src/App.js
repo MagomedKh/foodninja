@@ -42,6 +42,7 @@ import {
     Page,
     OrderComplete,
     Product,
+    CategoryPage,
 } from "./pages";
 import SearchPage from "./pages/SerachPage";
 import axios from "axios";
@@ -195,6 +196,11 @@ function App() {
                                     exact
                                     path="/search"
                                     element={<SearchPage />}
+                                />
+                                <Route
+                                    exact
+                                    path="/category/*"
+                                    element={<CategoryPage />}
                                 />
                                 <Route path="*" element={<Page />} />
                             </Routes>

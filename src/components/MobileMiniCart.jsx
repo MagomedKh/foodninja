@@ -1,70 +1,77 @@
-import React from 'react';
-import {useSelector, useDispatch} from 'react-redux';
-import Drawer from '@mui/material/Drawer';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import Button from '@material-ui/core/Button';
-import {Link} from 'react-router-dom';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
-import '../css/minicart.css';
-import MiniCartProduct from '../components/Product/MiniCartProduct';
-import {setCurrentPage} from '../redux/actions/pages';
-import {_declension} from './helpers.js';
-import {_isMobile} from './helpers.js';
-import Dialog from '@mui/material/Dialog';
-import Slide from '@mui/material/Slide';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import Drawer from "@mui/material/Drawer";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import Button from "@mui/material/Button";
+import { Link } from "react-router-dom";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
+import "../css/minicart.css";
+import MiniCartProduct from "../components/Product/MiniCartProduct";
+import { setCurrentPage } from "../redux/actions/pages";
+import { _declension } from "./helpers.js";
+import { _isMobile } from "./helpers.js";
+import Dialog from "@mui/material/Dialog";
+import Slide from "@mui/material/Slide";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
 function MobileMiniCart() {
-
     const [miniCartOpenDialog, setMiniCartDialog] = React.useState(false);
-	const drawerBleeding = 56;
+    const drawerBleeding = 56;
     const dispatch = useDispatch();
 
-    const { cartProducts, cartTotalPrice, cartCountItems, bonuses_items } = useSelector( ({cart, products}) => {
-        return {
-			bonuses_items: products.bonuses_items,
-        	cartProducts: cart.items,
-        	cartTotalPrice: cart.totalPrice,
-        	cartCountItems: cart.countItems,
-        }
-    });
+    const { cartProducts, cartTotalPrice, cartCountItems, bonuses_items } =
+        useSelector(({ cart, products }) => {
+            return {
+                bonuses_items: products.bonuses_items,
+                cartProducts: cart.items,
+                cartTotalPrice: cart.totalPrice,
+                cartCountItems: cart.countItems,
+            };
+        });
 
     const toggleMiniCartDialog = () => {
         setMiniCartDialog(!miniCartOpenDialog);
-    }; 
+    };
 
     const handleClickToCart = () => {
-        dispatch(setCurrentPage('/cart'));
-		window.scrollTo(0, 0);
+        dispatch(setCurrentPage("/cart"));
+        window.scrollTo(0, 0);
+    };
+
+    let dialogMiniCartProps = { open: miniCartOpenDialog };
+    if (_isMobile()) {
+        dialogMiniCartProps.TransitionComponent = Transition;
+        dialogMiniCartProps.fullScreen = true;
     }
 
-	let dialogMiniCartProps = {"open": miniCartOpenDialog };
-	if( _isMobile() ) {
-	  dialogMiniCartProps.TransitionComponent = Transition;
-	  dialogMiniCartProps.fullScreen = true;
-	}
-
     return (
-		<div className={ (bonuses_items !== undefined && bonuses_items.length) ? 'minicart--wrapper active-bonuses' : 'minicart--wrapper' }>
+        <div
+            className={
+                bonuses_items !== undefined && bonuses_items.length
+                    ? "minicart--wrapper active-bonuses"
+                    : "minicart--wrapper"
+            }
+        >
+            <Link
+                className="minicart-mobile"
+                onClick={handleClickToCart}
+                to={"/cart"}
+            >
+                <span className="minicart-mobile--count-item">
+                    {cartCountItems}
+                </span>
 
-			<Link className="minicart-mobile" onClick={handleClickToCart} to={'/cart'}>		
-			
-					<span className="minicart-mobile--count-item">
-						{cartCountItems}
-					</span>
-						
-					<ShoppingCartIcon />
-					
-					{/* <span className="minicart--topcart--price-total btn btn--action">{cartTotalPrice.toLocaleString('ru-RU')} &#8381;</span> */}
-		
-			</Link>
+                <ShoppingCartIcon />
 
-			{/* <Dialog
+                {/* <span className="minicart--topcart--price-total btn btn--action">{cartTotalPrice.toLocaleString('ru-RU')} &#8381;</span> */}
+            </Link>
+
+            {/* <Dialog
 				{...dialogMiniCartProps}
 			>
 				<h2 className="minicart-modal--title ">Корзина</h2>
@@ -109,8 +116,8 @@ function MobileMiniCart() {
 					</div>
 				) }
 			</Dialog> */}
-		</div>
-    )
+        </div>
+    );
 }
 
-export default MobileMiniCart
+export default MobileMiniCart;

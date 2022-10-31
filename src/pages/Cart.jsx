@@ -7,7 +7,7 @@ import PromocodeCartProduct from "../components/Product/PromocodeCartProduct";
 import CartBonusesProducts from "../components/CartBonusesProducts";
 import { useSelector, useDispatch } from "react-redux";
 import { setCurrentPage } from "../redux/actions/pages";
-import Button from "@material-ui/core/Button";
+import Button from "@mui/material/Button";
 
 import { useNavigate } from "react-router-dom";
 import emptyCartImg from "../img/empty-cart.svg";

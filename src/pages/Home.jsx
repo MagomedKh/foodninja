@@ -12,8 +12,11 @@ import {
 import SearchBar from "../components/SearchBar";
 import TopCategoriesMenu from "../components/TopCategoriesMenu";
 import { Alert, Button, Container, Skeleton } from "@mui/material";
-import { _clone, _isMobile } from "../components/helpers.js";
-import { getTime, set } from "date-fns";
+import {
+    _clone,
+    _isMobile,
+    _isCategoryDisabled,
+} from "../components/helpers.js";
 
 export default function Home() {
     const dispatch = useDispatch();
@@ -29,30 +32,6 @@ export default function Home() {
 
     const [activeCategoryTags, setActiveCategoryTags] = useState({});
     const [inputValue, setInputValue] = useState(null);
-
-    const activeCategories = categories?.map((el) => {
-        if (!el.timeLimitStart || !el.timeLimitEnd) {
-            return el;
-        }
-        const currentTime = getTime(new Date());
-
-        const timeLimitStart = set(new Date(), {
-            hours: el.timeLimitStart.slice(0, 2),
-            minutes: el.timeLimitStart.slice(3, 5),
-            seconds: 0,
-        });
-
-        const timeLimitEnd = set(new Date(), {
-            hours: el.timeLimitEnd.slice(0, 2),
-            minutes: el.timeLimitEnd.slice(3, 5),
-            seconds: 0,
-        });
-
-        if (currentTime < timeLimitStart || currentTime > timeLimitEnd) {
-            return { ...el, disabled: true };
-        }
-        return el;
-    });
 
     const handleClickCategoryTag = (categoryID, tagID) => {
         let tmpArray = _clone(activeCategoryTags);
@@ -81,7 +60,7 @@ export default function Home() {
                         <SearchBar dontShowList={true} size={"small"} />
                     </div>
                     {categories ? (
-                        activeCategories.map((item, index) => (
+                        categories.map((item, index) => (
                             <Container
                                 key={`container-category-${item.term_id}`}
                                 id={`category-${item.term_id}`}
@@ -91,7 +70,7 @@ export default function Home() {
                                     {item.name}
                                 </h2>
 
-                                {item.disabled ? (
+                                {_isCategoryDisabled(item) ? (
                                     <Alert
                                         severity="error"
                                         sx={{ width: "fit-content", mb: 1 }}
@@ -179,6 +158,9 @@ export default function Home() {
                                                             key={product.id}
                                                             product={product}
                                                             category={item}
+                                                            disabled={_isCategoryDisabled(
+                                                                item
+                                                            )}
                                                         />
                                                     )
                                                 ) : (

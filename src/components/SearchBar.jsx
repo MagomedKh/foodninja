@@ -1,22 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector, shallowEqual } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import Fuse from "fuse.js";
-import {
-    Container,
-    TextField,
-    Stack,
-    Autocomplete,
-    Button,
-} from "@mui/material";
+import { TextField, Autocomplete, Button } from "@mui/material";
 import { Product } from "../components";
 import { setStoredInputValue } from "../redux/actions/search";
+import { _isCategoryDisabled } from "./helpers";
 
 const SearchBar = ({ dontShowList, size }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { storedInputValue } = useSelector((state) => state.search);
-    const { items } = useSelector((state) => state.products);
+    const { items, categories } = useSelector((state) => state.products);
 
     const [filteredProducts, setFilteredProducts] = useState(null);
     const [inputValue, setInputValue] = useState(null);
@@ -31,6 +26,10 @@ const SearchBar = ({ dontShowList, size }) => {
     }, []);
 
     const allProducts = [].concat.apply([], Object.values(items));
+
+    const disabledCategoriesId = categories
+        .filter((el) => _isCategoryDisabled(el))
+        .map((el) => el.term_id);
 
     const fuse = new Fuse(allProducts, {
         keys: ["title"],
@@ -53,7 +52,14 @@ const SearchBar = ({ dontShowList, size }) => {
 
     const filteredPoructsList = dontShowList ? null : filteredProducts &&
       filteredProducts.length ? (
-        filteredProducts.map((el) => <Product product={el.item} />)
+        filteredProducts.map((el) => (
+            <Product
+                product={el.item}
+                disabled={el.item.categories.some((r) =>
+                    disabledCategoriesId.includes(r)
+                )}
+            />
+        ))
     ) : (
         <div>К сожалению, ничего не найдено</div>
     );
@@ -81,7 +87,6 @@ const SearchBar = ({ dontShowList, size }) => {
                         label="Поиск товаров"
                         value={inputValue}
                         onKeyPress={(e) => {
-                            console.log(e);
                             if (e.key === "Enter") {
                                 findButtonHandler();
                                 navigate("/search");
@@ -90,7 +95,12 @@ const SearchBar = ({ dontShowList, size }) => {
                         onChange={(e) => {
                             inputChangeHandler(e.target.value);
                         }}
-                        sx={{ mb: 2 }}
+                        sx={{
+                            mb: 2,
+                            "& fieldset": {
+                                borderRadius: "20px",
+                            },
+                        }}
                     />
                 )}
                 sx={{ flexGrow: 1 }}

@@ -1,25 +1,36 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector, shallowEqual } from "react-redux";
-import Fuse from "fuse.js";
+import { useSelector } from "react-redux";
+import { Container, Box } from "@mui/material";
 import {
-    Container,
-    TextField,
-    Stack,
-    Autocomplete,
-    Box,
-} from "@material-ui/core";
-import { Header, Footer } from "../components";
-import SearchBar from "../components/SearchBar";
-import { _getPlatform } from "../components/helpers";
+    Header,
+    Footer,
+    FooterBonuses,
+    SearchBar,
+    TopCategoriesMenu,
+    MobileMiniCart,
+} from "../components";
+import { _getPlatform, _isMobile } from "../components/helpers";
 
 const SearchPage = () => {
+    const { bonuses_items } = useSelector(({ products }) => {
+        return {
+            bonuses_items: products.bonuses_items,
+        };
+    });
     return (
         <Box sx={{ display: "flex", flexDirection: "column", height: "100vh" }}>
             <Header />
+            <TopCategoriesMenu />
             <Container sx={{ flexGrow: "1" }}>
                 <h1>Поиск товаров</h1>
                 <SearchBar size="normal" />
             </Container>
+            {_isMobile() ? <MobileMiniCart /> : ""}
+            {bonuses_items !== undefined && bonuses_items.length ? (
+                <FooterBonuses />
+            ) : (
+                ""
+            )}
             <Footer />
         </Box>
     );

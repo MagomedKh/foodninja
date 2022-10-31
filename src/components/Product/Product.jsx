@@ -9,25 +9,20 @@ import {
     setModalProduct,
     setOpenModal,
 } from "../../redux/actions/productModal";
-import { Button } from "@material-ui/core";
+import { Button } from "@mui/material";
 import "../../css/product.css";
 import LazyLoad from "react-lazyload";
-import { _getPlatform, _checkCartProduct } from "../helpers";
+import { _getPlatform } from "../helpers";
 import PlaceholderImageProduct from "./PlaceholderImageProduct";
 import GroupIcon from "@mui/icons-material/Group";
 import soon from "../../img/photo-soon.svg";
 
-export default function Product({ product, category }) {
+export default function Product({ product, disabled }) {
     const dispatch = useDispatch();
 
-    const [disabled, setDisabled] = useState(false);
-
     useEffect(() => {
-        if (category && !_checkCartProduct(product, category)) {
-            setDisabled(true);
+        if (disabled) {
             dispatch(removeProductFromCart(product));
-        } else {
-            setDisabled(false);
         }
     }, []);
 

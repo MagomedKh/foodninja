@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { getTime, set } from "date-fns";
 
 export const _declension = (value, words) => {
     value = Math.abs(value) % 100;
@@ -257,9 +258,28 @@ export const _checkPromocode = (promocode, items, cartTotal, typeDelivery) => {
     return true;
 };
 
-export const _checkCartProduct = (product, category) => {
-    if (category.disabled) return false;
-    return true;
+export const _isCategoryDisabled = (category) => {
+    if (!category.timeLimitStart || !category.timeLimitEnd) {
+        return false;
+    }
+    const currentTime = getTime(new Date());
+
+    const timeLimitStart = set(new Date(), {
+        hours: category.timeLimitStart.slice(0, 2),
+        minutes: category.timeLimitStart.slice(3, 5),
+        seconds: 0,
+    });
+
+    const timeLimitEnd = set(new Date(), {
+        hours: category.timeLimitEnd.slice(0, 2),
+        minutes: category.timeLimitEnd.slice(3, 5),
+        seconds: 0,
+    });
+
+    if (currentTime < timeLimitStart || currentTime > timeLimitEnd) {
+        return true;
+    }
+    return false;
 };
 
 export const ScrollToTop = () => {
