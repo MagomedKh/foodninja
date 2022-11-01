@@ -35,7 +35,14 @@ import "../css/checkout.css";
 import CheckoutFreeAddons from "../components/Product/CheckoutFreeAddons";
 import { updateAlerts } from "../redux/actions/systemAlerts";
 import PreorderForm from "../components/Product/PreorderForm";
-import { getUnixTime, set } from "date-fns";
+import {
+    getHours,
+    getMinutes,
+    getUnixTime,
+    set,
+    getTime,
+    addDays,
+} from "date-fns";
 
 const formatingStrPhone = (inputNumbersValue) => {
     var formattedPhone = "";
@@ -158,22 +165,55 @@ export default function Checkout() {
     const handlePreorderDateChange = (date) => {
         if (preorderTime) {
             setPreorderDate(
-                set(date, { hours: preorderTime, minutes: 0, seconds: 0 })
+                set(date, {
+                    hours: getHours(new Date(preorderTime)),
+                    minutes: getMinutes(new Date(preorderTime)),
+                    seconds: 0,
+                })
             );
         } else {
-            setPreorderDate(set(date, { hours: 14, minutes: 0, seconds: 0 }));
-            setPreorderTime(14);
+            setPreorderDate(
+                set(date, {
+                    hours: 14,
+                    minutes: 0,
+                    seconds: 0,
+                    milliseconds: 0,
+                })
+            );
+            setPreorderTime(
+                getTime(
+                    set(new Date(), {
+                        hours: 14,
+                        minutes: 0,
+                        seconds: 0,
+                        milliseconds: 0,
+                    })
+                )
+            );
         }
     };
 
     const handlePreorderTimeChange = (time) => {
         setPreorderTime(time);
-        const updatedPreorderDate = set(preorderDate, {
-            hours: time,
-            minutes: 0,
-            seconds: 0,
-        });
-        setPreorderDate(updatedPreorderDate);
+        if (preorderDate) {
+            const updatedPreorderDate = set(preorderDate, {
+                hours: getHours(new Date(time)),
+                minutes: getMinutes(new Date(time)),
+                seconds: 0,
+                milliseconds: 0,
+            });
+            setPreorderDate(updatedPreorderDate);
+        } else {
+            const newPreorderDate = addDays(new Date(), 1);
+
+            const updatedPreorderDate = set(newPreorderDate, {
+                hours: getHours(new Date(time)),
+                minutes: getMinutes(new Date(time)),
+                seconds: 0,
+                milliseconds: 0,
+            });
+            setPreorderDate(updatedPreorderDate);
+        }
     };
 
     const handleChangeName = (e) => {
@@ -833,7 +873,7 @@ export default function Checkout() {
 
                         {availableOrderTime && (
                             <div className="checkout--order-time">
-                                <h3>К какому времени приготовить заказ?</h3>
+                                <h3>Когда приготовить заказ?</h3>
 
                                 <FormControlLabel
                                     control={
