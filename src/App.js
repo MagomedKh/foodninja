@@ -21,9 +21,7 @@ import {
     setCurrentPage,
 } from "./redux/actions/pages";
 import {
-    Header,
     ProductModal,
-    Footer,
     AuthModal,
     BigLoader,
     Maintenance,
