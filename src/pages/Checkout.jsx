@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addPromocode, removePromocode } from "../redux/actions/cart";
 import { Link, useNavigate } from "react-router-dom";
@@ -42,6 +42,7 @@ import {
     set,
     getTime,
     addDays,
+    isToday,
 } from "date-fns";
 
 const formatingStrPhone = (inputNumbersValue) => {
@@ -90,7 +91,6 @@ export default function Checkout() {
         cartSubTotalPrice,
         cartTotalPrice,
         gateways,
-        availableOrderTime,
     } = useSelector(({ user, config, cart, gateways, orderTime, products }) => {
         return {
             user: user.user,
@@ -104,87 +104,56 @@ export default function Checkout() {
             userCartBonusProduct: cart.bonusProduct,
             cartTotalPrice: cart.totalPrice,
             cartSubTotalPrice: cart.subTotalPrice,
-            availableOrderTime: orderTime.availableTime,
         };
     });
     const navigate = useNavigate();
-    const [loading, setLoading] = React.useState(false);
-    const [validate, setValidate] = React.useState(true);
-    const [error, setError] = React.useState();
-    const [userName, setUserName] = React.useState(user.name ? user.name : "");
-    const [userPhone, setUserPhone] = React.useState(
+    const [loading, setLoading] = useState(false);
+    const [validate, setValidate] = useState(true);
+    const [error, setError] = useState();
+    const [userName, setUserName] = useState(user.name ? user.name : "");
+    const [userPhone, setUserPhone] = useState(
         user.phone ? formatingStrPhone(user.phone) : ""
     );
-    const [typeDelivery, setTypeDelivery] = React.useState(
+    const [typeDelivery, setTypeDelivery] = useState(
         config.CONFIG_order_receiving === "selfdelivery"
             ? "self"
             : promocode && promocode.typeDelivery === "self"
             ? "self"
             : "delivery"
     );
-    const [deliveryAddress, setDeliveryAddress] = React.useState(
+    const [deliveryAddress, setDeliveryAddress] = useState(
         user.addresses ? 0 : "new"
     );
-    const [selfDeliveryAddress, setSelfDeliveryAddress] =
-        React.useState("main");
-    const [activeGateway, setActiveGateway] = React.useState("card");
-    const [openOrderTimeModal, setOpenOrderTimeModal] = React.useState(false);
-    const [openAlert, setOpenAlert] = React.useState(false);
-    const [preorderChecked, setPreorderChecked] = React.useState(false);
-    const [preorderDate, setPreorderDate] = React.useState(null);
-    const [preorderTime, setPreorderTime] = React.useState("");
-    const [orderDeliveryTime, setOrderDeliveryTime] = React.useState(0);
-    const [newUserAddressStreet, setNewUserAddressStreet] = React.useState("");
-    const [newUserAddressHome, setNewUserAddressHome] = React.useState("");
-    const [newUserAddressPorch, setNewUserAddressPorch] = React.useState("");
-    const [newUserAddressFloor, setNewUserAddressFloor] = React.useState("");
-    const [newUserAddressApartment, setNewUserAddressApartment] =
-        React.useState("");
-    const [commentOrder, setCommentOrder] = React.useState("");
-    const [usedBonuses, setUsedBonuses] = React.useState(0);
-    const [countUsers, setCountUsers] = React.useState(1);
-    const [moneyBack, setMoneyBack] = React.useState("");
+    const [selfDeliveryAddress, setSelfDeliveryAddress] = useState("main");
+    const [activeGateway, setActiveGateway] = useState("card");
+    const [openAlert, setOpenAlert] = useState(false);
+    const [preorderDate, setPreorderDate] = useState(null);
+    const [preorderTime, setPreorderTime] = useState("");
+    const [newUserAddressStreet, setNewUserAddressStreet] = useState("");
+    const [newUserAddressHome, setNewUserAddressHome] = useState("");
+    const [newUserAddressPorch, setNewUserAddressPorch] = useState("");
+    const [newUserAddressFloor, setNewUserAddressFloor] = useState("");
+    const [newUserAddressApartment, setNewUserAddressApartment] = useState("");
+    const [commentOrder, setCommentOrder] = useState("");
+    const [usedBonuses, setUsedBonuses] = useState(0);
+    const [countUsers, setCountUsers] = useState(1);
+    const [moneyBack, setMoneyBack] = useState("");
 
-    const handleOrderTimeModalClose = () => {
-        setOpenOrderTimeModal(false);
-    };
     const handleAlertClose = () => {
         setOpenAlert(false);
     };
-    const handleClickOpenOrderTimeModal = () => {
-        setOpenOrderTimeModal(true);
-    };
-
-    const handlePreorderCheck = () => {
-        setPreorderDate(null);
-        setPreorderTime(null);
-        setOrderDeliveryTime(0);
-        setPreorderChecked(!preorderChecked);
-    };
 
     const handlePreorderDateChange = (date) => {
-        if (preorderTime) {
-            setPreorderDate(
-                set(date, {
-                    hours: getHours(new Date(preorderTime)),
-                    minutes: getMinutes(new Date(preorderTime)),
-                    seconds: 0,
-                })
-            );
-        } else {
-            setPreorderDate(
-                set(date, {
-                    hours: 14,
-                    minutes: 0,
-                    seconds: 0,
-                    milliseconds: 0,
-                })
-            );
+        setPreorderDate(
+            set(date, {
+                seconds: 0,
+                milliseconds: 0,
+            })
+        );
+        if (!preorderTime && isToday(date)) {
             setPreorderTime(
                 getTime(
                     set(new Date(), {
-                        hours: 14,
-                        minutes: 0,
                         seconds: 0,
                         milliseconds: 0,
                     })
@@ -321,10 +290,7 @@ export default function Checkout() {
                     newUserAddressPorch: newUserAddressPorch,
                     newUserAddressFloor: newUserAddressFloor,
                     newUserAddressApartment: newUserAddressApartment,
-                    orderTime:
-                        getUnixTime(preorderDate) ||
-                        availableOrderTime[orderDeliveryTime].timestamp,
-                    preorder: preorderDate ? true : false,
+                    orderTime: getUnixTime(preorderDate),
                     commentOrder: commentOrder,
                     activeGateway: activeGateway,
                     countUsers: countUsers,
@@ -507,41 +473,6 @@ export default function Checkout() {
         setTypeDelivery("self");
     };
 
-    const handleChageDeliveryOrderTime = (timestamp) => {
-        setOrderDeliveryTime(timestamp);
-        handleOrderTimeModalClose();
-    };
-
-    const ButtonOrderTime = ({ timestamp, timestampId }) => {
-        const buttonProps = {
-            endIcon:
-                timestamp.timestamp ===
-                availableOrderTime[orderDeliveryTime].timestamp ? (
-                    <CheckCircleOutlineIcon />
-                ) : (
-                    false
-                ),
-            className:
-                timestamp.timestamp ===
-                availableOrderTime[orderDeliveryTime].timestamp
-                    ? "btn--action btn--empty"
-                    : "btn btn--empty",
-        };
-        return (
-            <Grid item sm={12} md={4} sx={{ width: 1 }}>
-                <Button
-                    sx={{ width: 1 }}
-                    key={timestamp.timestamp}
-                    variant="button"
-                    {...buttonProps}
-                    onClick={() => handleChageDeliveryOrderTime(timestampId)}
-                >
-                    {timestamp.title}
-                </Button>
-            </Grid>
-        );
-    };
-
     const handleChangeCheckoutBonus = (e, value) => {
         setUsedBonuses(value);
     };
@@ -638,12 +569,6 @@ export default function Checkout() {
             maxBonuses = cartTotalPrice - config.CONFIG_order_min_price;
             if (maxBonuses < 0) maxBonuses = 0;
         }
-
-    let dialogTimeOrderingProps = { open: openOrderTimeModal };
-    if (_isMobile()) {
-        dialogTimeOrderingProps.TransitionComponent = Transition;
-        dialogTimeOrderingProps.fullScreen = true;
-    }
 
     return (
         <>
@@ -871,81 +796,20 @@ export default function Checkout() {
                             )}
                         </div>
 
-                        {availableOrderTime && (
-                            <div className="checkout--order-time">
-                                <h3>Когда приготовить заказ?</h3>
+                        <div className="checkout--order-time">
+                            <h3>Когда приготовить заказ?</h3>
 
-                                <FormControlLabel
-                                    control={
-                                        <Switch
-                                            checked={preorderChecked}
-                                            onChange={handlePreorderCheck}
-                                        />
-                                    }
-                                    label="Заказать к определенной дате?"
-                                    sx={{ mb: 1 }}
-                                />
-
-                                <Collapse in={preorderChecked} timeout={200}>
-                                    <PreorderForm
-                                        preorderDate={preorderDate}
-                                        preorderTime={preorderTime}
-                                        handlePreorderDateChange={
-                                            handlePreorderDateChange
-                                        }
-                                        handlePreorderTimeChange={
-                                            handlePreorderTimeChange
-                                        }
-                                    />
-                                </Collapse>
-                                <Collapse in={!preorderChecked} timeout={200}>
-                                    <Button
-                                        className="btn btn--outline-dark"
-                                        endIcon={<ArrowDropDownIcon />}
-                                        onClick={handleClickOpenOrderTimeModal}
-                                        sx={{ width: 1 }}
-                                    >
-                                        {
-                                            availableOrderTime[
-                                                orderDeliveryTime
-                                            ].title
-                                        }
-                                    </Button>
-                                </Collapse>
-                                <Dialog
-                                    maxWidth="md"
-                                    {...dialogTimeOrderingProps}
-                                >
-                                    <div className="time-order-modal-wrapper">
-                                        <IconButton
-                                            edge="start"
-                                            color="inherit"
-                                            onClick={handleOrderTimeModalClose}
-                                            aria-label="close"
-                                            className="modal-close"
-                                        >
-                                            <CloseIcon />
-                                        </IconButton>
-                                        <h2 className="auth-modal--title">
-                                            Время доставки
-                                        </h2>
-                                        <div className="time-order-modal-scroll">
-                                            <Grid container spacing={3}>
-                                                {Object.values(
-                                                    availableOrderTime
-                                                ).map((element, index) => (
-                                                    <ButtonOrderTime
-                                                        key={index}
-                                                        timestamp={element}
-                                                        timestampId={index}
-                                                    />
-                                                ))}
-                                            </Grid>
-                                        </div>
-                                    </div>
-                                </Dialog>
-                            </div>
-                        )}
+                            <PreorderForm
+                                preorderDate={preorderDate}
+                                preorderTime={preorderTime}
+                                handlePreorderDateChange={
+                                    handlePreorderDateChange
+                                }
+                                handlePreorderTimeChange={
+                                    handlePreorderTimeChange
+                                }
+                            />
+                        </div>
 
                         <div className="checkout--comment-order">
                             <h3>Комментарий к заказу</h3>

@@ -3,7 +3,19 @@ import { useSelector } from "react-redux";
 import { Box, Select, MenuItem, InputLabel, FormControl } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import ru from "date-fns/locale/ru";
-import { isToday, format, compareAsc, add, addMinutes, set } from "date-fns";
+import {
+    isToday,
+    format,
+    compareAsc,
+    add,
+    addMinutes,
+    addHours,
+    set,
+    getHours,
+    getMinutes,
+    getTime,
+    roundToNearestMinutes,
+} from "date-fns";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -22,17 +34,27 @@ const PreorderForm = forwardRef(
         });
 
         let startWorkDate = set(new Date(), {
-            hours: config.CONFIG_format_start_work.slice(0, 2),
-            minutes: 0,
+            hours: config.CONFIG_schedule_ordering_start.slice(0, 2),
+            minutes: config.CONFIG_schedule_ordering_start.slice(3, 5),
             seconds: 0,
             milliseconds: 0,
         });
         let endWorkDate = set(new Date(), {
-            hours: config.CONFIG_format_end_work.slice(0, 2),
-            minutes: 0,
+            hours: config.CONFIG_schedule_ordering_end.slice(0, 2),
+            minutes: config.CONFIG_schedule_ordering_end.slice(3, 5),
             seconds: 0,
             milliseconds: 0,
         });
+
+        if (isToday(preorderDate)) {
+            startWorkDate = addMinutes(
+                new Date(),
+                config.CONFIG_time_order_delay
+            );
+            startWorkDate = roundToNearestMinutes(startWorkDate, {
+                nearestTo: 30,
+            });
+        }
 
         const hoursArray = [];
 
@@ -73,15 +95,15 @@ const PreorderForm = forwardRef(
                         }}
                         value={preorderDate}
                         onChange={(newDate) => {
+                            if (!newDate) {
+                                return;
+                            }
                             handlePreorderDateChange(newDate);
                         }}
                         open={open}
                         onOpen={() => setOpen(true)}
                         onClose={() => setOpen(false)}
                         shouldDisableDate={(date) => {
-                            if (isToday(date)) {
-                                return true;
-                            }
                             if (
                                 compareAsc(
                                     date,
@@ -102,13 +124,27 @@ const PreorderForm = forwardRef(
                         labelId="preorder-time-select-label"
                         id="preorder-time-select"
                         value={preorderTime ? preorderTime : ""}
+                        disabled={!preorderDate}
                         onChange={(e) => {
                             handlePreorderTimeChange(e.target.value);
                         }}
                         autoWidth
                     >
+                        {isToday(preorderDate) ? (
+                            <MenuItem
+                                key={getTime(new Date())}
+                                value={getTime(
+                                    set(new Date(), {
+                                        seconds: 0,
+                                        milliseconds: 0,
+                                    })
+                                )}
+                            >
+                                Как можно скорее
+                            </MenuItem>
+                        ) : null}
                         {hoursArray.map((el) => (
-                            <MenuItem key={el.getTime()} value={el.getTime()}>
+                            <MenuItem key={getTime(el)} value={getTime(el)}>
                                 {format(el, "k:mm")}
                             </MenuItem>
                         ))}
