@@ -6,12 +6,10 @@ import {
     Alert,
     Button,
     Container,
-    Collapse,
     Dialog,
     FormControlLabel,
     IconButton,
     Grid,
-    Grow,
     MenuItem,
     Radio,
     RadioGroup,
@@ -21,9 +19,7 @@ import {
     Slide,
     TextField,
 } from "@mui/material";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import CloseIcon from "@mui/icons-material/Close";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { CheckoutProduct, Footer } from "../components";
 import { _checkPromocode, _declension } from "../components/helpers.js";
@@ -138,6 +134,7 @@ export default function Checkout() {
     const [usedBonuses, setUsedBonuses] = useState(0);
     const [countUsers, setCountUsers] = useState(1);
     const [moneyBack, setMoneyBack] = useState("");
+    const [dontRecall, setDontRecall] = useState(false);
 
     const handleAlertClose = () => {
         setOpenAlert(false);
@@ -274,6 +271,9 @@ export default function Checkout() {
         deliveryAddress === "new" &&
             (!newUserAddressStreet || !newUserAddressHome) &&
             setValidate(false);
+        if (!preorderDate) {
+            setValidate(false);
+        }
 
         if (validate) {
             setLoading(true);
@@ -300,6 +300,7 @@ export default function Checkout() {
                     products: cartProducts,
                     bonusProduct: userCartBonusProduct,
                     bonuses: usedBonuses,
+                    dontRecall: dontRecall,
                 })
                 .then((resp) => {
                     setLoading(false);
@@ -1098,6 +1099,19 @@ export default function Checkout() {
                                     </Grid>
                                 </div>
                             )}
+
+                            <FormControlLabel
+                                control={
+                                    <Switch
+                                        checked={dontRecall}
+                                        onChange={() =>
+                                            setDontRecall(!dontRecall)
+                                        }
+                                        name="gilad"
+                                    />
+                                }
+                                label="Не перезванивать для подтверждения заказа"
+                            />
 
                             <LoadingButton
                                 loading={loading}
