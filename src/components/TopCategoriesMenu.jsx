@@ -127,7 +127,7 @@ export default function TopCategoriesMenu() {
                         className="categories-menu"
                         ref={categoriesMenuRef}
                     >
-                        {showedCategories.map((item, index) => (
+                        {showedCategories.map((item) => (
                             <li key={item.term_id}>
                                 {pathname === "/" ? (
                                     <AnimateLink
@@ -162,10 +162,9 @@ export default function TopCategoriesMenu() {
                                 <div className="btn btn--action">Ещё</div>
                                 <ul className="flexmenu--dropdown">
                                     {restCategories.map((item) => (
-                                        <li>
+                                        <li key={item.term_id}>
                                             {pathname === "/" ? (
                                                 <AnimateLink
-                                                    key={item.term_id}
                                                     activeClass="active"
                                                     to={`category-${item.term_id}`}
                                                     spy={true}
