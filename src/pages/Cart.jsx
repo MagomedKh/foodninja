@@ -69,19 +69,23 @@ export default function Cart() {
     };
 
     if (promocode) {
-        const resultCheckPromocode = _checkPromocode(
-            promocode,
-            cartProducts,
-            cartSubTotalPrice
-        );
-        if (resultCheckPromocode.status === "error") {
+        if( config.selfDeliveryCoupon.code !== undefined && promocode.code === config.selfDeliveryCoupon.code )
             dispatch(removePromocode());
-            dispatch(
-                updateAlerts({
-                    open: true,
-                    message: resultCheckPromocode.message,
-                })
+        else {
+            const resultCheckPromocode = _checkPromocode(
+                promocode,
+                cartProducts,
+                cartSubTotalPrice
             );
+            if (resultCheckPromocode.status === "error") {
+                dispatch(removePromocode());
+                dispatch(
+                    updateAlerts({
+                        open: true,
+                        message: resultCheckPromocode.message,
+                    })
+                );
+            }
         }
     }
 

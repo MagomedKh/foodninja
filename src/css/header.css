@@ -40,6 +40,7 @@
 .header-logo {
     width: auto;
     height: 50px;
+    max-width: none;
     margin-right: 1.5rem !important;
 }
 #root .header-bar {
