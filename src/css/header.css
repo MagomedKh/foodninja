@@ -1,50 +1,55 @@
-.standart-header{
+.standart-header {
     display: flex;
     width: 100%;
 }
-.header-work, .header-phone{
+.header-work,
+.header-phone {
     color: black;
     display: flex;
-    margin-left: 1.5rem!important;
-    margin-right: 1.5rem!important
+    margin-left: 1.5rem !important;
+    margin-right: 1.5rem !important;
 }
-.header-work .icn, .header-phone .icn {
+.header-work .icn,
+.header-phone .icn {
     width: 28px;
     fill: var(--main-color);
-    margin-right: 1rem!important;
+    margin-right: 1rem !important;
 }
-.header-phone .title, .header-work .title {
+.header-phone .title,
+.header-work .title {
     color: #666;
 }
-.header-phone .info, .header-work .info {
+.header-phone .info,
+.header-work .info {
     font-weight: bold;
     font-size: 19px;
 }
-.header-phone .info{
+.header-phone .info {
     color: #000;
     text-decoration: none;
 }
-.header-phone .info:hover{
+.header-phone .info:hover {
     text-decoration: underline;
 }
-@media( max-width: 991px ) {
-    .header-phone, .header-work{
+@media (max-width: 991px) {
+    .header-phone,
+    .header-work {
         display: none;
     }
 }
-.header-logo{
+.header-logo {
     width: auto;
     height: 50px;
-    margin-right: 1.5rem!important
+    margin-right: 1.5rem !important;
 }
-#root .header-bar{
-    padding-top: .5rem;
-    padding-bottom: .5rem;
+#root .header-bar {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
     background: white;
     box-shadow: 0 0 20px rgb(0 0 0 / 20%);
     position: relative;
 }
-.header-login{
+.header-login {
     margin-left: 15px;
 }
 .header--right-col {
@@ -52,8 +57,8 @@
     margin-left: auto;
 }
 .header-phone .title .MuiSkeleton-text {
-    display: inline-block!important;
-    min-width: 50px!important;
+    display: inline-block !important;
+    min-width: 50px !important;
     vertical-align: middle;
 }
 .header-work .info-wrapper {
@@ -62,18 +67,17 @@
     justify-content: center;
 }
 
-
 /* Верхнее меню */
-.header-bar .MuiToolbar-root{
-    padding-right: 0!important;
-    padding-left: 0!important;
+.header-bar .MuiToolbar-root {
+    padding-right: 0 !important;
+    padding-left: 0 !important;
 }
-.top-menu ul{
+.top-menu ul {
     margin: 0;
     padding: 20px 25px 20px 0px;
     list-style: none;
 }
-.top-menu ul li{
+.top-menu ul li {
     display: inline-block;
     padding: 0;
     margin: 0 22px 0 0;
@@ -99,45 +103,41 @@
     display: block;
 }
 
-
 /* Шаги заказа */
-.stepper-header{
+.stepper-header {
     display: flex;
     width: 100%;
     justify-content: flex-end;
 }
 .MuiStepper-root {
-    min-width: 470px!important;
+    min-width: 470px !important;
 }
-.step-label svg.Mui-active, .step-label .Mui-completed {
-    color: var(--main-color)!important;
+.step-label svg.Mui-active,
+.step-label .Mui-completed {
+    color: var(--main-color) !important;
 }
-.step-label .MuiStepLabel-label{
-    margin-top: 2px!important;
-    font-family: 'Cera';
+.step-label .MuiStepLabel-label {
+    margin-top: 2px !important;
+    font-family: "Cera";
 }
-
 
 /* Мобильная шапка */
 .mobile-menu .MuiDrawer-paper {
     background: black;
     color: white;
 }
-.mobile-menu-wrapper{
+.mobile-menu-wrapper {
     width: 350px;
 }
-.mobile-menu-wrapper ul{
+.mobile-menu-wrapper ul {
     list-style: none;
     padding: 0;
     margin: 0 0 0 0;
     background: black;
-    padding: 20px 20px 0;
-    border-top: 1px solid #333;
+    padding: 10px 20px;
 }
-.mobile-menu--user-account-button{
-    margin: 0 0 20px 0;
-    border-bottom: 1px solid #333;
-    padding: 20px;
+.mobile-menu--user-account-button {
+    padding: 20px 20px 10px 20px;
 }
 .mobile-menu-wrapper li:not(:last-child) {
     padding-bottom: 10px;
@@ -152,67 +152,69 @@
 .mobile-menu-wrapper li a:hover {
     color: var(--main-color);
 }
-.mobile-menu-wrapper{
+.mobile-menu-wrapper {
     padding: 20px;
 }
-.mobile-menu--header{
+.mobile-menu--header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 40px;
 }
-.mobile-menu-wrapper .header-work, .mobile-menu-wrapper .header-phone {
+.mobile-menu-wrapper .header-work,
+.mobile-menu-wrapper .header-phone {
     color: #fff;
     display: flex;
-    margin: 0 0 20px!important;
-    padding: 0 20px 20px;
+    margin: 0 0 20px !important;
+    padding: 10px 20px;
 }
-.mobile-menu--contacts{
+.mobile-menu--contacts {
     display: flex;
     color: white;
-    padding: 0 20px 20px;
+    padding: 10px 20px;
 }
 .mobile-menu--contacts svg {
     width: 28px;
     fill: var(--main-color);
-    margin-right: 1rem!important;
+    margin-right: 1rem !important;
 }
-.mobile-menu--contacts a{
+.mobile-menu--contacts a {
     text-decoration: none;
     font-size: 20px;
     color: white;
 }
-.modal-alert--wrapper.choose-town .modal-alert--inner button{
+.modal-alert--wrapper.choose-town .modal-alert--inner button {
     width: 100%;
-    padding: 0px!important;
+    padding: 0px !important;
 }
-.button--choose-town.mobile{
+.button--choose-town.mobile {
     display: none;
 }
-@media(max-width: 899px){
-    .header-mobile-menu{
+@media (max-width: 899px) {
+    .header-mobile-menu {
         position: absolute;
         left: 0;
         top: 50%;
         transform: translateY(-50%);
     }
-    .header-mobile-menu svg{
+    .header-mobile-menu svg {
         width: 2rem;
         height: 2rem;
         color: black;
     }
     .header-wrapper {
-        display: block!important;
+        display: block !important;
         width: 100%;
         text-align: right;
     }
-    .mobile-menu-wrapper .header-logo, .header-wrapper .header-logo{
-        margin-right: 0!important;
+    .mobile-menu-wrapper .header-logo,
+    .header-wrapper .header-logo {
+        margin-right: 0 !important;
     }
     .modal-alert--wrapper.choose-town .modal-alert--inner {
         min-width: 300px;
     }
-    .modal-alert--wrapper.choose-town .modal-alert--title{
+    .modal-alert--wrapper.choose-town .modal-alert--title {
         text-align: center;
     }
     .button--choose-town.mobile {

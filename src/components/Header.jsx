@@ -13,6 +13,7 @@ import {
     AppBar,
     Button,
     Container,
+    Divider,
     Drawer,
     IconButton,
     Step,
@@ -130,6 +131,10 @@ function Header() {
                                             />
                                         </div>
 
+                                        <Divider
+                                            sx={{ bgcolor: "#333", my: "10px" }}
+                                        />
+
                                         {config.towns !== undefined &&
                                         config.towns.length ? (
                                             <div
@@ -155,6 +160,10 @@ function Header() {
                                         ) : (
                                             ""
                                         )}
+
+                                        <Divider
+                                            sx={{ bgcolor: "#333", my: "10px" }}
+                                        />
 
                                         {topMenu && (
                                             <ul>
@@ -222,6 +231,10 @@ function Header() {
                                                 )}
                                             </div>
                                         )}
+
+                                        <Divider
+                                            sx={{ bgcolor: "#333", my: "10px" }}
+                                        />
 
                                         <div className="mobile-menu--contacts">
                                             <svg
