@@ -17,7 +17,6 @@
 }
 .choosenTown {
     color: var(--main-color);
-    cursor: pointer;
 }
 .mobile-menu--choose-town {
     display: flex;

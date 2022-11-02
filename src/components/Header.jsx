@@ -135,15 +135,28 @@ function Header() {
                                             sx={{ bgcolor: "#333", my: "10px" }}
                                         />
 
-                                        {config.towns !== undefined &&
-                                        config.towns.length ? (
+                                        {config.towns && config.towns.length ? (
                                             <div
                                                 className="mobile-menu--choose-town"
-                                                onClick={handleOpenTownModal}
+                                                onClick={
+                                                    config.towns.length > 1
+                                                        ? handleOpenTownModal
+                                                        : null
+                                                }
                                             >
                                                 <LocationOnIcon />
                                                 <div>
-                                                    <b className="choosenTown">
+                                                    <b
+                                                        className="choosenTown"
+                                                        style={
+                                                            config.towns
+                                                                .length > 1
+                                                                ? {
+                                                                      cursor: "pointer",
+                                                                  }
+                                                                : null
+                                                        }
+                                                    >
                                                         {config ? (
                                                             config.CONFIG_town
                                                         ) : (
@@ -154,7 +167,9 @@ function Header() {
                                                         )}
                                                     </b>
                                                     <br />
-                                                    <small>Изменить</small>
+                                                    {config.towns.length > 1 ? (
+                                                        <small>Изменить</small>
+                                                    ) : null}
                                                 </div>
                                             </div>
                                         ) : (
@@ -372,14 +387,22 @@ function Header() {
                                         </g>
                                     </svg>
                                     <div>
-                                        {config.towns !== undefined &&
-                                        config.towns.length ? (
+                                        {config.towns && config.towns.length ? (
                                             <div className="title">
                                                 Ваш город{" "}
                                                 <b
                                                     className="choosenTown"
+                                                    style={
+                                                        config.towns.length > 1
+                                                            ? {
+                                                                  cursor: "pointer",
+                                                              }
+                                                            : null
+                                                    }
                                                     onClick={
-                                                        handleOpenTownModal
+                                                        config.towns.length > 1
+                                                            ? handleOpenTownModal
+                                                            : null
                                                     }
                                                 >
                                                     {config ? (
