@@ -42,6 +42,7 @@ import {
     isToday,
     setSeconds,
 } from "date-fns";
+import { useEffect } from "react";
 
 const formatingStrPhone = (inputNumbersValue) => {
     var formattedPhone = "";
@@ -142,6 +143,10 @@ export default function Checkout() {
     const handleAlertClose = () => {
         setOpenAlert(false);
     };
+
+    useEffect(() => {
+        handlePreorderDateChange("Как можно скорее");
+    }, []);
 
     const handlePreorderDateChange = (date) => {
         if (date === "Как можно скорее") {
