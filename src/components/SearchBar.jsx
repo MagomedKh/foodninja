@@ -7,7 +7,7 @@ import { Product } from "../components";
 import { setStoredInputValue } from "../redux/actions/search";
 import { _isCategoryDisabled } from "./helpers";
 
-const SearchBar = ({ dontShowList, size }) => {
+const SearchBar = ({ dontShowList }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { storedInputValue } = useSelector((state) => state.search);
@@ -83,7 +83,7 @@ const SearchBar = ({ dontShowList, size }) => {
                 renderInput={(params) => (
                     <TextField
                         {...params}
-                        size={size}
+                        size="small"
                         label="Поиск товаров"
                         value={inputValue}
                         onKeyPress={(e) => {
@@ -117,7 +117,7 @@ const SearchBar = ({ dontShowList, size }) => {
                     </Button>
                 </Link>
             ) : null}
-            {filteredPoructsList}
+            <div className="product-grid-list">{filteredPoructsList}</div>
         </>
     );
 };

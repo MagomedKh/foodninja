@@ -21,7 +21,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { CheckoutProduct, Footer } from "../components";
+import { CheckoutProduct, Footer, Header } from "../components";
 import { _checkPromocode, _declension } from "../components/helpers.js";
 import { _isMobile, _getDomain } from "../components/helpers.js";
 import axios from "axios";
@@ -35,10 +35,12 @@ import {
     getHours,
     getMinutes,
     getUnixTime,
-    set,
     getTime,
+    set,
+    setDayOfYear,
     addDays,
     isToday,
+    setSeconds,
 } from "date-fns";
 
 const formatingStrPhone = (inputNumbersValue) => {
@@ -125,6 +127,7 @@ export default function Checkout() {
     const [openAlert, setOpenAlert] = useState(false);
     const [preorderDate, setPreorderDate] = useState(null);
     const [preorderTime, setPreorderTime] = useState("");
+    const [asSoonAsPosible, setAsSoonAsPosible] = useState(false);
     const [newUserAddressStreet, setNewUserAddressStreet] = useState("");
     const [newUserAddressHome, setNewUserAddressHome] = useState("");
     const [newUserAddressPorch, setNewUserAddressPorch] = useState("");
@@ -141,21 +144,25 @@ export default function Checkout() {
     };
 
     const handlePreorderDateChange = (date) => {
-        setPreorderDate(
-            set(date, {
-                seconds: 0,
-                milliseconds: 0,
-            })
-        );
-        if (!preorderTime && isToday(date)) {
-            setPreorderTime(
-                getTime(
-                    set(new Date(), {
-                        seconds: 0,
-                        milliseconds: 0,
-                    })
-                )
+        if (date === "Как можно скорее") {
+            setPreorderDate(new Date());
+            setAsSoonAsPosible(date);
+            return;
+        } else {
+            setAsSoonAsPosible(false);
+        }
+        if (preorderTime) {
+            setPreorderDate(
+                set(setDayOfYear(new Date(), date), {
+                    hours: getHours(preorderTime),
+                    minutes: getMinutes(preorderTime),
+                    seconds: 0,
+                    milliseconds: 0,
+                })
             );
+        }
+        if (!preorderTime) {
+            setPreorderDate(setDayOfYear(new Date(), date));
         }
     };
 
@@ -485,7 +492,10 @@ export default function Checkout() {
     }, [navigate]);
 
     if (promocode) {
-        if( config.selfDeliveryCoupon.code !== undefined && promocode.code === config.selfDeliveryCoupon.code )
+        if (
+            config.selfDeliveryCoupon.code !== undefined &&
+            promocode.code === config.selfDeliveryCoupon.code
+        )
             dispatch(removePromocode());
         else {
             const resultCheckPromocode = _checkPromocode(
@@ -813,6 +823,7 @@ export default function Checkout() {
                                 handlePreorderTimeChange={
                                     handlePreorderTimeChange
                                 }
+                                asSoonAsPosible={asSoonAsPosible}
                             />
                         </div>
 
@@ -1114,7 +1125,7 @@ export default function Checkout() {
                                         name="gilad"
                                     />
                                 }
-                                label="Не перезванивать для подтверждения заказа"
+                                label="Не перезванивайте мне"
                             />
 
                             <LoadingButton

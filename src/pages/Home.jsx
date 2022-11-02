@@ -57,7 +57,7 @@ export default function Home() {
 
                 <Container>
                     <div style={{ display: "flex" }}>
-                        <SearchBar dontShowList={true} size={"small"} />
+                        <SearchBar dontShowList={true} />
                     </div>
                     {categories ? (
                         categories.map((item, index) => (
@@ -71,10 +71,7 @@ export default function Home() {
                                 </h2>
 
                                 {_isCategoryDisabled(item) ? (
-                                    <Alert
-                                        severity="error"
-                                        sx={{ width: "fit-content", mb: 1 }}
-                                    >
+                                    <Alert severity="error" sx={{ mb: 1 }}>
                                         Товары из данной категории доступны с{" "}
                                         {item.timeLimitStart} до{" "}
                                         {item.timeLimitEnd}

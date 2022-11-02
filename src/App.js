@@ -50,9 +50,12 @@ import "./App.css";
 import { createGlobalStyle } from "styled-components";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { _getDomain, _getPlatform, _isMobile } from "./components/helpers";
+import { ru } from "date-fns/locale";
+import { setDefaultOptions } from "date-fns";
 
 function App() {
     const dispatch = useDispatch();
+    setDefaultOptions({ locale: ru });
 
     const { user } = useSelector((state) => state.user);
     const { config } = useSelector(({ config }) => {

@@ -5,12 +5,15 @@ import TextField from "@mui/material/TextField";
 import ru from "date-fns/locale/ru";
 import {
     isToday,
+    eachDayOfInterval,
     format,
     compareAsc,
     add,
     addMinutes,
     addHours,
+    addDays,
     set,
+    getDayOfYear,
     getHours,
     getMinutes,
     getTime,
@@ -26,6 +29,7 @@ const PreorderForm = forwardRef(
         preorderTime,
         handlePreorderDateChange,
         handlePreorderTimeChange,
+        asSoonAsPosible,
     }) => {
         const { config } = useSelector(({ config }) => {
             return {
@@ -63,93 +67,87 @@ const PreorderForm = forwardRef(
             startWorkDate = addMinutes(startWorkDate, 30);
         }
 
+        const datesArray = eachDayOfInterval({
+            start: new Date(),
+            end: addDays(new Date(), 30),
+        });
+
         const [open, setOpen] = useState(false);
 
         return (
-            <Box sx={{ mr: 2, display: "flex" }}>
-                <LocalizationProvider dateAdapter={AdapterDateFns} locale={ru}>
-                    <DatePicker
-                        disablePast
-                        label="Выберите дату"
-                        disableMaskedInput
-                        inputFormat="dd MMM yyyy"
-                        renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                inputProps={{
-                                    ...params.inputProps,
-                                    readOnly: true,
-                                    placeholder: "дд.мм.гггг",
-                                }}
-                                onClick={() => setOpen(true)}
-                            />
-                        )}
-                        PaperProps={{
-                            sx: {
-                                "& .MuiPickersDay-root": {
-                                    "&.Mui-selected": {
-                                        backgroundColor: "primary.main",
-                                    },
-                                },
-                            },
-                        }}
-                        value={preorderDate}
-                        onChange={(newDate) => {
-                            if (!newDate) {
-                                return;
-                            }
-                            handlePreorderDateChange(newDate);
-                        }}
-                        open={open}
-                        onOpen={() => setOpen(true)}
-                        onClose={() => setOpen(false)}
-                        shouldDisableDate={(date) => {
-                            if (
-                                compareAsc(
-                                    date,
-                                    add(new Date(), { days: 30 })
-                                ) == 1
-                            ) {
-                                return true;
-                            }
-                        }}
-                    />
-                </LocalizationProvider>
-                <FormControl sx={{ minWidth: 120, ml: 1 }}>
-                    <InputLabel id="preorder-time-select-label">
-                        Время
+            <Box sx={{ display: "flex" }}>
+                <FormControl sx={{ minWidth: 120 }} size="small">
+                    <InputLabel id="preorder-date-select-label">
+                        Дата
                     </InputLabel>
                     <Select
-                        label="Время"
-                        labelId="preorder-time-select-label"
-                        id="preorder-time-select"
-                        value={preorderTime ? preorderTime : ""}
-                        disabled={!preorderDate}
+                        label="Дата"
+                        labelId="preorder-date-select-label"
+                        id="preorder-date-select"
+                        value={
+                            asSoonAsPosible
+                                ? asSoonAsPosible
+                                : preorderDate
+                                ? getDayOfYear(preorderDate)
+                                : ""
+                        }
                         onChange={(e) => {
-                            handlePreorderTimeChange(e.target.value);
+                            handlePreorderDateChange(e.target.value);
                         }}
                         autoWidth
+                        MenuProps={{ PaperProps: { sx: { maxHeight: 500 } } }}
                     >
-                        {isToday(preorderDate) ? (
+                        <MenuItem
+                            key={"Как можно скорее"}
+                            value={"Как можно скорее"}
+                            divider
+                        >
+                            Как можно скорее
+                        </MenuItem>
+
+                        {datesArray.map((el) => (
                             <MenuItem
-                                key={getTime(new Date())}
-                                value={getTime(
-                                    set(new Date(), {
-                                        seconds: 0,
-                                        milliseconds: 0,
-                                    })
-                                )}
+                                key={getDayOfYear(el)}
+                                value={getDayOfYear(el)}
+                                sx={{ justifyContent: "center" }}
+                                divider
                             >
-                                Как можно скорее
-                            </MenuItem>
-                        ) : null}
-                        {hoursArray.map((el) => (
-                            <MenuItem key={getTime(el)} value={getTime(el)}>
-                                {format(el, "k:mm")}
+                                {format(el, "d MMMM")}
                             </MenuItem>
                         ))}
                     </Select>
                 </FormControl>
+
+                {!asSoonAsPosible && preorderDate ? (
+                    <FormControl sx={{ minWidth: 120, ml: 1 }} size="small">
+                        <InputLabel id="preorder-time-select-label">
+                            Время
+                        </InputLabel>
+                        <Select
+                            label="Время"
+                            labelId="preorder-time-select-label"
+                            id="preorder-time-select"
+                            value={preorderTime ? preorderTime : ""}
+                            onChange={(e) => {
+                                handlePreorderTimeChange(e.target.value);
+                            }}
+                            autoWidth
+                            MenuProps={{
+                                PaperProps: { sx: { maxHeight: 500 } },
+                            }}
+                        >
+                            {hoursArray.map((el) => (
+                                <MenuItem
+                                    key={getTime(el)}
+                                    value={getTime(el)}
+                                    divider
+                                >
+                                    {format(el, "k:mm")}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                ) : null}
             </Box>
         );
     }

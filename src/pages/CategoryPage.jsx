@@ -57,10 +57,7 @@ const CategoryPage = () => {
                 </div>
                 <h1>{currentCategory.name}</h1>
                 {_isCategoryDisabled(currentCategory) ? (
-                    <Alert
-                        severity="error"
-                        sx={{ width: "fit-content", mb: 1 }}
-                    >
+                    <Alert severity="error" sx={{ mb: 1 }}>
                         Товары из данной категории доступны с{" "}
                         {currentCategory.timeLimitStart} до{" "}
                         {currentCategory.timeLimitEnd}
@@ -93,7 +90,7 @@ const CategoryPage = () => {
                             {tag.name}
                         </Button>
                     ))}
-                <div>
+                <div className="product-grid-list">
                     {products ? (
                         Object.values(products)
                             .sort((product1, product2) =>
