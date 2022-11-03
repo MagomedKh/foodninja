@@ -4,15 +4,18 @@ import { _isMobile, _getDomain } from "./helpers.js";
 import { useNavigate } from "react-router-dom";
 import { setOpenModalAuth, login } from "../redux/actions/user";
 import { setCurrentPage } from "../redux/actions/pages";
-import Alert from "@mui/material/Alert";
-import CircularProgress from "@mui/material/CircularProgress";
-import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-import Dialog from "@mui/material/Dialog";
+import { closeMobileMenu } from "../redux/actions/header";
+import {
+    Alert,
+    Button,
+    IconButton,
+    CircularProgress,
+    Dialog,
+    Slide,
+    TextField,
+} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import Slide from "@mui/material/Slide";
 import "../css/auth-modal.css";
-import TextField from "@mui/material/TextField";
 import axios from "axios";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -206,6 +209,7 @@ export default function AuthModal() {
                             navigate("/checkout", { replace: true });
                         }
                         dispatch(setOpenModalAuth(false));
+                        dispatch(closeMobileMenu());
                     } else setError(resp.data.text);
                     setLoading(false);
                 });

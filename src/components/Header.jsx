@@ -4,6 +4,7 @@ import "../css/header.css";
 import { setCurrentPage } from "../redux/actions/pages";
 import { setTownModal } from "../redux/actions/config";
 import { setOpenModalAuth } from "../redux/actions/user";
+import { closeMobileMenu, openMobileMenu } from "../redux/actions/header";
 import { Link, useNavigate } from "react-router-dom";
 import { _isMobile, _getPlatform } from "./helpers.js";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
@@ -26,16 +27,23 @@ import Cookies from "universal-cookie";
 import WeClosed from "./WeClosed";
 
 function Header() {
+    console.log("render");
     const [activeTopMenu, setActiveTopMenu] = useState(5792);
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [openChooseTown, setOpenChooseTown] = useState(false);
     const cookies = new Cookies();
     const currentTown = cookies.get("currentTown");
 
     const toggleMobileMenu = () => {
-        setMobileMenuOpen(!mobileMenuOpen);
+        if (!mobileMenuOpen) {
+            dispatch(openMobileMenu());
+        } else {
+            dispatch(closeMobileMenu());
+        }
     };
     const dispatch = useDispatch();
+
+    const { mobileMenuOpen } = useSelector((state) => state.header);
+
     const { configStatus, config, topMenu, currentPage, user } = useSelector(
         ({ config, pages, user }) => {
             return {
@@ -50,7 +58,9 @@ function Header() {
 
     const navigate = useNavigate();
     const hadleClickAccount = useCallback(() => {
-        if (mobileMenuOpen) setMobileMenuOpen(!mobileMenuOpen);
+        if (mobileMenuOpen) {
+            dispatch(closeMobileMenu());
+        }
         dispatch(setCurrentPage("/account"));
         navigate("/account", { replace: true });
     }, [navigate]);
@@ -60,7 +70,9 @@ function Header() {
     };
 
     const handleClickTopMenu = (item) => {
-        if (mobileMenuOpen) setMobileMenuOpen(!mobileMenuOpen);
+        if (mobileMenuOpen) {
+            dispatch(closeMobileMenu());
+        }
         dispatch(setCurrentPage(item.url));
         setActiveTopMenu(item.id);
     };

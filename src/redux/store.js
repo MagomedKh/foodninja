@@ -12,6 +12,7 @@ import productModalReducer from "./reducers/productModal";
 import loaderReducer from "./reducers/loader";
 import bonusesProductsModalReducer from "./reducers/bonusesProductsModal";
 import search from "./reducers/serach";
+import header from "./reducers/header";
 
 const rootReducer = combineReducers({
     products: productsReducer,
@@ -27,6 +28,7 @@ const rootReducer = combineReducers({
     bonusesProductsModal: bonusesProductsModalReducer,
     productModal: productModalReducer,
     search: search,
+    header: header,
 });
 
 const saveState = (state) => {
