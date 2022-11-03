@@ -24,15 +24,12 @@ export default function Home() {
     const dispatch = useDispatch();
 
     const { user } = useSelector((state) => state.user);
-    const { products, categories, bonuses_items } = useSelector(
-        ({ products }) => {
-            return {
-                products: products.items,
-                categories: products.categories,
-                bonuses_items: products.bonuses_items,
-            };
-        }
-    );
+    const { products, categories } = useSelector(({ products }) => {
+        return {
+            products: products.items,
+            categories: products.categories,
+        };
+    });
     const [activeCategoryTags, setActiveCategoryTags] = useState({});
     const [inputValue, setInputValue] = useState(null);
 
@@ -190,11 +187,7 @@ export default function Home() {
                     <SubscribeSnackbar />
                 ) : null}
 
-                {bonuses_items !== undefined && bonuses_items.length ? (
-                    <FooterBonuses />
-                ) : (
-                    ""
-                )}
+                <FooterBonuses />
             </div>
             <Footer />
         </>

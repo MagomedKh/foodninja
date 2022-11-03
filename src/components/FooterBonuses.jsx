@@ -34,6 +34,7 @@ export default function BonusesProductsModal() {
                 bonusesProductsModal.openBonusesProductsModal,
         };
     });
+    const { data: config } = useSelector((state) => state.config);
 
     const [bonusesItemsLocal, setBonusesItemsLocal] = useState(bonuses_items);
 
@@ -78,6 +79,14 @@ export default function BonusesProductsModal() {
         dialogProps.TransitionComponent = Transition;
         dialogProps.fullScreen = true;
         dialogProps.scroll = "body";
+    }
+
+    if (
+        config.CONFIG_free_products_program_status !== "on" ||
+        !bonuses_items ||
+        !bonuses_items.length
+    ) {
+        return null;
     }
     return (
         <div>

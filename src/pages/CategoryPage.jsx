@@ -17,15 +17,12 @@ import { getTime, set } from "date-fns";
 const CategoryPage = () => {
     const { pathname } = useLocation();
 
-    const { products, categories, bonuses_items } = useSelector(
-        ({ products }) => {
-            return {
-                products: products.items,
-                categories: products.categories,
-                bonuses_items: products.bonuses_items,
-            };
-        }
-    );
+    const { products, categories } = useSelector(({ products }) => {
+        return {
+            products: products.items,
+            categories: products.categories,
+        };
+    });
 
     const [activeCategoryTags, setActiveCategoryTags] = useState({});
 
@@ -137,11 +134,7 @@ const CategoryPage = () => {
                 </div>
             </Container>
             {_isMobile() ? <MobileMiniCart /> : ""}
-            {bonuses_items !== undefined && bonuses_items.length ? (
-                <FooterBonuses />
-            ) : (
-                ""
-            )}
+            <FooterBonuses />
             <Footer />
         </Box>
     );

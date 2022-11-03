@@ -26,11 +26,7 @@ const SearchPage = () => {
                 <SearchBar size="normal" />
             </Container>
             {_isMobile() ? <MobileMiniCart /> : ""}
-            {bonuses_items !== undefined && bonuses_items.length ? (
-                <FooterBonuses />
-            ) : (
-                ""
-            )}
+            <FooterBonuses />
             <Footer />
         </Box>
     );
