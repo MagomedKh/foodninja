@@ -235,9 +235,10 @@ function Header() {
                                                 ) : (
                                                     <Button
                                                         className="btn--action"
-                                                        onClick={
-                                                            hadleClickAccount
-                                                        }
+                                                        onClick={() => {
+                                                            hadleClickAccount();
+                                                            toggleMobileMenu();
+                                                        }}
                                                         variant="contained"
                                                         sx={{ width: 1 }}
                                                     >
