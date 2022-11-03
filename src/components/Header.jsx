@@ -27,7 +27,6 @@ import Cookies from "universal-cookie";
 import WeClosed from "./WeClosed";
 
 function Header() {
-    console.log("render");
     const [activeTopMenu, setActiveTopMenu] = useState(5792);
     const [openChooseTown, setOpenChooseTown] = useState(false);
     const cookies = new Cookies();

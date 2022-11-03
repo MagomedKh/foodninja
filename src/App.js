@@ -130,7 +130,9 @@ function App() {
             primary: {
                 light: "#757ce8",
                 main: mainColor.match(/#[a-f0-9]{6}\b/gi) ? mainColor : "#000",
-                dark: "#002884",
+                dark: secondColor.match(/#[a-f0-9]{6}\b/gi)
+                    ? secondColor
+                    : "#000",
                 contrastText: "#fff",
             },
             secondary: {
@@ -141,9 +143,27 @@ function App() {
                 dark: "#ba000d",
                 contrastText: "#000",
             },
+            white: {
+                main: "#fff",
+                contrastText: "#fff",
+            },
         },
         typography: {
             fontFamily: `"Cera","sans-serif"`,
+            button: {
+                textTransform: "none",
+                fontSize: 16,
+            },
+        },
+        components: {
+            MuiButton: {
+                styleOverrides: {
+                    root: {
+                        borderRadius: 20,
+                        padding: "6px 20px !important",
+                    },
+                },
+            },
         },
     });
 
