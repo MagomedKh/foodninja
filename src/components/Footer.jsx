@@ -153,14 +153,17 @@ export default function Footer() {
                         )}
                         {config.CONFIG_APPSTORE && (
                             <div className="contacts--appstore mobile-apps">
-                                <a href={config.CONFIG_APPSTORE}>
+                                <a
+                                    href={config.CONFIG_APPSTORE}
+                                    target="_blank"
+                                >
                                     <img src={AppStoreIcon} alt="iOS APP" />
                                 </a>
                             </div>
                         )}
                         {config.CONFIG_GPLAY && (
                             <div className="contacts--googleplay mobile-apps">
-                                <a href={config.CONFIG_GPLAY}>
+                                <a href={config.CONFIG_GPLAY} target="_blank">
                                     <img
                                         src={GooglePlayIcon}
                                         alt="Android APP"
