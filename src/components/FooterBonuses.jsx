@@ -132,7 +132,12 @@ export default function BonusesProductsModal() {
                 </Container>
             </div>
 
-            <Dialog maxWidth="md" onClose={handleClose} {...dialogProps}>
+            <Dialog
+                maxWidth="md"
+                fullWidth
+                onClose={handleClose}
+                {...dialogProps}
+            >
                 <div className="modal-alert--wrapper">
                     <IconButton
                         edge="start"
@@ -145,7 +150,7 @@ export default function BonusesProductsModal() {
                     </IconButton>
                     <h2 className="modal-alert--title">Выберите подарок</h2>
                     <div className="bonuses-modal__carts">
-                        <Grid container spacing={4}>
+                        <Grid container spacing={1}>
                             {bonusesItemsLocal &&
                                 bonusesItemsLocal.map((item, index) => (
                                     <Grid
