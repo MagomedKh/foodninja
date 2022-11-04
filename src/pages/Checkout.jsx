@@ -43,7 +43,6 @@ import {
     setSeconds,
 } from "date-fns";
 import { useEffect } from "react";
-
 const formatingStrPhone = (inputNumbersValue) => {
     var formattedPhone = "";
     if (["7", "8", "9"].indexOf(inputNumbersValue[0]) > -1) {
@@ -68,6 +67,7 @@ const formatingStrPhone = (inputNumbersValue) => {
     }
     return formattedPhone;
 };
+
 const getNumbersValue = function (input) {
     return input.replace(/\D/g, "");
 };
@@ -197,12 +197,15 @@ export default function Checkout() {
     const handleChangeName = (e) => {
         setUserName(e.target.value);
     };
+
     const handleChooseSelfDeliveryAddress = (e, value) => {
         setSelfDeliveryAddress(value);
     };
+
     const handleChooseDeliveryAddress = (e, value) => {
         setDeliveryAddress(value);
     };
+
     const handleChangeNewUserAddress = (e) => {
         switch (e.target.id) {
             case "street":
@@ -227,15 +230,19 @@ export default function Checkout() {
     const handleChangeCommentOrder = (e, value) => {
         setCommentOrder(e.target.value);
     };
+
     const handleSetActiveGateway = (e, value) => {
         setActiveGateway(value);
     };
+
     const handleChangeCountUsers = (e, value) => {
         setCountUsers(e.target.value);
     };
+
     const handleChangeMoneyBack = (e, value) => {
         setMoneyBack(e.target.value);
     };
+
     const handlePhonePaste = function (e) {
         var input = e.target,
             inputNumbersValue = getNumbersValue(input.value);
@@ -248,27 +255,26 @@ export default function Checkout() {
             }
         }
     };
+
     const handlePhoneInput = function (e) {
         var input = e.target,
             inputNumbersValue = getNumbersValue(input.value),
             selectionStart = input.selectionStart,
             formattedInputValue = "";
-
         if (!inputNumbersValue) {
             return (input.value = "");
         }
-
         if (input.value.length !== selectionStart) {
             if (e.data && /\D/g.test(e.data)) {
                 input.value = inputNumbersValue;
             }
             return;
         }
-
         formattedInputValue = formatingStrPhone(inputNumbersValue);
         input.value = formattedInputValue;
         setUserPhone(formattedInputValue);
     };
+
     const handlePhoneKeyDown = function (e) {
         var inputValue = e.target.value.replace(/\D/g, "");
         if (e.keyCode === 8 && inputValue.length === 1) {
@@ -286,7 +292,6 @@ export default function Checkout() {
         if (!preorderDate) {
             setValidate(false);
         }
-
         if (validate) {
             setLoading(true);
             axios
@@ -334,36 +339,30 @@ export default function Checkout() {
 
     const handleChangeTypeDelivery = (e, value) => {
         if (value === "self") {
-            if (
-                config.selfDeliveryCoupon &&
-                Object.keys(cart.promocode).length
-            ) {
-                setOpenAlert(true);
-            } else {
-                if (config.selfDeliveryCoupon) {
+            if (config.selfDeliveryCoupon && cart.discount) setOpenAlert(true);
+            else {
+                if (config.selfDeliveryCoupon)
                     dispatch(addPromocode(config.selfDeliveryCoupon));
-                    setTypeDelivery(value);
-                }
+                setTypeDelivery(value);
             }
         } else {
             if (
                 config.selfDeliveryCoupon &&
                 cart.promocode &&
                 config.selfDeliveryCoupon.code === cart.promocode.code
-            ) {
+            )
                 dispatch(removePromocode());
-            }
             setTypeDelivery(value);
         }
     };
+
     if (
         config.selfDeliveryCoupon &&
         cart.promocode &&
         config.selfDeliveryCoupon.code === cart.promocode.code &&
         typeDelivery !== "self"
-    ) {
+    )
         setTypeDelivery("self");
-    }
 
     const renderTypeOrdering = () => {
         if (typeof config.CONFIG_order_receiving !== "undefined") {
@@ -504,10 +503,10 @@ export default function Checkout() {
 
     if (promocode) {
         if (
-            config.selfDeliveryCoupon.code &&
+            config.selfDeliveryCoupon.code !== undefined &&
             promocode.code === config.selfDeliveryCoupon.code
         ) {
-            console.log("test");
+            dispatch(removePromocode());
         } else {
             const resultCheckPromocode = _checkPromocode(
                 promocode,
