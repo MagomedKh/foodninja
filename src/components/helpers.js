@@ -174,7 +174,10 @@ export const _checkPromocode = (promocode, items, cartTotal, typeDelivery) => {
                 }
 
                 // Только указанные категории
-                if (!promocode.excludeCategories) {
+                if (
+                    !promocode.excludeCategories &&
+                    promocode.coupon_categories_hardmode === "yes"
+                ) {
                     let notInCategory = false;
                     Object.values(items).forEach((product) => {
                         const inCategories = product[
