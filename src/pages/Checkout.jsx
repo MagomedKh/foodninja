@@ -334,20 +334,25 @@ export default function Checkout() {
 
     const handleChangeTypeDelivery = (e, value) => {
         if (value === "self") {
-            if (config.selfDeliveryCoupon && cart.discount) setOpenAlert(true);
-            else {
-                if (config.selfDeliveryCoupon)
+            if (
+                config.selfDeliveryCoupon &&
+                Object.keys(cart.promocode).length
+            ) {
+                setOpenAlert(true);
+            } else {
+                if (config.selfDeliveryCoupon) {
                     dispatch(addPromocode(config.selfDeliveryCoupon));
-
-                setTypeDelivery(value);
+                    setTypeDelivery(value);
+                }
             }
         } else {
             if (
                 config.selfDeliveryCoupon &&
                 cart.promocode &&
                 config.selfDeliveryCoupon.code === cart.promocode.code
-            )
+            ) {
                 dispatch(removePromocode());
+            }
             setTypeDelivery(value);
         }
     };
@@ -356,8 +361,9 @@ export default function Checkout() {
         cart.promocode &&
         config.selfDeliveryCoupon.code === cart.promocode.code &&
         typeDelivery !== "self"
-    )
+    ) {
         setTypeDelivery("self");
+    }
 
     const renderTypeOrdering = () => {
         if (typeof config.CONFIG_order_receiving !== "undefined") {
@@ -498,11 +504,11 @@ export default function Checkout() {
 
     if (promocode) {
         if (
-            config.selfDeliveryCoupon.code !== undefined &&
+            config.selfDeliveryCoupon.code &&
             promocode.code === config.selfDeliveryCoupon.code
-        )
-            dispatch(removePromocode());
-        else {
+        ) {
+            console.log("test");
+        } else {
             const resultCheckPromocode = _checkPromocode(
                 promocode,
                 cartProducts,
