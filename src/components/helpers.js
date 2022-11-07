@@ -152,7 +152,10 @@ export const _checkPromocode = (promocode, items, cartTotal, typeDelivery) => {
 
         // Проверка категорий
         if (promocode.type === "fixed_cart" || promocode.type === "percent") {
-            if (promocode.categories.length) {
+            if (
+                promocode.categories.length &&
+                promocode.categories_hardmode === "yes"
+            ) {
                 // Исключение категорий
                 if (promocode.excludeCategories) {
                     let hasExcludeCategory = false;

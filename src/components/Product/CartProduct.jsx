@@ -177,8 +177,22 @@ export default function CartProduct({
                         )
                     ) : (
                         <>
-                            {parseInt(productCart.options._regular_price) >
-                            parseInt(productCart.options._price) ? (
+                            {parseInt(productCart.options._promocode_price) ? (
+                                <span>
+                                    <span className="old-price">
+                                        {productCart.options._price *
+                                            productCount}{" "}
+                                        ₽
+                                    </span>
+                                    &nbsp;
+                                    <span className="main-color">
+                                        {productCart.options._promocode_price *
+                                            productCount}{" "}
+                                        ₽
+                                    </span>
+                                </span>
+                            ) : parseInt(productCart.options._regular_price) >
+                              parseInt(productCart.options._price) ? (
                                 <span>
                                     <span className="old-price">
                                         {productCart.options._regular_price *

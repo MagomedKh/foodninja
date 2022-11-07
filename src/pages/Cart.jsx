@@ -69,7 +69,10 @@ export default function Cart() {
     };
 
     if (promocode) {
-        if( config.selfDeliveryCoupon.code !== undefined && promocode.code === config.selfDeliveryCoupon.code )
+        if (
+            config.selfDeliveryCoupon.code !== undefined &&
+            promocode.code === config.selfDeliveryCoupon.code
+        )
             dispatch(removePromocode());
         else {
             const resultCheckPromocode = _checkPromocode(
@@ -222,7 +225,7 @@ export default function Cart() {
                                         :
                                         {promocode.type === "percent" ? (
                                             <span className="money main-color">
-                                                -{promocode.amount}%
+                                                -{cart.discount} ₽
                                             </span>
                                         ) : (
                                             <span className="money main-color">

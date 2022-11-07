@@ -39,31 +39,91 @@ const cart = (state = initialState, action) => {
             switch (action.payload.type) {
                 case "percent": {
                     const percentDiscount = (100 - action.payload.amount) / 100;
+                    let productsWithDiscount;
 
-                    const productsWithDiscount = { ...state.items };
-                    for (let el in productsWithDiscount) {
-                        productsWithDiscount[el].items.forEach(
-                            (elem, index, array) => {
-                                if (
-                                    action.payload.categories?.some((r) =>
-                                        elem.categories.includes(r)
-                                    ) &&
-                                    !elem.options._sale_price
-                                ) {
-                                    array[index] = {
-                                        ...elem,
-                                        options: {
-                                            ...elem.options,
-                                            _promocode_price:
-                                                elem.options._price *
-                                                percentDiscount,
-                                        },
-                                    };
-                                } else {
-                                    array[index] = elem;
+                    //Добавляем к товарам из выбранных категорий свойство "_promocode_price"
+                    if (
+                        action.payload.excludeCategories &&
+                        action.payload.categories.length
+                    ) {
+                        productsWithDiscount = { ...state.items };
+                        for (let el in productsWithDiscount) {
+                            productsWithDiscount[el].items.forEach(
+                                (elem, index, array) => {
+                                    if (
+                                        !action.payload.categories?.some((r) =>
+                                            elem.categories.includes(r)
+                                        ) &&
+                                        !elem.options._sale_price
+                                    ) {
+                                        array[index] = {
+                                            ...elem,
+                                            options: {
+                                                ...elem.options,
+                                                _promocode_price: Math.ceil(
+                                                    elem.options._price *
+                                                        percentDiscount
+                                                ),
+                                            },
+                                        };
+                                    } else {
+                                        array[index] = elem;
+                                    }
                                 }
-                            }
-                        );
+                            );
+                        }
+                    } else if (
+                        !action.payload.excludeCategories &&
+                        action.payload.categories.length
+                    ) {
+                        productsWithDiscount = { ...state.items };
+                        for (let el in productsWithDiscount) {
+                            productsWithDiscount[el].items.forEach(
+                                (elem, index, array) => {
+                                    if (
+                                        action.payload.categories?.some((r) =>
+                                            elem.categories.includes(r)
+                                        ) &&
+                                        !elem.options._sale_price
+                                    ) {
+                                        array[index] = {
+                                            ...elem,
+                                            options: {
+                                                ...elem.options,
+                                                _promocode_price: Math.ceil(
+                                                    elem.options._price *
+                                                        percentDiscount
+                                                ),
+                                            },
+                                        };
+                                    } else {
+                                        array[index] = elem;
+                                    }
+                                }
+                            );
+                        }
+                    } else {
+                        productsWithDiscount = { ...state.items };
+                        for (let el in productsWithDiscount) {
+                            productsWithDiscount[el].items.forEach(
+                                (elem, index, array) => {
+                                    if (!elem.options._sale_price) {
+                                        array[index] = {
+                                            ...elem,
+                                            options: {
+                                                ...elem.options,
+                                                _promocode_price: Math.ceil(
+                                                    elem.options._price *
+                                                        percentDiscount
+                                                ),
+                                            },
+                                        };
+                                    } else {
+                                        array[index] = elem;
+                                    }
+                                }
+                            );
+                        }
                     }
                     const allProducts = [].concat.apply(
                         [],
@@ -71,13 +131,20 @@ const cart = (state = initialState, action) => {
                             (obj) => obj.items
                         )
                     );
-                    const discount = allProducts.reduce(
-                        (total, item) =>
-                            total +
-                            (item.options._price -
-                                item.options._promocode_price),
-                        0
-                    );
+
+                    // Считаем размер скидки как разницу между ценой по промокоду и обычной
+                    const discount = allProducts.reduce((total, item) => {
+                        if (item.options._promocode_price) {
+                            return (
+                                total +
+                                (parseInt(item.options._price) -
+                                    item.options._promocode_price)
+                            );
+                        } else {
+                            return total;
+                        }
+                    }, 0);
+
                     const totalPrice = getTotalPrice(allProducts);
                     return {
                         ...state,
@@ -232,6 +299,14 @@ const cart = (state = initialState, action) => {
             }
         }
         case "REMOVE_PROMOCODE": {
+            const productsWithoutDiscount = { ...state.items };
+            for (let el in productsWithoutDiscount) {
+                productsWithoutDiscount[el].items.forEach(
+                    (elem, index, array) => {
+                        delete array[index].options._promocode_price;
+                    }
+                );
+            }
             const allProducts = [].concat.apply(
                 [],
                 Object.values(state.items).map((obj) => obj.items)
@@ -239,6 +314,7 @@ const cart = (state = initialState, action) => {
             const totalRolls = getTotalRollsCount(allProducts, state);
             return {
                 ...state,
+                items: productsWithoutDiscount,
                 totalRolls: totalRolls,
                 discount: 0,
                 promocode: {},
@@ -255,29 +331,80 @@ const cart = (state = initialState, action) => {
         }
         case "ADD_PRODUCT_TO_CART": {
             let discount = state.discount;
-            if (
-                state.promocode?.categories?.some((r) =>
-                    action.payload.categories.includes(r)
-                )
-            ) {
-                console.log("YEAH");
-                action.payload = {
-                    ...action.payload,
-                    options: {
-                        ...action.payload.options,
-                        _promocode_price:
-                            (action.payload.options._price *
-                                (100 - state.promocode.amount)) /
-                            100,
-                    },
-                };
 
-                discount +=
-                    action.payload.options._price -
-                    action.payload.options._promocode_price;
+            if (
+                state.promocode?.categories?.length &&
+                state.promocode?.excludeCategories
+            ) {
+                if (
+                    !state.promocode?.categories?.some((r) =>
+                        action.payload.categories.includes(r)
+                    ) &&
+                    !action.payload.options._sale_price
+                ) {
+                    action.payload = {
+                        ...action.payload,
+                        options: {
+                            ...action.payload.options,
+                            _promocode_price: Math.ceil(
+                                (action.payload.options._price *
+                                    (100 - state.promocode.amount)) /
+                                    100
+                            ),
+                        },
+                    };
+
+                    discount +=
+                        action.payload.options._price -
+                        action.payload.options._promocode_price;
+                }
+            } else if (
+                state.promocode?.categories?.length &&
+                !state.promocode?.excludeCategories
+            ) {
+                if (
+                    state.promocode?.categories?.some((r) =>
+                        action.payload.categories.includes(r)
+                    ) &&
+                    !action.payload.options._sale_price
+                ) {
+                    action.payload = {
+                        ...action.payload,
+                        options: {
+                            ...action.payload.options,
+                            _promocode_price: Math.ceil(
+                                (action.payload.options._price *
+                                    (100 - state.promocode.amount)) /
+                                    100
+                            ),
+                        },
+                    };
+
+                    discount +=
+                        action.payload.options._price -
+                        action.payload.options._promocode_price;
+                }
+            } else if (Object.keys(state.promocode).length) {
+                if (!action.payload.options._sale_price) {
+                    console.log(action.payload);
+                    action.payload = {
+                        ...action.payload,
+                        options: {
+                            ...action.payload.options,
+                            _promocode_price: Math.ceil(
+                                (action.payload.options._price *
+                                    (100 - state.promocode.amount)) /
+                                    100
+                            ),
+                        },
+                    };
+
+                    discount +=
+                        action.payload.options._price -
+                        action.payload.options._promocode_price;
+                }
             }
 
-            let newItem;
             let newItems;
             if (action.payload.variant) {
                 if (!state.items[action.payload.id])
@@ -334,6 +461,7 @@ const cart = (state = initialState, action) => {
             };
         }
         case "DECREASE_PRODUCT_IN_CART": {
+            let discount = state.discount;
             const oldItems = state.items[action.payload.id].items;
             const newItems =
                 oldItems.length > 1
@@ -352,6 +480,13 @@ const cart = (state = initialState, action) => {
                 [],
                 Object.values(updatedItems).map((obj) => obj.items)
             );
+
+            if (action.payload.options._promocode_price) {
+                discount -=
+                    action.payload.options._price -
+                    action.payload.options._promocode_price;
+            }
+
             const totalRolls = getTotalRollsCount(allProducts, state);
             const cartTotalPrice = getTotalPrice(allProducts);
             const bonusProduct = state.bonusProduct
@@ -381,12 +516,21 @@ const cart = (state = initialState, action) => {
                 totalRolls: totalRolls,
                 bonusProduct: bonusProduct,
                 countItems: allProducts.length,
+                discount: discount,
                 subTotalPrice: cartTotalPrice,
-                totalPrice: cartTotalPrice - state.discount,
+                totalPrice: cartTotalPrice - discount,
             };
         }
         case "REMOVE_PRODUCT_FROM_CART": {
+            let discount = state.discount;
             const updatedItems = state.items;
+
+            if (action.payload.options._promocode_price) {
+                discount -=
+                    (action.payload.options._price -
+                        action.payload.options._promocode_price) *
+                    updatedItems[action.payload.id]?.items?.length;
+            }
 
             if (action.payload.variant) {
                 const indexVar = Object.values(
@@ -405,6 +549,7 @@ const cart = (state = initialState, action) => {
                 [],
                 Object.values(updatedItems).map((obj) => obj.items)
             );
+
             const totalRolls = getTotalRollsCount(allProducts, state);
             const cartTotalPrice = getTotalPrice(allProducts);
             const bonusProduct = state.bonusProduct
@@ -434,8 +579,9 @@ const cart = (state = initialState, action) => {
                 bonusProduct: bonusProduct,
                 totalRolls: totalRolls,
                 countItems: allProducts.length,
+                discount: discount,
                 subTotalPrice: cartTotalPrice,
-                totalPrice: cartTotalPrice - state.discount,
+                totalPrice: cartTotalPrice - discount,
             };
         }
 
