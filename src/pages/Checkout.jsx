@@ -1125,18 +1125,20 @@ export default function Checkout() {
                                 </div>
                             )}
 
-                            <FormControlLabel
-                                control={
-                                    <Switch
-                                        checked={dontRecall}
-                                        onChange={() =>
-                                            setDontRecall(!dontRecall)
-                                        }
-                                        name="gilad"
-                                    />
-                                }
-                                label="Не перезванивайте мне"
-                            />
+                            {config.CONFIG_checkout_dont_recall === "on" ? (
+                                <FormControlLabel
+                                    control={
+                                        <Switch
+                                            checked={dontRecall}
+                                            onChange={() =>
+                                                setDontRecall(!dontRecall)
+                                            }
+                                            name="gilad"
+                                        />
+                                    }
+                                    label="Не перезванивайте мне"
+                                />
+                            ) : null}
 
                             <LoadingButton
                                 loading={loading}
