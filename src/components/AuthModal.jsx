@@ -83,6 +83,8 @@ export default function AuthModal() {
         };
     });
 
+    const { data: config } = useSelector((state) => state.config);
+
     let dialogAuthProps = { open: openModalAuth };
     if (_isMobile()) {
         dialogAuthProps.TransitionComponent = Transition;
@@ -406,22 +408,29 @@ export default function AuthModal() {
                                     )}
                                 </Button>
 
-                                {/* <div className="auth-modal--info"><b>Не поступил звонок?</b><br/>Проверьте правильность номера телефона.</div>
+                                <div className="auth-modal--info">
+                                    <b>Не поступил звонок?</b>
+                                    <br />
+                                    Проверьте правильность номера телефона.
+                                </div>
 
-								<Button
-									variant="button" 
-									disabled={resmsActive}
-									onClick={handleResms} 
-									className="phone-auth--resms btn--gray"
-									sx={{width: 1, mt: 2}}>
-									
-										Запросить смс 
-										{ resmsActive && (
-											<span className="resms-timout">
-												через {resmsTimer} сек.
-											</span>
-										) }
-								</Button> */}
+                                {config.CONFIG_auth_type ===
+                                "robocallwithsms" ? (
+                                    <Button
+                                        variant="button"
+                                        disabled={resmsActive}
+                                        onClick={handleResms}
+                                        className="phone-auth--resms btn--gray"
+                                        sx={{ width: 1, mt: 2 }}
+                                    >
+                                        Запросить смс
+                                        {resmsActive && (
+                                            <span className="resms-timout">
+                                                через {resmsTimer} сек.
+                                            </span>
+                                        )}
+                                    </Button>
+                                ) : null}
                             </div>
                         )}
                     </div>
