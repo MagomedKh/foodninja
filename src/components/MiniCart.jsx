@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { Alert, Button, Drawer, IconButton } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import CloseIcon from "@mui/icons-material/Close";
-import "../css/minicart.css";
 import emptyCartImg from "../img/empty-cart.svg";
 import MiniCartProduct from "../components/Product/MiniCartProduct";
 import MiniCartBonusProduct from "../components/Product/MiniCartBonusProduct";
@@ -16,9 +15,10 @@ import MiniCartReccomends from "./MiniCartRecommends";
 import CartBonusesProducts from "./CartBonusesProducts";
 import { updateAlerts } from "../redux/actions/systemAlerts";
 import { removePromocode } from "../redux/actions/cart";
+import { openMiniCart, closeMiniCart } from "../redux/actions/miniCart";
+import "../css/minicart.css";
 
 function MiniCart() {
-    const [miniCartOpen, setMiniCartState] = React.useState(false);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const {
@@ -54,8 +54,15 @@ function MiniCart() {
             user: user.user,
         };
     });
-    const toggleMiniCartState = () => {
-        setMiniCartState(!miniCartOpen);
+
+    const { miniCartOpen } = useSelector((state) => state.miniCart);
+
+    const handleOpenMiniCart = () => {
+        dispatch(openMiniCart());
+    };
+
+    const handleCloseMiniCart = () => {
+        dispatch(closeMiniCart());
     };
 
     const handleClickTopMenu = () => {
@@ -76,6 +83,7 @@ function MiniCart() {
         if (!user.token && config.CONFIG_auth_type !== "noauth")
             dispatch(setOpenModalAuth(true));
         else {
+            dispatch(closeMiniCart());
             window.scrollTo(0, 0);
             navigate("/checkout", { replace: true });
         }
@@ -115,7 +123,7 @@ function MiniCart() {
         >
             <button
                 className="btn--action minicart"
-                onClick={toggleMiniCartState}
+                onClick={handleOpenMiniCart}
             >
                 <ShoppingCartIcon className="minicart--cart-icon" />
                 <div className="minicart--separator"></div>
@@ -136,7 +144,7 @@ function MiniCart() {
             <Drawer
                 anchor="right"
                 open={miniCartOpen}
-                onClose={toggleMiniCartState}
+                onClose={handleCloseMiniCart}
             >
                 {cartCountItems && cartProducts ? (
                     <div className="minicart--inner">
@@ -145,7 +153,7 @@ function MiniCart() {
                                 Корзина
                                 <IconButton
                                     color="inherit"
-                                    onClick={toggleMiniCartState}
+                                    onClick={handleCloseMiniCart}
                                     className="minicart--close"
                                 >
                                     <CloseIcon />

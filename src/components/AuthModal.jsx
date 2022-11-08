@@ -4,6 +4,7 @@ import { _isMobile, _getDomain } from "./helpers.js";
 import { useNavigate, useLocation } from "react-router-dom";
 import { setOpenModalAuth, login } from "../redux/actions/user";
 import { closeMobileMenu } from "../redux/actions/header";
+import { closeMiniCart } from "../redux/actions/miniCart";
 import {
     Alert,
     Button,
@@ -32,6 +33,8 @@ export default function AuthModal() {
             openModalAuth: user.openModalAuth,
         };
     });
+
+    const { miniCartOpen } = useSelector((state) => state.miniCart);
 
     const authType = "verify-code";
     const inputCode = React.useRef([]);
@@ -205,9 +208,10 @@ export default function AuthModal() {
                     if (resp.data.status === "success") {
                         dispatch(login(resp.data.user));
                         setError(false);
-                        if (pathname === "/cart") {
+                        if (pathname === "/cart" || miniCartOpen) {
                             navigate("/checkout", { replace: true });
                         }
+                        dispatch(closeMiniCart());
                         dispatch(setOpenModalAuth(false));
                         dispatch(closeMobileMenu());
                     } else setError(resp.data.text);
