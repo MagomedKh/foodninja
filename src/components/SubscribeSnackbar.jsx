@@ -58,6 +58,7 @@ const SubscribeSnackbar = () => {
                             Нет
                         </Button>
                         <Button
+                            onClick={() => setSubscribeOpen(false)}
                             variant="contained"
                             sx={{ ml: 1, flexGrow: 1, flexBasis: "0.5" }}
                             href={config.CONFIG_vk_mailing_link}
