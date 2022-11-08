@@ -201,7 +201,10 @@ export const _checkPromocode = (promocode, items, cartTotal, typeDelivery) => {
             }
 
             // Проверка товаров по скидке
-            if (promocode.excludeSaleProduct) {
+            if (
+                promocode.excludeSaleProduct &&
+                promocode.categories_hardmode === "yes"
+            ) {
                 let hasSale = false;
                 Object.values(items).forEach((product) => {
                     if (

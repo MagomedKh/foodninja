@@ -54,7 +54,12 @@ const cart = (state = initialState, action) => {
                                         !action.payload.categories?.some((r) =>
                                             elem.categories.includes(r)
                                         ) &&
-                                        !elem.options._sale_price
+                                        (!elem.options._sale_price ||
+                                            (action.payload
+                                                .categories_hardmode !==
+                                                "yes" &&
+                                                !action.payload
+                                                    .excludeSaleProduct))
                                     ) {
                                         array[index] = {
                                             ...elem,
@@ -84,7 +89,12 @@ const cart = (state = initialState, action) => {
                                         action.payload.categories?.some((r) =>
                                             elem.categories.includes(r)
                                         ) &&
-                                        !elem.options._sale_price
+                                        (!elem.options._sale_price ||
+                                            (action.payload
+                                                .categories_hardmode !==
+                                                "yes" &&
+                                                !action.payload
+                                                    .excludeSaleProduct))
                                     ) {
                                         array[index] = {
                                             ...elem,
@@ -107,7 +117,12 @@ const cart = (state = initialState, action) => {
                         for (let el in productsWithDiscount) {
                             productsWithDiscount[el].items.forEach(
                                 (elem, index, array) => {
-                                    if (!elem.options._sale_price) {
+                                    if (
+                                        !elem.options._sale_price ||
+                                        (action.payload.categories_hardmode !==
+                                            "yes" &&
+                                            !action.payload.excludeSaleProduct)
+                                    ) {
                                         array[index] = {
                                             ...elem,
                                             options: {
@@ -340,7 +355,9 @@ const cart = (state = initialState, action) => {
                     !state.promocode?.categories?.some((r) =>
                         action.payload.categories.includes(r)
                     ) &&
-                    !action.payload.options._sale_price
+                    (!action.payload.options._sale_price ||
+                        (state.promocode.categories_hardmode !== "yes" &&
+                            !state.promocode.excludeSaleProduct))
                 ) {
                     action.payload = {
                         ...action.payload,
@@ -366,7 +383,9 @@ const cart = (state = initialState, action) => {
                     state.promocode?.categories?.some((r) =>
                         action.payload.categories.includes(r)
                     ) &&
-                    !action.payload.options._sale_price
+                    (!action.payload.options._sale_price ||
+                        (state.promocode.categories_hardmode !== "yes" &&
+                            !state.promocode.excludeSaleProduct))
                 ) {
                     action.payload = {
                         ...action.payload,
@@ -385,8 +404,11 @@ const cart = (state = initialState, action) => {
                         action.payload.options._promocode_price;
                 }
             } else if (Object.keys(state.promocode).length) {
-                if (!action.payload.options._sale_price) {
-                    console.log(action.payload);
+                if (
+                    !action.payload.options._sale_price ||
+                    (state.promocode.categories_hardmode !== "yes" &&
+                        !state.promocode.excludeSaleProduct)
+                ) {
                     action.payload = {
                         ...action.payload,
                         options: {
