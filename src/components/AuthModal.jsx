@@ -43,13 +43,9 @@ export default function AuthModal() {
     const [authPhone, setAuthPhone] = React.useState();
     const [authPhoneCode, setAuthPhoneCode] = React.useState(false);
     const [verifyPhone, setVerifyPhone] = React.useState(false);
-
     const [recallInterval, setRecallInterval] = React.useState(false);
-    const [resmsInterval, setResmsInterval] = React.useState(false);
     const [recallTimer, setRecallTimer] = React.useState(30);
-    const [resmsTimer, setResmsTimer] = React.useState(30);
     const [recallActive, setRecallActive] = React.useState(false);
-    const [resmsActive, setResmsActive] = React.useState(false);
 
     const startRecallTimer = () => {
         stopRecallTimer();
@@ -67,24 +63,6 @@ export default function AuthModal() {
     };
     if (recallActive && recallTimer < 1) {
         stopRecallTimer();
-    }
-
-    const startResmsTimer = () => {
-        stopResmsTimer();
-        setResmsActive(true);
-        setResmsInterval(
-            setInterval(() => {
-                setResmsTimer((prevTimer) => --prevTimer);
-            }, 1000)
-        );
-    };
-    const stopResmsTimer = () => {
-        setResmsActive(false);
-        setResmsTimer(30);
-        if (resmsInterval) clearInterval(resmsInterval);
-    };
-    if (resmsActive && resmsTimer < 1) {
-        stopResmsTimer();
     }
 
     let dialogAuthProps = { open: openModalAuth };
@@ -161,7 +139,7 @@ export default function AuthModal() {
                 )
                 .then((resp) => {
                     setLoading(false);
-                    startResmsTimer();
+                    startRecallTimer();
                     resp.data.status === "error" && setError(resp.data.text);
                 });
         } else {
@@ -420,15 +398,15 @@ export default function AuthModal() {
                                 "robocallwithsms" ? (
                                     <Button
                                         variant="button"
-                                        disabled={resmsActive}
+                                        disabled={recallActive}
                                         onClick={handleResms}
                                         className="phone-auth--resms btn--gray"
                                         sx={{ width: 1, mt: 2 }}
                                     >
                                         Запросить смс
-                                        {resmsActive && (
+                                        {recallActive && (
                                             <span className="resms-timout">
-                                                через {resmsTimer} сек.
+                                                через {recallTimer} сек.
                                             </span>
                                         )}
                                     </Button>
