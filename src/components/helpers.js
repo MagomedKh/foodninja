@@ -148,10 +148,7 @@ export const _checkPromocode = (promocode, items, cartTotal, typeDelivery) => {
         // Проверка платформы
         if (promocode.platform) {
             const currentPlatform = _getPlatform();
-            if (
-                promocode.platform[currentPlatform] &&
-                promocode.platform[currentPlatform] !== "on"
-            )
+            if (promocode.platform[currentPlatform] !== "on")
                 return {
                     status: "error",
                     message:
