@@ -1,17 +1,13 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import Drawer from "@mui/material/Drawer";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useNavigate } from "react-router-dom";
-import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
+import { Alert, Button, Drawer, IconButton } from "@mui/material";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import CloseIcon from "@mui/icons-material/Close";
-import Alert from "@mui/material/Alert";
 import "../css/minicart.css";
 import emptyCartImg from "../img/empty-cart.svg";
 import MiniCartProduct from "../components/Product/MiniCartProduct";
 import MiniCartBonusProduct from "../components/Product/MiniCartBonusProduct";
-import { setCurrentPage } from "../redux/actions/pages";
 import { setOpenModalAuth } from "../redux/actions/user";
 import MiniCartFreeAddons from "./Product/MiniCartFreeAddons";
 import { _checkPromocode, _isMobile } from "../components/helpers.js";
@@ -64,7 +60,6 @@ function MiniCart() {
 
     const handleClickTopMenu = () => {
         window.scrollTo(0, 0);
-        dispatch(setCurrentPage("/cart"));
     };
 
     function _declension(value, words) {
@@ -81,7 +76,6 @@ function MiniCart() {
         if (!user.token && config.CONFIG_auth_type !== "noauth")
             dispatch(setOpenModalAuth(true));
         else {
-            dispatch(setCurrentPage("/checkout"));
             window.scrollTo(0, 0);
             navigate("/checkout", { replace: true });
         }

@@ -6,7 +6,6 @@ import MiniCartReccomends from "../components/MiniCartRecommends";
 import PromocodeCartProduct from "../components/Product/PromocodeCartProduct";
 import CartBonusesProducts from "../components/CartBonusesProducts";
 import { useSelector, useDispatch } from "react-redux";
-import { setCurrentPage } from "../redux/actions/pages";
 import Button from "@mui/material/Button";
 
 import { useNavigate } from "react-router-dom";
@@ -52,7 +51,6 @@ export default function Cart() {
 
     const navigate = useNavigate();
     const handleClickBackToMenu = useCallback(() => {
-        dispatch(setCurrentPage("/"));
         window.scrollTo(0, 0);
         navigate("/", { replace: true });
     }, [navigate]);
@@ -62,7 +60,6 @@ export default function Cart() {
         if (!user.token && config.CONFIG_auth_type !== "noauth")
             dispatch(setOpenModalAuth(true));
         else {
-            dispatch(setCurrentPage("/checkout"));
             window.scrollTo(0, 0);
             navigate("/checkout", { replace: true });
         }

@@ -1,10 +1,7 @@
 import * as React from "react";
-import "../css/footer.css";
-import { useDispatch, useSelector } from "react-redux";
-import Container from "@mui/material/Container";
-import { setCurrentPage } from "../redux/actions/pages";
-import Grid from "@mui/material/Grid";
 import { Link, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Container, Grid } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faVk,
@@ -13,22 +10,18 @@ import {
 import AppStoreIcon from "../img/app-store-bage-white.svg";
 import GooglePlayIcon from "../img/google-play-bage-white.svg";
 import { _getPlatform } from "./helpers";
+import "../css/footer.css";
 
 export default function Footer() {
-    const dispatch = useDispatch();
     const { pathname } = useLocation();
-    const { config, topMenu, currentPage } = useSelector(
-        ({ config, pages, products }) => {
-            return {
-                config: config.data,
-                topMenu: pages.topMenu,
-                currentPage: pages.currentPage,
-            };
-        }
-    );
+    const { config, topMenu } = useSelector(({ config, pages, products }) => {
+        return {
+            config: config.data,
+            topMenu: pages.topMenu,
+        };
+    });
 
     const handleClickPage = (item) => {
-        dispatch(setCurrentPage(item.url));
         window.scrollTo(0, 0);
     };
     if (_getPlatform() !== "site") return <div className="footer-space"></div>;

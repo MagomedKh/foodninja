@@ -18,7 +18,6 @@ import {
     setBottomMenu,
     setPages,
     setSales,
-    setCurrentPage,
 } from "./redux/actions/pages";
 import {
     ProductModal,
@@ -65,7 +64,6 @@ function App() {
     }, shallowEqual);
 
     React.useEffect(() => {
-        dispatch(setCurrentPage(window.location.pathname));
         dispatch(setMainLoading(false));
         axios
             .get("https://" + _getDomain() + "/?rest-api=base_init", {

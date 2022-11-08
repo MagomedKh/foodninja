@@ -25,7 +25,6 @@ import { CheckoutProduct, Footer, Header } from "../components";
 import { _checkPromocode, _declension } from "../components/helpers.js";
 import { _isMobile, _getDomain } from "../components/helpers.js";
 import axios from "axios";
-import { setCurrentPage } from "../redux/actions/pages";
 import { clearCart } from "../redux/actions/cart";
 import "../css/checkout.css";
 import CheckoutFreeAddons from "../components/Product/CheckoutFreeAddons";
@@ -323,7 +322,6 @@ export default function Checkout() {
                     setLoading(false);
                     if (resp.data.status === "success") {
                         dispatch(clearCart());
-                        dispatch(setCurrentPage("/order-complete"));
                         window.scrollTo(0, 0);
                         navigate("/order-complete", { replace: true });
                     } else if (resp.data.status === "need_payment") {
@@ -496,7 +494,6 @@ export default function Checkout() {
     };
 
     const handleBackToMenu = useCallback(() => {
-        dispatch(setCurrentPage("/"));
         window.scrollTo(0, 0);
         navigate("/", { replace: true });
     }, [navigate]);

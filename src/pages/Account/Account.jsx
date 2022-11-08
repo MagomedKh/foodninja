@@ -20,7 +20,6 @@ import { Orders } from "../";
 import { Header, Footer } from "../../components";
 import { Button, Grid } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { setCurrentPage } from "../../redux/actions/pages";
 import TextField from "@mui/material/TextField";
 import {} from "@mui/material/TextField";
 import axios from "axios";
@@ -234,10 +233,6 @@ export default function Account() {
         dispatch(setOpenModalAuth(true));
     };
 
-    const handleClickMenu = (url) => {
-        dispatch(setCurrentPage(url));
-    };
-
     const userNameProps = {
         error: !userName && !validate ? true : false,
         helperText:
@@ -295,7 +290,6 @@ export default function Account() {
                         <div className="account-menu">
                             <Link
                                 variant="button"
-                                onClick={() => handleClickMenu("/account")}
                                 to="/account"
                                 className="btn btn--action"
                             >
@@ -303,9 +297,6 @@ export default function Account() {
                             </Link>
                             <Link
                                 variant="button"
-                                onClick={() =>
-                                    handleClickMenu("/account/orders")
-                                }
                                 to="/account/orders"
                                 className="btn btn--outline-dark"
                             >

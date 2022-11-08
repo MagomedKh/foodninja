@@ -8,7 +8,6 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import "../css/minicart.css";
 import MiniCartProduct from "../components/Product/MiniCartProduct";
-import { setCurrentPage } from "../redux/actions/pages";
 import { _declension } from "./helpers.js";
 import { _isMobile } from "./helpers.js";
 import Dialog from "@mui/material/Dialog";
@@ -39,7 +38,6 @@ function MobileMiniCart() {
     };
 
     const handleClickToCart = () => {
-        dispatch(setCurrentPage("/cart"));
         window.scrollTo(0, 0);
     };
 

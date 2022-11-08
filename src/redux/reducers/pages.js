@@ -3,39 +3,33 @@ const initialState = {
     bottomMenu: [],
     pages: [],
     sales: [],
-    currentPage: '/'
-}
+};
 
-const pages = ( state = initialState, action) => {
+const pages = (state = initialState, action) => {
     switch (action.type) {
-        case 'SET_TOP_MENU':
-            return {
-                ...state, 
-                topMenu: action.payload
-            }          
-        case 'SET_BOTTOM_MENU':
-            return {
-                ...state, 
-                bottomMenu: action.payload
-            }         
-        case 'SET_PAGES':
+        case "SET_TOP_MENU":
             return {
                 ...state,
-                pages: action.payload
-            }           
-        case 'SET_SALES':
+                topMenu: action.payload,
+            };
+        case "SET_BOTTOM_MENU":
             return {
                 ...state,
-                sales: action.payload
-            }        
-        case 'SET_CURRENT_PAGE':
+                bottomMenu: action.payload,
+            };
+        case "SET_PAGES":
             return {
-                ...state, 
-                currentPage: action.payload
-            }
-    
+                ...state,
+                pages: action.payload,
+            };
+        case "SET_SALES":
+            return {
+                ...state,
+                sales: action.payload,
+            };
+
         default:
-            return state
+            return state;
     }
 };
 

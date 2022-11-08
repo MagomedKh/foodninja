@@ -1,9 +1,8 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { _isMobile, _getDomain } from "./helpers.js";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { setOpenModalAuth, login } from "../redux/actions/user";
-import { setCurrentPage } from "../redux/actions/pages";
 import { closeMobileMenu } from "../redux/actions/header";
 import {
     Alert,
@@ -24,6 +23,15 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function AuthModal() {
     const dispatch = useDispatch();
+    const { pathname } = useLocation();
+
+    const { data: config } = useSelector((state) => state.config);
+
+    const { openModalAuth } = useSelector(({ user }) => {
+        return {
+            openModalAuth: user.openModalAuth,
+        };
+    });
 
     const authType = "verify-code";
     const inputCode = React.useRef([]);
@@ -75,15 +83,6 @@ export default function AuthModal() {
     if (resmsActive && resmsTimer < 1) {
         stopResmsTimer();
     }
-
-    const { openModalAuth, currentPage } = useSelector(({ user, pages }) => {
-        return {
-            openModalAuth: user.openModalAuth,
-            currentPage: pages.currentPage,
-        };
-    });
-
-    const { data: config } = useSelector((state) => state.config);
 
     let dialogAuthProps = { open: openModalAuth };
     if (_isMobile()) {
@@ -206,8 +205,7 @@ export default function AuthModal() {
                     if (resp.data.status === "success") {
                         dispatch(login(resp.data.user));
                         setError(false);
-                        if (currentPage === "/cart") {
-                            dispatch(setCurrentPage("/checkout"));
+                        if (pathname === "/cart") {
                             navigate("/checkout", { replace: true });
                         }
                         dispatch(setOpenModalAuth(false));

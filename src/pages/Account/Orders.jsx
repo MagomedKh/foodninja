@@ -3,7 +3,6 @@ import { Button, Container, Skeleton } from "@mui/material";
 import Pagination from "@mui/material/Pagination";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { setCurrentPage } from "../../redux/actions/pages";
 import { setOpenModalAuth } from "../../redux/actions/user";
 import {
     addBonusProductToCart,
@@ -51,10 +50,6 @@ export default function Orders() {
         }
     }, [mainLoading]);
 
-    const handleClickMenu = (url) => {
-        dispatch(setCurrentPage(url));
-    };
-
     const handleOpenAuthModal = () => {
         dispatch(setOpenModalAuth(true));
     };
@@ -80,7 +75,6 @@ export default function Orders() {
         if (order.promocode.code !== undefined)
             dispatch(addPromocode(order.promocode));
 
-        dispatch(setCurrentPage("/checkout"));
         navigate("/checkout", { replace: true });
     };
 
@@ -128,7 +122,6 @@ export default function Orders() {
                 <div className="account-menu">
                     <Link
                         variant="button"
-                        onClick={() => handleClickMenu("/account")}
                         to="/account"
                         className="btn btn--outline-dark"
                     >
@@ -136,7 +129,6 @@ export default function Orders() {
                     </Link>
                     <Link
                         variant="button"
-                        onClick={() => handleClickMenu("/account/orders")}
                         to="/account/orders"
                         className="btn btn--action"
                     >

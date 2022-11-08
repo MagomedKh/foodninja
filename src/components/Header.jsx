@@ -1,11 +1,9 @@
 import React, { useState, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import "../css/header.css";
-import { setCurrentPage } from "../redux/actions/pages";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { setTownModal } from "../redux/actions/config";
 import { setOpenModalAuth } from "../redux/actions/user";
 import { closeMobileMenu, openMobileMenu } from "../redux/actions/header";
-import { Link, useNavigate } from "react-router-dom";
 import { _isMobile, _getPlatform } from "./helpers.js";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -25,8 +23,12 @@ import {
 } from "@mui/material";
 import Cookies from "universal-cookie";
 import WeClosed from "./WeClosed";
+import "../css/header.css";
 
 function Header() {
+    const dispatch = useDispatch();
+    const { pathname } = useLocation();
+
     const [activeTopMenu, setActiveTopMenu] = useState(5792);
     const [openChooseTown, setOpenChooseTown] = useState(false);
     const cookies = new Cookies();
@@ -39,17 +41,15 @@ function Header() {
             dispatch(closeMobileMenu());
         }
     };
-    const dispatch = useDispatch();
 
     const { mobileMenuOpen } = useSelector((state) => state.header);
 
-    const { configStatus, config, topMenu, currentPage, user } = useSelector(
+    const { configStatus, config, topMenu, user } = useSelector(
         ({ config, pages, user }) => {
             return {
                 configStatus: config.status,
                 config: config.data,
                 topMenu: pages.topMenu,
-                currentPage: pages.currentPage,
                 user: user.user,
             };
         }
@@ -60,7 +60,6 @@ function Header() {
         if (mobileMenuOpen) {
             dispatch(closeMobileMenu());
         }
-        dispatch(setCurrentPage("/account"));
         navigate("/account", { replace: true });
     }, [navigate]);
 
@@ -72,7 +71,6 @@ function Header() {
         if (mobileMenuOpen) {
             dispatch(closeMobileMenu());
         }
-        dispatch(setCurrentPage(item.url));
         setActiveTopMenu(item.id);
     };
 
@@ -102,10 +100,7 @@ function Header() {
                                 />
                             </a>
                         ) : (
-                            <Link
-                                onClick={() => dispatch(setCurrentPage("/"))}
-                                to="/"
-                            >
+                            <Link to="/">
                                 <img
                                     src={config.CONFIG_company_logo_main}
                                     className="header-logo"
@@ -373,7 +368,7 @@ function Header() {
                             </div>
                         )}
 
-                        {!stepperPage.includes(currentPage) ? (
+                        {!stepperPage.includes(pathname) ? (
                             <div className="standart-header">
                                 <div className="header-phone">
                                     <svg
@@ -562,7 +557,7 @@ function Header() {
                                 <div className="stepper-header">
                                     <Stepper
                                         activeStep={stepperPage.indexOf(
-                                            currentPage
+                                            pathname
                                         )}
                                         alternativeLabel
                                     >
@@ -581,7 +576,7 @@ function Header() {
                 </Container>
             </AppBar>
 
-            {!stepperPage.includes(currentPage) && !_isMobile() ? (
+            {!stepperPage.includes(pathname) && !_isMobile() ? (
                 <div className="top-menu">
                     <Container>
                         {topMenu ? (
