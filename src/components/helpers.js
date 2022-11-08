@@ -146,9 +146,18 @@ export const _checkPromocode = (promocode, items, cartTotal, typeDelivery) => {
         }
 
         // Проверка платформы
-        // if(  ) {
-
-        // }
+        if (promocode.platform) {
+            const currentPlatform = _getPlatform();
+            if (
+                promocode.platform[currentPlatform] &&
+                promocode.platform[currentPlatform] !== "on"
+            )
+                return {
+                    status: "error",
+                    message:
+                        "Промокод отменен, т.к. не действует на данной платформе.",
+                };
+        }
 
         // Проверка категорий
         if (promocode.type === "fixed_cart" || promocode.type === "percent") {
