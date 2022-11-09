@@ -107,8 +107,8 @@ export default function ChooseTown() {
                                 }}
                                 fullWidth
                             />
+                            {renderedTownsName}
                         </div>
-                        {renderedTownsName}
                     </div>
                 </Dialog>
             ) : (

@@ -213,7 +213,7 @@
         margin-right: 0 !important;
     }
     .modal-alert--wrapper.choose-town .modal-alert--inner {
-        min-width: 300px;
+        min-width: 200px;
     }
     .modal-alert--wrapper.choose-town .modal-alert--title {
         text-align: center;
