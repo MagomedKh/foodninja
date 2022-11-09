@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { setTownModal } from "../redux/actions/config";
@@ -33,6 +33,8 @@ function Header() {
     const [openChooseTown, setOpenChooseTown] = useState(false);
     const cookies = new Cookies();
     const currentTown = cookies.get("currentTown");
+
+    useEffect(() => dispatch(closeMobileMenu()), []);
 
     const toggleMobileMenu = () => {
         if (!mobileMenuOpen) {
