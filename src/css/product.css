@@ -287,6 +287,11 @@
     .product--quantity .product-add {
         width: 28px !important;
     }
+
+    .cart--product .product-decrease,
+    .cart--product .product-add {
+        height: 28px !important;
+    }
     .product--quantity .quantity {
         width: 28px;
         display: inline-block;
