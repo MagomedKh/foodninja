@@ -25,6 +25,7 @@ export default function BonusesProductsModal() {
         cartTotalPrice,
         userCartBonusProduct,
         openBonusesProductsModal,
+        promocode,
     } = useSelector(({ products, cart, bonusesProductsModal }) => {
         return {
             bonuses_items: products.bonuses_items,
@@ -32,6 +33,7 @@ export default function BonusesProductsModal() {
             cartTotalPrice: cart.totalPrice,
             openBonusesProductsModal:
                 bonusesProductsModal.openBonusesProductsModal,
+            promocode: cart.promocode,
         };
     });
     const { data: config } = useSelector((state) => state.config);
@@ -85,7 +87,8 @@ export default function BonusesProductsModal() {
     if (
         config.CONFIG_free_products_program_status !== "on" ||
         !bonuses_items ||
-        !bonuses_items.length
+        !bonuses_items.length ||
+        Object.keys(promocode).length
     ) {
         return null;
     }
