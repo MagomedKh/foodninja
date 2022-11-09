@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { styled } from "@mui/material/styles";
 import { addBonusProductToCart } from "../redux/actions/cart";
@@ -11,6 +11,8 @@ import {
     RadioGroup,
 } from "@mui/material";
 import CartBonusProduct from "../components/Product/CartBonusProduct";
+import CloseIcon from "@mui/icons-material/Close";
+import { useEffect } from "react";
 
 const BootstrapTooltip = styled(({ className, ...props }) => (
     <Tooltip {...props} arrow classes={{ popper: className }} />
@@ -40,21 +42,33 @@ export default function CartBonusesProducts(minicart = false) {
             userCartBonusProduct: cart.bonusProduct,
         };
     });
+    const [choosenProductId, setChoosenProductId] = useState(null);
+
+    useEffect(() => {
+        if (cart.bonusProduct) {
+            setChoosenProductId(cart.bonusProduct.id);
+        } else {
+            setChoosenProductId(null);
+        }
+    }, [cart.bonusProduct]);
 
     const handleChooseBonusProduct = (product) => {
         if (
             Object.keys(userCartBonusProduct).length &&
             userCartBonusProduct.id === product.id
-        )
+        ) {
             dispatch(addBonusProductToCart({}));
-        else {
+            setChoosenProductId(null);
+        } else {
             if (
                 ((config.CONFIG_promocode_with_bonus_program !== "on" &&
                     !cart.discount) ||
                     config.CONFIG_promocode_with_bonus_program === "on") &&
                 cartTotalPrice >= product.limit
-            )
+            ) {
                 dispatch(addBonusProductToCart(product));
+                setChoosenProductId(product.id);
+            }
         }
     };
 
@@ -138,6 +152,9 @@ export default function CartBonusesProducts(minicart = false) {
                                             <CartBonusProduct
                                                 product={product}
                                             />
+                                            {choosenProductId === product.id ? (
+                                                <CloseIcon />
+                                            ) : null}
                                         </div>
                                     </BootstrapTooltip>
                                 </Grid>
