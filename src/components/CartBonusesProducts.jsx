@@ -109,6 +109,7 @@ export default function CartBonusesProducts(minicart = false) {
                                     item
                                     md={minicart ? 12 : 6}
                                     sm={12}
+                                    sx={{ width: "100%" }}
                                 >
                                     <BootstrapTooltip
                                         placement="left"
@@ -149,12 +150,15 @@ export default function CartBonusesProducts(minicart = false) {
                                                 value={product.id}
                                                 control={<Radio />}
                                             />
-                                            <CartBonusProduct
-                                                product={product}
-                                            />
-                                            {choosenProductId === product.id ? (
-                                                <CloseIcon />
-                                            ) : null}
+                                            <div className="bonus-product-choose-content">
+                                                <CartBonusProduct
+                                                    product={product}
+                                                />
+                                                {choosenProductId ===
+                                                product.id ? (
+                                                    <CloseIcon />
+                                                ) : null}
+                                            </div>
                                         </div>
                                     </BootstrapTooltip>
                                 </Grid>
