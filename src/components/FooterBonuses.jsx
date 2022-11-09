@@ -61,6 +61,7 @@ export default function BonusesProductsModal() {
 
     const handleChooseBonusProduct = (item) => {
         dispatch(addBonusProductToCart(item));
+        dispatch(setOpenBonusesModal(false));
     };
 
     const handleBonusesHandler = () => {
