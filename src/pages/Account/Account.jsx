@@ -430,8 +430,23 @@ export default function Account() {
                                             </MenuItem>
                                         </TextField>
                                     </Box>
-                                    <FormHelperText id="userBirthday-helper-text">
-                                        Выберите ваш день рождения.
+                                    <FormHelperText
+                                        id="userBirthday-helper-text"
+                                        disabled={!!user.dayBirthday}
+                                    >
+                                        {!!user.dayBirthday ? (
+                                            <div>Ваш день рождения</div>
+                                        ) : (
+                                            <>
+                                                <div>
+                                                    Выберите ваш день рождения
+                                                </div>
+                                                <div>
+                                                    Указать дату можно только
+                                                    один раз
+                                                </div>
+                                            </>
+                                        )}
                                     </FormHelperText>
                                 </FormControl>
 
