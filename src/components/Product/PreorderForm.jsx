@@ -97,13 +97,15 @@ const PreorderForm = forwardRef(
                         autoWidth
                         MenuProps={{ PaperProps: { sx: { maxHeight: 500 } } }}
                     >
-                        <MenuItem
-                            key={"Как можно скорее"}
-                            value={"Как можно скорее"}
-                            divider
-                        >
-                            Как можно скорее
-                        </MenuItem>
+                        {config.CONFIG_work_status === "closed" ? null : (
+                            <MenuItem
+                                key={"Как можно скорее"}
+                                value={"Как можно скорее"}
+                                divider
+                            >
+                                Как можно скорее
+                            </MenuItem>
+                        )}
 
                         {datesArray.map((el) => (
                             <MenuItem

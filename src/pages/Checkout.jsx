@@ -144,7 +144,9 @@ export default function Checkout() {
     };
 
     useEffect(() => {
-        handlePreorderDateChange("Как можно скорее");
+        if (config.CONFIG_work_status !== "closed") {
+            handlePreorderDateChange("Как можно скорее");
+        }
     }, []);
 
     const handlePreorderDateChange = (date) => {
