@@ -12,7 +12,7 @@ import {
 import { Button } from "@mui/material";
 import "../../css/product.css";
 import LazyLoad from "react-lazyload";
-import { _getPlatform } from "../helpers";
+import { _getPlatform, _isMobile } from "../helpers";
 import PlaceholderImageProduct from "./PlaceholderImageProduct";
 import GroupIcon from "@mui/icons-material/Group";
 import soon from "../../img/photo-soon.svg";
@@ -155,7 +155,7 @@ export default function Product({ product, disabled }) {
                             onClick={openModalBtnClick}
                             disabled={disabled}
                         >
-                            Выбрать
+                            {_isMobile() ? "Хочу" : "Выбрать"}
                         </Button>
                     ) : !cartProducts[product.id] ? (
                         <Button
