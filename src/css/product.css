@@ -1,6 +1,10 @@
 .product-grid-list {
     font-size: 0;
 }
+
+.product--category-container {
+    padding: 0 16px;
+}
 .product {
     border-radius: 15px;
     width: 25%;
@@ -225,6 +229,9 @@
 }
 
 @media (max-width: 899px) {
+    .product--category-container {
+        padding: 0;
+    }
     .product {
         padding: 0;
         width: 100%;
@@ -245,9 +252,9 @@
         border-bottom: none !important;
     }
     .product .product--image {
-        min-width: 150px !important;
+        min-width: 130px !important;
         margin-right: 15px;
-        width: 150px;
+        width: 130px;
         padding: 0;
     }
     .product .product--image img {
@@ -278,12 +285,10 @@
     }
     .product--quantity .product-decrease,
     .product--quantity .product-add {
-        height: 28px !important;
         width: 28px !important;
     }
     .product--quantity .quantity {
         width: 28px;
         display: inline-block;
-        height: 28px;
     }
 }

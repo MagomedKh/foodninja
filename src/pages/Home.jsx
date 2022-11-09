@@ -64,10 +64,10 @@ export default function Home() {
                     </div>
                     {categories ? (
                         categories.map((item, index) => (
-                            <Container
+                            <div
                                 key={`container-category-${item.term_id}`}
                                 id={`category-${item.term_id}`}
-                                className={`category-${item.term_id}`}
+                                className={`category-${item.term_id} product--category-container`}
                             >
                                 <h2 key={`title-${item.term_id}`}>
                                     {item.name}
@@ -174,7 +174,7 @@ export default function Home() {
                                         />
                                     )}
                                 </div>
-                            </Container>
+                            </div>
                         ))
                     ) : (
                         <Skeleton variant="text" animation="wave" />
