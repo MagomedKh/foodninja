@@ -3,7 +3,7 @@ import { Dialog } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { setTownModal } from "../redux/actions/config";
 import "../css/choose-town.css";
-import { _isMobile } from "./helpers";
+import { _isMobile, _getDomain } from "./helpers";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
 import { Slide, TextField } from "@mui/material";
@@ -34,6 +34,38 @@ export default function ChooseTown() {
         threshold: 0.2,
     });
 
+    useEffect(() => {
+        let subDomain;
+        const urlParts = _getDomain().split(".");
+        if (urlParts.length >= 4) {
+            subDomain = urlParts[0];
+        }
+        if (currentTown && !subDomain) {
+            window.location.href = `https://${currentTown}.${config.data.baseDomain}`;
+        }
+
+        if (
+            config.data.CONFIG_always_choose_town === "on" ||
+            _getDomain() === config.data.baseDomain ||
+            (config.status && !currentTown && !subDomain)
+        ) {
+            dispatch(setTownModal(true));
+        } else {
+            dispatch(setTownModal(false));
+        }
+    }, [config.status]);
+
+    const chooseTownHandler = (town) => {
+        let subDomain;
+        const urlParts = town.url.split(".");
+        if (urlParts.length >= 4) {
+            subDomain = urlParts[0];
+        }
+        cookies.set("currentTown", subDomain, {
+            path: "/",
+        });
+    };
+
     const inputChangeHandler = (event) => {
         setInputValue(event.target.value);
         if (!event.target.value) {
@@ -47,25 +79,24 @@ export default function ChooseTown() {
     const renderedTownsName = filteredTowns
         ? filteredTowns.map((value, index) => (
               <div key={index} className="town-link">
-                  <a href={`https://${value.item.url}/?saveTown=true`}>
+                  <a
+                      href={`https://${value.item.url}/?saveTown=true`}
+                      onClick={() => chooseTownHandler(value)}
+                  >
                       {value.item.name}
                   </a>
               </div>
           ))
         : config.data.towns.map((value, index) => (
               <div key={index} className="town-link">
-                  <a href={`https://${value.url}/?saveTown=true`}>
+                  <a
+                      href={`https://${value.url}/?saveTown=true`}
+                      onClick={() => chooseTownHandler(value)}
+                  >
                       {value.name}
                   </a>
               </div>
           ));
-
-    useEffect(() => {
-        if (config.status && currentTown === undefined)
-            dispatch(setTownModal(true));
-
-        return dispatch(setTownModal(false));
-    }, [config.status]);
 
     const handleAlertClose = () => {
         dispatch(setTownModal(false));

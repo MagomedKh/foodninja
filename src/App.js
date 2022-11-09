@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import {
@@ -63,7 +63,11 @@ function App() {
         };
     }, shallowEqual);
 
-    React.useEffect(() => {
+    useEffect(() => {
+        console.log(_getDomain());
+    }, []);
+
+    useEffect(() => {
         dispatch(setMainLoading(false));
         axios
             .get("https://" + _getDomain() + "/?rest-api=base_init", {
