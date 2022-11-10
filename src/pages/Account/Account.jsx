@@ -171,15 +171,6 @@ export default function Account() {
     };
 
     const handleSaveUser = () => {
-        console.log({
-            name: userName,
-            phone: getNumbersValue(userPhone),
-            email: userEmail,
-            vk: userVK,
-            token: user.token,
-            dayBirthday,
-            monthBirthday: monthBirthday + 1,
-        });
         setValidate(true);
         (!userName || getNumbersValue(userPhone).length != 11) &&
             setValidate(false);
@@ -195,7 +186,7 @@ export default function Account() {
                     vk: userVK,
                     token: user.token,
                     dayBirthday,
-                    monthBirthday,
+                    monthBirthday: monthBirthday + 1,
                 })
                 .then((resp) => {
                     console.log(resp);
