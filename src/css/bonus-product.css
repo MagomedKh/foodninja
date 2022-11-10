@@ -16,7 +16,6 @@
 
 .bonus-product-choose-content {
     display: flex;
-    align-items: center;
     width: 100%;
 }
 
@@ -25,6 +24,17 @@
     max-width: initial;
     margin-right: 15px;
 }
+
+.cart-product-list .cart--bonuses-products .cart--product-remove svg {
+    width: 1.2rem;
+    height: 1.2rem;
+}
+
+.minicart--product-list .cart--bonuses-products .cart--product-remove svg {
+    width: 15px;
+    height: auto;
+}
+
 .bonus-product--info {
     display: flex;
     font-weight: 400;

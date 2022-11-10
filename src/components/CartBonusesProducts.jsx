@@ -156,7 +156,9 @@ export default function CartBonusesProducts(minicart = false) {
                                                 />
                                                 {choosenProductId ===
                                                 product.id ? (
-                                                    <CloseIcon />
+                                                    <div className="cart--product-remove">
+                                                        <CloseIcon />
+                                                    </div>
                                                 ) : null}
                                             </div>
                                         </div>
