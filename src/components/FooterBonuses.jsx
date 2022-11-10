@@ -1,17 +1,20 @@
-import * as React from "react";
-import Dialog from "@mui/material/Dialog";
-import { setOpenBonusesModal } from "../redux/actions/bonusesProductsModal";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { setOpenBonusesModal } from "../redux/actions/bonusesProductsModal";
 import { addBonusProductToCart } from "../redux/actions/cart";
-import IconButton from "@mui/material/IconButton";
-import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
-import Button from "@mui/material/Button";
+import {
+    Button,
+    Container,
+    Collapse,
+    Dialog,
+    Grid,
+    IconButton,
+    Slide,
+} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { useState } from "react";
-import "../css/footer-bonuses.css";
-import Slide from "@mui/material/Slide";
+import { TransitionGroup } from "react-transition-group";
 import { _isMobile } from "./helpers";
+import "../css/footer-bonuses.css";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -83,58 +86,62 @@ export default function BonusesProductsModal() {
         dialogProps.fullScreen = true;
         dialogProps.scroll = "body";
     }
-
-    if (
-        config.CONFIG_free_products_program_status !== "on" ||
-        !bonuses_items ||
-        !bonuses_items.length ||
-        Object.keys(promocode).length
-    ) {
-        return null;
-    }
     return (
         <div>
-            <div className="footer-bonuses">
-                <Container className="footer-bonuses__container">
-                    <div
-                        className="footer-bonuses__info"
-                        onClick={handleBonusesHandler}
-                    >
-                        Выбери подарок
-                    </div>
-                    <div className="footer-bonuses__points">
+            <Slide
+                direction="up"
+                in={
+                    config.CONFIG_free_products_program_status === "on" &&
+                    bonuses_items &&
+                    bonuses_items.length &&
+                    !Object.keys(promocode).length
+                }
+                mountOnEnter
+                unmountOnExit
+            >
+                <div className="footer-bonuses">
+                    <Container className="footer-bonuses__container">
                         <div
-                            className="footer-bonuses__points-bg"
-                            style={{
-                                width: `${
-                                    cartTotalPrice
-                                        ? (cartTotalPrice / maxBonusesPrice) *
-                                          100
-                                        : 0
-                                }%`,
-                            }}
-                        ></div>
-                        {bonuses_items.map((item) => (
+                            className="footer-bonuses__info"
+                            onClick={handleBonusesHandler}
+                        >
+                            Выбери подарок
+                        </div>
+                        <div className="footer-bonuses__points">
                             <div
-                                key={item.id}
-                                className="footer-bonuses__point"
+                                className="footer-bonuses__points-bg"
                                 style={{
-                                    left: `${
-                                        (item.limit / maxBonusesPrice) * 100
+                                    width: `${
+                                        cartTotalPrice
+                                            ? (cartTotalPrice /
+                                                  maxBonusesPrice) *
+                                              100
+                                            : 0
                                     }%`,
                                 }}
-                            >
-                                <div className="footer-bonuses__point-block">
-                                    {item.limit}
-                                    <span className="footer-bonuses__point-valute">
-                                        ₽
-                                    </span>
+                            ></div>
+                            {bonuses_items.map((item) => (
+                                <div
+                                    key={item.id}
+                                    className="footer-bonuses__point"
+                                    style={{
+                                        left: `${
+                                            (item.limit / maxBonusesPrice) * 100
+                                        }%`,
+                                    }}
+                                >
+                                    <div className="footer-bonuses__point-block">
+                                        {item.limit}
+                                        <span className="footer-bonuses__point-valute">
+                                            ₽
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
-                </Container>
-            </div>
+                            ))}
+                        </div>
+                    </Container>
+                </div>
+            </Slide>
 
             <Dialog
                 maxWidth="md"
