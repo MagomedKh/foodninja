@@ -38,16 +38,6 @@ export default function ChooseTown() {
         if (
             config.status &&
             _getDomain() === config.data.baseDomain &&
-            config.data.CONFIG_always_choose_town !== "on" &&
-            currentTown &&
-            currentTown !== config.data.baseDomain
-        ) {
-            window.location.href = `http://${currentTown}`;
-        }
-
-        if (
-            config.status &&
-            _getDomain() === config.data.baseDomain &&
             (!currentTown || config.data.CONFIG_always_choose_town === "on")
         ) {
             dispatch(setTownModal(true));
@@ -80,7 +70,7 @@ export default function ChooseTown() {
                       {value.name}
                   </a>
               </div>
-          ));
+        ));
 
     const handleAlertClose = () => {
         dispatch(setTownModal(false));
