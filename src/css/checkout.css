@@ -43,16 +43,6 @@
     margin-top: 25px;
     padding: 0 20px;
 }
-.time-order-modal-wrapper::-webkit-scrollbar {
-    width: 6px;
-}
-.time-order-modal-wrapper::-webkit-scrollbar-track {
-    background: #f2f5f7;
-}
-.time-order-modal-wrapper::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 4px;
-}
 .time-order-modal-wrapper h2 {
     margin-top: 0;
     margin-bottom: 30px;

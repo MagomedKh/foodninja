@@ -193,6 +193,19 @@ a.btn {
     }
 }
 
+/* Scroll Bar */
+
+.MuiPopover-paper::-webkit-scrollbar {
+    width: 6px;
+}
+.MuiPopover-paper::-webkit-scrollbar-track {
+    background: #f2f5f7;
+}
+.MuiPopover-paper::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+
 .modal-alert--wrapper {
     padding: 50px;
     min-height: 500px;
