@@ -9,6 +9,7 @@ import IconButton from "@mui/material/IconButton";
 import { Slide, TextField } from "@mui/material";
 import Cookies from "universal-cookie";
 import Fuse from "fuse.js";
+import { addMinutes } from "date-fns";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -28,6 +29,7 @@ export default function ChooseTown() {
 
     const cookies = new Cookies();
     const currentTown = cookies.get("currentSite");
+    const chooseTownShown = cookies.get("chooseTownShown");
     const fuse = new Fuse(config.data.towns, {
         keys: ["name"],
         minMatchCharLength: 1,
@@ -36,16 +38,21 @@ export default function ChooseTown() {
 
     useEffect(() => {
         if (
-            (config.status &&
+            !chooseTownShown &&
+            ((config.status &&
                 _getDomain() === config.data.baseDomain &&
                 config.data.CONFIG_always_choose_town === "on" &&
                 window.location.href !==
                     `https://${config.data.baseDomain}/?saveTown=true`) ||
-            (config.status &&
-                _getDomain() !== config.data.baseDomain &&
-                !currentTown)
+                (config.status &&
+                    _getDomain() !== config.data.baseDomain &&
+                    !currentTown))
         ) {
             dispatch(setTownModal(true));
+            cookies.set("chooseTownShown", "true", {
+                path: "/",
+                expires: addMinutes(new Date(), 30),
+            });
         } else {
             dispatch(setTownModal(false));
         }
