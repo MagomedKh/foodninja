@@ -9,6 +9,7 @@ import {
     Header,
     Footer,
     SubscribeSnackbar,
+    ChooseTown,
 } from "../components";
 import SearchBar from "../components/SearchBar";
 import TopCategoriesMenu from "../components/TopCategoriesMenu";
@@ -17,12 +18,18 @@ import {
     _clone,
     _isMobile,
     _isCategoryDisabled,
+    _getPlatform,
 } from "../components/helpers.js";
 
 export default function Home() {
     const dispatch = useDispatch();
 
     const { user } = useSelector((state) => state.user);
+    const { config } = useSelector(({ config }) => {
+        return {
+            config: config.data,
+        };
+    });
     const { products, categories } = useSelector(({ products }) => {
         return {
             products: products.items,
@@ -50,6 +57,14 @@ export default function Home() {
         <>
             <Header />
             <div className="home">
+                {config.towns !== undefined &&
+                config.towns.length &&
+                _getPlatform() !== "vk" ? (
+                    <ChooseTown />
+                ) : (
+                    ""
+                )}
+
                 <Banners />
 
                 <TopCategoriesMenu />

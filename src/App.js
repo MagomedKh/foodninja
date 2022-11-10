@@ -230,13 +230,6 @@ function App() {
                             <ProductModal />
                             <AuthModal />
                             <SystemAlerts />
-                            {config.towns !== undefined &&
-                            config.towns.length &&
-                            _getPlatform() !== "vk" ? (
-                                <ChooseTown />
-                            ) : (
-                                ""
-                            )}
                             {_getPlatform() === "site" && _isMobile() ? (
                                 <InstallApp />
                             ) : (
