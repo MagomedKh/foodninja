@@ -15,13 +15,23 @@ const SubscribeSnackbar = () => {
 
     const cookies = new Cookies();
 
+    const agreedToSubscribe = cookies.get("agreedToSubscribe");
+
     const handleClose = (event, reason) => {
         if (reason === "clickaway") {
             return;
         }
-        cookies.set("refusedToSubscribe", "true", {
+        cookies.set("agreedToSubscribe", "no", {
             path: "/",
             expires: addDays(new Date(), 7),
+        });
+        setSubscribeOpen(false);
+    };
+
+    const handleConfirm = () => {
+        cookies.set("agreedToSubscribe", "yes", {
+            path: "/",
+            expires: addDays(new Date(), 90),
         });
         setSubscribeOpen(false);
     };
@@ -32,6 +42,10 @@ const SubscribeSnackbar = () => {
         }, 15000);
         return () => clearTimeout(subscribeTimeout);
     }, []);
+
+    if (agreedToSubscribe) {
+        return null;
+    }
     return (
         <Snackbar
             open={subscribeOpen}
@@ -58,7 +72,7 @@ const SubscribeSnackbar = () => {
                             Нет
                         </Button>
                         <Button
-                            onClick={() => setSubscribeOpen(false)}
+                            onClick={handleConfirm}
                             variant="contained"
                             sx={{ ml: 1, flexGrow: 1, flexBasis: "0.5" }}
                             href={config.CONFIG_vk_mailing_link}

@@ -18,7 +18,6 @@ import {
     _isMobile,
     _isCategoryDisabled,
 } from "../components/helpers.js";
-import Cookies from "universal-cookie";
 
 export default function Home() {
     const dispatch = useDispatch();
@@ -32,9 +31,6 @@ export default function Home() {
     });
     const [activeCategoryTags, setActiveCategoryTags] = useState({});
     const [inputValue, setInputValue] = useState(null);
-
-    const cookies = new Cookies();
-    const refusedToSubscribe = cookies.get("refusedToSubscribe");
 
     const handleClickCategoryTag = (categoryID, tagID) => {
         let tmpArray = _clone(activeCategoryTags);
@@ -183,9 +179,7 @@ export default function Home() {
 
                 {_isMobile() ? <MobileMiniCart /> : ""}
 
-                {user?.token && !refusedToSubscribe ? (
-                    <SubscribeSnackbar />
-                ) : null}
+                <SubscribeSnackbar />
 
                 <FooterBonuses />
             </div>
