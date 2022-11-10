@@ -27,7 +27,12 @@ const CategoryPage = () => {
     const [activeCategoryTags, setActiveCategoryTags] = useState({});
 
     const currentCategory = categories.find(
-        (el) => el.slug === pathname.slice(10)
+        (el) =>
+            el.slug ===
+            pathname
+                .split("/")
+                .filter((element) => element)
+                .at(-1)
     );
 
     const handleClickCategoryTag = (categoryID, tagID) => {
