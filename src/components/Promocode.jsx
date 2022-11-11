@@ -89,7 +89,7 @@ export default function Promocode() {
                     id="promocode"
                     label="Промокод"
                     onInput={handleChangePromocode}
-                    value={promocode}
+                    value={promocode || ""}
                     disabled={
                         (cartPromocode.code !== undefined &&
                             cartPromocode.code) ||
