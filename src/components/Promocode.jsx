@@ -96,7 +96,7 @@ export default function Promocode() {
                         (Object.keys(userCartBonusProduct).length &&
                             canPromocodeWithBonus !== "on")
                             ? true
-                            : ""
+                            : false
                     }
                 />
                 {cartPromocode.code !== undefined && cartPromocode.code ? (
@@ -118,7 +118,7 @@ export default function Promocode() {
                             Object.keys(userCartBonusProduct).length &&
                             canPromocodeWithBonus !== "on"
                                 ? true
-                                : ""
+                                : false
                         }
                         className="btn--action promocode-button"
                         onClick={handleApplyPromocode}
