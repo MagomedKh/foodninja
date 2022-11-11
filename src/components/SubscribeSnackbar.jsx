@@ -43,7 +43,11 @@ const SubscribeSnackbar = () => {
         return () => clearTimeout(subscribeTimeout);
     }, []);
 
-    if (agreedToSubscribe) {
+    if (
+        agreedToSubscribe ||
+        !config.CONFIG_vk_mailing_text ||
+        !config.CONFIG_vk_mailing_link
+    ) {
         return null;
     }
     return (
