@@ -19,18 +19,18 @@ import {
     getTime,
     roundToNearestMinutes,
 } from "date-fns";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 const PreorderForm = forwardRef(
-    ({
-        preorderDate,
-        preorderTime,
-        handlePreorderDateChange,
-        handlePreorderTimeChange,
-        asSoonAsPosible,
-    }) => {
+    (
+        {
+            preorderDate,
+            preorderTime,
+            handlePreorderDateChange,
+            handlePreorderTimeChange,
+            asSoonAsPosible,
+        },
+        ref
+    ) => {
         const { config } = useSelector(({ config }) => {
             return {
                 config: config.data,
