@@ -175,8 +175,9 @@ export default function Footer() {
                             md={8}
                             sx={{ width: 1 }}
                             className={
-                                config.CONFIG_active_no_whitelabel &&
-                                `right-col`
+                                config.CONFIG_active_no_whitelabel
+                                    ? `right-col`
+                                    : ""
                             }
                         >
                             {new Date().getFullYear()} © Все права защищены.

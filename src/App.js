@@ -77,10 +77,6 @@ function App() {
     }, shallowEqual);
 
     useEffect(() => {
-        console.log(_getDomain());
-    }, []);
-
-    useEffect(() => {
         dispatch(setMainLoading(false));
         axios
             .get("https://" + _getDomain() + "/?rest-api=base_init", {
