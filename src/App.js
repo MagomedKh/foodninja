@@ -52,6 +52,19 @@ import { _getDomain, _getPlatform, _isMobile } from "./components/helpers";
 import { ru } from "date-fns/locale";
 import { setDefaultOptions } from "date-fns";
 
+const MainTheme = createGlobalStyle`
+	:root {
+		--main-color: ${(props) =>
+            props.mainColor.match(/#[a-f0-9]{6}\b/gi)
+                ? props.mainColor
+                : "#000"};
+        
+		--sec-color: ${(props) =>
+            props.secondColor.match(/#[a-f0-9]{6}\b/gi)
+                ? props.secondColor
+                : "#000"};
+	}`;
+
 function App() {
     const dispatch = useDispatch();
     setDefaultOptions({ locale: ru });
@@ -121,12 +134,6 @@ function App() {
             : "#000"
         : "#000";
 
-    const MainTheme = createGlobalStyle`
-	:root {
-		--main-color: ${mainColor.match(/#[a-f0-9]{6}\b/gi) ? mainColor : "#000"};
-		--sec-color: ${secondColor.match(/#[a-f0-9]{6}\b/gi) ? secondColor : "#000"};
-	}`;
-
     const foodninja = createTheme({
         palette: {
             primary: {
@@ -171,7 +178,7 @@ function App() {
 
     return (
         <ThemeProvider theme={foodninja}>
-            <MainTheme />
+            <MainTheme mainColor={mainColor} secondColor={secondColor} />
             {config !== undefined && Object.keys(config).length ? (
                 <div>
                     {config.site_status === "closed" ? (
