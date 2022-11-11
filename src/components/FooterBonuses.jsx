@@ -1,18 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setOpenBonusesModal } from "../redux/actions/bonusesProductsModal";
 import { addBonusProductToCart } from "../redux/actions/cart";
 import {
     Button,
     Container,
-    Collapse,
     Dialog,
     Grid,
     IconButton,
     Slide,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { TransitionGroup } from "react-transition-group";
 import { _isMobile } from "./helpers";
 import "../css/footer-bonuses.css";
 
@@ -41,7 +39,13 @@ export default function BonusesProductsModal() {
     });
     const { data: config } = useSelector((state) => state.config);
 
-    const [bonusesItemsLocal, setBonusesItemsLocal] = useState(bonuses_items);
+    const [bonusesItemsLocal, setBonusesItemsLocal] = useState(null);
+
+    useEffect(() => {
+        if (bonuses_items) {
+            setBonusesItemsLocal(bonuses_items);
+        }
+    }, [bonuses_items]);
 
     const setBonusesContentActive = (item) => {
         setBonusesItemsLocal(
