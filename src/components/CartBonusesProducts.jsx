@@ -126,11 +126,13 @@ export default function CartBonusesProducts(minicart = false) {
                                     >
                                         <div
                                             disabled={
-                                                cartTotalPrice <=
-                                                    product.limit ||
-                                                (cart.discount &&
-                                                    config.CONFIG_promocode_with_bonus_program !==
-                                                        "on")
+                                                !!(
+                                                    cartTotalPrice <=
+                                                        product.limit ||
+                                                    (cart.discount &&
+                                                        config.CONFIG_promocode_with_bonus_program !==
+                                                            "on")
+                                                )
                                             }
                                             className="bonus-product-choose"
                                             onClick={() =>
@@ -141,11 +143,13 @@ export default function CartBonusesProducts(minicart = false) {
                                         >
                                             <FormControlLabel
                                                 disabled={
-                                                    cartTotalPrice <=
-                                                        product.limit ||
-                                                    (cart.discount &&
-                                                        config.CONFIG_promocode_with_bonus_program !==
-                                                            "on")
+                                                    !!(
+                                                        cartTotalPrice <=
+                                                            product.limit ||
+                                                        (cart.discount &&
+                                                            config.CONFIG_promocode_with_bonus_program !==
+                                                                "on")
+                                                    )
                                                 }
                                                 value={product.id}
                                                 control={<Radio />}
