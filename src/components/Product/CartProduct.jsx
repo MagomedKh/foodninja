@@ -223,13 +223,13 @@ export default function CartProduct({
                     )}
                 </div>
 
-                <a
+                <div
                     className="cart--product-remove"
                     onClick={handleRemoveProduct}
                     data-product_id={productCart.id}
                 >
                     <CloseIcon />
-                </a>
+                </div>
             </div>
         </div>
     );

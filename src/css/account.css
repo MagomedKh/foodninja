@@ -1,4 +1,4 @@
-.user-bonuses-info h2{
+.user-bonuses-info h2 {
     margin-top: 0;
 }
 .account-menu {
@@ -6,16 +6,16 @@
     padding: 0 0;
     margin-bottom: 1.5rem;
 }
-.account-menu a{
+.account-menu a {
     margin-right: 15px;
 }
-.account-menu a.active{
+.account-menu a.active {
     color: black;
 }
 .account-menu a.btn.btn--action {
-    padding: 7px 21px!important;
+    padding: 7px 21px !important;
 }
-.account--user-order{
+.account--user-order {
     border: 1px solid #f1f1f1;
     font-size: 15px;
     box-shadow: 0 0 10px rgb(0 0 0 / 10%);
@@ -26,7 +26,9 @@
     height: 100%;
     position: relative;
 }
-.account--user-order--total, .account--user-order--header, .account--user-order--delivery{
+.account--user-order--total,
+.account--user-order--header,
+.account--user-order--delivery {
     display: flex;
     justify-content: space-between;
 }
@@ -40,13 +42,13 @@
 .ccount--user-order--delivery-type {
     color: var(--main-color);
 }
-.account--user-order--products{
+.account--user-order--products {
     padding: 10px 0;
     border-top: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
     margin-top: 15px;
 }
-.account--user-order--product{
+.account--user-order--product {
     display: flex;
     font-size: 14px;
     justify-content: space-between;
@@ -54,11 +56,11 @@
 .account--user-order--product-price {
     white-space: nowrap;
 }
-.account--user-order--product-price .default-price{
+.account--user-order--product-price .default-price {
     text-decoration: line-through;
     margin-right: 5px;
 }
-.account--user-order--product-price .default-price{
+.account--user-order--product-price .default-price {
     color: var(--main-color);
 }
 .account--user-order--promocode {
@@ -71,10 +73,10 @@
     display: flex;
     justify-content: space-between;
 }
-.account--user-order .repeat-order{
+.account--user-order .repeat-order {
     position: absolute;
-    bottom:25px;
-    left: 25px; 
+    bottom: 25px;
+    left: 25px;
     right: 25px;
     text-transform: none;
 }
@@ -92,12 +94,32 @@
     box-shadow: 0 0 10px rgb(0 0 0 / 10%);
     border-radius: 10px;
 }
-.deleting-account{
+.deleting-account {
     margin-top: 15px;
     font-size: 14px;
 }
-.account-separator{
+
+.deleting-account .btn--delete-account {
+    padding: 0;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: var(--main-color);
+    font-size: inherit;
+}
+
+.account-separator {
     margin-top: 30px;
     border: 0;
     border-top: 1px solid #ccc;
+}
+
+.btn--auth {
+    display: inline;
+    padding: 0;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: var(--main-color);
+    font-size: inherit;
 }

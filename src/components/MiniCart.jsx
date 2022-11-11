@@ -9,7 +9,7 @@ import MiniCartProduct from "../components/Product/MiniCartProduct";
 import MiniCartBonusProduct from "../components/Product/MiniCartBonusProduct";
 import { setOpenModalAuth } from "../redux/actions/user";
 import MiniCartFreeAddons from "./Product/MiniCartFreeAddons";
-import { _checkPromocode, _isMobile } from "../components/helpers.js";
+import { _checkPromocode } from "../components/helpers.js";
 import { Promocode } from "../components";
 import MiniCartReccomends from "./MiniCartRecommends";
 import CartBonusesProducts from "./CartBonusesProducts";
@@ -63,10 +63,6 @@ function MiniCart() {
 
     const handleCloseMiniCart = () => {
         dispatch(closeMiniCart());
-    };
-
-    const handleClickTopMenu = () => {
-        window.scrollTo(0, 0);
     };
 
     function _declension(value, words) {

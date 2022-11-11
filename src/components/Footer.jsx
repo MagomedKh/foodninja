@@ -149,6 +149,7 @@ export default function Footer() {
                                 <a
                                     href={config.CONFIG_APPSTORE}
                                     target="_blank"
+                                    rel="noreferrer"
                                 >
                                     <img src={AppStoreIcon} alt="iOS APP" />
                                 </a>
@@ -156,7 +157,11 @@ export default function Footer() {
                         )}
                         {config.CONFIG_GPLAY && (
                             <div className="contacts--googleplay mobile-apps">
-                                <a href={config.CONFIG_GPLAY} target="_blank">
+                                <a
+                                    href={config.CONFIG_GPLAY}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                >
                                     <img
                                         src={GooglePlayIcon}
                                         alt="Android APP"

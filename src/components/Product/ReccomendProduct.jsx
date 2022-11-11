@@ -3,10 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import {
     addProductToCart,
     decreaseProductInCart,
-    removeProductFromCart,
 } from "../../redux/actions/cart";
 import Button from "@mui/material/Button";
-import DeleteIcon from "@mui/icons-material/Delete";
 import "../../css/recommend-product.css";
 import soon from "../../img/photo-soon.svg";
 
@@ -23,9 +21,6 @@ export default function ReccomendProduct({ product }) {
     };
     const handleDecreaseProduct = () => {
         dispatch(decreaseProductInCart(product));
-    };
-    const handleRemoveProduct = () => {
-        dispatch(removeProductFromCart(product));
     };
 
     return (

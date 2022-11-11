@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { setOpenBonusesModal } from "../redux/actions/bonusesProductsModal";
 import { addBonusProductToCart } from "../redux/actions/cart";
 import {
@@ -36,8 +36,10 @@ export default function BonusesProductsModal() {
                 bonusesProductsModal.openBonusesProductsModal,
             promocode: cart.promocode,
         };
-    });
-    const { data: config } = useSelector((state) => state.config);
+    }, shallowEqual);
+    const { CONFIG_free_products_program_status } = useSelector((state) => {
+        return state.config.data;
+    }, shallowEqual);
 
     const [bonusesItemsLocal, setBonusesItemsLocal] = useState(null);
 
@@ -95,7 +97,7 @@ export default function BonusesProductsModal() {
             <Slide
                 direction="up"
                 in={
-                    config.CONFIG_free_products_program_status === "on" &&
+                    CONFIG_free_products_program_status === "on" &&
                     bonuses_items &&
                     bonuses_items.length &&
                     !Object.keys(promocode).length

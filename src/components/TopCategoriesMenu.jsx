@@ -2,7 +2,6 @@ import React, { useRef, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { MiniCart } from "../components";
-import ScrollContainer from "react-indiana-drag-scroll";
 import Container from "@mui/material/Container";
 import Skeleton from "@mui/material/Skeleton";
 import { Link as AnimateLink } from "react-scroll";
@@ -45,7 +44,6 @@ export default function TopCategoriesMenu() {
     }, []);
 
     const checkFlexMenu = () => {
-        let flex = true;
         let menuWidth,
             allLi,
             allLiLength,
@@ -64,7 +62,6 @@ export default function TopCategoriesMenu() {
         if (!_isMobile() && breakIndex)
             changeFlexMenu("decrease", allLi.length - breakIndex);
         else {
-            flex = false;
             menuWidth =
                 document.querySelector("#topCategoriesMenu").offsetWidth;
             allLi = document.querySelectorAll("#topCategoriesMenu li");
@@ -77,7 +74,7 @@ export default function TopCategoriesMenu() {
     };
     const changeFlexMenu = (type, countEl) => {
         // decrease
-        if (!_isMobile() && type == "decrease") {
+        if (!_isMobile() && type === "decrease") {
             setRestCategories([
                 ...restCategoriesRef.current,
                 ...showedCategoriesRef.current.slice(
@@ -91,7 +88,7 @@ export default function TopCategoriesMenu() {
                     showedCategoriesRef.current.length - countEl
                 )
             );
-        } else if (!_isMobile() && type == "increase") {
+        } else if (!_isMobile() && type === "increase") {
             setShowedCategories([
                 ...showedCategoriesRef.current,
                 ...restCategoriesRef.current.slice(

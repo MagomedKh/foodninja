@@ -1,21 +1,15 @@
-import React, { useState, forwardRef } from "react";
+import React, { forwardRef } from "react";
 import { useSelector } from "react-redux";
 import { Box, Select, MenuItem, InputLabel, FormControl } from "@mui/material";
-import TextField from "@mui/material/TextField";
-import ru from "date-fns/locale/ru";
 import {
     isToday,
     eachDayOfInterval,
     format,
     compareAsc,
-    add,
     addMinutes,
-    addHours,
     addDays,
     set,
     getDayOfYear,
-    getHours,
-    getMinutes,
     getTime,
     roundToNearestMinutes,
 } from "date-fns";
@@ -71,8 +65,6 @@ const PreorderForm = forwardRef(
             start: new Date(),
             end: addDays(new Date(), 30),
         });
-
-        const [open, setOpen] = useState(false);
 
         return (
             <Box sx={{ display: "flex" }}>

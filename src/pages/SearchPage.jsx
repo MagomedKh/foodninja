@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React from "react";
 import { Container, Box } from "@mui/material";
 import {
     Header,
@@ -9,14 +8,9 @@ import {
     TopCategoriesMenu,
     MobileMiniCart,
 } from "../components";
-import { _getPlatform, _isMobile } from "../components/helpers";
+import { _isMobile } from "../components/helpers";
 
 const SearchPage = () => {
-    const { bonuses_items } = useSelector(({ products }) => {
-        return {
-            bonuses_items: products.bonuses_items,
-        };
-    });
     return (
         <Box sx={{ display: "flex", flexDirection: "column", height: "100vh" }}>
             <Header />

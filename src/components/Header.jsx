@@ -21,7 +21,6 @@ import {
     Skeleton,
     Toolbar,
 } from "@mui/material";
-import Cookies from "universal-cookie";
 import WeClosed from "./WeClosed";
 import "../css/header.css";
 
@@ -30,11 +29,8 @@ function Header() {
     const { pathname } = useLocation();
 
     const [activeTopMenu, setActiveTopMenu] = useState(5792);
-    const [openChooseTown, setOpenChooseTown] = useState(false);
-    const cookies = new Cookies();
-    const currentTown = cookies.get("currentTown");
 
-    useEffect(() => dispatch(closeMobileMenu()), []);
+    useEffect(() => dispatch(closeMobileMenu()), [dispatch]);
 
     const toggleMobileMenu = () => {
         if (!mobileMenuOpen) {
@@ -46,16 +42,14 @@ function Header() {
 
     const { mobileMenuOpen } = useSelector((state) => state.header);
 
-    const { configStatus, config, topMenu, user } = useSelector(
-        ({ config, pages, user }) => {
-            return {
-                configStatus: config.status,
-                config: config.data,
-                topMenu: pages.topMenu,
-                user: user.user,
-            };
-        }
-    );
+    const { config, topMenu, user } = useSelector(({ config, pages, user }) => {
+        return {
+            configStatus: config.status,
+            config: config.data,
+            topMenu: pages.topMenu,
+            user: user.user,
+        };
+    });
 
     const navigate = useNavigate();
     const hadleClickAccount = useCallback(() => {
@@ -63,7 +57,7 @@ function Header() {
             dispatch(closeMobileMenu());
         }
         navigate("/account", { replace: true });
-    }, [navigate]);
+    }, [navigate, dispatch, mobileMenuOpen]);
 
     const openAuthModalBtnClick = () => {
         dispatch(setOpenModalAuth(true));
@@ -94,6 +88,7 @@ function Header() {
                             <a
                                 target="_blank"
                                 href={`https://vk.com/club${config.CONFIG_vk_group_id}`}
+                                rel="noreferrer"
                             >
                                 <img
                                     src={config.CONFIG_company_logo_main}
@@ -197,6 +192,7 @@ function Header() {
                                                             <a
                                                                 href={item.url}
                                                                 target="_blank"
+                                                                rel="noreferrer"
                                                                 title={
                                                                     item.title
                                                                 }
@@ -589,6 +585,7 @@ function Header() {
                                             <a
                                                 href={item.url}
                                                 target="_blank"
+                                                rel="noreferrer"
                                                 title={item.title}
                                             >
                                                 {item.title}

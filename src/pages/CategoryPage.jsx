@@ -12,7 +12,6 @@ import {
     FooterBonuses,
 } from "../components";
 import { _isMobile, _clone, _isCategoryDisabled } from "../components/helpers";
-import { getTime, set } from "date-fns";
 
 const CategoryPage = () => {
     const { pathname } = useLocation();

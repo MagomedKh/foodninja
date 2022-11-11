@@ -1,7 +1,5 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import Button from "@mui/material/Button";
-import DeleteIcon from "@mui/icons-material/Delete";
 import "../../css/cart.css";
 
 export default function CartFreeAddons() {

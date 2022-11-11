@@ -311,6 +311,8 @@ export default function Orders() {
                                                                                         </div>
                                                                                     </div>
                                                                                 );
+                                                                            } else {
+                                                                                return null;
                                                                             }
                                                                         }
                                                                     )}

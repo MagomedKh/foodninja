@@ -1,7 +1,5 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import Button from "@mui/material/Button";
-import CloseIcon from "@mui/icons-material/Close";
 
 export default function MiniCartFreeAddons() {
     const { delimiter, totalRolls, sauceImg, vasabiImg, imbirImg } =

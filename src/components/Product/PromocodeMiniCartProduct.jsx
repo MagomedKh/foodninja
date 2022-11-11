@@ -71,13 +71,13 @@ export default function PromocodeMiniCartProduct({
                     </div>
                     {/* <div className="minicart--product-price">{productCart.options._price.toLocaleString('ru-RU')} &#8381;</div> */}
 
-                    <a
+                    <div
                         className="minicart--product-remove"
                         onClick={handleRemovePromocodeProduct}
                         data-product_id={productCart.id}
                     >
                         <CloseIcon />
-                    </a>
+                    </div>
                 </div>
             </div>
             <div className="minicart--product-result">

@@ -1,7 +1,6 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { removePromocode } from "../../redux/actions/cart";
-import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
 import "../../css/cart.css";
 import soon from "../../img/photo-soon.svg";
@@ -88,13 +87,13 @@ export default function PromocodeCartProduct({
                     </span>
                 </div>
 
-                <a
+                <div
                     className="cart--product-remove"
                     onClick={handleRemovePromocodeProduct}
                     data-product_id={productCart.id}
                 >
                     <DeleteIcon />
-                </a>
+                </div>
             </div>
         </div>
     );

@@ -39,9 +39,9 @@ export default function InstallApp({ initStatus = false }) {
     };
     let linkApp;
 
-    if (mobileType == "android" && linkAndroid) {
+    if (mobileType === "android" && linkAndroid) {
         linkApp = linkAndroid;
-    } else if (mobileType == "ios" && linkIos) {
+    } else if (mobileType === "ios" && linkIos) {
         linkApp = linkIos;
     } else open = false;
 
@@ -54,7 +54,11 @@ export default function InstallApp({ initStatus = false }) {
                 className="install-app--panel"
             >
                 <div className="install-app--inner">
-                    <img className="install-app--icon" src={icon} />
+                    <img
+                        className="install-app--icon"
+                        src={icon}
+                        alt={"App logo"}
+                    />
                     <h4 className="install-app--title">
                         Скачай мобильное приложение
                     </h4>
@@ -79,6 +83,7 @@ export default function InstallApp({ initStatus = false }) {
                     <a
                         href={linkApp}
                         target="_blank"
+                        rel="noreferrer"
                         className="btn btn-lg btn--action w-100 t-center"
                     >
                         Установить приложение

@@ -39,8 +39,8 @@ import {
     OrderComplete,
     Product,
     CategoryPage,
+    SearchPage,
 } from "./pages";
-import SearchPage from "./pages/SerachPage";
 import axios from "axios";
 import "./fonts/cera/CeraRoundProMedium.woff2";
 import "./fonts/cera/CeraRoundProBold.woff2";

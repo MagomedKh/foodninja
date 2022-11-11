@@ -10,16 +10,19 @@ import {
     setOpenModal,
 } from "../../redux/actions/productModal";
 import AddonProductModal from "../../components/Product/AddonProductModal";
-import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-import Dialog from "@mui/material/Dialog";
+import {
+    Alert,
+    Button,
+    Collapse,
+    Dialog,
+    IconButton,
+    Slide,
+    ToggleButtonGroup,
+    ToggleButton,
+    Zoom,
+} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import Slide from "@mui/material/Slide";
 import "../../css/product-modal.css";
-import Zoom from "@mui/material/Zoom";
-import Collapse from "@mui/material/Collapse";
-import Alert from "@mui/material/Alert";
-import { ButtonGroup, ToggleButtonGroup, ToggleButton } from "@mui/material";
 import soon from "../../img/photo-soon.svg";
 
 const Transition = React.forwardRef(function Transition(props, ref) {

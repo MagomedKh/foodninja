@@ -1,32 +1,29 @@
-import React from 'react'
-import {useSelector} from 'react-redux';
-import '../../css/checkout.css';
-
+import React from "react";
+import { useSelector } from "react-redux";
+import "../../css/checkout.css";
 
 export default function CheckoutFreeAddons() {
-
-    const { delimiter, totalRolls, sauceImg, vasabiImg, imbirImg } = useSelector( ({config, cart}) => {
+    const { delimiter, totalRolls } = useSelector(({ config, cart }) => {
         return {
             delimiter: config.data.CONFIG_count_rolls_for_free_addons,
             sauceImg: config.data.CONFIG_free_sauce_image,
             vasabiImg: config.data.CONFIG_free_vasabi_image,
             imbirImg: config.data.CONFIG_free_imbir_image,
-            totalRolls: cart.totalRolls
-        }
-    } );
+            totalRolls: cart.totalRolls,
+        };
+    });
 
     let countAddons = 0;
-    if( delimiter ) {
-        countAddons = parseInt( totalRolls / delimiter );
-        ( totalRolls % delimiter ) && countAddons++;
+    if (delimiter) {
+        countAddons = parseInt(totalRolls / delimiter);
+        totalRolls % delimiter && countAddons++;
     }
 
     return (
         <div>
-            { countAddons ? (
+            {countAddons ? (
                 <div className="free-addons">
-                    <div className="checkout--product" >
-                
+                    <div className="checkout--product">
                         <div className="checkout--product-name">
                             Соевый соус x {countAddons} шт.
                         </div>
@@ -35,7 +32,7 @@ export default function CheckoutFreeAddons() {
                             Бесплатно
                         </div>
                     </div>
-                    <div className="checkout--product" >
+                    <div className="checkout--product">
                         <div className="checkout--product-name">
                             Васаби x {countAddons} шт.
                         </div>
@@ -43,8 +40,8 @@ export default function CheckoutFreeAddons() {
                         <div className="checkout--product-result">
                             Бесплатно
                         </div>
-                    </div>                 
-                    <div className="checkout--product" >
+                    </div>
+                    <div className="checkout--product">
                         <div className="checkout--product-name">
                             Имбирь x {countAddons} шт.
                         </div>
@@ -54,7 +51,9 @@ export default function CheckoutFreeAddons() {
                         </div>
                     </div>
                 </div>
-            ) : '' }
+            ) : (
+                ""
+            )}
         </div>
     );
 }

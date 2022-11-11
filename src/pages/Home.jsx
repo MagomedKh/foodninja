@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-
+import { useSelector } from "react-redux";
 import {
     Product,
     MobileMiniCart,
@@ -22,9 +21,6 @@ import {
 } from "../components/helpers.js";
 
 export default function Home() {
-    const dispatch = useDispatch();
-
-    const { user } = useSelector((state) => state.user);
     const { config } = useSelector(({ config }) => {
         return {
             config: config.data,
@@ -37,7 +33,6 @@ export default function Home() {
         };
     });
     const [activeCategoryTags, setActiveCategoryTags] = useState({});
-    const [inputValue, setInputValue] = useState(null);
 
     const handleClickCategoryTag = (categoryID, tagID) => {
         let tmpArray = _clone(activeCategoryTags);

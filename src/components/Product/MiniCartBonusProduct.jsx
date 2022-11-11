@@ -1,11 +1,6 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import {
-    addProductToCart,
-    decreaseProductInCart,
-    removeProductFromCart,
-    addBonusProductToCart,
-} from "../../redux/actions/cart";
+import { addBonusProductToCart } from "../../redux/actions/cart";
 import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
 import "../../css/cart.css";
@@ -17,16 +12,6 @@ export default function MiniCartBonusProduct({
     productTotalPrice,
 }) {
     const dispatch = useDispatch();
-
-    const handleAddProduct = () => {
-        dispatch(addProductToCart(productCart));
-    };
-    const handleDecreaseProduct = () => {
-        dispatch(decreaseProductInCart(productCart));
-    };
-    const handleRemoveProduct = () => {
-        dispatch(removeProductFromCart(productCart));
-    };
 
     const handleChooseBonusProduct = (item) => {
         dispatch(addBonusProductToCart(item));
@@ -63,13 +48,13 @@ export default function MiniCartBonusProduct({
                     </div>
                     {/* <div className="minicart--product-price">{productCart.options._price.toLocaleString('ru-RU')} &#8381;</div> */}
 
-                    <a
+                    <div
                         className="minicart--product-remove"
                         onClick={() => handleChooseBonusProduct({})}
                         data-product_id={productCart.id}
                     >
                         <CloseIcon />
-                    </a>
+                    </div>
                 </div>
             </div>
             <div className="minicart--product-result">

@@ -1,9 +1,8 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
-import { _isMobile } from "../components/helpers.js";
 import { Swiper, SwiperSlide } from "swiper/react/swiper-react";
 import { FreeMode, Navigation } from "swiper";
 import MiniCartReccomendProduct from "../components/Product/MiniCartReccomendProduct";
@@ -17,12 +16,10 @@ export default function MiniCartReccomends() {
     const [miniCartAddonOpenFirst, setMiniCartAddonOpenFirst] =
         React.useState(true);
 
-    const dispatch = useDispatch();
-    const { cartProducts, config, recommend_items, addon_items } = useSelector(
-        ({ config, cart, products }) => {
+    const { cartProducts, recommend_items, addon_items } = useSelector(
+        ({ cart, products }) => {
             return {
                 cartProducts: cart.items,
-                config: config.data,
                 recommend_items: products.recommend_items,
                 addon_items: products.addon_items,
             };
@@ -30,7 +27,7 @@ export default function MiniCartReccomends() {
     );
 
     const miniCartAddonOpenHandler = () => {
-        if (pathname == "/cart")
+        if (pathname === "/cart")
             document.body.style.overflow = miniCartAddonOpen
                 ? "initial"
                 : "hidden";
@@ -63,6 +60,7 @@ export default function MiniCartReccomends() {
                                 <img
                                     className="lazyload-image"
                                     src={addonImg}
+                                    alt={"Дополнения"}
                                 />
                                 <div className="reccomend-slide--addons-title">
                                     Дополнения
@@ -71,7 +69,7 @@ export default function MiniCartReccomends() {
                         </SwiperSlide>
 
                         {recommend_items.map((product) => {
-                            if (!cartProducts[product.id])
+                            if (!cartProducts[product.id]) {
                                 return (
                                     <SwiperSlide
                                         key={product.id}
@@ -83,6 +81,7 @@ export default function MiniCartReccomends() {
                                         />
                                     </SwiperSlide>
                                 );
+                            } else return null;
                         })}
                     </Swiper>
                 </div>

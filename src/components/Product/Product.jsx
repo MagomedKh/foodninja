@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
     addProductToCart,
@@ -24,18 +24,17 @@ export default function Product({ product, disabled }) {
         if (disabled) {
             dispatch(removeProductFromCart(product));
         }
-    }, []);
+    }, [dispatch, disabled]);
 
-    const { cartProducts, lazyloadImg, categoryNew, categoryHit, logoImg } =
-        useSelector(({ cart, config }) => {
+    const { cartProducts, categoryNew, categoryHit } = useSelector(
+        ({ cart, config }) => {
             return {
-                logoImg: config.data.CONFIG_company_logo_main,
                 cartProducts: cart.items,
                 categoryNew: config.data.CONFIG_new_category,
                 categoryHit: config.data.CONFIG_hit_category,
-                lazyloadImg: config.data.CONFIG_company_logo_preview_product,
             };
-        });
+        }
+    );
 
     const openModalBtnClick = () => {
         dispatch(setModalProduct({ ...product, disabled: disabled }));

@@ -17,25 +17,25 @@ const SearchBar = ({ dontShowList }) => {
     const [inputValue, setInputValue] = useState(null);
     const [optionsOpen, setOptionsOpen] = useState(false);
 
-    useEffect(() => {
-        if (storedInputValue) {
-            const temp = fuse.search(storedInputValue);
-            setFilteredProducts(temp);
-            dispatch(setStoredInputValue(null));
-        }
-    }, []);
-
     const allProducts = [].concat.apply([], Object.values(items));
-
-    const disabledCategoriesId = categories
-        .filter((el) => _isCategoryDisabled(el))
-        .map((el) => el.term_id);
 
     const fuse = new Fuse(allProducts, {
         keys: ["title"],
         minMatchCharLength: 1,
         threshold: 0.2,
     });
+
+    useEffect(() => {
+        if (storedInputValue) {
+            const temp = fuse.search(storedInputValue);
+            setFilteredProducts(temp);
+            dispatch(setStoredInputValue(null));
+        }
+    }, [dispatch]);
+
+    const disabledCategoriesId = categories
+        .filter((el) => _isCategoryDisabled(el))
+        .map((el) => el.term_id);
 
     const inputChangeHandler = (value) => {
         setInputValue(value);

@@ -1,18 +1,12 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import Drawer from "@mui/material/Drawer";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
-import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
-import "../css/minicart.css";
+import { Button, CloseIcon, Dialog, IconButton, Slide } from "@mui/material";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import MiniCartProduct from "../components/Product/MiniCartProduct";
-import { _declension } from "./helpers.js";
-import { _isMobile } from "./helpers.js";
-import Dialog from "@mui/material/Dialog";
-import Slide from "@mui/material/Slide";
+import { _declension, _isMobile } from "./helpers.js";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import "../css/minicart.css";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -20,7 +14,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 function MobileMiniCart() {
     const [miniCartOpenDialog, setMiniCartDialog] = React.useState(false);
-    const drawerBleeding = 56;
     const dispatch = useDispatch();
 
     const { cartProducts, cartTotalPrice, cartCountItems, bonuses_items } =

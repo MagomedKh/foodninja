@@ -2,25 +2,22 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { saveLogin, logout, setOpenModalAuth } from "../../redux/actions/user";
 import { Alert, Container } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
-import { Dialog } from "@mui/material";
-import Slide from "@mui/material/Slide";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import FormHelperText from "@mui/material/FormHelperText";
-import Box from "@mui/material/Box";
-import Tab from "@mui/material/Tab";
-import TabContext from "@mui/lab/TabContext";
-import TabList from "@mui/lab/TabList";
+import { Link } from "react-router-dom";
+import {
+    Button,
+    Box,
+    Dialog,
+    IconButton,
+    MenuItem,
+    Slide,
+    TextField,
+    FormControl,
+    FormHelperText,
+    Grid,
+} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import IconButton from "@mui/material/IconButton";
-import TabPanel from "@mui/lab/TabPanel";
-import { Orders } from "../";
 import { Header, Footer } from "../../components";
-import { Button, Grid } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
-import TextField from "@mui/material/TextField";
 import {} from "@mui/material/TextField";
 import axios from "axios";
 import { _getDomain, _isMobile } from "../../components/helpers.js";
@@ -499,12 +496,12 @@ export default function Account() {
                         </Button>
                         <hr className="account-separator" />
                         <div className="deleting-account">
-                            <a
+                            <button
                                 className="btn--delete-account"
                                 onClick={toogleModalDeleting}
                             >
                                 Удалить аккаунт
-                            </a>
+                            </button>
                         </div>
 
                         <Dialog maxWidth="md" {...dialogProps}>
@@ -553,12 +550,12 @@ export default function Account() {
                     <div className="auth">
                         <p>Вы не авторизованы.</p>
                         <p>
-                            <a
-                                className="main-color"
+                            <button
+                                className="btn--auth"
                                 onClick={handleOpenAuthModal}
                             >
                                 Авторизуйтесь
-                            </a>
+                            </button>
                             , чтобы войти в личный кабинет.
                         </p>
                     </div>
