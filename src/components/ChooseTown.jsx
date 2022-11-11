@@ -60,15 +60,7 @@ export default function ChooseTown() {
         } else {
             dispatch(setTownModal(false));
         }
-    }, [
-        dispatch,
-        config.status,
-        chooseTownShown,
-        config.data.CONFIG_always_choose_town,
-        config.data.baseDomain,
-        cookies,
-        currentTown,
-    ]);
+    }, [dispatch]);
 
     const inputChangeHandler = (event) => {
         setInputValue(event.target.value);
