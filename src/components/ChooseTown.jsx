@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Dialog } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { setTownModal } from "../redux/actions/config";
@@ -27,7 +27,7 @@ export default function ChooseTown() {
     const [inputValue, setInputValue] = useState("");
     const [filteredTowns, setFilteredTowns] = useState(null);
 
-    const cookies = new Cookies();
+    const cookies = useMemo(() => new Cookies(), []);
     const currentTown = cookies.get("currentSite");
     const chooseTownShown = cookies.get("chooseTownShown");
     const fuse = new Fuse(config.data.towns, {
@@ -45,6 +45,10 @@ export default function ChooseTown() {
                 window.location.href !==
                     `https://${config.data.baseDomain}/?saveTown=true`) ||
                 (config.status &&
+                    _getDomain() === config.data.baseDomain &&
+                    config.data.CONFIG_always_choose_town !== "on" &&
+                    !currentTown) ||
+                (config.status &&
                     _getDomain() !== config.data.baseDomain &&
                     !currentTown))
         ) {
@@ -56,7 +60,15 @@ export default function ChooseTown() {
         } else {
             dispatch(setTownModal(false));
         }
-    }, [config.status]);
+    }, [
+        dispatch,
+        config.status,
+        chooseTownShown,
+        config.data.CONFIG_always_choose_town,
+        config.data.baseDomain,
+        cookies,
+        currentTown,
+    ]);
 
     const inputChangeHandler = (event) => {
         setInputValue(event.target.value);
