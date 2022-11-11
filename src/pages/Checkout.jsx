@@ -33,13 +33,10 @@ import PreorderForm from "../components/Product/PreorderForm";
 import {
     getHours,
     getMinutes,
-    getUnixTime,
-    getTime,
     set,
     setDayOfYear,
     addDays,
-    isToday,
-    setSeconds,
+    format,
 } from "date-fns";
 import { useEffect } from "react";
 const formatingStrPhone = (inputNumbersValue) => {
@@ -147,7 +144,7 @@ export default function Checkout() {
         if (config.CONFIG_work_status !== "closed") {
             handlePreorderDateChange("Как можно скорее");
         }
-    }, []);
+    }, [config.CONFIG_work_status]);
 
     const handlePreorderDateChange = (date) => {
         if (date === "Как можно скорее") {
@@ -308,7 +305,7 @@ export default function Checkout() {
                     newUserAddressPorch: newUserAddressPorch,
                     newUserAddressFloor: newUserAddressFloor,
                     newUserAddressApartment: newUserAddressApartment,
-                    orderTime: getUnixTime(preorderDate),
+                    orderTime: format(preorderDate, "dd.MM.yyyy HH:mm"),
                     commentOrder: commentOrder,
                     activeGateway: activeGateway,
                     countUsers: countUsers,
