@@ -25,7 +25,6 @@ import {
     BigLoader,
     Maintenance,
     InstallApp,
-    ChooseTown,
     SystemAlerts,
 } from "./components";
 import {
@@ -96,28 +95,29 @@ function App() {
                 dispatch(setGateways(resp.data.gateways));
                 dispatch(setOrderTime(resp.data.availableTimeOrder));
                 dispatch(setBanners(resp.data.banners));
-            })
-            .then(() => {
-                if (user.token && user.phone)
-                    axios
-                        .get(
-                            "https://" +
-                                _getDomain() +
-                                "/?rest-api=checkLogin&token=" +
-                                user.token +
-                                "&phone=" +
-                                user.phone,
-                            { mode: "no-cors" }
-                        )
-                        .then((resp) => {
-                            resp.data.status === "success"
-                                ? dispatch(login(resp.data.user))
-                                : dispatch(logout(true));
-                            dispatch(setMainLoading(true));
-                        });
-                else dispatch(setMainLoading(true));
             });
-    }, []);
+    }, [dispatch]);
+
+    useEffect(() => {
+        if (user.token && user.phone)
+            axios
+                .get(
+                    "https://" +
+                        _getDomain() +
+                        "/?rest-api=checkLogin&token=" +
+                        user.token +
+                        "&phone=" +
+                        user.phone,
+                    { mode: "no-cors" }
+                )
+                .then((resp) => {
+                    resp.data.status === "success"
+                        ? dispatch(login(resp.data.user))
+                        : dispatch(logout(true));
+                    dispatch(setMainLoading(true));
+                });
+        else dispatch(setMainLoading(true));
+    }, [dispatch, user.token, user.phone]);
 
     const mainColor = config
         ? config.CONFIG_main_color !== undefined
