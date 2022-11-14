@@ -1,11 +1,12 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import { Button, CloseIcon, Dialog, IconButton, Slide } from "@mui/material";
+import { Slide } from "@mui/material";
+// import { Button, CloseIcon, Dialog, IconButton } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import MiniCartProduct from "../components/Product/MiniCartProduct";
+// import MiniCartProduct from "../components/Product/MiniCartProduct";
 import { _declension, _isMobile } from "./helpers.js";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+// import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import "../css/minicart.css";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -16,19 +17,26 @@ function MobileMiniCart() {
     const [miniCartOpenDialog, setMiniCartDialog] = React.useState(false);
     const dispatch = useDispatch();
 
-    const { cartProducts, cartTotalPrice, cartCountItems, bonuses_items } =
-        useSelector(({ cart, products }) => {
+    // const { cartProducts, cartTotalPrice } =
+    //     useSelector(({ cart, products }) => {
+    //         return {
+    //             cartProducts: cart.items,
+    //             cartTotalPrice: cart.totalPrice,
+    //         };
+    //     });
+
+    const { cartCountItems, bonuses_items } = useSelector(
+        ({ cart, products }) => {
             return {
                 bonuses_items: products.bonuses_items,
-                cartProducts: cart.items,
-                cartTotalPrice: cart.totalPrice,
                 cartCountItems: cart.countItems,
             };
-        });
+        }
+    );
 
-    const toggleMiniCartDialog = () => {
-        setMiniCartDialog(!miniCartOpenDialog);
-    };
+    // const toggleMiniCartDialog = () => {
+    //     setMiniCartDialog(!miniCartOpenDialog);
+    // };
 
     const handleClickToCart = () => {
         window.scrollTo(0, 0);
