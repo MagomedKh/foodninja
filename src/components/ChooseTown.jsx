@@ -39,6 +39,8 @@ export default function ChooseTown() {
     useEffect(() => {
         if (
             !chooseTownShown &&
+            config.data.towns &&
+            config.data.towns.length > 1 &&
             ((config.status &&
                 _getDomain() === config.data.baseDomain &&
                 config.data.CONFIG_always_choose_town === "on" &&
