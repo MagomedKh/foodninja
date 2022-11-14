@@ -220,6 +220,7 @@
     right: 10px;
 }
 .addon-product .product--quantity {
+    height: 32.5px;
     position: relative;
 }
 .addon-product .product--quantity .quantity {
