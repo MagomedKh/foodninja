@@ -220,7 +220,7 @@ export const _checkPromocode = (promocode, items, cartTotal, typeDelivery) => {
             if (!hasProduct)
                 return {
                     status: "error",
-                    message: "Промокод отменен, т.к. нету нужного товара.",
+                    message: "Промокод отменен, т.к. нет нужного товара.",
                 };
         }
 

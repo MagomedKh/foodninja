@@ -349,7 +349,8 @@ const cart = (state = initialState, action) => {
 
             if (
                 state.promocode?.categories?.length &&
-                state.promocode?.excludeCategories
+                state.promocode?.excludeCategories &&
+                state.promocode.type === "percent"
             ) {
                 if (
                     !state.promocode?.categories?.some((r) =>
@@ -377,7 +378,8 @@ const cart = (state = initialState, action) => {
                 }
             } else if (
                 state.promocode?.categories?.length &&
-                !state.promocode?.excludeCategories
+                !state.promocode?.excludeCategories &&
+                state.promocode.type === "percent"
             ) {
                 if (
                     state.promocode?.categories?.some((r) =>
@@ -403,7 +405,10 @@ const cart = (state = initialState, action) => {
                         action.payload.options._price -
                         action.payload.options._promocode_price;
                 }
-            } else if (Object.keys(state.promocode).length) {
+            } else if (
+                Object.keys(state.promocode).length &&
+                state.promocode.type === "percent"
+            ) {
                 if (
                     !action.payload.options._sale_price ||
                     (state.promocode.categories_hardmode !== "yes" &&
