@@ -139,49 +139,56 @@ function Header() {
                                         />
 
                                         {config.towns && config.towns.length ? (
-                                            <div
-                                                className="mobile-menu--choose-town"
-                                                onClick={
-                                                    config.towns.length > 1
-                                                        ? handleOpenTownModal
-                                                        : null
-                                                }
-                                            >
-                                                <LocationOnIcon />
-                                                <div>
-                                                    <b
-                                                        className="choosenTown"
-                                                        style={
-                                                            config.towns
-                                                                .length > 1
-                                                                ? {
-                                                                      cursor: "pointer",
-                                                                  }
-                                                                : null
-                                                        }
-                                                    >
-                                                        {config ? (
-                                                            config.CONFIG_town
-                                                        ) : (
-                                                            <Skeleton
-                                                                variant="text"
-                                                                animation="wave"
-                                                            />
-                                                        )}
-                                                    </b>
-                                                    <br />
-                                                    {config.towns.length > 1 ? (
-                                                        <small>Изменить</small>
-                                                    ) : null}
+                                            <>
+                                                <div
+                                                    className="mobile-menu--choose-town"
+                                                    onClick={
+                                                        config.towns.length > 1
+                                                            ? handleOpenTownModal
+                                                            : null
+                                                    }
+                                                >
+                                                    <LocationOnIcon />
+                                                    <div>
+                                                        <b
+                                                            className="choosenTown"
+                                                            style={
+                                                                config.towns
+                                                                    .length > 1
+                                                                    ? {
+                                                                          cursor: "pointer",
+                                                                      }
+                                                                    : null
+                                                            }
+                                                        >
+                                                            {config ? (
+                                                                config.CONFIG_town
+                                                            ) : (
+                                                                <Skeleton
+                                                                    variant="text"
+                                                                    animation="wave"
+                                                                />
+                                                            )}
+                                                        </b>
+                                                        <br />
+                                                        {config.towns.length >
+                                                        1 ? (
+                                                            <small>
+                                                                Изменить
+                                                            </small>
+                                                        ) : null}
+                                                    </div>
                                                 </div>
-                                            </div>
+                                                <Divider
+                                                    sx={{
+                                                        bgcolor: "#333",
+                                                        my: "10px",
+                                                    }}
+                                                />
+                                            </>
                                         ) : (
                                             ""
                                         )}
-
-                                        <Divider
-                                            sx={{ bgcolor: "#333", my: "10px" }}
-                                        />
 
                                         {topMenu && (
                                             <ul>
