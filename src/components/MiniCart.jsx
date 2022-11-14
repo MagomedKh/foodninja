@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Alert, Button, Drawer, IconButton } from "@mui/material";
@@ -14,7 +14,7 @@ import { Promocode } from "../components";
 import MiniCartReccomends from "./MiniCartRecommends";
 import CartBonusesProducts from "./CartBonusesProducts";
 import { updateAlerts } from "../redux/actions/systemAlerts";
-import { removePromocode } from "../redux/actions/cart";
+import { removePromocode, addBonusProductToCart } from "../redux/actions/cart";
 import { openMiniCart, closeMiniCart } from "../redux/actions/miniCart";
 import "../css/minicart.css";
 
@@ -108,6 +108,12 @@ function MiniCart() {
             }
         }
     }
+
+    useEffect(() => {
+        if (config.CONFIG_free_products_program_status !== "on") {
+            dispatch(addBonusProductToCart({}));
+        }
+    }, [config.CONFIG_free_products_program_status]);
 
     return (
         <div

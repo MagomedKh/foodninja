@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addPromocode, removePromocode } from "../redux/actions/cart";
 import { Link, useNavigate } from "react-router-dom";
@@ -25,7 +25,7 @@ import { CheckoutProduct, Footer, Header } from "../components";
 import { _checkPromocode, _declension } from "../components/helpers.js";
 import { _isMobile, _getDomain } from "../components/helpers.js";
 import axios from "axios";
-import { clearCart } from "../redux/actions/cart";
+import { clearCart, addBonusProductToCart } from "../redux/actions/cart";
 import "../css/checkout.css";
 import CheckoutFreeAddons from "../components/Product/CheckoutFreeAddons";
 import { updateAlerts } from "../redux/actions/systemAlerts";
@@ -38,7 +38,6 @@ import {
     addDays,
     format,
 } from "date-fns";
-import { useEffect } from "react";
 const formatingStrPhone = (inputNumbersValue) => {
     var formattedPhone = "";
     if (["7", "8", "9"].indexOf(inputNumbersValue[0]) > -1) {
@@ -145,6 +144,12 @@ export default function Checkout() {
             handlePreorderDateChange("Как можно скорее");
         }
     }, [config.CONFIG_work_status]);
+
+    useEffect(() => {
+        if (config.CONFIG_free_products_program_status !== "on") {
+            dispatch(addBonusProductToCart({}));
+        }
+    }, [config.CONFIG_free_products_program_status]);
 
     const handlePreorderDateChange = (date) => {
         if (date === "Как можно скорее") {

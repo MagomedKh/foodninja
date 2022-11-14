@@ -72,6 +72,10 @@ export default function CartBonusesProducts(minicart = false) {
         }
     };
 
+    if (config.CONFIG_free_products_program_status !== "on") {
+        return null;
+    }
+
     return (
         <div>
             {bonuses_items.length ? (

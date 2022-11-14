@@ -1,25 +1,22 @@
-import React, { useCallback } from "react";
-import Container from "@mui/material/Container";
-import { setOpenModalAuth } from "../redux/actions/user";
+import React, { useEffect, useCallback } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import CartProduct from "../components/Product/CartProduct";
 import MiniCartReccomends from "../components/MiniCartRecommends";
 import PromocodeCartProduct from "../components/Product/PromocodeCartProduct";
 import CartBonusesProducts from "../components/CartBonusesProducts";
-import { useSelector, useDispatch } from "react-redux";
-import Button from "@mui/material/Button";
-
-import { useNavigate } from "react-router-dom";
-import emptyCartImg from "../img/empty-cart.svg";
+import { Button, Container, Alert, Collapse } from "@mui/material";
 
 import { TransitionGroup } from "react-transition-group";
-import "swiper/swiper.min.css";
-import "swiper/modules/navigation/navigation.min.css";
-import { Alert, Collapse } from "@mui/material";
 import { Promocode, Header, Footer } from "../components";
 import CartFreeAddons from "../components/Product/CartFreeAddons";
 import { _checkPromocode } from "../components/helpers";
-import { removePromocode } from "../redux/actions/cart";
+import { removePromocode, addBonusProductToCart } from "../redux/actions/cart";
+import { setOpenModalAuth } from "../redux/actions/user";
 import { updateAlerts } from "../redux/actions/systemAlerts";
+import emptyCartImg from "../img/empty-cart.svg";
+import "swiper/modules/navigation/navigation.min.css";
+import "swiper/swiper.min.css";
 
 export default function Cart() {
     const dispatch = useDispatch();
@@ -88,6 +85,12 @@ export default function Cart() {
             }
         }
     }
+
+    useEffect(() => {
+        if (config.CONFIG_free_products_program_status !== "on") {
+            dispatch(addBonusProductToCart({}));
+        }
+    }, [config.CONFIG_free_products_program_status]);
 
     return (
         <>
