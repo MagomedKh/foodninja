@@ -60,7 +60,7 @@ export default function ChooseTown() {
         } else {
             dispatch(setTownModal(false));
         }
-    }, [dispatch]);
+    }, [config.status]);
 
     const inputChangeHandler = (event) => {
         setInputValue(event.target.value);
