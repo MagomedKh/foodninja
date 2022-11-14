@@ -178,28 +178,6 @@ export const _checkPromocode = (promocode, items, cartTotal, typeDelivery) => {
                         };
                 }
             }
-
-            // Проверка товаров по скидке
-            if (
-                promocode.excludeSaleProduct &&
-                promocode.categories_hardmode === "yes"
-            ) {
-                let hasSale = false;
-                Object.values(items).forEach((product) => {
-                    if (
-                        product["items"][0].options._sale_price &&
-                        product["items"][0].options._regular_price >
-                            product["items"][0].options._sale_price
-                    )
-                        hasSale = true;
-                });
-                if (hasSale)
-                    return {
-                        status: "error",
-                        message:
-                            "Промокод отменен, т.к. не действует с товарами по скидке.",
-                    };
-            }
         }
         if (promocode.type === "fixed_product") {
             let hasProduct = false;
@@ -221,6 +199,28 @@ export const _checkPromocode = (promocode, items, cartTotal, typeDelivery) => {
                 return {
                     status: "error",
                     message: "Промокод отменен, т.к. нет нужного товара.",
+                };
+        }
+
+        // Проверка товаров по скидке
+        if (
+            promocode.excludeSaleProduct &&
+            promocode.categories_hardmode === "yes"
+        ) {
+            let hasSale = false;
+            Object.values(items).forEach((product) => {
+                if (
+                    product["items"][0].options._sale_price &&
+                    product["items"][0].options._regular_price >
+                        product["items"][0].options._sale_price
+                )
+                    hasSale = true;
+            });
+            if (hasSale)
+                return {
+                    status: "error",
+                    message:
+                        "Промокод отменен, т.к. не действует с товарами по скидке.",
                 };
         }
 
