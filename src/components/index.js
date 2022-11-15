@@ -14,6 +14,8 @@ export { default as AddonProductMini } from "./Product/AddonProductMini.jsx";
 export { default as ReccomendProduct } from "./Product/ReccomendProduct.jsx";
 export { default as MiniCartProduct } from "./Product/MiniCartProduct.jsx";
 export { default as CartProduct } from "./Product/CartProduct.jsx";
+export { default as ModificatorProduct } from "./Product/ModificatorProduct.jsx";
+export { default as ModificatorCategory } from "./Product/ModificatorCategory.jsx";
 export { default as PromocodeCartProduct } from "./Product/PromocodeCartProduct.jsx";
 export { default as Promocode } from "./Promocode.jsx";
 export { default as CartBonusProduct } from "./Product/CartBonusProduct.jsx";

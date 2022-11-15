@@ -83,6 +83,14 @@
     position: relative;
     height: 40px;
 }
+
+.product-modal--variations-buying {
+    padding: 10px;
+}
+
+.product-modal--variations-buying .btn-buy {
+    width: 100%;
+}
 .product-modal--price {
     position: absolute;
     top: 0;

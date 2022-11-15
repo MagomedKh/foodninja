@@ -7,9 +7,11 @@ import {
 } from "../../redux/actions/cart";
 import {
     setModalProduct,
+    clearModalProduct,
     setOpenModal,
 } from "../../redux/actions/productModal";
 import AddonProductModal from "../../components/Product/AddonProductModal";
+import ModificatorCategory from "./ModificatorCategory.jsx";
 import {
     Alert,
     Button,
@@ -81,7 +83,7 @@ export default function ProductModal() {
         }
 
         return;
-    }, [productModal]);
+    }, [productModal.attributes]);
 
     const handleChooseAttribute = (attribute, value) => {
         let dataAttributes = choosenAttributes;
@@ -110,7 +112,7 @@ export default function ProductModal() {
     };
 
     const handleClose = () => {
-        dispatch(setModalProduct(false));
+        dispatch(clearModalProduct());
         setActiveVariant(false);
         dispatch(setOpenModal(false));
     };
@@ -287,7 +289,8 @@ export default function ProductModal() {
                                     ""
                                 )}
 
-                                {!wrongVariant ? (
+                                {!wrongVariant &&
+                                productModal.type !== "variations" ? (
                                     <div className="product-modal--buying">
                                         <div className="product-modal--price">
                                             {activeVariant
@@ -415,6 +418,15 @@ export default function ProductModal() {
                                     ""
                                 )}
 
+                                {productModal.product_addons?.map(
+                                    (category) => (
+                                        <ModificatorCategory
+                                            category={category}
+                                            key={category.category_id}
+                                        />
+                                    )
+                                )}
+
                                 {addon_products.length ? (
                                     <div className="addon-products">
                                         <h3 className="addon-products--title">
@@ -433,6 +445,31 @@ export default function ProductModal() {
                                     ""
                                 )}
                             </div>
+                            {productModal.type === "variations" ? (
+                                <div className="product-modal--variations-buying">
+                                    <Button
+                                        variant="button"
+                                        className="btn--action btn-buy"
+                                        onClick={handleAddVariantProduct}
+                                        disabled={
+                                            productModal.disabled ||
+                                            wrongVariant
+                                        }
+                                    >
+                                        Добавить в корзину за{" "}
+                                        {activeVariant && !wrongVariant
+                                            ? activeVariant.price +
+                                              productModal.modificatorsAmount
+                                            : parseInt(
+                                                  productModal.options._price
+                                              ) +
+                                              productModal.modificatorsAmount}{" "}
+                                        &#8381;
+                                    </Button>
+                                </div>
+                            ) : (
+                                ""
+                            )}
                         </div>
                     </div>
                 </div>
