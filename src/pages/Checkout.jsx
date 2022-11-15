@@ -1145,7 +1145,7 @@ export default function Checkout() {
                                 loading={loading}
                                 sx={{ width: 1, mt: 1.5 }}
                                 variant="button"
-                                className="btn--action"
+                                className="btn--action makeOrder"
                                 onClick={handleMakeOrder}
                             >
                                 Подтвердить заказ

@@ -125,7 +125,7 @@ export default function TopCategoriesMenu() {
                         ref={categoriesMenuRef}
                     >
                         {showedCategories.map((item) => (
-                            <li key={item.term_id}>
+                            <li key={item.term_id} className={"viewCategory"}>
                                 {pathname === "/" ? (
                                     <AnimateLink
                                         activeClass="active"

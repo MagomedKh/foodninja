@@ -264,6 +264,7 @@ export default function Cart() {
                                     ""
                                 )}
                             </div>
+
                             <div className="cart--bottom-buttons">
                                 <Button
                                     onClick={handleClickBackToMenu}
@@ -287,7 +288,7 @@ export default function Cart() {
                                         <Button
                                             variant="button"
                                             onClick={handleMakeOrder}
-                                            className="btn--action"
+                                            className="btn--action openCheckout"
                                         >
                                             Оформить заказ
                                         </Button>
@@ -296,7 +297,7 @@ export default function Cart() {
                                     <Button
                                         variant="button"
                                         onClick={handleMakeOrder}
-                                        className="btn--action"
+                                        className="btn--action openCheckout"
                                     >
                                         Оформить заказ
                                     </Button>

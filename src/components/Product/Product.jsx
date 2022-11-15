@@ -37,7 +37,12 @@ export default function Product({ product, disabled }) {
     );
 
     const openModalBtnClick = () => {
-        dispatch(setModalProduct({ ...product, disabled: disabled }));
+        dispatch(
+            setModalProduct({
+                ...product,
+                disabled: disabled,
+            })
+        );
         dispatch(setOpenModal(true));
     };
 
@@ -75,7 +80,10 @@ export default function Product({ product, disabled }) {
             </div>
           ) } */}
             </div>
-            <div className="product--image" onClick={openModalBtnClick}>
+            <div
+                className="product--image viewProduct"
+                onClick={openModalBtnClick}
+            >
                 {_getPlatform() === "vk" ? (
                     <img alt={product.title} src={product.img} />
                 ) : (
@@ -94,18 +102,21 @@ export default function Product({ product, disabled }) {
             </div>
 
             <div className="product--inner-wrapper">
-                <h4 className="product--title" onClick={openModalBtnClick}>
+                <h4
+                    className="product--title viewProduct"
+                    onClick={openModalBtnClick}
+                >
                     {product.title}
                 </h4>
                 <div
-                    className="product--description"
+                    className="product--description viewProduct"
                     onClick={openModalBtnClick}
                     dangerouslySetInnerHTML={{ __html: product.content }}
                 ></div>
                 <div className="short-fade">
                     <span
                         onClick={openModalBtnClick}
-                        className="action"
+                        className="action viewProduct"
                         data-product-id={product.id}
                     ></span>
                 </div>

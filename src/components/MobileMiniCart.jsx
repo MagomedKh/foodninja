@@ -57,7 +57,7 @@ function MobileMiniCart() {
             }
         >
             <Link
-                className="minicart-mobile"
+                className="minicart-mobile openCart"
                 onClick={handleClickToCart}
                 to={"/cart"}
             >

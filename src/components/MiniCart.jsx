@@ -124,7 +124,7 @@ function MiniCart() {
             }
         >
             <button
-                className="btn--action minicart"
+                className="btn--action minicart openMiniCart"
                 onClick={handleOpenMiniCart}
             >
                 <ShoppingCartIcon className="minicart--cart-icon" />
@@ -322,7 +322,7 @@ function MiniCart() {
                                         <Button
                                             variant="button"
                                             onClick={handleMakeOrder}
-                                            className="btn--action"
+                                            className="btn--action openCheckout"
                                             sx={{ mt: 2 }}
                                         >
                                             Оформить заказ
@@ -332,7 +332,7 @@ function MiniCart() {
                                     <Button
                                         variant="button"
                                         onClick={handleMakeOrder}
-                                        className="btn--action"
+                                        className="btn--action openCheckout"
                                         sx={{ mt: 2 }}
                                     >
                                         Оформить заказ
