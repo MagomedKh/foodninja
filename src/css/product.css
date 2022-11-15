@@ -283,6 +283,7 @@
     .product:hover {
         box-shadow: none;
     }
+
     .product--quantity .product-decrease,
     .product--quantity .product-add {
         width: 28px !important;
@@ -293,6 +294,7 @@
         height: 28px !important;
     }
     .product--quantity .quantity {
+        height: 28px !important;
         width: 28px;
         display: inline-block;
     }
