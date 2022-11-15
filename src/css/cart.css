@@ -152,6 +152,19 @@
 .new-price {
     color: var(--main-color);
 }
+
+@media (max-width: 400px) {
+    .cart--bottom-buttons {
+        flex-direction: column;
+    }
+    .cart--bottom-buttons button {
+        flex-grow: 1;
+    }
+    .cart--bottom-buttons button:not(:first-child) {
+        margin-top: 10px;
+    }
+}
+
 @media (max-width: 899px) {
     .cart--product .product--quantity {
         margin: 10px 0;
