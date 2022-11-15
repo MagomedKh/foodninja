@@ -18,6 +18,15 @@
 .custom-radio.new-address .MuiFormControlLabel-label {
     font-weight: bold;
 }
+
+.checkout--type-delivery .custom-radio {
+    height: auto;
+    margin-bottom: 8px;
+}
+
+.checkout--type-delivery .MuiRadio-root {
+    padding: 4px 9px;
+}
 .checkout--form-new-address {
     margin-top: 1.5rem;
 }
