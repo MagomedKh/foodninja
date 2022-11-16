@@ -97,13 +97,15 @@ function Header() {
                                 />
                             </a>
                         ) : (
-                            <Link to="/">
-                                <img
-                                    src={config.CONFIG_company_logo_main}
-                                    className="header-logo"
-                                    alt="Логотип"
-                                />
-                            </Link>
+                            <div className="header-logo-wrapper">
+                                <Link to="/">
+                                    <img
+                                        src={config.CONFIG_company_logo_main}
+                                        className="header-logo"
+                                        alt="Логотип"
+                                    />
+                                </Link>
+                            </div>
                         )}
 
                         {_isMobile() && (
@@ -125,13 +127,15 @@ function Header() {
                                             >
                                                 <CloseIcon />
                                             </IconButton>
-                                            <img
-                                                src={
-                                                    config.CONFIG_company_logo_footer
-                                                }
-                                                className="header-logo"
-                                                alt="Логотип"
-                                            />
+                                            <div className="header-logo-wrapper">
+                                                <img
+                                                    src={
+                                                        config.CONFIG_company_logo_footer
+                                                    }
+                                                    className="header-logo"
+                                                    alt="Логотип"
+                                                />
+                                            </div>
                                         </div>
 
                                         <Divider

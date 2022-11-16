@@ -210,7 +210,17 @@
     }
     .mobile-menu-wrapper .header-logo,
     .header-wrapper .header-logo {
+        width: auto;
+        max-width: 200px;
+        height: auto;
+        max-height: 50px;
         margin-right: 0 !important;
+    }
+    .header-logo-wrapper {
+        display: flex;
+        justify-content: end;
+        align-items: center;
+        height: 56px;
     }
     .modal-alert--wrapper.choose-town .modal-alert--inner {
         min-width: 200px;
