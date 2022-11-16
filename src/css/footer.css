@@ -6,16 +6,18 @@
     font-size: 17px;
     line-height: 25.5px;
 }
-.footer h1, .footer strong, .fotoer b{
+.footer h1,
+.footer strong,
+.fotoer b {
     color: #fff;
     line-height: 1;
 }
-.footer hr{
+.footer hr {
     border: 0;
     border-bottom: 1px solid #3c3b3b;
     margin: 3rem 0;
 }
-.footer h4{
+.footer h4 {
     font-size: 28px;
     color: white;
 }
@@ -28,24 +30,24 @@
     font-size: 16px;
     text-decoration: none;
 }
-.footer h4 a{
+.footer h4 a {
     font-size: 28px;
     color: #fff;
 }
-.footer ul{
+.footer ul {
     padding: 0;
     margin: 0;
     list-style: none;
 }
-.footer--icon svg{
-    color: white!important;
+.footer--icon svg {
+    color: white !important;
 }
-.mobile-apps a{
+.mobile-apps a {
     display: block;
     line-height: 1;
 }
 .mobile-apps a:hover img {
-    background-color: rgba(255,255,255,.5);
+    background-color: rgba(255, 255, 255, 0.5);
     transition: background-color 0.2s;
 }
 .mobile-apps img {
@@ -54,10 +56,10 @@
     border-radius: 7px;
     margin: 10px 0 0;
 }
-.footer .right-col{
+.footer .right-col {
     text-align: right;
 }
-.footer-copyright{
+.footer-copyright {
     margin-top: 3rem;
 }
 .creators {
@@ -67,7 +69,6 @@
     padding: 9px 10px 12px 10px;
     font-size: 17px;
     color: #aaa;
-    z-index: 222;
     display: inline-block;
     position: relative;
 }
@@ -79,8 +80,8 @@
 .creators a {
     color: var(--main-color);
 }
-@media ( max-width: 899px ) {
-    .footer .right-col{
+@media (max-width: 899px) {
+    .footer .right-col {
         text-align: left;
     }
 }
