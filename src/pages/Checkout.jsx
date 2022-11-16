@@ -286,16 +286,27 @@ export default function Checkout() {
     };
 
     const handleMakeOrder = () => {
+        let currentValidation = true;
         setValidate(true);
-        (!userName || getNumbersValue(userPhone).length !== 11) &&
+        if (!userName || getNumbersValue(userPhone).length !== 11) {
+            currentValidation = false;
             setValidate(false);
-        deliveryAddress === "new" &&
-            (!newUserAddressStreet || !newUserAddressHome) &&
-            setValidate(false);
-        if (!preorderDate) {
-            setValidate(false);
+            return;
         }
-        if (validate) {
+        if (
+            deliveryAddress === "new" &&
+            (!newUserAddressStreet || !newUserAddressHome)
+        ) {
+            currentValidation = false;
+            setValidate(false);
+            return;
+        }
+        if (!preorderDate || (!preorderTime && !asSoonAsPosible)) {
+            currentValidation = false;
+            setValidate(false);
+            return;
+        }
+        if (currentValidation) {
             setLoading(true);
             axios
                 .post("https://" + _getDomain() + "/?rest-api=makeOrder", {
@@ -562,6 +573,13 @@ export default function Checkout() {
             !newUserAddressHome && deliveryAddress === "new" && !validate
                 ? "Поле обязательно для заполнения"
                 : "",
+    };
+
+    const preorderFormProps = {
+        error:
+            !validate && (!preorderDate || (!preorderTime && !asSoonAsPosible)),
+
+        helperText: !validate ? "Выберите дату и время" : "",
     };
 
     if (typeof user.addresses !== "undefined" && user.addresses.length) {
@@ -835,6 +853,7 @@ export default function Checkout() {
                                     handlePreorderTimeChange
                                 }
                                 asSoonAsPosible={asSoonAsPosible}
+                                {...preorderFormProps}
                             />
                         </div>
 

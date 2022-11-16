@@ -1,6 +1,13 @@
 import React, { forwardRef } from "react";
 import { useSelector } from "react-redux";
-import { Box, Select, MenuItem, InputLabel, FormControl } from "@mui/material";
+import {
+    Box,
+    Select,
+    MenuItem,
+    InputLabel,
+    FormControl,
+    FormHelperText,
+} from "@mui/material";
 import {
     isToday,
     eachDayOfInterval,
@@ -22,6 +29,8 @@ const PreorderForm = forwardRef(
             handlePreorderDateChange,
             handlePreorderTimeChange,
             asSoonAsPosible,
+            error,
+            helperText,
         },
         ref
     ) => {
@@ -68,7 +77,7 @@ const PreorderForm = forwardRef(
 
         return (
             <Box sx={{ display: "flex" }}>
-                <FormControl sx={{ minWidth: 120 }} size="small">
+                <FormControl sx={{ minWidth: 120 }} size="small" error={error}>
                     <InputLabel id="preorder-date-select-label">
                         Дата
                     </InputLabel>
@@ -110,10 +119,15 @@ const PreorderForm = forwardRef(
                             </MenuItem>
                         ))}
                     </Select>
+                    <FormHelperText>{helperText}</FormHelperText>
                 </FormControl>
 
                 {!asSoonAsPosible && preorderDate ? (
-                    <FormControl sx={{ minWidth: 120, ml: 1 }} size="small">
+                    <FormControl
+                        sx={{ minWidth: 120, ml: 1 }}
+                        size="small"
+                        error={error}
+                    >
                         <InputLabel id="preorder-time-select-label">
                             Время
                         </InputLabel>
