@@ -528,3 +528,7 @@ a.btn {
     opacity: 1;
     filter: grayscale(1);
 }
+
+.grecaptcha-badge {
+    visibility: hidden;
+}

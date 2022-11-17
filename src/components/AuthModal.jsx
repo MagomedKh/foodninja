@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { _isMobile, _getDomain } from "./helpers.js";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -17,6 +17,8 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import "../css/auth-modal.css";
 import axios from "axios";
+import { GoogleReCaptcha } from "react-google-recaptcha-v3";
+import { useCallback } from "react";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -46,6 +48,7 @@ export default function AuthModal() {
     const [recallInterval, setRecallInterval] = React.useState(false);
     const [recallTimer, setRecallTimer] = React.useState(30);
     const [recallActive, setRecallActive] = React.useState(false);
+    const [token, setToken] = React.useState("");
 
     const startRecallTimer = () => {
         stopRecallTimer();
@@ -87,7 +90,9 @@ export default function AuthModal() {
                     "https://" +
                         _getDomain() +
                         "/?rest-api=verifyCodeRobocall&phone=" +
-                        phone,
+                        phone +
+                        "&recaptchaResponse=" +
+                        token,
                     { mode: "no-cors" }
                 )
                 .then((resp) => {
@@ -112,7 +117,9 @@ export default function AuthModal() {
                     "https://" +
                         _getDomain() +
                         "/?rest-api=verifyCodeRobocallAgain&phone=" +
-                        phone,
+                        phone +
+                        "&recaptchaResponse=" +
+                        token,
                     { mode: "no-cors" }
                 )
                 .then((resp) => {
@@ -134,7 +141,9 @@ export default function AuthModal() {
                     "https://" +
                         _getDomain() +
                         "/?rest-api=verifyCodeSms&phone=" +
-                        phone,
+                        phone +
+                        "&recaptchaResponse=" +
+                        token,
                     { mode: "no-cors" }
                 )
                 .then((resp) => {
@@ -263,6 +272,10 @@ export default function AuthModal() {
         }
     };
 
+    const onVerify = useCallback((token) => {
+        setToken(token);
+    }, []);
+
     return (
         <Dialog {...dialogAuthProps}>
             <div className="auth-modal">
@@ -272,6 +285,7 @@ export default function AuthModal() {
                     </div>
                 )}
                 <h2 className="auth-modal--title">Авторизация</h2>
+                <GoogleReCaptcha onVerify={onVerify} />
                 <IconButton
                     edge="start"
                     color="inherit"
@@ -303,14 +317,16 @@ export default function AuthModal() {
                         />
 
                         {!authPhoneCode ? (
-                            <Button
-                                variant="button"
-                                onClick={handleAuth}
-                                className="btn--action auth-btn"
-                                disabled={!verifyPhone}
-                            >
-                                Войти
-                            </Button>
+                            <div id="recaptcha-container">
+                                <Button
+                                    variant="button"
+                                    onClick={handleAuth}
+                                    className="btn--action auth-btn"
+                                    disabled={!verifyPhone}
+                                >
+                                    Войти
+                                </Button>
+                            </div>
                         ) : (
                             <div>
                                 <div className="auth-modal--info">
