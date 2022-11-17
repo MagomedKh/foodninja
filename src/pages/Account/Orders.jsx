@@ -220,29 +220,34 @@ export default function Orders() {
                                                                 <div className="account--user-order--time">
                                                                     {order.time}
                                                                 </div>
+                                                                <div className="account--user-order--status">
+                                                                    {
+                                                                        order.status
+                                                                    }
+                                                                </div>
                                                             </div>
 
                                                             {order.typeDelivery ===
                                                             "delivery" ? (
                                                                 <div className="account--user-order--delivery">
+                                                                    <div className="ccount--user-order--delivery-type">
+                                                                        Доставка
+                                                                    </div>
                                                                     <div className="ccount--user-order--delivery-address">
                                                                         {
                                                                             order.addressDelivery
                                                                         }
                                                                     </div>
-                                                                    <div className="ccount--user-order--delivery-type">
-                                                                        Доставка
-                                                                    </div>
                                                                 </div>
                                                             ) : (
                                                                 <div className="account--user-order--delivery">
+                                                                    <div className="ccount--user-order--delivery-type">
+                                                                        Самовывоз
+                                                                    </div>
                                                                     <div className="ccount--user-order--delivery-address">
                                                                         {
                                                                             order.selfDelivery
                                                                         }
-                                                                    </div>
-                                                                    <div className="ccount--user-order--delivery-type">
-                                                                        Самовывоз
                                                                     </div>
                                                                 </div>
                                                             )}

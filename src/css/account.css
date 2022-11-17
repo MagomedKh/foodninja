@@ -36,6 +36,11 @@
     color: #aaa;
     font-size: 13px;
 }
+
+.account--user-order--status {
+    color: var(--main-color);
+}
+
 .account--user-order--delivery {
     margin-top: 5px;
 }
