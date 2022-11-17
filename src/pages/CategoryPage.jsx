@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { Alert, Button, Box, Container, Skeleton } from "@mui/material";
@@ -23,6 +23,10 @@ const CategoryPage = () => {
         };
     });
 
+    const [allProducts, setAllProducts] = useState([]);
+    const [filteredProducts, setFilteredProducts] = useState(
+        [].concat.apply([], Object.values(products))
+    );
     const [activeCategoryTags, setActiveCategoryTags] = useState({});
 
     const currentCategory = categories.find(
@@ -33,6 +37,25 @@ const CategoryPage = () => {
                 .filter((element) => element)
                 .at(-1)
     );
+
+    useEffect(() => {
+        if (currentCategory) {
+            const temp = [].concat
+                .apply([], Object.values(products))
+                .filter((el) =>
+                    el.categories.includes(currentCategory.term_id)
+                );
+            setAllProducts(temp);
+        }
+    }, [currentCategory]);
+
+    const handleFilter = (filteredProducts) => {
+        if (filteredProducts) {
+            setFilteredProducts(filteredProducts);
+        } else {
+            setFilteredProducts([].concat.apply([], Object.values(products)));
+        }
+    };
 
     const handleClickCategoryTag = (categoryID, tagID) => {
         let tmpArray = _clone(activeCategoryTags);
@@ -53,10 +76,13 @@ const CategoryPage = () => {
             <Header />
             <TopCategoriesMenu />
             <Container sx={{ flexGrow: "1" }}>
-                <div style={{ display: "flex" }}>
-                    <SearchBar dontShowList={true} size={"small"} />
-                </div>
                 <h1>{currentCategory.name}</h1>
+                <SearchBar
+                    products={allProducts}
+                    dontShowList
+                    dontShowButton
+                    handleFilter={handleFilter}
+                />
                 {_isCategoryDisabled(currentCategory) ? (
                     <Alert severity="error" sx={{ mb: 1 }}>
                         Товары из данной категории доступны с{" "}
@@ -92,8 +118,8 @@ const CategoryPage = () => {
                         </Button>
                     ))}
                 <div className="product-grid-list">
-                    {products ? (
-                        Object.values(products)
+                    {filteredProducts ? (
+                        filteredProducts
                             .sort((product1, product2) =>
                                 product1["order"] > product2["order"] ? 1 : -1
                             )

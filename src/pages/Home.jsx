@@ -65,9 +65,10 @@ export default function Home() {
                 <TopCategoriesMenu />
 
                 <Container>
-                    <div style={{ display: "flex" }}>
-                        <SearchBar dontShowList={true} />
-                    </div>
+                    <SearchBar
+                        dontShowList={true}
+                        products={[].concat.apply([], Object.values(products))}
+                    />
                     {categories ? (
                         categories.map((item, index) => (
                             <div

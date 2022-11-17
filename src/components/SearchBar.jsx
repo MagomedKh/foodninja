@@ -7,19 +7,22 @@ import { Product } from "../components";
 import { setStoredInputValue } from "../redux/actions/search";
 import { _isCategoryDisabled } from "./helpers";
 
-const SearchBar = ({ dontShowList }) => {
+const SearchBar = ({
+    dontShowList,
+    dontShowButton,
+    products = [],
+    handleFilter = () => {},
+}) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { storedInputValue } = useSelector((state) => state.search);
-    const { items, categories } = useSelector((state) => state.products);
+    const { categories } = useSelector((state) => state.products);
 
-    const [filteredProducts, setFilteredProducts] = useState(null);
     const [inputValue, setInputValue] = useState(null);
+    const [filteredProducts, setFilteredProducts] = useState(null);
     const [optionsOpen, setOptionsOpen] = useState(false);
 
-    const allProducts = [].concat.apply([], Object.values(items));
-
-    const fuse = new Fuse(allProducts, {
+    const fuse = new Fuse(products, {
         keys: ["title"],
         minMatchCharLength: 1,
         threshold: 0.2,
@@ -32,6 +35,17 @@ const SearchBar = ({ dontShowList }) => {
             dispatch(setStoredInputValue(null));
         }
     }, [dispatch]);
+
+    useEffect(() => {
+        if (dontShowList && filteredProducts && filteredProducts.length) {
+            const temp = filteredProducts.map((el) => el.item);
+            handleFilter(temp);
+        } else if (dontShowList && inputValue) {
+            handleFilter([]);
+        } else if (dontShowList && !inputValue) {
+            handleFilter(null);
+        }
+    }, [filteredProducts, inputValue]);
 
     const disabledCategoriesId = categories
         .filter((el) => _isCategoryDisabled(el))
@@ -58,6 +72,7 @@ const SearchBar = ({ dontShowList }) => {
                 disabled={el.item.categories.some((r) =>
                     disabledCategoriesId.includes(r)
                 )}
+                key={el.id}
             />
         ))
     ) : (
@@ -66,57 +81,74 @@ const SearchBar = ({ dontShowList }) => {
 
     return (
         <>
-            <Autocomplete
-                freeSolo
-                autoSelect={true}
-                clearOnBlur={true}
-                clearOnEscape={false}
-                id="search-bar"
-                open={optionsOpen}
-                onClose={() => setOptionsOpen(false)}
-                options={allProducts.map((option) => option.title)}
-                onChange={(e, value, reason) => {
-                    if (value) {
-                        inputChangeHandler(value);
-                    } else setFilteredProducts(null);
-                }}
-                renderInput={(params) => (
-                    <TextField
-                        {...params}
-                        size="small"
-                        label="Поиск товаров"
-                        value={inputValue}
-                        onKeyPress={(e) => {
-                            if (e.key === "Enter") {
-                                findButtonHandler();
-                                navigate("/search");
-                            }
-                        }}
-                        onChange={(e) => {
-                            inputChangeHandler(e.target.value);
-                        }}
-                        sx={{
-                            mb: 2,
-                            "& fieldset": {
-                                borderRadius: "20px",
-                            },
-                        }}
-                    />
+            <div style={{ display: "flex" }}>
+                <Autocomplete
+                    freeSolo
+                    autoSelect={true}
+                    inputValue={inputValue || ""}
+                    id="search-bar"
+                    open={optionsOpen}
+                    onClose={() => setOptionsOpen(false)}
+                    options={products}
+                    getOptionLabel={(option) =>
+                        option.title ? option.title : ""
+                    }
+                    renderOption={(props, option) => {
+                        return (
+                            <li {...props} key={option.id}>
+                                {option.title}
+                            </li>
+                        );
+                    }}
+                    onChange={(e, value, reason) => {
+                        if (reason === "blur") {
+                            return;
+                        }
+                        if (value) {
+                            inputChangeHandler(value.title);
+                        } else {
+                            inputChangeHandler("");
+                            setFilteredProducts(null);
+                        }
+                    }}
+                    renderInput={(params) => (
+                        <TextField
+                            {...params}
+                            size="small"
+                            label="Поиск товаров"
+                            value={inputValue}
+                            onKeyPress={(e) => {
+                                if (e.key === "Enter") {
+                                    findButtonHandler();
+                                    navigate("/search");
+                                }
+                            }}
+                            onChange={(e) => {
+                                inputChangeHandler(e.target.value);
+                            }}
+                            sx={{
+                                mb: 2,
+                                "& fieldset": {
+                                    borderRadius: "20px",
+                                },
+                            }}
+                        />
+                    )}
+                    sx={{ flexGrow: 1 }}
+                />
+                {dontShowButton ? null : (
+                    <Link to="/search" style={{ textDecoration: "none" }}>
+                        <Button
+                            className="btn--action"
+                            variant="outlined"
+                            sx={{ width: "100px", ml: 1 }}
+                            onClick={findButtonHandler}
+                        >
+                            Найти
+                        </Button>
+                    </Link>
                 )}
-                sx={{ flexGrow: 1 }}
-            />
-            {dontShowList ? (
-                <Link to="/search" style={{ textDecoration: "none" }}>
-                    <Button
-                        className="btn--action"
-                        variant="outlined"
-                        sx={{ width: "100px", ml: 1 }}
-                        onClick={findButtonHandler}
-                    >
-                        Найти
-                    </Button>
-                </Link>
-            ) : null}
+            </div>
             <div className="product-grid-list">{filteredPoructsList}</div>
         </>
     );
