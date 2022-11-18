@@ -1,4 +1,4 @@
-.contacts--block{
+.contacts--block {
     box-shadow: 0 0 20px rgb(0 0 0 / 10%);
     padding: 25px;
     border-radius: 10px;
@@ -8,7 +8,7 @@
 .contacts--block:last-child {
     margin-bottom: 0;
 }
-.contacts--custom-map{
+.contacts--custom-map {
     box-shadow: 0 0 20px rgb(0 0 0 / 10%);
     border-radius: 10px;
     position: relative;
@@ -17,24 +17,53 @@
     max-height: 400px;
 }
 
-.contacts--main-address, .contacts--main-phone, .contacts--email, .contacts--vk, .contacts--fb, .contacts--instagram, .contacts--ok{
+.contacts--main-address,
+.contacts--main-phone,
+.contacts--email,
+.contacts--vk,
+.contacts--fb,
+.contacts--instagram,
+.contacts--ok {
     margin-top: 10px;
 }
-.contacts--main-address svg, .contacts--main-phone svg, .contacts--email svg, .contacts--vk svg, .contacts--fb svg, .contacts--instagram svg, .contacts--ok svg {
+.contacts--main-address svg,
+.contacts--main-phone svg,
+.contacts--email svg,
+.contacts--vk svg,
+.contacts--fb svg,
+.contacts--instagram svg,
+.contacts--ok svg {
     width: 25px;
     height: 25px;
     margin-right: 10px;
     vertical-align: middle;
     color: #555;
 }
-.contacts--today-work{
+.contacts--today-work {
     font-size: 16px;
 }
-.today-work--status{
+.today-work--status {
     font-size: 13px;
     margin-top: 5px;
     color: red;
 }
-.today-work--status.open{
+.today-work--status.open {
     color: green;
+}
+
+.contacts--adress {
+    font-size: 16px;
+}
+
+.contacts--adress svg {
+    width: 25px;
+    height: 25px;
+    margin-right: 10px;
+    vertical-align: middle;
+    color: #555;
+}
+
+.contacts--adress .contacts--phone,
+.contacts--adress .contacts--schedule {
+    margin-top: 6px;
 }

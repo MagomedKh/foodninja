@@ -1,12 +1,13 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { Container } from "@mui/material";
+import { Container, Divider } from "@mui/material";
 import { Grid } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faMapLocationDot,
     faPhone,
     faEnvelope,
+    faClock,
 } from "@fortawesome/free-solid-svg-icons";
 import {
     faVk,
@@ -37,43 +38,122 @@ export default function Contacts() {
                     <Grid item sm={12} md={4} sx={{ width: 1 }}>
                         {config.CONFIG_address && (
                             <div className="contacts--block">
-                                <h4>Адрес</h4>
-                                <div className="contacts--main-address">
-                                    <FontAwesomeIcon icon={faMapLocationDot} />{" "}
-                                    {config.CONFIG_address}
+                                <h4>Точки продаж</h4>
+                                <div className="contacts--adress">
+                                    <div>
+                                        <FontAwesomeIcon
+                                            icon={faMapLocationDot}
+                                        />
+                                        {config.CONFIG_address}
+                                    </div>
+                                    <div>
+                                        {phones &&
+                                            phones.map(
+                                                (phone, index) =>
+                                                    phone.replace(
+                                                        /\D+/g,
+                                                        ""
+                                                    ) && (
+                                                        <div
+                                                            key={index}
+                                                            className="contacts--phone"
+                                                        >
+                                                            <FontAwesomeIcon
+                                                                icon={faPhone}
+                                                            />
+                                                            <a
+                                                                href={
+                                                                    _getPlatform() ===
+                                                                        "android" ||
+                                                                    _getPlatform() ===
+                                                                        "ios"
+                                                                        ? `#`
+                                                                        : `tel:${phone.replace(
+                                                                              /\D+/g,
+                                                                              ""
+                                                                          )}`
+                                                                }
+                                                            >
+                                                                {phone}
+                                                            </a>
+                                                        </div>
+                                                    )
+                                            )}
+                                    </div>
+                                    <div className="contacts--schedule">
+                                        <FontAwesomeIcon icon={faClock} />
+                                        Сегодня с{" "}
+                                        {
+                                            config.CONFIG_format_start_work
+                                        } до {config.CONFIG_format_end_work}
+                                    </div>
+                                    {config.CONFIG_filials?.length ? (
+                                        <Divider
+                                            sx={{
+                                                my: "8px",
+                                                width: "200px",
+                                            }}
+                                        />
+                                    ) : null}
                                 </div>
+                                {config.CONFIG_filials?.map(
+                                    (el, index, arr) => (
+                                        <div className="contacts--adress">
+                                            <div>
+                                                <FontAwesomeIcon
+                                                    icon={faMapLocationDot}
+                                                />
+                                                {el.address}
+                                            </div>
+                                            {el.phones.map((phone) => (
+                                                <div className="contacts--phone">
+                                                    <FontAwesomeIcon
+                                                        icon={faPhone}
+                                                    />
+                                                    <a
+                                                        href={
+                                                            _getPlatform() ===
+                                                                "android" ||
+                                                            _getPlatform() ===
+                                                                "ios"
+                                                                ? `#`
+                                                                : `tel:${phone.replace(
+                                                                      /\D+/g,
+                                                                      ""
+                                                                  )}`
+                                                        }
+                                                    >
+                                                        {phone}
+                                                    </a>
+                                                </div>
+                                            ))}
+                                            <div className="contacts--schedule">
+                                                <FontAwesomeIcon
+                                                    icon={faClock}
+                                                />
+                                                Сегодня с{" "}
+                                                {
+                                                    config.CONFIG_format_start_work
+                                                }{" "}
+                                                до{" "}
+                                                {config.CONFIG_format_end_work}
+                                            </div>
+                                            {index === arr.length - 1 ? null : (
+                                                <Divider
+                                                    sx={{
+                                                        my: "8px",
+                                                        width: "200px",
+                                                    }}
+                                                />
+                                            )}
+                                        </div>
+                                    )
+                                )}
                             </div>
                         )}
                         <div className="contacts--block">
-                            <h4>Контактная информация</h4>
-                            {phones &&
-                                phones.map(
-                                    (phone, index) =>
-                                        phone.replace(/\D+/g, "") && (
-                                            <div
-                                                key={index}
-                                                className="contacts--main-phone"
-                                            >
-                                                <FontAwesomeIcon
-                                                    icon={faPhone}
-                                                />{" "}
-                                                <a
-                                                    href={
-                                                        _getPlatform() ===
-                                                            "android" ||
-                                                        _getPlatform() === "ios"
-                                                            ? `#`
-                                                            : `tel:${phone.replace(
-                                                                  /\D+/g,
-                                                                  ""
-                                                              )}`
-                                                    }
-                                                >
-                                                    {phone}
-                                                </a>
-                                            </div>
-                                        )
-                                )}
+                            <h4>Соцсети</h4>
+
                             {config.CONFIG_email && (
                                 <div className="contacts--email">
                                     <FontAwesomeIcon icon={faEnvelope} />{" "}
@@ -134,7 +214,7 @@ export default function Contacts() {
                                 </div>
                             )}
                         </div>
-                        <div className="contacts--block">
+                        {/* <div className="contacts--block">
                             <h4>Время работы</h4>
                             {config && (
                                 <div className="contacts--today-work">
@@ -152,7 +232,7 @@ export default function Contacts() {
                                     )}
                                 </div>
                             )}
-                        </div>
+                        </div> */}
 
                         {config.CONFIG_legalInfo && (
                             <div className="contacts--block">
