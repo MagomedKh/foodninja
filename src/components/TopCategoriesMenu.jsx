@@ -49,16 +49,23 @@ export default function TopCategoriesMenu() {
             allLiLength,
             breakIndex = 0;
 
+        const wrapperWidth =
+            document.querySelector(".inner-wrapper").offsetWidth;
+
+        document.querySelector("#topCategoriesMenu").style.maxWidth = `${
+            wrapperWidth - 230
+        }px`;
         menuWidth = document.querySelector("#topCategoriesMenu").offsetWidth;
 
         allLi = document.querySelectorAll("#topCategoriesMenu li");
         allLiLength = 100;
         for (let i = 0; i < allLi.length; i++) {
             allLiLength += allLi[i].offsetWidth;
-            if (menuWidth < allLiLength && !breakIndex) {
+            if (menuWidth <= allLiLength && !breakIndex) {
                 breakIndex = i;
             }
         }
+
         if (!_isMobile() && breakIndex)
             changeFlexMenu("decrease", allLi.length - breakIndex);
         else {

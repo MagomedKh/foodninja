@@ -8,6 +8,7 @@
     transition: background-color 0.5s ease-in-out;
 }
 .sticked-top-bar ul.categories-menu {
+    white-space: nowrap;
     margin: 0;
     margin-right: 20px;
     list-style: none;
