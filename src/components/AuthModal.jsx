@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { _isMobile, _getDomain } from "./helpers.js";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -18,7 +18,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import "../css/auth-modal.css";
 import axios from "axios";
 import { GoogleReCaptcha } from "react-google-recaptcha-v3";
-import { useCallback } from "react";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -49,6 +48,7 @@ export default function AuthModal() {
     const [recallTimer, setRecallTimer] = React.useState(30);
     const [recallActive, setRecallActive] = React.useState(false);
     const [token, setToken] = React.useState("");
+    const [refreshReCaptcha, setRefreshReCaptcha] = useState(false);
 
     const startRecallTimer = () => {
         stopRecallTimer();
@@ -103,6 +103,7 @@ export default function AuthModal() {
                     } else setError(resp.data.text);
                     setLoading(false);
                 });
+            setRefreshReCaptcha((r) => !r);
         } else {
         }
     };
@@ -127,6 +128,7 @@ export default function AuthModal() {
                     startRecallTimer();
                     resp.data.status === "error" && setError(resp.data.text);
                 });
+            setRefreshReCaptcha((r) => !r);
         } else {
         }
     };
@@ -151,6 +153,7 @@ export default function AuthModal() {
                     startRecallTimer();
                     resp.data.status === "error" && setError(resp.data.text);
                 });
+            setRefreshReCaptcha((r) => !r);
         } else {
         }
     };
@@ -287,7 +290,10 @@ export default function AuthModal() {
                 <h2 className="auth-modal--title">Авторизация</h2>
                 {config.CONFIG_auth_recaptcha === "on" &&
                 config.CONFIG_auth_recaptcha_site_token ? (
-                    <GoogleReCaptcha onVerify={onVerify} />
+                    <GoogleReCaptcha
+                        onVerify={onVerify}
+                        refreshReCaptcha={refreshReCaptcha}
+                    />
                 ) : null}
                 <IconButton
                     edge="start"
