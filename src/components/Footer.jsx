@@ -14,12 +14,15 @@ import "../css/footer.css";
 
 export default function Footer() {
     const { pathname } = useLocation();
-    const { config, topMenu } = useSelector(({ config, pages, products }) => {
-        return {
-            config: config.data,
-            topMenu: pages.topMenu,
-        };
-    });
+    const { config, topMenu, bottomMenu } = useSelector(
+        ({ config, pages, products }) => {
+            return {
+                config: config.data,
+                topMenu: pages.topMenu,
+                bottomMenu: pages.bottomMenu,
+            };
+        }
+    );
 
     const handleClickPage = (item) => {
         window.scrollTo(0, 0);
@@ -51,7 +54,33 @@ export default function Footer() {
                     </Grid>
                     <Grid item sm={12} md={4} sx={{ width: 1 }}>
                         <h4>Страницы</h4>
-                        {topMenu && (
+                        {bottomMenu ? (
+                            <ul>
+                                {bottomMenu.map((item, index) => (
+                                    <li key={item.id}>
+                                        {item.target === "_blank" ? (
+                                            <a
+                                                href={item.url}
+                                                target="_blank"
+                                                rel="noreferrer"
+                                                title={item.title}
+                                            >
+                                                {item.title}
+                                            </a>
+                                        ) : (
+                                            <Link
+                                                onClick={() =>
+                                                    handleClickPage(item)
+                                                }
+                                                to={item.url}
+                                            >
+                                                {item.title}
+                                            </Link>
+                                        )}
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
                             <ul>
                                 {topMenu.map((item, index) => (
                                     <li key={item.id}>
