@@ -1,12 +1,19 @@
 import * as React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Container, Grid } from "@mui/material";
+import { Container, Grid, Divider } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faVk,
-    faOdnoklassnikiSquare,
+    faMapLocationDot,
+    faPhone,
+    faEnvelope,
+} from "@fortawesome/free-solid-svg-icons";
+import {
+    faInstagram,
+    faOdnoklassniki,
+    faFacebookF,
 } from "@fortawesome/free-brands-svg-icons";
+import VKsvg from "../img/Vk-svg";
 import AppStoreIcon from "../img/app-store-bage-white.svg";
 import GooglePlayIcon from "../img/google-play-bage-white.svg";
 import { _getPlatform } from "./helpers";
@@ -24,6 +31,10 @@ export default function Footer() {
         }
     );
 
+    const phones = config.CONFIG_home_phones
+        ? config.CONFIG_home_phones.split(";")
+        : [];
+
     const handleClickPage = (item) => {
         window.scrollTo(0, 0);
     };
@@ -40,7 +51,7 @@ export default function Footer() {
                                 __html: config.CONFIG_footer_text,
                             }}
                         ></div>
-                        <hr />
+                        <hr className="about-divider" />
                     </div>
                 )}
 
@@ -51,9 +62,83 @@ export default function Footer() {
                             className="header-logo"
                             alt="Логотип"
                         />
+                        <div className="footer--town">
+                            {config && config.CONFIG_town ? (
+                                <span>{config.CONFIG_town}</span>
+                            ) : null}
+                        </div>
+                        <div className="footer--adress-list">
+                            <div className="footer--adress-list-title">
+                                Точки продаж:
+                            </div>
+                            <div className="footer--adress">
+                                <div>{config.CONFIG_address}</div>
+                                <div>
+                                    {phones &&
+                                        phones.map(
+                                            (phone, index) =>
+                                                phone.replace(/\D+/g, "") && (
+                                                    <div key={index}>
+                                                        <a
+                                                            href={
+                                                                _getPlatform() ===
+                                                                    "android" ||
+                                                                _getPlatform() ===
+                                                                    "ios"
+                                                                    ? `#`
+                                                                    : `tel:${phone.replace(
+                                                                          /\D+/g,
+                                                                          ""
+                                                                      )}`
+                                                            }
+                                                        >
+                                                            {phone}
+                                                        </a>
+                                                    </div>
+                                                )
+                                        )}
+                                </div>
+                                <div>
+                                    Сегодня с {config.CONFIG_format_start_work}{" "}
+                                    до {config.CONFIG_format_end_work}
+                                </div>
+                                {config.CONFIG_filials?.length ? (
+                                    <Divider
+                                        sx={{
+                                            my: "6px",
+                                            borderColor: "#3c3b3b",
+                                            width: "200px",
+                                        }}
+                                    />
+                                ) : null}
+                            </div>
+                            {config.CONFIG_filials.map((el, index, arr) => (
+                                <div className="footer--adress">
+                                    <div>{el.address}</div>
+                                    <div>
+                                        {el.phones.map((phone) => (
+                                            <div>{phone}</div>
+                                        ))}
+                                    </div>
+                                    <div>
+                                        Сегодня с{" "}
+                                        {config.CONFIG_format_start_work} до{" "}
+                                        {config.CONFIG_format_end_work}
+                                    </div>
+                                    {index === arr.length - 1 ? null : (
+                                        <Divider
+                                            sx={{
+                                                my: "6px",
+                                                borderColor: "#3c3b3b",
+                                                width: "200px",
+                                            }}
+                                        />
+                                    )}
+                                </div>
+                            ))}
+                        </div>
                     </Grid>
                     <Grid item sm={12} md={4} sx={{ width: 1 }}>
-                        <h4>Страницы</h4>
                         {bottomMenu ? (
                             <ul>
                                 {bottomMenu.map((item, index) => (
@@ -140,39 +225,54 @@ export default function Footer() {
                             </a>
                         </h4>
 
-                        {config.CONFIG_vk && (
-                            <div className="contacts--vk footer--icon">
-                                <FontAwesomeIcon icon={faVk} />{" "}
-                                <a href={config.CONFIG_vk}>
-                                    {config.CONFIG_vk.replace("https://", "")}
+                        <div className="contacts--social-links">
+                            {config.CONFIG_vk && (
+                                <a
+                                    href={config.CONFIG_vk}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                >
+                                    <div className="footer--icon">
+                                        <VKsvg />
+                                    </div>
                                 </a>
-                            </div>
-                        )}
-                        {config.CONFIG_fb && (
-                            <div className="contacts--fb footer--icon">
-                                <a href={config.CONFIG_fb}>
-                                    {config.CONFIG_fb.replace("https://", "")}
+                            )}
+                            {config.CONFIG_fb && (
+                                <a
+                                    href={config.CONFIG_fb}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                >
+                                    <div className="footer--icon">
+                                        <FontAwesomeIcon icon={faFacebookF} />
+                                    </div>
                                 </a>
-                            </div>
-                        )}
-                        {config.CONFIG_instagram && (
-                            <div className="contacts--instagram footer--icon">
-                                <a href={config.CONFIG_instagram}>
-                                    {config.CONFIG_instagram.replace(
-                                        "https://",
-                                        ""
-                                    )}
+                            )}
+                            {config.CONFIG_instagram && (
+                                <a
+                                    href={config.CONFIG_instagram}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                >
+                                    <div className="footer--icon">
+                                        <FontAwesomeIcon icon={faInstagram} />
+                                    </div>
                                 </a>
-                            </div>
-                        )}
-                        {config.CONFIG_ok && (
-                            <div className="contacts--ok footer--icon">
-                                <FontAwesomeIcon icon={faOdnoklassnikiSquare} />{" "}
-                                <a href={config.CONFIG_ok}>
-                                    {config.CONFIG_ok.replace("https://", "")}
+                            )}
+                            {config.CONFIG_ok && (
+                                <a
+                                    href={config.CONFIG_ok}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                >
+                                    <div className="footer--icon">
+                                        <FontAwesomeIcon
+                                            icon={faOdnoklassniki}
+                                        />
+                                    </div>
                                 </a>
-                            </div>
-                        )}
+                            )}
+                        </div>
                         {config.CONFIG_APPSTORE && (
                             <div className="contacts--appstore mobile-apps">
                                 <a
@@ -203,23 +303,6 @@ export default function Footer() {
 
                 <div className="footer-copyright">
                     <Grid container spacing={5}>
-                        <Grid
-                            item
-                            sm={12}
-                            md={8}
-                            sx={{ width: 1 }}
-                            className={
-                                config.CONFIG_active_no_whitelabel
-                                    ? `right-col`
-                                    : ""
-                            }
-                        >
-                            {new Date().getFullYear()} © Все права защищены.
-                            Служба доставки еды{" "}
-                            <a href="/" title={config.siteTitle}>
-                                {config.CONFIG_company_name}
-                            </a>
-                        </Grid>
                         {!config.CONFIG_active_no_whitelabel && (
                             <Grid
                                 item
@@ -229,13 +312,13 @@ export default function Footer() {
                                 className="right-col"
                             >
                                 <div className="creators">
-                                    Платформа FoodNinja от{" "}
+                                    Работает на платформе{" "}
                                     <a
                                         href="https://iqmd.ru"
                                         target="_blank"
                                         rel="noreferrer"
                                     >
-                                        IQ Media
+                                        FoodNinja
                                     </a>
                                 </div>
                             </Grid>
