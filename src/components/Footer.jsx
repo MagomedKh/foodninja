@@ -117,7 +117,22 @@ export default function Footer() {
                                     <div>{el.address}</div>
                                     <div>
                                         {el.phones.map((phone) => (
-                                            <div>{phone}</div>
+                                            <div>
+                                                <a
+                                                    href={
+                                                        _getPlatform() ===
+                                                            "android" ||
+                                                        _getPlatform() === "ios"
+                                                            ? `#`
+                                                            : `tel:${phone.replace(
+                                                                  /\D+/g,
+                                                                  ""
+                                                              )}`
+                                                    }
+                                                >
+                                                    {phone}
+                                                </a>
+                                            </div>
                                         ))}
                                     </div>
                                     <div>
