@@ -174,16 +174,18 @@ function App() {
     });
 
     return (
-        <GoogleReCaptchaProvider
-            reCaptchaKey={config.CONFIG_auth_recaptcha_site_token}
-        >
-            <ThemeProvider theme={foodninja}>
-                <MainTheme mainColor={mainColor} secondColor={secondColor} />
-                {config !== undefined && Object.keys(config).length ? (
-                    <div>
-                        {config.site_status === "closed" ? (
-                            <Maintenance />
-                        ) : (
+        <ThemeProvider theme={foodninja}>
+            <MainTheme mainColor={mainColor} secondColor={secondColor} />
+            {config !== undefined && Object.keys(config).length ? (
+                <div>
+                    {config.site_status === "closed" ? (
+                        <Maintenance />
+                    ) : (
+                        <GoogleReCaptchaProvider
+                            reCaptchaKey={
+                                config.CONFIG_auth_recaptcha_site_token
+                            }
+                        >
                             <div>
                                 <Routes>
                                     <Route exact path="/" element={<Home />} />
@@ -247,13 +249,13 @@ function App() {
                                     ""
                                 )}
                             </div>
-                        )}
-                    </div>
-                ) : (
-                    <BigLoader initStatus={true} />
-                )}
-            </ThemeProvider>
-        </GoogleReCaptchaProvider>
+                        </GoogleReCaptchaProvider>
+                    )}
+                </div>
+            ) : (
+                <BigLoader initStatus={true} />
+            )}
+        </ThemeProvider>
     );
 }
 
