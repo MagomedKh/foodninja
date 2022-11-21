@@ -28,13 +28,20 @@
 }
 .contacts--main-address svg,
 .contacts--main-phone svg,
-.contacts--email svg,
 .contacts--vk svg,
 .contacts--fb svg,
 .contacts--instagram svg,
 .contacts--ok svg {
     width: 22px;
     height: 22px;
+    margin-right: 10px;
+    vertical-align: middle;
+    color: #555;
+}
+
+.contacts--email svg {
+    width: 22px;
+    height: 19px;
     margin-right: 10px;
     vertical-align: middle;
     color: #555;
@@ -56,8 +63,8 @@
 }
 
 .contacts--adress svg {
-    width: 22px;
-    height: 22px;
+    width: 19px;
+    height: 19px;
     margin-right: 10px;
     vertical-align: middle;
     color: #555;
