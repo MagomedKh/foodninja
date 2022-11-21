@@ -123,6 +123,14 @@ const SearchBar = ({
                                     navigate("/search");
                                 }
                             }}
+                            inputProps={{
+                                ...params.inputProps,
+                                onKeyDown: (e) => {
+                                    if (e.key === "Enter") {
+                                        e.stopPropagation();
+                                    }
+                                },
+                            }}
                             onChange={(e) => {
                                 inputChangeHandler(e.target.value);
                             }}
