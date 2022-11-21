@@ -48,6 +48,19 @@ export default function Home() {
         setActiveCategoryTags(tmpArray);
     };
 
+    const productsForSearch = [].concat
+        .apply([], Object.values(products))
+        .filter((product) => {
+            if (
+                product.categories.includes(
+                    parseInt(config.CONFIG_bonuses_category)
+                )
+            ) {
+                return false;
+            }
+            return true;
+        });
+
     return (
         <>
             <Header />
@@ -67,7 +80,7 @@ export default function Home() {
                 <Container>
                     <SearchBar
                         dontShowList={true}
-                        products={[].concat.apply([], Object.values(products))}
+                        products={productsForSearch}
                     />
                     {categories ? (
                         categories.map((item, index) => (

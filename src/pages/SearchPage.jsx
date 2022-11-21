@@ -18,15 +18,32 @@ const SearchPage = () => {
         };
     });
 
+    const { config } = useSelector(({ config }) => {
+        return {
+            config: config.data,
+        };
+    });
+
+    const productsForSearch = [].concat
+        .apply([], Object.values(products))
+        .filter((product) => {
+            if (
+                product.categories.includes(
+                    parseInt(config.CONFIG_bonuses_category)
+                )
+            ) {
+                return false;
+            }
+            return true;
+        });
+
     return (
         <Box sx={{ display: "flex", flexDirection: "column", height: "100vh" }}>
             <Header />
             <TopCategoriesMenu />
             <Container sx={{ flexGrow: "1" }}>
                 <h1>Поиск товаров</h1>
-                <SearchBar
-                    products={[].concat.apply([], Object.values(products))}
-                />
+                <SearchBar products={productsForSearch} />
             </Container>
             {_isMobile() ? <MobileMiniCart /> : ""}
             <FooterBonuses />
