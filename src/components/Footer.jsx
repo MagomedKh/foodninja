@@ -98,10 +98,16 @@ export default function Footer() {
                                                 )
                                         )}
                                 </div>
-                                <div>
-                                    Сегодня с {config.CONFIG_format_start_work}{" "}
-                                    до {config.CONFIG_format_end_work}
-                                </div>
+                                {config.CONFIG_format_start_work &&
+                                config.CONFIG_format_end_work ? (
+                                    <div>
+                                        Сегодня с{" "}
+                                        {config.CONFIG_format_start_work} до{" "}
+                                        {config.CONFIG_format_end_work}
+                                    </div>
+                                ) : (
+                                    <div>Сегодня закрыто</div>
+                                )}
                                 {config.CONFIG_filials?.length ? (
                                     <Divider
                                         sx={{
@@ -135,11 +141,16 @@ export default function Footer() {
                                             </div>
                                         ))}
                                     </div>
-                                    <div>
-                                        Сегодня с{" "}
-                                        {config.CONFIG_format_start_work} до{" "}
-                                        {config.CONFIG_format_end_work}
-                                    </div>
+                                    {config.CONFIG_format_start_work &&
+                                    config.CONFIG_format_end_work ? (
+                                        <div>
+                                            Сегодня с{" "}
+                                            {config.CONFIG_format_start_work} до{" "}
+                                            {config.CONFIG_format_end_work}
+                                        </div>
+                                    ) : (
+                                        <div>Сегодня закрыто</div>
+                                    )}
                                     {index === arr.length - 1 ? null : (
                                         <Divider
                                             sx={{
