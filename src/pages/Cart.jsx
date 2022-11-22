@@ -128,7 +128,7 @@ export default function Cart() {
                                                 indexVariantProduct
                                             ) => (
                                                 <Collapse
-                                                    key={key}
+                                                    key={indexVariantProduct}
                                                     className="collapse-cart-product"
                                                 >
                                                     <CartProduct
