@@ -33,7 +33,12 @@ export default function MiniCartProduct({
         dispatch(decreaseProductInCart(productCart));
     };
     const handleRemoveProduct = () => {
-        dispatch(removeProductFromCart(productCart));
+        dispatch(
+            removeProductFromCart({
+                ...productCart,
+                productIndex: productIndex,
+            })
+        );
     };
 
     let dataAttributes = {};
@@ -186,7 +191,7 @@ export default function MiniCartProduct({
                     <div className="minicart--product-name">
                         {productCart.title}
                     </div>
-                    <div className="minicart--product-info">
+                    <div className="minicart--product-description">
                         {productCart.type === "variations" ? (
                             <div className="minicart--product-attributes">
                                 {Object.values(
@@ -218,6 +223,23 @@ export default function MiniCartProduct({
                                 )}
                             </>
                         )}
+                        {productCart.choosenModificators?.length ? (
+                            <div className="minicart--product-attributes">
+                                +{" "}
+                                {productCart.choosenModificators.map(
+                                    (el, inx, array) =>
+                                        inx !== array.length - 1 ? (
+                                            <span key={el.id}>
+                                                {el.title} {el.count} шт,{" "}
+                                            </span>
+                                        ) : (
+                                            <span key={el.id}>
+                                                {el.title} {el.count} шт
+                                            </span>
+                                        )
+                                )}
+                            </div>
+                        ) : null}
                     </div>
                     {/* <div className="minicart--product-price">{productCart.options._price.toLocaleString('ru-RU')} &#8381;</div> */}
 

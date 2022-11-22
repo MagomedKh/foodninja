@@ -27,6 +27,12 @@
     flex-grow: 1;
     width: 100%;
 }
+
+.cart--product-description {
+    font-size: 13px;
+    color: #5c6370 !important;
+}
+
 .cart--product-inner {
     width: 100%;
     display: flex;

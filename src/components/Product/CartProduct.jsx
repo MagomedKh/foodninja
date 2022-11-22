@@ -177,24 +177,42 @@ export default function CartProduct({
                 <div className="cart--product-name">
                     {productCart.title}
 
-                    {productCart.type === "variations" && (
-                        <div className="minicart--product-attributes">
-                            {productCart.variant.mini_description ? (
-                                <>{productCart.variant.mini_description}</>
-                            ) : (
-                                Object.values(
-                                    productCart.variant.attributes
-                                ).map((attribute, keyAttr) => (
-                                    <div
-                                        className="minicart--product-attribute"
-                                        key={keyAttr}
-                                    >
-                                        {dataAttributes[keyAttr]}: {attribute}
-                                    </div>
-                                ))
-                            )}
-                        </div>
-                    )}
+                    <div className="cart--product-description">
+                        {productCart.type === "variations" && (
+                            <div>
+                                {productCart.variant.mini_description ? (
+                                    <>{productCart.variant.mini_description}</>
+                                ) : (
+                                    Object.values(
+                                        productCart.variant.attributes
+                                    ).map((attribute, keyAttr) => (
+                                        <div key={keyAttr}>
+                                            {dataAttributes[keyAttr]}:{" "}
+                                            {attribute}
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+                        )}
+
+                        {productCart.choosenModificators?.length ? (
+                            <div>
+                                +{" "}
+                                {productCart.choosenModificators.map(
+                                    (el, inx, array) =>
+                                        inx !== array.length - 1 ? (
+                                            <span key={el.id}>
+                                                {el.title} {el.count} шт,{" "}
+                                            </span>
+                                        ) : (
+                                            <span key={el.id}>
+                                                {el.title} {el.count} шт
+                                            </span>
+                                        )
+                                )}
+                            </div>
+                        ) : null}
+                    </div>
 
                     <div className="product--info">
                         {productCart.options.weight ? (
