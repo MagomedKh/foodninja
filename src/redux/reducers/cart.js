@@ -51,7 +51,6 @@ const getTotalRollsCount = (cartProducts, state) => {
 const cart = (state = initialState, action) => {
     switch (action.type) {
         case "ADD_PROMOCODE": {
-            console.log(action.payload);
             switch (action.payload.type) {
                 case "percent": {
                     const percentDiscount = (100 - action.payload.amount) / 100;
@@ -82,8 +81,13 @@ const cart = (state = initialState, action) => {
                                             options: {
                                                 ...elem.options,
                                                 _promocode_price:
-                                                    elem.options._price *
-                                                    percentDiscount,
+                                                    elem.modificatorsAmount
+                                                        ? (elem.options._price -
+                                                              elem.modificatorsAmount) *
+                                                              percentDiscount +
+                                                          elem.modificatorsAmount
+                                                        : elem.options._price *
+                                                          percentDiscount,
                                             },
                                         };
                                     } else {
@@ -120,8 +124,13 @@ const cart = (state = initialState, action) => {
                                             options: {
                                                 ...elem.options,
                                                 _promocode_price:
-                                                    elem.options._price *
-                                                    percentDiscount,
+                                                    elem.modificatorsAmount
+                                                        ? (elem.options._price -
+                                                              elem.modificatorsAmount) *
+                                                              percentDiscount +
+                                                          elem.modificatorsAmount
+                                                        : elem.options._price *
+                                                          percentDiscount,
                                             },
                                         };
                                     } else {
@@ -150,8 +159,13 @@ const cart = (state = initialState, action) => {
                                             options: {
                                                 ...elem.options,
                                                 _promocode_price:
-                                                    elem.options._price *
-                                                    percentDiscount,
+                                                    elem.modificatorsAmount
+                                                        ? (elem.options._price -
+                                                              elem.modificatorsAmount) *
+                                                              percentDiscount +
+                                                          elem.modificatorsAmount
+                                                        : elem.options._price *
+                                                          percentDiscount,
                                             },
                                         };
                                     } else {
@@ -283,7 +297,6 @@ const cart = (state = initialState, action) => {
                             });
 
                             if (!find) {
-                                console.log("find");
                                 let buffItems;
                                 buffItems = [
                                     ...itemsWithDiscount[
@@ -336,7 +349,6 @@ const cart = (state = initialState, action) => {
                                     subTotalPrice: subTotalPrice,
                                 };
                             } else {
-                                console.log("else");
                                 // const updatedItems = {
                                 //     ...state.items,
                                 //     [action.payload.promocodeProducts.id]: {
@@ -554,7 +566,11 @@ const cart = (state = initialState, action) => {
                     }
                 }
 
-                console.log(newItem);
+                if (newItem.modificatorsAmount) {
+                    newItem.options._promocode_price +=
+                        newItem.modificatorsAmount;
+                    newItem.options._price += newItem.modificatorsAmount;
+                }
 
                 let newItems;
 
@@ -595,6 +611,13 @@ const cart = (state = initialState, action) => {
             }
 
             let newItems;
+
+            if (action.payload.modificatorsAmount) {
+                action.payload.options._promocode_price +=
+                    action.payload.modificatorsAmount;
+                action.payload.options._price +=
+                    action.payload.modificatorsAmount;
+            }
             if (action.payload.variant) {
                 if (!state.items[action.payload.id]) {
                     newItems = [_clone(action.payload)];
@@ -621,7 +644,6 @@ const cart = (state = initialState, action) => {
                 totalPrice: getItemTotalPrice(newItems),
             };
 
-            console.log(updatedItems);
             const allProducts = [].concat.apply(
                 [],
                 Object.values(updatedItems).map((obj) => obj.items)
