@@ -200,9 +200,7 @@ function MiniCart() {
                                                 }
                                                 productCount={1}
                                                 productTotalPrice={
-                                                    cartProducts[key].items[
-                                                        indexVariantProduct
-                                                    ].options._price
+                                                    cartProducts[key].totalPrice
                                                 }
                                             />
                                         )
