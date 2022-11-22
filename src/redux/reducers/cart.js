@@ -728,7 +728,10 @@ const cart = (state = initialState, action) => {
                         element.variant.variant_id ===
                         action.payload.variant.variant_id
                 );
-                updatedItems[action.payload.id].items.splice(indexVar, 1);
+                updatedItems[action.payload.id].items.splice(
+                    action.payload.productIndex || indexVar,
+                    1
+                );
                 updatedItems[action.payload.id].totalPrice = getItemTotalPrice(
                     updatedItems[action.payload.id].items
                 );
