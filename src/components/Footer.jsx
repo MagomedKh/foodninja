@@ -119,11 +119,14 @@ export default function Footer() {
                                 ) : null}
                             </div>
                             {config.CONFIG_filials.map((el, index, arr) => (
-                                <div className="footer--adress">
+                                <div
+                                    className="footer--adress"
+                                    key={el.address}
+                                >
                                     <div>{el.address}</div>
                                     <div>
                                         {el.phones.map((phone) => (
-                                            <div>
+                                            <div key={phone}>
                                                 <a
                                                     href={
                                                         _getPlatform() ===
