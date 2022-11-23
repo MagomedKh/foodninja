@@ -84,29 +84,15 @@ function Header() {
             <AppBar position="static" className="header-bar">
                 <Container maxWidth="lg">
                     <Toolbar className="header-wrapper">
-                        {_getPlatform() === "vk" ? (
-                            <a
-                                target="_blank"
-                                href={`https://vk.com/club${config.CONFIG_vk_group_id}`}
-                                rel="noreferrer"
-                            >
+                        <div className="header-logo-wrapper">
+                            <Link to="/">
                                 <img
                                     src={config.CONFIG_company_logo_main}
                                     className="header-logo"
                                     alt="Логотип"
                                 />
-                            </a>
-                        ) : (
-                            <div className="header-logo-wrapper">
-                                <Link to="/">
-                                    <img
-                                        src={config.CONFIG_company_logo_main}
-                                        className="header-logo"
-                                        alt="Логотип"
-                                    />
-                                </Link>
-                            </div>
-                        )}
+                            </Link>
+                        </div>
 
                         {_isMobile() && (
                             <div className="header-mobile-menu">
