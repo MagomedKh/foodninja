@@ -8,6 +8,7 @@ import Collapse from "@mui/material/Collapse";
 import Alert from "@mui/material/Alert";
 import { ToggleButtonGroup, ToggleButton, Button } from "@mui/material";
 import Zoom from "@mui/material/Zoom";
+import { Header, Footer } from "../components";
 
 export default function Product() {
     const dispatch = useDispatch();
@@ -105,225 +106,253 @@ export default function Product() {
     };
 
     return (
-        <Container>
-            {product !== undefined ? (
-                <div className="product-modal">
-                    <div className="product-modal--image">
-                        <Zoom in={true}>
-                            <img
-                                src={
-                                    activeVariant
-                                        ? activeVariant.img
-                                        : product.img
-                                }
-                                alt={product.title}
-                            />
-                        </Zoom>
-                    </div>
-                    <div className="product-modal--info no-bg">
-                        <h1
-                            className="product-modal--title"
-                            style={{ marginBottom: 5 }}
-                        >
-                            {product.title}
-                        </h1>
+        <>
+            <Header />
+            <Container>
+                {product !== undefined ? (
+                    <div className="product-modal">
+                        <div className="product-modal--image">
+                            <Zoom in={true}>
+                                <img
+                                    src={
+                                        activeVariant
+                                            ? activeVariant.img
+                                            : product.img
+                                    }
+                                    alt={product.title}
+                                />
+                            </Zoom>
+                        </div>
+                        <div className="product-modal--info no-bg">
+                            <h1
+                                className="product-modal--title"
+                                style={{ marginBottom: 5 }}
+                            >
+                                {product.title}
+                            </h1>
 
-                        {product.type === "variations" ? (
-                            <>
-                                {activeVariant && activeVariant.description ? (
-                                    <div
-                                        className="product-modal--description"
-                                        data-product-id={product.id}
-                                        dangerouslySetInnerHTML={{
-                                            __html: activeVariant.description,
-                                        }}
-                                    ></div>
-                                ) : (
-                                    <div
-                                        className="product-modal--description"
-                                        data-product-id={product.id}
-                                        dangerouslySetInnerHTML={{
-                                            __html: product.content.replace(
-                                                /\n/g,
-                                                "<br />"
-                                            ),
-                                        }}
-                                    ></div>
-                                )}
+                            {product.type === "variations" ? (
+                                <>
+                                    {activeVariant &&
+                                    activeVariant.description ? (
+                                        <div
+                                            className="product-modal--description"
+                                            data-product-id={product.id}
+                                            dangerouslySetInnerHTML={{
+                                                __html: activeVariant.description,
+                                            }}
+                                        ></div>
+                                    ) : (
+                                        <div
+                                            className="product-modal--description"
+                                            data-product-id={product.id}
+                                            dangerouslySetInnerHTML={{
+                                                __html: product.content.replace(
+                                                    /\n/g,
+                                                    "<br />"
+                                                ),
+                                            }}
+                                        ></div>
+                                    )}
 
-                                <div className="product-modal--attributes">
-                                    {Object.values(product.attributes).map(
-                                        (attribute, keyAttr) => (
-                                            <div
-                                                className="product-modal--attribute"
-                                                key={keyAttr}
-                                            >
-                                                <div className="attribute--name">
-                                                    {attribute.name}
-                                                </div>
-                                                <ToggleButtonGroup
-                                                    color="primary"
-                                                    value={
-                                                        choosenAttributes[
-                                                            keyAttr
-                                                        ]
-                                                    }
-                                                    className="attribute--variations"
+                                    <div className="product-modal--attributes">
+                                        {Object.values(product.attributes).map(
+                                            (attribute, keyAttr) => (
+                                                <div
+                                                    className="product-modal--attribute"
+                                                    key={keyAttr}
                                                 >
-                                                    {Object.values(
-                                                        attribute.options
-                                                    ).map((opt, key) => (
-                                                        <ToggleButton
-                                                            className="btn--variation"
-                                                            onClick={() =>
-                                                                handleChooseAttribute(
-                                                                    keyAttr,
-                                                                    opt
-                                                                )
-                                                            }
-                                                            key={key}
-                                                            value={opt}
-                                                            sx={{ mr: "20px" }}
-                                                        >
-                                                            {opt}
-                                                        </ToggleButton>
-                                                    ))}
-                                                </ToggleButtonGroup>
+                                                    <div className="attribute--name">
+                                                        {attribute.name}
+                                                    </div>
+                                                    <ToggleButtonGroup
+                                                        color="primary"
+                                                        value={
+                                                            choosenAttributes[
+                                                                keyAttr
+                                                            ]
+                                                        }
+                                                        className="attribute--variations"
+                                                    >
+                                                        {Object.values(
+                                                            attribute.options
+                                                        ).map((opt, key) => (
+                                                            <ToggleButton
+                                                                className="btn--variation"
+                                                                onClick={() =>
+                                                                    handleChooseAttribute(
+                                                                        keyAttr,
+                                                                        opt
+                                                                    )
+                                                                }
+                                                                key={key}
+                                                                value={opt}
+                                                                sx={{
+                                                                    mr: "20px",
+                                                                }}
+                                                            >
+                                                                {opt}
+                                                            </ToggleButton>
+                                                        ))}
+                                                    </ToggleButtonGroup>
+                                                </div>
+                                            )
+                                        )}
+                                    </div>
+                                </>
+                            ) : (
+                                <div
+                                    className="product-modal--description"
+                                    data-product-id={product.id}
+                                    dangerouslySetInnerHTML={{
+                                        __html: product.content.replace(
+                                            /\n/g,
+                                            "<br />"
+                                        ),
+                                    }}
+                                ></div>
+                            )}
+
+                            {wrongVariant ? (
+                                <Collapse sx={{ mt: 1 }} in={true}>
+                                    <Alert
+                                        severity="error"
+                                        className="alert--wrong-variant"
+                                    >
+                                        Данный вариант недоступен
+                                    </Alert>
+                                </Collapse>
+                            ) : (
+                                ""
+                            )}
+
+                            {!wrongVariant ? (
+                                <div className="product-modal--buying">
+                                    {activeVariant && activeVariant.price ? (
+                                        parseInt(activeVariant._regular_price) >
+                                        parseInt(activeVariant.price) ? (
+                                            <div className="product-modal--price">
+                                                <span className="product--old-price">
+                                                    {
+                                                        activeVariant._regular_price
+                                                    }{" "}
+                                                    ₽
+                                                </span>
+                                                <span className="product--sale-price main-color">
+                                                    {activeVariant.price} ₽
+                                                </span>
+                                            </div>
+                                        ) : (
+                                            <div className="product-modal--price">
+                                                {activeVariant.price} ₽
                                             </div>
                                         )
-                                    )}
-                                </div>
-                            </>
-                        ) : (
-                            <div
-                                className="product-modal--description"
-                                data-product-id={product.id}
-                                dangerouslySetInnerHTML={{
-                                    __html: product.content.replace(
-                                        /\n/g,
-                                        "<br />"
-                                    ),
-                                }}
-                            ></div>
-                        )}
-
-                        {wrongVariant ? (
-                            <Collapse sx={{ mt: 1 }} in={true}>
-                                <Alert
-                                    severity="error"
-                                    className="alert--wrong-variant"
-                                >
-                                    Данный вариант недоступен
-                                </Alert>
-                            </Collapse>
-                        ) : (
-                            ""
-                        )}
-
-                        {!wrongVariant ? (
-                            <div className="product-modal--buying">
-                                <div className="product-modal--price">
-                                    {activeVariant
-                                        ? activeVariant.price
-                                        : product.options._price}{" "}
-                                    &#8381;
-                                </div>
-                                <div className="product-modal--stats">
-                                    {product.options.weight ? (
-                                        <div className="weight">
-                                            {product.options.weight} гр.
-                                        </div>
                                     ) : (
-                                        ""
-                                    )}
-                                    {product.options.count_rolls ? (
-                                        <div className="count-rolls">
-                                            {product.options.count_rolls} шт.
+                                        <div className="product-modal--price">
+                                            {product.options._price} ₽
                                         </div>
-                                    ) : (
-                                        ""
                                     )}
-                                </div>
-                                {product.type === "variations" ? (
-                                    <Button
-                                        variant="button"
-                                        className="btn--action btn-buy"
-                                        onClick={handleAddVariantProduct}
-                                    >
-                                        Хочу
-                                    </Button>
-                                ) : !cartProducts[product.id] ? (
-                                    <Button
-                                        variant="button"
-                                        className="btn--action btn-buy"
-                                        onClick={() =>
-                                            handleAddProduct(product)
-                                        }
-                                    >
-                                        Хочу
-                                    </Button>
-                                ) : (
-                                    <div className="product-modal--quantity">
+                                    <div className="product-modal--stats">
+                                        {product.options.weight ? (
+                                            <div className="weight">
+                                                {product.options.weight} гр.
+                                            </div>
+                                        ) : (
+                                            ""
+                                        )}
+                                        {product.options.count_rolls ? (
+                                            <div className="count-rolls">
+                                                {product.options.count_rolls}{" "}
+                                                шт.
+                                            </div>
+                                        ) : (
+                                            ""
+                                        )}
+                                    </div>
+                                    {product.type === "variations" ? (
                                         <Button
-                                            className="btn--default product-decrease"
-                                            onClick={() =>
-                                                handleDecreaseProduct(product)
-                                            }
+                                            variant="button"
+                                            className="btn--action btn-buy"
+                                            onClick={handleAddVariantProduct}
                                         >
-                                            -
+                                            Хочу
                                         </Button>
-                                        <input
-                                            className="quantity"
-                                            type="text"
-                                            readOnly
-                                            value={
-                                                cartProducts[product.id].items
-                                                    .length
-                                            }
-                                            data-product_id={product.id}
-                                        />
+                                    ) : !cartProducts[product.id] ? (
                                         <Button
-                                            className="btn--default product-add"
+                                            variant="button"
+                                            className="btn--action btn-buy"
                                             onClick={() =>
                                                 handleAddProduct(product)
                                             }
                                         >
-                                            +
+                                            Хочу
                                         </Button>
-                                    </div>
-                                )}
-                            </div>
-                        ) : (
-                            ""
-                        )}
-
-                        {addon_products.length ? (
-                            <div className="addon-products">
-                                <h3 className="addon-products--title">
-                                    Соусы и дополнения
-                                </h3>
-                                <div className="addon-products--grid-list">
-                                    {addon_products.map((product) => (
-                                        <AddonProductModal
-                                            key={product.id}
-                                            product={product}
-                                        />
-                                    ))}
+                                    ) : (
+                                        <div className="product-modal--quantity">
+                                            <Button
+                                                className="btn--default product-decrease"
+                                                onClick={() =>
+                                                    handleDecreaseProduct(
+                                                        product
+                                                    )
+                                                }
+                                            >
+                                                -
+                                            </Button>
+                                            <input
+                                                className="quantity"
+                                                type="text"
+                                                readOnly
+                                                value={
+                                                    cartProducts[product.id]
+                                                        .items.length
+                                                }
+                                                data-product_id={product.id}
+                                            />
+                                            <Button
+                                                className="btn--default product-add"
+                                                onClick={() =>
+                                                    handleAddProduct(product)
+                                                }
+                                            >
+                                                +
+                                            </Button>
+                                        </div>
+                                    )}
                                 </div>
-                            </div>
-                        ) : (
-                            ""
-                        )}
+                            ) : (
+                                ""
+                            )}
+
+                            {addon_products.length ? (
+                                <div className="addon-products">
+                                    <h3 className="addon-products--title">
+                                        Соусы и дополнения
+                                    </h3>
+                                    <div className="addon-products--grid-list">
+                                        {addon_products.map((product) => (
+                                            <AddonProductModal
+                                                key={product.id}
+                                                product={product}
+                                            />
+                                        ))}
+                                    </div>
+                                </div>
+                            ) : (
+                                ""
+                            )}
+                        </div>
                     </div>
-                </div>
-            ) : (
-                <>
-                    <h1>Товар не найден</h1>
-                    <p>
-                        Вернитесь на <Link to="/">главную страницу</Link>.
-                    </p>
-                </>
-            )}
-        </Container>
+                ) : (
+                    <>
+                        <h1>Товар не найден</h1>
+                        <p>
+                            Вернитесь на <Link to="/">главную страницу</Link>.
+                        </p>
+                    </>
+                )}
+            </Container>
+            <Footer />
+        </>
     );
 }
