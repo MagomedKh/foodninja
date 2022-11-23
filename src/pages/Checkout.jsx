@@ -287,13 +287,16 @@ export default function Checkout() {
 
     const handleMakeOrder = () => {
         let currentValidation = true;
+
         setValidate(true);
         if (!userName || getNumbersValue(userPhone).length !== 11) {
             currentValidation = false;
             setValidate(false);
             return;
         }
+
         if (
+            typeDelivery === "delivery" &&
             deliveryAddress === "new" &&
             (!newUserAddressStreet || !newUserAddressHome)
         ) {
@@ -301,11 +304,13 @@ export default function Checkout() {
             setValidate(false);
             return;
         }
+
         if (!preorderDate || (!preorderTime && !asSoonAsPosible)) {
             currentValidation = false;
             setValidate(false);
             return;
         }
+
         if (currentValidation) {
             setLoading(true);
             axios
