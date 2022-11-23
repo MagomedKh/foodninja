@@ -118,11 +118,11 @@ export default function Footer() {
                                     />
                                 ) : null}
                             </div>
-                            {config.CONFIG_filials.map((el, index, arr) => (
+                            {config.CONFIG_filials?.map((el, index, arr) => (
                                 <div className="footer--adress">
                                     <div>{el.address}</div>
                                     <div>
-                                        {el.phones.map((phone) => (
+                                        {el.phones?.map((phone) => (
                                             <div>
                                                 <a
                                                     href={
