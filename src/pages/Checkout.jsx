@@ -103,7 +103,7 @@ export default function Checkout() {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [validate, setValidate] = useState(true);
-    const [error, setError] = useState();
+    const [error, setError] = useState(null);
     const [userName, setUserName] = useState(user.name ? user.name : "");
     const [userPhone, setUserPhone] = useState(
         user.phone ? formatingStrPhone(user.phone) : ""
@@ -287,11 +287,13 @@ export default function Checkout() {
 
     const handleMakeOrder = () => {
         let currentValidation = true;
-
         setValidate(true);
+        setError(null);
+
         if (!userName || getNumbersValue(userPhone).length !== 11) {
             currentValidation = false;
             setValidate(false);
+            setError("Заполните все обязательные поля");
             return;
         }
 
@@ -302,16 +304,19 @@ export default function Checkout() {
         ) {
             currentValidation = false;
             setValidate(false);
+            setError("Заполните все обязательные поля");
             return;
         }
 
         if (!preorderDate || (!preorderTime && !asSoonAsPosible)) {
             currentValidation = false;
             setValidate(false);
+            setError("Заполните все обязательные поля");
             return;
         }
 
         if (currentValidation) {
+            console.log(userName);
             setLoading(true);
             axios
                 .post("https://" + _getDomain() + "/?rest-api=makeOrder", {
@@ -1165,16 +1170,6 @@ export default function Checkout() {
                                 />
                             ) : null}
 
-                            <LoadingButton
-                                loading={loading}
-                                sx={{ width: 1, mt: 1.5 }}
-                                variant="button"
-                                className="btn--action makeOrder"
-                                onClick={handleMakeOrder}
-                            >
-                                Подтвердить заказ
-                            </LoadingButton>
-
                             {error && (
                                 <Alert
                                     action={
@@ -1195,6 +1190,16 @@ export default function Checkout() {
                                     {error}
                                 </Alert>
                             )}
+
+                            <LoadingButton
+                                loading={loading}
+                                sx={{ width: 1, mt: 1.5 }}
+                                variant="button"
+                                className="btn--action makeOrder"
+                                onClick={handleMakeOrder}
+                            >
+                                Подтвердить заказ
+                            </LoadingButton>
                         </div>
                     </Grid>
                 </Grid>
