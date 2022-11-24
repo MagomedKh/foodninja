@@ -71,7 +71,7 @@ const ModificatorCategory = ({ category, handleSetModificatorsCondition }) => {
                 {category.category_title}
             </h3>
             <Collapse sx={{ mt: 1 }} in={isRequiredCategoryEmpty}>
-                <Alert severity="info">
+                <Alert severity="info" sx={{ border: "1px solid #c8c2ff" }}>
                     {category.count_products_type === "manual"
                         ? `Выберите хотя бы ${category.count_products.min} ${
                               category.count_products.min == 1
