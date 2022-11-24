@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
     addProductModificator,
@@ -9,19 +9,15 @@ import "../../css/product.css";
 import "../../css/addon-product.css";
 import soon from "../../img/photo-soon.svg";
 
-const ModificatorProduct = ({ product }) => {
+const ModificatorProduct = ({ product, disabledAddButton }) => {
     const dispatch = useDispatch();
-
-    const { cartProducts } = useSelector(({ cart }) => {
-        return {
-            cartProducts: cart.items,
-        };
-    });
 
     const { productModal } = useSelector((state) => state.productModal);
 
-    const existModificator = productModal.choosenModificators.find(
-        (el) => el.id === product.id
+    const existModificator = useMemo(
+        () =>
+            productModal.choosenModificators.find((el) => el.id === product.id),
+        [productModal]
     );
 
     const handleAddModificator = () => {
@@ -50,6 +46,7 @@ const ModificatorProduct = ({ product }) => {
                     <Button
                         className="btn--outline btn-buy"
                         onClick={handleAddModificator}
+                        disabled={disabledAddButton}
                     >
                         Хочу
                     </Button>
@@ -70,6 +67,7 @@ const ModificatorProduct = ({ product }) => {
                         <Button
                             className="btn--default product-add"
                             onClick={handleAddModificator}
+                            disabled={disabledAddButton}
                         >
                             +
                         </Button>
