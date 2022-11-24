@@ -66,8 +66,10 @@ const ModificatorCategory = ({ category, handleSetModificatorsCondition }) => {
     console.log(category);
 
     return (
-        <div className="addon-products" key={category.category_id}>
-            <h3 className="addon-products--title">{category.category_title}</h3>
+        <div className="modificator-products" key={category.category_id}>
+            <h3 className="modificator-products--title">
+                {category.category_title}
+            </h3>
             <Collapse sx={{ mt: 1 }} in={isRequiredCategoryEmpty}>
                 <Alert severity="info">
                     {category.count_products_type === "manual"
@@ -85,7 +87,7 @@ const ModificatorCategory = ({ category, handleSetModificatorsCondition }) => {
                         : null}
                 </Alert>
             </Collapse>
-            <div className="addon-products--grid-list">
+            <div className="modificator-products--grid-list">
                 {modificatorProducts.map((product) => (
                     <ModificatorProduct
                         key={product.id}

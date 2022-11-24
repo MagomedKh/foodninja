@@ -28,8 +28,12 @@ const ModificatorProduct = ({ product, disabledAddButton }) => {
     };
 
     return (
-        <div className="addon-product addon-product-modal">
-            <div className="addon-product--image">
+        <div
+            className={`modificator-product modificator-product-modal ${
+                existModificator ? "modificator-product-active" : null
+            }`}
+        >
+            <div className="modificator-product--image">
                 <img
                     className="lazyload-image"
                     src={product.img ? product.img : soon}
@@ -37,9 +41,9 @@ const ModificatorProduct = ({ product, disabledAddButton }) => {
                 />
             </div>
 
-            <h4 className="addon-product--title">{product.title}</h4>
-            <div className="addon-product--buying">
-                <div className="addon-product--price">
+            <h4 className="modificator-product--title">{product.title}</h4>
+            <div className="modificator-product--buying">
+                <div className="modificator-product--price">
                     {product.options._price} &#8381;
                 </div>
                 {!existModificator ? (
