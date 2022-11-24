@@ -34,12 +34,13 @@ const ModificatorCategory = ({ category, handleSetModificatorsCondition }) => {
 
     const isRequiredCategoryEmpty = useMemo(
         () =>
-            (category.required === "yes" &&
-                category.count_products_type === "manual" &&
+            category.required === "yes" &&
+            ((category.count_products_type === "manual" &&
                 totalCategoryCount < category.count_products.min) ||
-            (category.count_products_type === "one" &&
-                totalCategoryCount < 1) ||
-            (category.count_products_type === "all" && !totalCategoryCount),
+                (category.count_products_type === "one" &&
+                    totalCategoryCount < 1) ||
+                (category.count_products_type === "all" &&
+                    !totalCategoryCount)),
         [productModal]
     );
 
@@ -70,7 +71,13 @@ const ModificatorCategory = ({ category, handleSetModificatorsCondition }) => {
             <Collapse sx={{ mt: 1 }} in={isRequiredCategoryEmpty}>
                 <Alert severity="info">
                     {category.count_products_type === "manual"
-                        ? `Выберите хотя бы ${category.count_products.min} продукт из категории`
+                        ? `Выберите хотя бы ${category.count_products.min} ${
+                              category.count_products.min == 1
+                                  ? "продукт"
+                                  : 1 <= category.count_products.min <= 4
+                                  ? "продукта"
+                                  : "продуктов"
+                          } из категории`
                         : category.count_products_type === "one"
                         ? `Выберите продукт из категории`
                         : category.count_products_type === "all"
