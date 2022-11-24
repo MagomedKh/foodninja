@@ -48,7 +48,7 @@ const SearchBar = ({
     }, [filteredProducts, inputValue]);
 
     const disabledCategoriesId = categories
-        .filter((el) => _isCategoryDisabled(el))
+        ?.filter((el) => _isCategoryDisabled(el))
         .map((el) => el.term_id);
 
     const inputChangeHandler = (value) => {
@@ -70,7 +70,7 @@ const SearchBar = ({
             <Product
                 product={el.item}
                 disabled={el.item.categories.some((r) =>
-                    disabledCategoriesId.includes(r)
+                    disabledCategoriesId?.includes(r)
                 )}
                 key={el.id}
             />
