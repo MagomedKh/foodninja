@@ -194,6 +194,8 @@
     margin-bottom: 5px;
 }
 .modificator-product {
+    display: flex;
+    flex-direction: column;
     padding: 10px 10px 71px;
     border-radius: 10px;
     background: white;
@@ -208,6 +210,11 @@
 .modificator-product-active {
     outline: 2px solid var(--main-color);
 }
+
+.modificator-product .modificator-product--image {
+    flex-grow: 1;
+}
+
 .modificator-product .modificator-product--image img {
     width: 100%;
 }
