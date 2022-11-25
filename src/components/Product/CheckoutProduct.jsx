@@ -22,6 +22,127 @@ export default function CheckoutProduct({
         };
     });
 
+    const renderCheckoutProductResult = () => {
+        if (promocodeProducts && promocodeProducts.id === productCart.id) {
+            if (
+                productCart.type === "variations" &&
+                promocodeProducts.type === "variations"
+            ) {
+                if (
+                    productCart.variant.variant_id ==
+                    promocodeProducts.variant.variant_id
+                ) {
+                    if (
+                        productCart.options._promocode_price ||
+                        productCart.options._promocode_price == 0
+                    ) {
+                        return (
+                            <>
+                                <span>
+                                    <span className="old-price">
+                                        {productCart.options._price} ₽
+                                    </span>
+                                    &nbsp;
+                                    <span className="main-color">
+                                        {productCart.options._promocode_price} ₽
+                                    </span>
+                                </span>
+                            </>
+                        );
+                    } else {
+                        return (
+                            <span>
+                                {parseInt(
+                                    productCart.options._price
+                                ).toLocaleString("ru-RU")}{" "}
+                                &#8381;
+                            </span>
+                        );
+                    }
+                } else {
+                    return (
+                        <span>
+                            {parseInt(
+                                productCart.options._price
+                            ).toLocaleString("ru-RU")}{" "}
+                            &#8381;
+                        </span>
+                    );
+                }
+            } else {
+                return (
+                    <span>
+                        <span className="old-price">
+                            {productCart.options._price * productCount} ₽
+                        </span>
+                        &nbsp;
+                        <span className="main-color">
+                            {productTotalPrice} ₽
+                        </span>
+                    </span>
+                );
+            }
+        }
+
+        if (parseInt(productCart.options._promocode_price)) {
+            if (productCart.type === "variations") {
+                return (
+                    <span>
+                        <span className="old-price">
+                            {productCart.options._price} ₽
+                        </span>
+                        &nbsp;
+                        <span className="main-color">
+                            {Math.ceil(productCart.options._promocode_price)} ₽
+                        </span>
+                    </span>
+                );
+            } else {
+                return (
+                    <span>
+                        <span className="old-price">
+                            {productCart.options._price * productCount} ₽
+                        </span>
+                        &nbsp;
+                        <span className="main-color">
+                            {productTotalPrice} ₽
+                        </span>
+                    </span>
+                );
+            }
+        }
+        if (
+            parseInt(productCart.options._regular_price) >
+            parseInt(productCart.options._price)
+        ) {
+            return (
+                <span>
+                    <span className="old-price">
+                        {productCart.options._regular_price * productCount} ₽
+                    </span>
+                    &nbsp;
+                    <span className="main-color">{productTotalPrice} ₽</span>
+                </span>
+            );
+        }
+
+        if (productCart.type === "variations") {
+            return (
+                <span>
+                    {parseInt(productCart.options._price).toLocaleString(
+                        "ru-RU"
+                    )}{" "}
+                    &#8381;
+                </span>
+            );
+        }
+        return (
+            <span>
+                {parseInt(productTotalPrice).toLocaleString("ru-RU")} &#8381;
+            </span>
+        );
+    };
+
     return (
         <div className="checkout--product" data-product_id={productCart.id}>
             <div className="checkout--product-name">
@@ -59,7 +180,7 @@ export default function CheckoutProduct({
                 ) : null}
             </div>
 
-            <div className="checkout--product-result">
+            {/* <div className="checkout--product-result">
                 {promocodeProducts.id !== undefined &&
                 promocodeProducts.id === productCart.id ? (
                     productCart.type === "variations" &&
@@ -127,6 +248,9 @@ export default function CheckoutProduct({
                         )}
                     </>
                 )}
+            </div> */}
+            <div className="checkout--product-result">
+                {renderCheckoutProductResult()}
             </div>
         </div>
     );
