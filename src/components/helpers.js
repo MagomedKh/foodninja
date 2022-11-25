@@ -226,7 +226,11 @@ export const _checkPromocode = (promocode, items, cartTotal, typeDelivery) => {
 
         // Проверка минимальной суммы заказа
         if (promocode.type === "fixed_product")
-            cartTotal -= promocode.promocodeProducts.options._price;
+            cartTotal =
+                cartTotal -
+                parseInt(promocode.promocodeProducts.options._price) +
+                parseInt(promocode.productPrice);
+        console.log(cartTotal);
 
         if (
             parseInt(promocode.minimumPrice) &&
