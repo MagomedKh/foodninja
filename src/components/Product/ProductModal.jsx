@@ -139,7 +139,10 @@ export default function ProductModal() {
     }
 
     return (
-        <Dialog {...dialogProps}>
+        <Dialog
+            {...dialogProps}
+            PaperProps={{ style: { borderRadius: "20px" } }}
+        >
             {" "}
             {productModal ? (
                 <div className="product-modal-wrapper">
