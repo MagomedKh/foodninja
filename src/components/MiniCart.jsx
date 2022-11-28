@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Alert, Button, Drawer, IconButton } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import CloseIcon from "@mui/icons-material/Close";
 import emptyCartImg from "../img/empty-cart.svg";
 import MiniCartProduct from "../components/Product/MiniCartProduct";
@@ -315,7 +316,8 @@ function MiniCart() {
                                                 className="btn--action"
                                                 sx={{ mt: 2 }}
                                             >
-                                                Оформить заказ
+                                                К оформлению заказа
+                                                <NavigateNextIcon className="button-arrow" />
                                             </Button>
                                         </>
                                     ) : (
@@ -325,7 +327,8 @@ function MiniCart() {
                                             className="btn--action openCheckout"
                                             sx={{ mt: 2 }}
                                         >
-                                            Оформить заказ
+                                            К оформлению заказа
+                                            <NavigateNextIcon className="button-arrow" />
                                         </Button>
                                     )
                                 ) : (
@@ -335,7 +338,8 @@ function MiniCart() {
                                         className="btn--action openCheckout"
                                         sx={{ mt: 2 }}
                                     >
-                                        Оформить заказ
+                                        К оформлению заказа
+                                        <NavigateNextIcon className="button-arrow" />
                                     </Button>
                                 )}
                             </div>
