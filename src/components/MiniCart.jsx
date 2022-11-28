@@ -317,7 +317,7 @@ function MiniCart() {
                                                 sx={{ mt: 2 }}
                                             >
                                                 К оформлению заказа
-                                                <NavigateNextIcon className="button-arrow" />
+                                                <NavigateNextIcon className="button-arrow-icon" />
                                             </Button>
                                         </>
                                     ) : (
@@ -328,7 +328,7 @@ function MiniCart() {
                                             sx={{ mt: 2 }}
                                         >
                                             К оформлению заказа
-                                            <NavigateNextIcon className="button-arrow" />
+                                            <NavigateNextIcon className="button-arrow-icon" />
                                         </Button>
                                     )
                                 ) : (
@@ -339,7 +339,7 @@ function MiniCart() {
                                         sx={{ mt: 2 }}
                                     >
                                         К оформлению заказа
-                                        <NavigateNextIcon className="button-arrow" />
+                                        <NavigateNextIcon className="button-arrow-icon" />
                                     </Button>
                                 )}
                             </div>
