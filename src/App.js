@@ -171,6 +171,20 @@ function App() {
                 },
             },
         },
+        breakpoints: {
+            values: {
+                xs: 0,
+                sm: 600,
+                md: 900,
+                lg: 1200,
+                xl: 1536,
+                mobileXs: 0,
+                mobileSm: 400,
+                mobileMd: 600,
+                mobileLg: 720,
+                desctop: 899,
+            },
+        },
     });
 
     return (

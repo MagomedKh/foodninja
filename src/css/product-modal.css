@@ -196,14 +196,12 @@
 .modificator-product {
     display: flex;
     flex-direction: column;
+    height: 100%;
     padding: 10px 10px 71px;
     border-radius: 10px;
     background: white;
-    width: 31%;
     margin-bottom: 0;
     position: relative;
-    margin-top: 8px;
-    margin-left: 2%;
     border: 1px solid transparent;
 }
 
