@@ -121,42 +121,44 @@ export default function Product({ product, disabled }) {
                     ></span>
                 </div>
                 <div className="product--buying">
-                    <div className="product--price">
-                        {product.type === "variations" ? (
-                            <span className="product--standart-price">
-                                от {product.options._price} ₽
-                            </span>
-                        ) : parseInt(product.options._regular_price) >
-                          parseInt(product.options._price) ? (
-                            <span className="product--sales">
-                                <span className="product--old-price">
-                                    {product.options._regular_price} ₽
+                    <div className="product--price-wrapper">
+                        <div className="product--price">
+                            {product.type === "variations" ? (
+                                <span className="product--standart-price">
+                                    от {product.options._price} ₽
                                 </span>
-                                <span className="product--sale-price main-color">
+                            ) : parseInt(product.options._regular_price) >
+                              parseInt(product.options._price) ? (
+                                <span className="product--sales">
+                                    <span className="product--old-price">
+                                        {product.options._regular_price} ₽
+                                    </span>
+                                    <span className="product--sale-price main-color">
+                                        {product.options._price} ₽
+                                    </span>
+                                </span>
+                            ) : (
+                                <span className="product--standart-price">
                                     {product.options._price} ₽
                                 </span>
-                            </span>
-                        ) : (
-                            <span className="product--standart-price">
-                                {product.options._price} ₽
-                            </span>
-                        )}
-                    </div>
-                    <div className="product--info">
-                        {product.options.weight ? (
-                            <div className="weight">
-                                {product.options.weight} гр.
-                            </div>
-                        ) : (
-                            ""
-                        )}
-                        {product.options.count_rolls ? (
-                            <div className="count-rolls">
-                                {product.options.count_rolls} шт.
-                            </div>
-                        ) : (
-                            ""
-                        )}
+                            )}
+                        </div>
+                        <div className="product--info">
+                            {product.options.weight ? (
+                                <div className="weight">
+                                    {product.options.weight} гр.
+                                </div>
+                            ) : (
+                                ""
+                            )}
+                            {product.options.count_rolls ? (
+                                <div className="count-rolls">
+                                    {product.options.count_rolls} шт.
+                                </div>
+                            ) : (
+                                ""
+                            )}
+                        </div>
                     </div>
                     {product.type === "variations" ? (
                         <Button

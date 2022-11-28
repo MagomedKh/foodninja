@@ -99,15 +99,19 @@
 }
 
 .product--buying {
+    display: flex;
+    justify-content: space-between;
     margin-top: 1rem;
-    text-align: right;
-    position: relative;
     height: 40px;
 }
+
+.product--price-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
 .product--price {
-    position: absolute;
-    top: 0;
-    left: 0;
     font-size: 22px;
     font-weight: bold;
     letter-spacing: -1px;
@@ -118,12 +122,18 @@
     margin-right: 5px;
     font-size: 14px;
 }
+
+.product--sales {
+    white-space: nowrap;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
 .product--info {
     display: flex;
+    flex-wrap: wrap;
     font-weight: 400;
-    position: absolute;
-    left: 0;
-    bottom: 0;
     white-space: nowrap;
     line-height: 1;
 }
@@ -141,8 +151,6 @@
 .product--quantity {
     display: flex;
     font-size: 0;
-    position: absolute;
-    right: 0;
     bottom: 0px;
 }
 
