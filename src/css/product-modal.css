@@ -85,16 +85,24 @@
 }
 
 .product-modal--variations-buying {
-    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 25px 10px 20px;
+    background-color: white;
 }
 
 .product-modal--variations-buying .btn-buy {
-    width: 100%;
+    flex-basis: 50%;
 }
+
+.product-modal--price-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
 .product-modal--price {
-    position: absolute;
-    top: 0;
-    left: 0;
+    flex-basis: 50%;
     font-size: 22px;
     font-weight: bold;
     letter-spacing: -1px;
@@ -103,9 +111,6 @@
 .product-modal--stats {
     display: flex;
     font-weight: 400;
-    position: absolute;
-    left: 0;
-    bottom: 0;
     white-space: nowrap;
     line-height: 1;
 }
@@ -249,6 +254,12 @@
     .product-modal--scrolling {
         max-height: none !important;
         margin-top: 0px !important;
+    }
+
+    .product-modal--variations-buying {
+        position: sticky;
+        bottom: 0;
+        z-index: 10;
     }
 }
 

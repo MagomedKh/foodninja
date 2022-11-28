@@ -114,6 +114,7 @@ export default function ProductModal() {
     const handleClose = () => {
         dispatch(clearModalProduct());
         setActiveVariant(false);
+        setWrongVariant(false);
         dispatch(setOpenModal(false));
     };
     const handleAddProduct = (productModal) => {
@@ -137,6 +138,61 @@ export default function ProductModal() {
         dialogProps.fullScreen = true;
         dialogProps.scroll = "body";
     }
+
+    const productPriceRender = () => {
+        if (activeVariant) {
+            if (
+                parseInt(activeVariant._regular_price) >
+                parseInt(activeVariant.price)
+            ) {
+                return (
+                    <>
+                        <span className="product--old-price">
+                            {parseInt(activeVariant._regular_price) +
+                                productModal.modificatorsAmount}
+                            ₽
+                        </span>
+                        <span className="product--sale-price main-color">
+                            {parseInt(activeVariant.price) +
+                                productModal.modificatorsAmount}{" "}
+                            ₽
+                        </span>
+                    </>
+                );
+            } else {
+                return (
+                    <span>
+                        {activeVariant.price + productModal.modificatorsAmount}{" "}
+                        ₽
+                    </span>
+                );
+            }
+        } else {
+            if (
+                parseInt(productModal.options?._regular_price) >
+                parseInt(productModal.options?._price)
+            ) {
+                return (
+                    <>
+                        <span className="product--old-price">
+                            {productModal.options._regular_price} ₽
+                        </span>
+                        <span className="product--sale-price main-color">
+                            {productModal.options._price} ₽
+                        </span>
+                    </>
+                );
+            } else {
+                return (
+                    <span>
+                        {parseInt(productModal.options._price) +
+                            productModal.modificatorsAmount}{" "}
+                        ₽
+                    </span>
+                );
+            }
+        }
+    };
 
     return (
         <Dialog
@@ -292,135 +348,6 @@ export default function ProductModal() {
                                     ""
                                 )}
 
-                                {!wrongVariant &&
-                                productModal.type !== "variations" ? (
-                                    <div className="product-modal--buying">
-                                        <div className="product-modal--price">
-                                            {activeVariant
-                                                ? activeVariant.price
-                                                : productModal.options
-                                                      ._price}{" "}
-                                            &#8381;
-                                        </div>
-                                        <div className="product-modal--stats">
-                                            {productModal.type ===
-                                            "variations" ? (
-                                                <>
-                                                    {activeVariant &&
-                                                    activeVariant.weight ? (
-                                                        <div className="weight">
-                                                            {
-                                                                activeVariant.weight
-                                                            }{" "}
-                                                            гр.
-                                                        </div>
-                                                    ) : (
-                                                        ""
-                                                    )}
-                                                </>
-                                            ) : (
-                                                <>
-                                                    {productModal.options
-                                                        .weight ? (
-                                                        <div className="weight">
-                                                            {
-                                                                productModal
-                                                                    .options
-                                                                    .weight
-                                                            }{" "}
-                                                            гр.
-                                                        </div>
-                                                    ) : (
-                                                        ""
-                                                    )}
-                                                    {productModal.options
-                                                        .count_rolls ? (
-                                                        <div className="count-rolls">
-                                                            {
-                                                                productModal
-                                                                    .options
-                                                                    .count_rolls
-                                                            }{" "}
-                                                            шт.
-                                                        </div>
-                                                    ) : (
-                                                        ""
-                                                    )}
-                                                </>
-                                            )}
-                                        </div>
-                                        {productModal.type === "variations" ? (
-                                            <Button
-                                                variant="button"
-                                                className="btn--action btn-buy"
-                                                onClick={
-                                                    handleAddVariantProduct
-                                                }
-                                                disabled={productModal.disabled}
-                                            >
-                                                Хочу
-                                            </Button>
-                                        ) : !cartProducts[productModal.id] ? (
-                                            <Button
-                                                variant="button"
-                                                className="btn--action btn-buy"
-                                                onClick={() =>
-                                                    handleAddProduct(
-                                                        productModal
-                                                    )
-                                                }
-                                                disabled={productModal.disabled}
-                                            >
-                                                Хочу
-                                            </Button>
-                                        ) : (
-                                            <div className="product-modal--quantity">
-                                                <Button
-                                                    className="btn--default product-decrease"
-                                                    onClick={() =>
-                                                        handleDecreaseProduct(
-                                                            productModal
-                                                        )
-                                                    }
-                                                    disabled={
-                                                        productModal.disabled
-                                                    }
-                                                >
-                                                    -
-                                                </Button>
-                                                <input
-                                                    className="quantity"
-                                                    type="text"
-                                                    readOnly
-                                                    value={
-                                                        cartProducts[
-                                                            productModal.id
-                                                        ].items.length
-                                                    }
-                                                    data-product_id={
-                                                        productModal.id
-                                                    }
-                                                />
-                                                <Button
-                                                    className="btn--default product-add"
-                                                    onClick={() =>
-                                                        handleAddProduct(
-                                                            productModal
-                                                        )
-                                                    }
-                                                    disabled={
-                                                        productModal.disabled
-                                                    }
-                                                >
-                                                    +
-                                                </Button>
-                                            </div>
-                                        )}
-                                    </div>
-                                ) : (
-                                    ""
-                                )}
-
                                 {productModal.product_addons?.map(
                                     (category) => (
                                         <ModificatorCategory
@@ -448,8 +375,54 @@ export default function ProductModal() {
                                     ""
                                 )}
                             </div>
-                            {productModal.type === "variations" ? (
-                                <div className="product-modal--variations-buying">
+                            <div className="product-modal--variations-buying">
+                                <div className="product-modal--price-wrapper">
+                                    <div className="product-modal--price">
+                                        {productPriceRender()}
+                                    </div>
+                                    <div className="product-modal--stats">
+                                        {productModal.type === "variations" ? (
+                                            <>
+                                                {activeVariant &&
+                                                activeVariant.weight ? (
+                                                    <div className="weight">
+                                                        {activeVariant.weight}{" "}
+                                                        гр.
+                                                    </div>
+                                                ) : (
+                                                    ""
+                                                )}
+                                            </>
+                                        ) : (
+                                            <>
+                                                {productModal.options.weight ? (
+                                                    <div className="weight">
+                                                        {
+                                                            productModal.options
+                                                                .weight
+                                                        }{" "}
+                                                        гр.
+                                                    </div>
+                                                ) : (
+                                                    ""
+                                                )}
+                                                {productModal.options
+                                                    .count_rolls ? (
+                                                    <div className="count-rolls">
+                                                        {
+                                                            productModal.options
+                                                                .count_rolls
+                                                        }{" "}
+                                                        шт.
+                                                    </div>
+                                                ) : (
+                                                    ""
+                                                )}
+                                            </>
+                                        )}
+                                    </div>
+                                </div>
+                                {productModal.type === "variations" ? (
                                     <Button
                                         variant="button"
                                         className="btn--action btn-buy"
@@ -459,20 +432,21 @@ export default function ProductModal() {
                                             wrongVariant
                                         }
                                     >
-                                        Добавить в корзину за{" "}
-                                        {activeVariant && !wrongVariant
-                                            ? activeVariant.price +
-                                              productModal.modificatorsAmount
-                                            : parseInt(
-                                                  productModal.options._price
-                                              ) +
-                                              productModal.modificatorsAmount}{" "}
-                                        &#8381;
+                                        Хочу
                                     </Button>
-                                </div>
-                            ) : (
-                                ""
-                            )}
+                                ) : (
+                                    <Button
+                                        variant="button"
+                                        className="btn--action btn-buy"
+                                        onClick={() =>
+                                            handleAddProduct(productModal)
+                                        }
+                                        disabled={productModal.disabled}
+                                    >
+                                        Хочу
+                                    </Button>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
