@@ -35,11 +35,9 @@ const ModificatorProduct = ({ product, disabledAddButton }) => {
             className={`modificator-product modificator-product-modal ${
                 existModificator ? "modificator-product-active" : ""
             }`}
+            onClick={handleAddModificator}
         >
-            <div
-                className="modificator-product--image"
-                onClick={handleAddModificator}
-            >
+            <div className="modificator-product--image">
                 <img
                     className="lazyload-image"
                     src={product.img ? product.img : soon}
@@ -47,23 +45,16 @@ const ModificatorProduct = ({ product, disabledAddButton }) => {
                 />
             </div>
 
-            <h4
-                className="modificator-product--title"
-                onClick={handleAddModificator}
-            >
-                {product.title}
-            </h4>
+            <h4 className="modificator-product--title">{product.title}</h4>
             <div className="modificator-product--buying">
-                <div
-                    className="modificator-product--price"
-                    onClick={handleAddModificator}
-                >
+                <div className="modificator-product--price">
                     {product.options._price} &#8381;
                 </div>
                 {!existModificator ? (
                     <Button
                         className="btn--outline btn-buy"
                         onClick={(event) => {
+                            event.stopPropagation();
                             handleAddModificator();
                         }}
                         disabled={disabledAddButton}
@@ -75,6 +66,7 @@ const ModificatorProduct = ({ product, disabledAddButton }) => {
                         <Button
                             className="btn--default product-decrease"
                             onClick={(event) => {
+                                event.stopPropagation();
                                 handleDecreaseModificator();
                             }}
                         >
@@ -85,10 +77,14 @@ const ModificatorProduct = ({ product, disabledAddButton }) => {
                             type="text"
                             readOnly
                             value={existModificator.count}
+                            onClick={(event) => {
+                                event.stopPropagation();
+                            }}
                         />
                         <Button
                             className="btn--default product-add"
                             onClick={(event) => {
+                                event.stopPropagation();
                                 handleAddModificator();
                             }}
                             disabled={disabledAddButton}
