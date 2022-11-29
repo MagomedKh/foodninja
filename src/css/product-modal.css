@@ -36,7 +36,7 @@
     max-height: 500px;
     height: 100%;
     margin-top: 25px;
-    padding: 0 20px;
+    padding: 0 20px 10px 20px;
 }
 .product-modal--scrolling::-webkit-scrollbar {
     width: 5px;
@@ -87,8 +87,8 @@
 .product-modal--variations-buying {
     display: flex;
     justify-content: space-between;
-    padding: 10px 25px 10px 20px;
-    background-color: white;
+    padding: 15px 15px 15px 20px;
+    box-shadow: rgb(6 5 50 / 12%) 0px 0px 8px;
 }
 
 .product-modal--variations-buying .btn-buy {

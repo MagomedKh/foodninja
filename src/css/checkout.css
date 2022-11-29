@@ -45,13 +45,6 @@
     padding: 50px;
     overflow-y: auto;
 }
-.product-modal--scrolling {
-    overflow: auto;
-    max-height: 500px;
-    height: 100%;
-    margin-top: 25px;
-    padding: 0 20px;
-}
 .time-order-modal-wrapper h2 {
     margin-top: 0;
     margin-bottom: 30px;
