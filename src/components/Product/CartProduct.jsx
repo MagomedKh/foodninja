@@ -31,7 +31,12 @@ export default function CartProduct({
         dispatch(decreaseProductInCart(productCart));
     };
     const handleRemoveProduct = () => {
-        dispatch(removeProductFromCart(productCart));
+        dispatch(
+            removeProductFromCart({
+                ...productCart,
+                productIndex: productIndex,
+            })
+        );
     };
 
     let dataAttributes = {};
