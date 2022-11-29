@@ -188,7 +188,10 @@ export const _checkPromocode = (promocode, items, cartTotal, typeDelivery) => {
                         if (
                             product.type === "variations" &&
                             product.variant.variant_id ==
-                                promocode.promocodeProducts.variant.variant_id
+                                promocode.promocodeProducts.variant
+                                    .variant_id &&
+                            (product.options._promocode_price ||
+                                product.options._promocode_price == 0)
                         )
                             hasProduct = true;
                     } else if (promocode.promocodeProducts.id === product.id)
@@ -230,7 +233,6 @@ export const _checkPromocode = (promocode, items, cartTotal, typeDelivery) => {
                 cartTotal -
                 parseInt(promocode.promocodeProducts.options._price) +
                 parseInt(promocode.productPrice);
-        console.log(cartTotal);
 
         if (
             parseInt(promocode.minimumPrice) &&

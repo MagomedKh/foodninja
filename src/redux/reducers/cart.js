@@ -380,11 +380,23 @@ const cart = (state = initialState, action) => {
                                 };
                                 updatedItems[
                                     action.payload.promocodeProducts.id
-                                ].items[0].options._promocode_price =
-                                    parseInt(action.payload.productPrice) +
+                                ].items[0].options._promocode_price = parseInt(
+                                    action.payload.productPrice
+                                );
+
+                                // Если у существующего товара есть модификаторы, прибавляем их к скидочной цене
+                                if (
                                     updatedItems[
                                         action.payload.promocodeProducts.id
-                                    ].items[0].modificatorsAmount;
+                                    ].items[0].modificatorsAmount
+                                ) {
+                                    updatedItems[
+                                        action.payload.promocodeProducts.id
+                                    ].items[0].options._promocode_price +=
+                                        updatedItems[
+                                            action.payload.promocodeProducts.id
+                                        ].items[0].modificatorsAmount;
+                                }
 
                                 updatedItems[
                                     action.payload.promocodeProducts.id
@@ -752,10 +764,16 @@ const cart = (state = initialState, action) => {
                         element.variant.variant_id ===
                         action.payload.variant.variant_id
                 );
-                updatedItems[action.payload.id].items.splice(
-                    action.payload.productIndex || indexVar,
-                    1
-                );
+                if (
+                    action.payload.productIndex ||
+                    action.payload.productIndex == 0
+                ) {
+                    updatedItems[action.payload.id].items.splice(
+                        action.payload.productIndex,
+                        1
+                    );
+                } else
+                    updatedItems[action.payload.id].items.splice(indexVar, 1);
                 updatedItems[action.payload.id].totalPrice = getItemTotalPrice(
                     updatedItems[action.payload.id].items
                 );

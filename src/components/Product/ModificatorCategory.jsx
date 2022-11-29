@@ -44,8 +44,6 @@ const ModificatorCategory = ({ category, handleSetModificatorsCondition }) => {
         [productModal]
     );
 
-    console.log(isRequiredCategoryEmpty);
-
     const disabledAddButton = useMemo(
         () =>
             (category.count_products_type === "one" &&
@@ -62,8 +60,6 @@ const ModificatorCategory = ({ category, handleSetModificatorsCondition }) => {
             dispatch(deleteEmptyRequiredCategory(category.category_id));
         }
     }, [isRequiredCategoryEmpty]);
-
-    console.log(category);
 
     return (
         <div className="modificator-products" key={category.category_id}>
@@ -91,10 +87,10 @@ const ModificatorCategory = ({ category, handleSetModificatorsCondition }) => {
                 {modificatorProducts.map((product) => (
                     <Grid
                         item
-                        mobileXs={6}
-                        mobileSm={4}
-                        mobileMd={3}
-                        mobileLg={2}
+                        mobilexs={6}
+                        mobilesm={4}
+                        mobilemd={3}
+                        mobilelg={2}
                         desctop={4}
                     >
                         <ModificatorProduct
