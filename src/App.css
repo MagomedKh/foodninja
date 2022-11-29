@@ -359,6 +359,9 @@ a.btn {
     display: none;
 }
 .minicart--recommend-products .recommend-product .right-block {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     padding-bottom: 0;
     height: 100%;
     width: 100%;

@@ -6,7 +6,7 @@ import MiniCartReccomends from "../components/MiniCartRecommends";
 import PromocodeCartProduct from "../components/Product/PromocodeCartProduct";
 import CartBonusesProducts from "../components/CartBonusesProducts";
 import { Button, Container, Alert, Collapse } from "@mui/material";
-
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { TransitionGroup } from "react-transition-group";
 import { Promocode, Header, Footer } from "../components";
 import CartFreeAddons from "../components/Product/CartFreeAddons";
@@ -280,26 +280,29 @@ export default function Cart() {
                                             disabled
                                             variant="button"
                                             onClick={handleMakeOrder}
-                                            className="btn--action"
+                                            className="btn--action button-arrow btn-arrow-action"
                                         >
-                                            Оформить заказ
+                                            К оформлению заказа
+                                            <NavigateNextIcon className="button-arrow-icon" />
                                         </Button>
                                     ) : (
                                         <Button
                                             variant="button"
                                             onClick={handleMakeOrder}
-                                            className="btn--action openCheckout"
+                                            className="btn--action button-arrow openCheckout"
                                         >
-                                            Оформить заказ
+                                            К оформлению заказа
+                                            <NavigateNextIcon className="button-arrow-icon" />
                                         </Button>
                                     )
                                 ) : (
                                     <Button
                                         variant="button"
                                         onClick={handleMakeOrder}
-                                        className="btn--action openCheckout"
+                                        className="btn--action button-arrow openCheckout"
                                     >
-                                        Оформить заказ
+                                        К оформлению заказа
+                                        <NavigateNextIcon className="button-arrow-icon" />
                                     </Button>
                                 )}
                             </div>

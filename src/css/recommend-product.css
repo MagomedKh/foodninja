@@ -1,8 +1,8 @@
 .reccomend-slide {
     display: flex;
-    height: auto!important;
+    height: auto !important;
 }
-.recommend-product{
+.recommend-product {
     font-size: 14px;
     width: 100%;
     overflow: initial;
@@ -10,27 +10,21 @@
     border-radius: 15px;
     display: flex;
     border: 1px solid #ddd;
-    box-shadow: none!important;
+    box-shadow: none !important;
 }
-.recommend-product .product-image{
+.recommend-product .product-image {
     width: 110px;
     margin-right: 15px;
 }
-.recommend-product .right-block{
+.recommend-product .right-block {
     padding-bottom: 55px;
     width: 100%;
     position: relative;
 }
-.recommend-product .product-image img{
+.recommend-product .product-image img {
     width: 100%;
 }
-.recommend-product .product--buying{
-    position: absolute;
-    bottom: 5px;
-    left: 0;
-    width: 100%;
-}
-.recommend-product .product--price{
+.recommend-product .product--price {
     position: relative;
     font-size: 14px;
     font-weight: 500;
@@ -41,30 +35,22 @@
     position: relative;
     text-align: left;
 }
-.recommend-product .btn--outline.btn-buy{
-    border-radius: 5px!important;
-    font-size: 14px!important;
-    padding: 8px 15px!important;
+.recommend-product .btn--outline.btn-buy {
+    border-radius: 5px !important;
+    font-size: 14px !important;
+    padding: 8px 15px !important;
     line-height: 1;
-    border-radius: 15px!important;
+    border-radius: 15px !important;
     width: 100%;
 }
 @media (max-width: 899px) {
-    .recommend-product .quantity{
-        width: calc( 100% - 64px );
+    .recommend-product .quantity {
+        width: calc(100% - 64px);
     }
-    .recommend-product{
+    .recommend-product {
         display: block;
     }
     .recommend-product .right-block {
         position: initial;
-    }
-    .recommend-product .product--buying {
-        position: absolute;
-        bottom: 15px;
-        left: 15px;
-        right: 15px;
-        width: auto;
-        height: auto;
     }
 }
