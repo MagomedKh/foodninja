@@ -181,6 +181,75 @@
     outline: none !important;
 }
 
+/* Модификаторы */
+
+.modificator-products {
+    text-align: left;
+}
+.modificator-products--grid-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    margin-left: -2%;
+}
+.modificator-products .modificator-products--title {
+    margin-top: 1.5rem;
+    margin-bottom: 5px;
+}
+.modificator-product {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 10px 10px 71px;
+    border-radius: 10px;
+    background: white;
+    margin-bottom: 0;
+    position: relative;
+    border: 1px solid transparent;
+}
+
+.modificator-product-active {
+    outline: 2px solid var(--main-color);
+}
+
+.modificator-product .modificator-product--image {
+    flex-grow: 1;
+}
+
+.modificator-product .modificator-product--image img {
+    width: 100%;
+}
+.modificator-product .modificator-product--title {
+    font-size: 14px;
+    margin-top: 0;
+    margin-bottom: 0.25rem !important;
+}
+.modificator-product .modificator-product--price {
+    font-size: 14px;
+    margin-bottom: 0.5rem !important;
+    font-weight: bold;
+    margin-top: 0.5rem;
+}
+.modificator-product .btn-buy {
+    border-radius: 15px !important;
+    font-size: 14px !important;
+    padding: 3px 15px !important;
+    width: 100%;
+}
+.modificator-product--buying {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+}
+.modificator-product .product--quantity {
+    height: 32.5px;
+    position: relative;
+}
+.modificator-product .product--quantity .quantity {
+    width: calc(100% - 64px);
+}
+
 /* Дополнения */
 .addon-products {
     text-align: left;

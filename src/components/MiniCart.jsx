@@ -201,9 +201,7 @@ function MiniCart() {
                                                 }
                                                 productCount={1}
                                                 productTotalPrice={
-                                                    cartProducts[key].items[
-                                                        indexVariantProduct
-                                                    ].options._price
+                                                    cartProducts[key].totalPrice
                                                 }
                                             />
                                         )
@@ -243,94 +241,79 @@ function MiniCart() {
                             <CartBonusesProducts minicart={true} />
 
                             <MiniCartReccomends />
+                        </div>
+                        <div className="minicart--total-wrapper">
+                            <div className="minicart--promocode">
+                                <Promocode />
+                            </div>
 
-                            <div className="minicart--total-wrapper">
-                                <div className="minicart--promocode">
-                                    <Promocode />
-                                </div>
+                            {cart.discount ? (
+                                <div className="minicart--subtotal-price">
+                                    <div className="price">
+                                        Сумма заказа{" "}
+                                        <span className="money">
+                                            {cart.subTotalPrice.toLocaleString(
+                                                "ru-RU"
+                                            )}{" "}
+                                            &#8381;
+                                        </span>
+                                    </div>
+                                    <div className="promocode">
+                                        <span>
+                                            Промокод{" "}
+                                            <span className="main-color">
+                                                {promocode.code}
+                                            </span>
+                                        </span>
 
-                                {cart.discount ? (
-                                    <div className="minicart--subtotal-price">
-                                        <div className="price">
-                                            Сумма заказа{" "}
-                                            <span className="money">
-                                                {cart.subTotalPrice.toLocaleString(
+                                        {promocode.type === "percent" ? (
+                                            <span className="money main-color">
+                                                -{cart.discount} ₽
+                                            </span>
+                                        ) : (
+                                            <span className="money main-color">
+                                                -
+                                                {cart.discount.toLocaleString(
                                                     "ru-RU"
                                                 )}{" "}
                                                 &#8381;
                                             </span>
-                                        </div>
-                                        <div className="promocode">
-                                            <span>
-                                                Промокод{" "}
-                                                <span className="main-color">
-                                                    {promocode.code}
-                                                </span>
-                                            </span>
-
-                                            {promocode.type === "percent" ? (
-                                                <span className="money main-color">
-                                                    -{cart.discount} ₽
-                                                </span>
-                                            ) : (
-                                                <span className="money main-color">
-                                                    -
-                                                    {cart.discount.toLocaleString(
-                                                        "ru-RU"
-                                                    )}{" "}
-                                                    &#8381;
-                                                </span>
-                                            )}
-                                        </div>
+                                        )}
                                     </div>
-                                ) : (
-                                    ""
-                                )}
-
-                                <div className="minicart--total-block">
-                                    <span className="minicart--total-title">
-                                        Итого
-                                    </span>
-                                    <span className="minicart--total-price">
-                                        {cartTotalPrice.toLocaleString("ru-RU")}{" "}
-                                        &#8381;
-                                    </span>
                                 </div>
+                            ) : (
+                                ""
+                            )}
 
-                                {config.CONFIG_order_min_price ? (
-                                    cartTotalPrice <
-                                    config.CONFIG_order_min_price ? (
-                                        <>
-                                            <Alert
-                                                severity="error"
-                                                sx={{ mb: 1 }}
-                                            >
-                                                Минимальная сумма для заказа -{" "}
-                                                {config.CONFIG_order_min_price}{" "}
-                                                ₽
-                                            </Alert>
-                                            <Button
-                                                disabled
-                                                variant="button"
-                                                onClick={handleMakeOrder}
-                                                className="btn--action"
-                                                sx={{ mt: 2 }}
-                                            >
-                                                К оформлению заказа
-                                                <NavigateNextIcon className="button-arrow-icon" />
-                                            </Button>
-                                        </>
-                                    ) : (
+                            <div className="minicart--total-block">
+                                <span className="minicart--total-title">
+                                    Итого
+                                </span>
+                                <span className="minicart--total-price">
+                                    {cartTotalPrice.toLocaleString("ru-RU")}{" "}
+                                    &#8381;
+                                </span>
+                            </div>
+
+                            {config.CONFIG_order_min_price ? (
+                                cartTotalPrice <
+                                config.CONFIG_order_min_price ? (
+                                    <>
+                                        <Alert severity="error" sx={{ mb: 1 }}>
+                                            Минимальная сумма для заказа -{" "}
+                                            {config.CONFIG_order_min_price} ₽
+                                        </Alert>
                                         <Button
+                                            disabled
                                             variant="button"
                                             onClick={handleMakeOrder}
-                                            className="btn--action openCheckout"
+                                            className="btn--action"
                                             sx={{ mt: 2 }}
                                         >
                                             К оформлению заказа
                                             <NavigateNextIcon className="button-arrow-icon" />
                                         </Button>
-                                    )
+                                    </>
                                 ) : (
                                     <Button
                                         variant="button"
@@ -341,8 +324,17 @@ function MiniCart() {
                                         К оформлению заказа
                                         <NavigateNextIcon className="button-arrow-icon" />
                                     </Button>
-                                )}
-                            </div>
+                                )
+                            ) : (
+                                <Button
+                                    variant="button"
+                                    onClick={handleMakeOrder}
+                                    className="btn--action openCheckout"
+                                    sx={{ mt: 2 }}
+                                >
+                                    Оформить заказ
+                                </Button>
+                            )}
                         </div>
                     </div>
                 ) : (

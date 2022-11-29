@@ -33,7 +33,12 @@ export default function MiniCartProduct({
         dispatch(decreaseProductInCart(productCart));
     };
     const handleRemoveProduct = () => {
-        dispatch(removeProductFromCart(productCart));
+        dispatch(
+            removeProductFromCart({
+                ...productCart,
+                productIndex: productIndex,
+            })
+        );
     };
 
     let dataAttributes = {};
@@ -42,6 +47,136 @@ export default function MiniCartProduct({
             dataAttributes[index] = value.name;
         });
     }
+
+    const renderMinicartProductResult = () => {
+        if (disabled) {
+            return (
+                <Alert severity="error" sx={{ width: "100%" }}>
+                    Товар недоступен в данный момент
+                </Alert>
+            );
+        }
+        if (promocodeProducts && promocodeProducts.id === productCart.id) {
+            if (
+                productCart.type === "variations" &&
+                promocodeProducts.type === "variations"
+            ) {
+                if (
+                    productCart.variant.variant_id ==
+                    promocodeProducts.variant.variant_id
+                ) {
+                    if (
+                        productCart.options._promocode_price ||
+                        productCart.options._promocode_price == 0
+                    ) {
+                        return (
+                            <>
+                                <span>
+                                    <span className="old-price">
+                                        {productCart.options._price} ₽
+                                    </span>
+                                    &nbsp;
+                                    <span className="main-color">
+                                        {productCart.options._promocode_price} ₽
+                                    </span>
+                                </span>
+                            </>
+                        );
+                    } else {
+                        return (
+                            <span>
+                                {parseInt(
+                                    productCart.options._price
+                                ).toLocaleString("ru-RU")}{" "}
+                                &#8381;
+                            </span>
+                        );
+                    }
+                } else {
+                    return (
+                        <span>
+                            {parseInt(
+                                productCart.options._price
+                            ).toLocaleString("ru-RU")}{" "}
+                            &#8381;
+                        </span>
+                    );
+                }
+            } else {
+                return (
+                    <span>
+                        <span className="old-price">
+                            {productCart.options._price * productCount} ₽
+                        </span>
+                        &nbsp;
+                        <span className="main-color">
+                            {productTotalPrice} ₽
+                        </span>
+                    </span>
+                );
+            }
+        }
+
+        if (parseInt(productCart.options._promocode_price)) {
+            if (productCart.type === "variations") {
+                return (
+                    <span>
+                        <span className="old-price">
+                            {productCart.options._price} ₽
+                        </span>
+                        &nbsp;
+                        <span className="main-color">
+                            {Math.ceil(productCart.options._promocode_price)} ₽
+                        </span>
+                    </span>
+                );
+            } else {
+                return (
+                    <span>
+                        <span className="old-price">
+                            {productCart.options._price * productCount} ₽
+                        </span>
+                        &nbsp;
+                        <span className="main-color">
+                            {productTotalPrice} ₽
+                        </span>
+                    </span>
+                );
+            }
+        }
+        if (
+            parseInt(productCart.options._regular_price) >
+            parseInt(productCart.options._price)
+        ) {
+            return (
+                <span>
+                    <span className="old-price">
+                        {productCart.options._regular_price * productCount} ₽
+                    </span>
+                    &nbsp;
+                    <span className="main-color">{productTotalPrice} ₽</span>
+                </span>
+            );
+        }
+
+        if (productCart.type === "variations") {
+            return (
+                <span>
+                    {parseInt(productCart.options._price).toLocaleString(
+                        "ru-RU"
+                    )}{" "}
+                    &#8381;
+                </span>
+            );
+        }
+        return (
+            <span>
+                {parseInt(productTotalPrice).toLocaleString("ru-RU")} &#8381;
+            </span>
+        );
+    };
+
+    const minicartProductResult = renderMinicartProductResult();
 
     return (
         <div className="minicart--product" data-product_id={productCart.id}>
@@ -56,7 +191,7 @@ export default function MiniCartProduct({
                     <div className="minicart--product-name">
                         {productCart.title}
                     </div>
-                    <div className="minicart--product-info">
+                    <div className="minicart--product-description">
                         {productCart.type === "variations" ? (
                             <div className="minicart--product-attributes">
                                 {Object.values(
@@ -88,6 +223,23 @@ export default function MiniCartProduct({
                                 )}
                             </>
                         )}
+                        {productCart.choosenModificators?.length ? (
+                            <div className="minicart--product-attributes">
+                                +{" "}
+                                {productCart.choosenModificators.map(
+                                    (el, inx, array) =>
+                                        inx !== array.length - 1 ? (
+                                            <span key={el.id}>
+                                                {el.title} {el.count} шт,{" "}
+                                            </span>
+                                        ) : (
+                                            <span key={el.id}>
+                                                {el.title} {el.count} шт
+                                            </span>
+                                        )
+                                )}
+                            </div>
+                        ) : null}
                     </div>
                     {/* <div className="minicart--product-price">{productCart.options._price.toLocaleString('ru-RU')} &#8381;</div> */}
 
@@ -100,7 +252,7 @@ export default function MiniCartProduct({
                     </div>
                 </div>
             </div>
-            <div className="minicart--product-result">
+            {/* <div className="minicart--product-result">
                 {disabled ? (
                     <Alert severity="error" sx={{ width: "100%" }}>
                         Товар недоступен в данный момент
@@ -115,19 +267,11 @@ export default function MiniCartProduct({
                         <>
                             <span>
                                 <span className="old-price">
-                                    {parseInt(productTotalPrice).toLocaleString(
-                                        "ru-RU"
-                                    )}{" "}
-                                    &#8381;
+                                    {productCart.options._price} ₽
                                 </span>
                                 &nbsp;
                                 <span className="main-color">
-                                    {parseInt(
-                                        productTotalPrice -
-                                            (productCart.options._price -
-                                                promocode.productPrice)
-                                    ).toLocaleString("ru-RU")}{" "}
-                                    &#8381;
+                                    {productCart.options._promocode_price} ₽
                                 </span>
                             </span>
                         </>
@@ -137,19 +281,13 @@ export default function MiniCartProduct({
                             productCart.id === promocodeProducts.id ? (
                                 <span>
                                     <span className="old-price">
-                                        {parseInt(
-                                            productTotalPrice
-                                        ).toLocaleString("ru-RU")}{" "}
-                                        &#8381;
+                                        {productCart.options._price *
+                                            productCount}{" "}
+                                        ₽
                                     </span>
                                     &nbsp;
                                     <span className="main-color">
-                                        {parseInt(
-                                            productTotalPrice -
-                                                (productCart.options._price -
-                                                    promocode.productPrice)
-                                        ).toLocaleString("ru-RU")}{" "}
-                                        &#8381;
+                                        {productTotalPrice} ₽
                                     </span>
                                 </span>
                             ) : (
@@ -196,9 +334,7 @@ export default function MiniCartProduct({
                                 </span>
                                 &nbsp;
                                 <span className="main-color">
-                                    {productCart.options._promocode_price *
-                                        productCount}{" "}
-                                    ₽
+                                    {productTotalPrice} ₽
                                 </span>
                             </span>
                         ) : parseInt(productCart.options._regular_price) >
@@ -211,9 +347,15 @@ export default function MiniCartProduct({
                                 </span>
                                 &nbsp;
                                 <span className="main-color">
-                                    {productCart.options._price * productCount}{" "}
-                                    ₽
+                                    {productTotalPrice} ₽
                                 </span>
+                            </span>
+                        ) : productCart.type === "variations" ? (
+                            <span>
+                                {parseInt(
+                                    productCart.options._price
+                                ).toLocaleString("ru-RU")}{" "}
+                                &#8381;
                             </span>
                         ) : (
                             <span>
@@ -248,6 +390,32 @@ export default function MiniCartProduct({
                             </div>
                         )}
                     </>
+                )}
+            </div> */}
+            <div className="minicart--product-result">
+                {minicartProductResult}
+                {productCart.type !== "variations" && (
+                    <div className="minicart--product-quantity">
+                        <Button
+                            className="btn--default product-decrease"
+                            onClick={handleDecreaseProduct}
+                        >
+                            -
+                        </Button>
+                        <input
+                            className="quantity"
+                            type="text"
+                            readOnly
+                            value={productCount}
+                            data-product_id={productCart.id}
+                        />
+                        <Button
+                            className="btn--default product-add"
+                            onClick={handleAddProduct}
+                        >
+                            +
+                        </Button>
+                    </div>
                 )}
             </div>
         </div>

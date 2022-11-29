@@ -11,7 +11,9 @@ const productModal = (state = initialState, action) => {
                 productModal: {
                     ...action.payload,
                     choosenModificators: [],
+                    emptyModificatorCategories: [],
                     modificatorsAmount: 0,
+                    modificatorsCondition: true,
                 },
             };
         }
@@ -72,6 +74,46 @@ const productModal = (state = initialState, action) => {
                 productModal: updatedProductModal,
             };
         }
+        case "ADD_EMPTY_REQUIRED_CATEGORY": {
+            const updatedProductModal = { ...state.productModal };
+            const newEmptyModificatorCategories = state.productModal
+                .emptyModificatorCategories?.length
+                ? [...state.productModal.emptyModificatorCategories]
+                : [];
+            if (!newEmptyModificatorCategories.includes(action.payload)) {
+                newEmptyModificatorCategories.push(action.payload);
+            }
+            updatedProductModal.emptyModificatorCategories =
+                newEmptyModificatorCategories;
+            updatedProductModal.modificatorsCondition =
+                !newEmptyModificatorCategories.length;
+
+            return {
+                ...state,
+                productModal: updatedProductModal,
+            };
+        }
+        case "DELETE_EMPTY_REQUIRED_CATEGORY": {
+            const updatedProductModal = { ...state.productModal };
+            const newEmptyModificatorCategories = state.productModal
+                .emptyModificatorCategories?.length
+                ? [...state.productModal.emptyModificatorCategories]
+                : [];
+            const requiredModificatorInx =
+                newEmptyModificatorCategories.findIndex(
+                    (el) => el === action.payload
+                );
+            newEmptyModificatorCategories.splice(requiredModificatorInx, 1);
+            updatedProductModal.emptyModificatorCategories =
+                newEmptyModificatorCategories;
+            updatedProductModal.modificatorsCondition =
+                !newEmptyModificatorCategories.length;
+            return {
+                ...state,
+                productModal: updatedProductModal,
+            };
+        }
+
         default:
             return state;
     }

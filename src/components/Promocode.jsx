@@ -145,7 +145,7 @@ export default function Promocode() {
                     </Collapse>
                 )}
             {alertMessage && (
-                <Collapse sx={{ mt: 1 }} in={showAlertMessage}>
+                <Collapse sx={{ mt: 1 }} in={!!showAlertMessage}>
                     <Alert
                         {...alertProps}
                         action={
