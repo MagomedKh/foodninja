@@ -520,7 +520,7 @@ const cart = (state = initialState, action) => {
             };
         }
         case "ADD_PRODUCT_TO_CART": {
-            const newItem = { ...action.payload };
+            const newItem = _clone(action.payload);
 
             // Добавляем товар с активным промокодом на %
             if (state.promocode.type === "percent") {
@@ -626,23 +626,20 @@ const cart = (state = initialState, action) => {
 
             let newItems;
 
-            if (action.payload.modificatorsAmount) {
-                action.payload.options._promocode_price +=
-                    action.payload.modificatorsAmount;
-                action.payload.options._price +=
-                    action.payload.modificatorsAmount;
+            if (newItem.modificatorsAmount) {
+                newItem.options._promocode_price += newItem.modificatorsAmount;
+                newItem.options._price += newItem.modificatorsAmount;
             }
             if (action.payload.variant) {
                 if (!state.items[action.payload.id]) {
-                    newItems = [_clone(action.payload)];
+                    newItems = [newItem];
                 } else {
                     let buffItems;
                     buffItems = [...state.items[action.payload.id].items];
-                    buffItems.push(_clone(action.payload));
+                    buffItems.push(newItem);
                     newItems = buffItems;
                 }
             } else {
-                const newItem = _clone(action.payload);
                 delete newItem.options._promocode_price;
                 newItems = !state.items[action.payload.id]
                     ? [newItem]
