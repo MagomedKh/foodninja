@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { _isMobile } from "../../components/helpers.js";
+import { _clone, _isMobile } from "../../components/helpers.js";
 import {
     addProductToCart,
     decreaseProductInCart,
@@ -123,7 +123,7 @@ export default function ProductModal() {
         handleClose();
     };
     const handleAddVariantProduct = () => {
-        let product = productModal;
+        let product = _clone(productModal);
         product.options._price = activeVariant.price;
         product.variant = activeVariant;
         dispatch(addProductToCart(product));
