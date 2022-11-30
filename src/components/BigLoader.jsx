@@ -3,6 +3,8 @@ import CircularProgress from "@mui/material/CircularProgress";
 import "../css/loader.css";
 
 export default function BigLoader({ initStatus = false }) {
+    const color = window.mainColor;
+
     return (
         <div>
             <div className="mainloader">
@@ -13,7 +15,12 @@ export default function BigLoader({ initStatus = false }) {
                         viewBox="0 0 100 100"
                         preserveAspectRatio="xMidYMid"
                     >
-                        <circle cx="27.5" cy="57.5" r="5" fill="#fe718d">
+                        <circle
+                            cx="27.5"
+                            cy="57.5"
+                            r="5"
+                            fill={color || "#fe718d"}
+                        >
                             <animate
                                 attributeName="cy"
                                 calcMode="spline"
@@ -25,7 +32,12 @@ export default function BigLoader({ initStatus = false }) {
                                 begin="-0.6s"
                             ></animate>
                         </circle>{" "}
-                        <circle cx="42.5" cy="57.5" r="5" fill="#f47e60">
+                        <circle
+                            cx="42.5"
+                            cy="57.5"
+                            r="5"
+                            fill={color || "#f47e60"}
+                        >
                             <animate
                                 attributeName="cy"
                                 calcMode="spline"
@@ -37,7 +49,12 @@ export default function BigLoader({ initStatus = false }) {
                                 begin="-0.44999999999999996s"
                             ></animate>
                         </circle>{" "}
-                        <circle cx="57.5" cy="57.5" r="5" fill="#f8b26a">
+                        <circle
+                            cx="57.5"
+                            cy="57.5"
+                            r="5"
+                            fill={color || "#f8b26a"}
+                        >
                             <animate
                                 attributeName="cy"
                                 calcMode="spline"
@@ -49,7 +66,12 @@ export default function BigLoader({ initStatus = false }) {
                                 begin="-0.3s"
                             ></animate>
                         </circle>{" "}
-                        <circle cx="72.5" cy="57.5" r="5" fill="#abbd81">
+                        <circle
+                            cx="72.5"
+                            cy="57.5"
+                            r="5"
+                            fill={color || "#abbd81"}
+                        >
                             <animate
                                 attributeName="cy"
                                 calcMode="spline"
