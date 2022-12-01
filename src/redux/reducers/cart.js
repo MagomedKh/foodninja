@@ -19,7 +19,7 @@ const getTotalPrice = (products) =>
 const getDiscountTotalPrice = (products) =>
     products.reduce((total, item) => total + item.totalPrice, 0);
 
-const getItemTotalPrice = (products) =>
+export const getItemTotalPrice = (products) =>
     Math.ceil(
         products.reduce((total, item) => {
             if (
@@ -441,6 +441,21 @@ const cart = (state = initialState, action) => {
                             ].items[0].options._promocode_price = parseInt(
                                 action.payload.productPrice
                             );
+
+                            // Если у существующего товара есть модификаторы, прибавляем их к скидочной цене
+                            if (
+                                updatedItems[
+                                    action.payload.promocodeProducts.id
+                                ].items[0].modificatorsAmount
+                            ) {
+                                updatedItems[
+                                    action.payload.promocodeProducts.id
+                                ].items[0].options._promocode_price +=
+                                    updatedItems[
+                                        action.payload.promocodeProducts.id
+                                    ].items[0].modificatorsAmount;
+                            }
+
                             updatedItems[
                                 action.payload.promocodeProducts.id
                             ].totalPrice = getItemTotalPrice(
@@ -695,7 +710,13 @@ const cart = (state = initialState, action) => {
         case "DECREASE_PRODUCT_IN_CART": {
             const oldItems = [...state.items[action.payload.id].items];
             const newItems = [...state.items[action.payload.id].items];
-            if (newItems.length > 1) {
+
+            if (!action.payload.choosenModificators?.length) {
+                const deletedItemInx = newItems.findLastIndex(
+                    (el) => !el.choosenModificators?.length
+                );
+                newItems.splice(deletedItemInx, 1);
+            } else if (newItems.length > 1) {
                 newItems.pop();
             }
             const updatedItems = {
@@ -776,6 +797,35 @@ const cart = (state = initialState, action) => {
                 );
                 if (!updatedItems[action.payload.id].items.length)
                     delete updatedItems[action.payload.id];
+            }
+            // Проверяем есть ли у удаляемого простого товара модификаторы, если есть удаляем только выбранный товар
+            else if (action.payload.choosenModificators?.length) {
+                updatedItems[action.payload.id].items.splice(
+                    action.payload.productIndex,
+                    1
+                );
+                updatedItems[action.payload.id].totalPrice = getItemTotalPrice(
+                    updatedItems[action.payload.id].items
+                );
+                // Если после удаления простого товара с модификаторами товаров больше нет, удаляем весь объект
+                if (!updatedItems[action.payload.id].items.length) {
+                    delete updatedItems[action.payload.id];
+                }
+            }
+            // Если удаляем простой товар без модификаторов, то проверяем, есть ли кроме простых, товары с модификаторами,
+            // если есть, то оставляем только их
+            else if (
+                updatedItems[action.payload.id].items.find(
+                    (el) => el.choosenModificators?.length
+                )
+            ) {
+                const newItems = updatedItems[action.payload.id].items.filter(
+                    (el) => el.choosenModificators?.length
+                );
+                updatedItems[action.payload.id].items = newItems;
+                updatedItems[action.payload.id].totalPrice = getItemTotalPrice(
+                    updatedItems[action.payload.id].items
+                );
             } else delete updatedItems[action.payload.id];
 
             const allProducts = [].concat.apply(
@@ -793,22 +843,6 @@ const cart = (state = initialState, action) => {
                     ? state.bonusProduct
                     : {}
                 : {};
-
-            // if( state.promocode && !_checkPromocode(state.promocode, updatedItems, cartTotalPrice ) ) {
-
-            //     return {
-            //         ...state,
-            //         items: updatedItems,
-            //         totalRolls: totalRolls,
-            //         bonusProduct: bonusProduct,
-            //         countItems: allProducts.length,
-            //         subTotalPrice: cartTotalPrice,
-            //         promocode: {},
-            //         promocodeProducts: {},
-            //         discount: 0,
-            //         totalPrice: cartTotalPrice
-            //     }
-            // }
             return {
                 ...state,
                 items: updatedItems,

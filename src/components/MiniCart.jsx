@@ -18,6 +18,7 @@ import { updateAlerts } from "../redux/actions/systemAlerts";
 import { removePromocode, addBonusProductToCart } from "../redux/actions/cart";
 import { openMiniCart, closeMiniCart } from "../redux/actions/miniCart";
 import "../css/minicart.css";
+import { getItemTotalPrice } from "../redux/reducers/cart";
 
 function MiniCart() {
     const navigate = useNavigate();
@@ -177,11 +178,13 @@ function MiniCart() {
                                         ></div>
                                     </Alert>
                                 )}
-                            {Object.keys(cartProducts).map((key, index) =>
-                                items[key] &&
-                                items[key].type !== undefined &&
-                                items[key].type === "variations" ? (
-                                    cartProducts[key].items.map(
+                            {Object.keys(cartProducts).map((key, index) => {
+                                if (
+                                    items[key] &&
+                                    items[key].type !== undefined &&
+                                    items[key].type === "variations"
+                                ) {
+                                    return cartProducts[key].items.map(
                                         (
                                             keyVariantProduct,
                                             indexVariantProduct
@@ -205,22 +208,66 @@ function MiniCart() {
                                                 }
                                             />
                                         )
-                                    )
-                                ) : (
-                                    <MiniCartProduct
-                                        disabled={cartProducts[key].disabled}
-                                        key={cartProducts[key].items[0].id}
-                                        productIndex={0}
-                                        productCart={cartProducts[key].items[0]}
-                                        productCount={
-                                            cartProducts[key].items.length
+                                    );
+                                } else {
+                                    const itemsWithoutModificators =
+                                        cartProducts[key].items?.filter(
+                                            (el) =>
+                                                !el.choosenModificators?.length
+                                        );
+                                    const itemsWithoutModificatorsTotal =
+                                        getItemTotalPrice(
+                                            itemsWithoutModificators
+                                        );
+                                    let itemWithoutModificatorRendered = false;
+                                    return cartProducts[key].items.map(
+                                        (el, inx) => {
+                                            if (
+                                                el.choosenModificators?.length
+                                            ) {
+                                                return (
+                                                    <MiniCartProduct
+                                                        disabled={
+                                                            cartProducts[key]
+                                                                .disabled
+                                                        }
+                                                        key={inx}
+                                                        productIndex={inx}
+                                                        productCart={el}
+                                                        productCount={1}
+                                                        productTotalPrice={
+                                                            el.options
+                                                                ._promocode_price ??
+                                                            el.options._price
+                                                        }
+                                                    />
+                                                );
+                                            } else if (
+                                                !itemWithoutModificatorRendered
+                                            ) {
+                                                itemWithoutModificatorRendered = true;
+                                                return (
+                                                    <MiniCartProduct
+                                                        disabled={
+                                                            cartProducts[key]
+                                                                .disabled
+                                                        }
+                                                        key={inx}
+                                                        productIndex={inx}
+                                                        productCart={el}
+                                                        productCount={
+                                                            itemsWithoutModificators.length
+                                                        }
+                                                        productTotalPrice={
+                                                            itemsWithoutModificatorsTotal
+                                                        }
+                                                    />
+                                                );
+                                            }
                                         }
-                                        productTotalPrice={
-                                            cartProducts[key].totalPrice
-                                        }
-                                    />
-                                )
-                            )}
+                                    );
+                                }
+                            })}
 
                             {/* { Object.keys(promocodeProducts).map( (key, index) => items[key] !== undefined &&
                                     <PromocodeMiniCartProduct productCart={promocodeProducts[key]} productCount="1" productTotalPrice={promocode.productPrice} />

@@ -194,7 +194,10 @@ export const _checkPromocode = (promocode, items, cartTotal, typeDelivery) => {
                                 product.options._promocode_price == 0)
                         )
                             hasProduct = true;
-                    } else if (promocode.promocodeProducts.id === product.id)
+                    } else if (
+                        promocode.promocodeProducts.id === product.id &&
+                        product.options._promocode_price >= 0
+                    )
                         hasProduct = true;
                 });
             });

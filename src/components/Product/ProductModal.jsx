@@ -176,10 +176,14 @@ export default function ProductModal() {
                 return (
                     <>
                         <span className="product--old-price">
-                            {productModal.options._regular_price} ₽
+                            {parseInt(productModal.options._regular_price) +
+                                (productModal.modificatorsAmount ?? 0)}{" "}
+                            ₽
                         </span>
                         <span className="product--sale-price main-color">
-                            {productModal.options._price} ₽
+                            {productModal.options._price +
+                                (productModal.modificatorsAmount ?? 0)}{" "}
+                            ₽
                         </span>
                     </>
                 );
@@ -187,7 +191,7 @@ export default function ProductModal() {
                 return (
                     <span>
                         {parseInt(productModal.options._price) +
-                            productModal.modificatorsAmount}{" "}
+                            (productModal.modificatorsAmount ?? 0)}{" "}
                         ₽
                     </span>
                 );
