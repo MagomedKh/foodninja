@@ -17,6 +17,7 @@ import { updateAlerts } from "../redux/actions/systemAlerts";
 import emptyCartImg from "../img/empty-cart.svg";
 import "swiper/modules/navigation/navigation.min.css";
 import "swiper/swiper.min.css";
+import { getItemTotalPrice } from "../redux/reducers/cart";
 
 export default function Cart() {
     const dispatch = useDispatch();
@@ -118,11 +119,13 @@ export default function Cart() {
                                 )}
 
                             <TransitionGroup>
-                                {Object.keys(cartProducts).map((key, index) =>
-                                    items[key] &&
-                                    items[key].type !== undefined &&
-                                    items[key].type === "variations" ? (
-                                        cartProducts[key].items.map(
+                                {Object.keys(cartProducts).map((key, index) => {
+                                    if (
+                                        items[key] &&
+                                        items[key].type !== undefined &&
+                                        items[key].type === "variations"
+                                    ) {
+                                        return cartProducts[key].items.map(
                                             (
                                                 keyVariantProduct,
                                                 indexVariantProduct
@@ -132,6 +135,10 @@ export default function Cart() {
                                                     className="collapse-cart-product"
                                                 >
                                                     <CartProduct
+                                                        disabled={
+                                                            cartProducts[key]
+                                                                .disabled
+                                                        }
                                                         key={
                                                             indexVariantProduct
                                                         }
@@ -147,39 +154,90 @@ export default function Cart() {
                                                         productCount={1}
                                                         productTotalPrice={
                                                             cartProducts[key]
-                                                                .items[
-                                                                indexVariantProduct
-                                                            ].options._price
+                                                                .totalPrice
                                                         }
                                                     />
                                                 </Collapse>
                                             )
-                                        )
-                                    ) : (
-                                        <Collapse
-                                            key={key}
-                                            className="collapse-cart-product"
-                                        >
-                                            <CartProduct
-                                                key={
-                                                    cartProducts[key].items[0]
-                                                        .id
+                                        );
+                                    } else {
+                                        const itemsWithoutModificators =
+                                            cartProducts[key].items?.filter(
+                                                (el) =>
+                                                    !el.choosenModificators
+                                                        ?.length
+                                            );
+                                        const itemsWithoutModificatorsTotal =
+                                            getItemTotalPrice(
+                                                itemsWithoutModificators
+                                            );
+                                        let itemWithoutModificatorRendered = false;
+                                        return cartProducts[key].items.map(
+                                            (el, inx) => {
+                                                if (
+                                                    el.choosenModificators
+                                                        ?.length
+                                                ) {
+                                                    return (
+                                                        <Collapse
+                                                            key={inx}
+                                                            className="collapse-cart-product"
+                                                        >
+                                                            <CartProduct
+                                                                disabled={
+                                                                    cartProducts[
+                                                                        key
+                                                                    ].disabled
+                                                                }
+                                                                key={inx}
+                                                                productIndex={
+                                                                    inx
+                                                                }
+                                                                productCart={el}
+                                                                productCount={1}
+                                                                productTotalPrice={
+                                                                    el.options
+                                                                        ._promocode_price ??
+                                                                    el.options
+                                                                        ._price
+                                                                }
+                                                            />
+                                                        </Collapse>
+                                                    );
+                                                } else if (
+                                                    !itemWithoutModificatorRendered
+                                                ) {
+                                                    itemWithoutModificatorRendered = true;
+                                                    return (
+                                                        <Collapse
+                                                            key={inx}
+                                                            className="collapse-cart-product"
+                                                        >
+                                                            <CartProduct
+                                                                disabled={
+                                                                    cartProducts[
+                                                                        key
+                                                                    ].disabled
+                                                                }
+                                                                key={inx}
+                                                                productIndex={
+                                                                    inx
+                                                                }
+                                                                productCart={el}
+                                                                productCount={
+                                                                    itemsWithoutModificators.length
+                                                                }
+                                                                productTotalPrice={
+                                                                    itemsWithoutModificatorsTotal
+                                                                }
+                                                            />{" "}
+                                                        </Collapse>
+                                                    );
                                                 }
-                                                productIndex={0}
-                                                productCart={
-                                                    cartProducts[key].items[0]
-                                                }
-                                                productCount={
-                                                    cartProducts[key].items
-                                                        .length
-                                                }
-                                                productTotalPrice={
-                                                    cartProducts[key].totalPrice
-                                                }
-                                            />
-                                        </Collapse>
-                                    )
-                                )}
+                                            }
+                                        );
+                                    }
+                                })}
 
                                 {Object.keys(promocodeProducts).map(
                                     (key, index) =>
