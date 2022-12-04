@@ -217,8 +217,8 @@ export const _checkPromocode = (promocode, items, cartTotal, typeDelivery) => {
             Object.values(items).forEach((product) => {
                 if (
                     product["items"][0].options._sale_price &&
-                    product["items"][0].options._regular_price >
-                        product["items"][0].options._sale_price
+                    parseInt(product["items"][0].options._regular_price) >
+                        parseInt(product["items"][0].options._sale_price)
                 )
                     hasSale = true;
             });
