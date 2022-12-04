@@ -81,6 +81,7 @@ const SubscribeSnackbar = () => {
                             sx={{ ml: 1, flexGrow: 1, flexBasis: "0.5" }}
                             href={config.CONFIG_vk_mailing_link}
                             target="_blank"
+                            className="btn--action"
                         >
                             Да
                         </Button>
@@ -93,6 +94,8 @@ const SubscribeSnackbar = () => {
                 mb: 4,
                 "& .MuiPaper-root": {
                     maxWidth: "320px",
+                    boxShadow: "0 0 20px rgb(0 0 0 / 10%)",
+                    borderRadius: "15px",
                 },
                 "& .MuiSnackbarContent-root": {
                     backgroundColor: "#fff",

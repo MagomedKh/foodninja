@@ -29,3 +29,4 @@ export { default as SystemAlerts } from "./SystemAlerts.jsx";
 export { default as TopCategoriesMenu } from "./TopCategoriesMenu.jsx";
 export { default as SearchBar } from "./SearchBar.jsx";
 export { default as SubscribeSnackbar } from "./SubscribeSnackbar.jsx";
+export { default as LeafletMap } from "./LeafletMap.jsx";

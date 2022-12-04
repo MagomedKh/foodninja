@@ -535,3 +535,7 @@ a.btn {
 .grecaptcha-badge {
     visibility: hidden;
 }
+
+.leaflet-control-attribution .leaflet-control {
+    visibility: hidden;
+}
