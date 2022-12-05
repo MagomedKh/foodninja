@@ -1109,44 +1109,65 @@ export default function Checkout() {
                                     </RadioGroup>
 
                                     <Grid container spacing={4}>
-                                        <Grid
-                                            item
-                                            sm={12}
-                                            md={6}
-                                            sx={{ width: 1 }}
-                                        >
-                                            {config.CONFIG_checkout_count_person_name ? (
-                                                <b>
-                                                    {
-                                                        config.CONFIG_checkout_count_person_name
-                                                    }
-                                                </b>
-                                            ) : (
-                                                <b>Количество персон</b>
-                                            )}
-                                            <Select
-                                                id="count_peoples"
-                                                value={countUsers}
-                                                sx={{ width: 1, mt: 0.5 }}
-                                                size="small"
-                                                onChange={
-                                                    handleChangeCountUsers
-                                                }
+                                        {config.CONFIG_checkout_hide_count_person ===
+                                        "yes" ? null : (
+                                            <Grid
+                                                item
+                                                sm={12}
+                                                md={6}
+                                                sx={{ width: 1 }}
                                             >
-                                                <MenuItem value={1}>1</MenuItem>
-                                                <MenuItem value={2}>2</MenuItem>
-                                                <MenuItem value={3}>3</MenuItem>
-                                                <MenuItem value={4}>4</MenuItem>
-                                                <MenuItem value={5}>5</MenuItem>
-                                                <MenuItem value={6}>6</MenuItem>
-                                                <MenuItem value={7}>7</MenuItem>
-                                                <MenuItem value={8}>8</MenuItem>
-                                                <MenuItem value={9}>9</MenuItem>
-                                                <MenuItem value={10}>
-                                                    10
-                                                </MenuItem>
-                                            </Select>
-                                        </Grid>
+                                                {config.CONFIG_checkout_count_person_name ? (
+                                                    <b>
+                                                        {
+                                                            config.CONFIG_checkout_count_person_name
+                                                        }
+                                                    </b>
+                                                ) : (
+                                                    <b>Количество персон</b>
+                                                )}
+                                                <Select
+                                                    id="count_peoples"
+                                                    value={countUsers}
+                                                    sx={{ width: 1, mt: 0.5 }}
+                                                    size="small"
+                                                    onChange={
+                                                        handleChangeCountUsers
+                                                    }
+                                                >
+                                                    <MenuItem value={1}>
+                                                        1
+                                                    </MenuItem>
+                                                    <MenuItem value={2}>
+                                                        2
+                                                    </MenuItem>
+                                                    <MenuItem value={3}>
+                                                        3
+                                                    </MenuItem>
+                                                    <MenuItem value={4}>
+                                                        4
+                                                    </MenuItem>
+                                                    <MenuItem value={5}>
+                                                        5
+                                                    </MenuItem>
+                                                    <MenuItem value={6}>
+                                                        6
+                                                    </MenuItem>
+                                                    <MenuItem value={7}>
+                                                        7
+                                                    </MenuItem>
+                                                    <MenuItem value={8}>
+                                                        8
+                                                    </MenuItem>
+                                                    <MenuItem value={9}>
+                                                        9
+                                                    </MenuItem>
+                                                    <MenuItem value={10}>
+                                                        10
+                                                    </MenuItem>
+                                                </Select>
+                                            </Grid>
+                                        )}
 
                                         {activeGateway === "cash" && (
                                             <Grid
