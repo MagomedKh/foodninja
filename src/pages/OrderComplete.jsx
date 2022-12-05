@@ -177,7 +177,11 @@ export default function Contacts() {
                                 подтверждения заказа.
                             </p>
                             <p>
-                                <Link className="btn btn--action" to="/">
+                                <Link
+                                    className="btn btn--action"
+                                    to="/"
+                                    style={{ marginTop: "15px" }}
+                                >
                                     На главную страницу
                                 </Link>
                             </p>
@@ -191,7 +195,11 @@ export default function Contacts() {
                             dangerouslySetInnerHTML={{ __html: pageContent }}
                         ></div>
                         <p>
-                            <Link className="btn btn--action" to="/">
+                            <Link
+                                className="btn btn--action"
+                                to="/"
+                                style={{ marginTop: "15px" }}
+                            >
                                 На главную страницу
                             </Link>
                         </p>
