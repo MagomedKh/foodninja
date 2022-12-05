@@ -760,48 +760,57 @@ export default function Checkout() {
                                                         {...homeProps}
                                                     />
                                                 </Grid>
-                                                <Grid item xs={4} md={4}>
-                                                    <TextField
-                                                        size="small"
-                                                        id="porch"
-                                                        label="Подъезд"
-                                                        value={
-                                                            newUserAddressPorch
-                                                        }
-                                                        onChange={
-                                                            handleChangeNewUserAddress
-                                                        }
-                                                        sx={{ width: 1 }}
-                                                    />
-                                                </Grid>
-                                                <Grid item xs={4} md={4}>
-                                                    <TextField
-                                                        size="small"
-                                                        id="floor"
-                                                        label="Этаж"
-                                                        value={
-                                                            newUserAddressFloor
-                                                        }
-                                                        onChange={
-                                                            handleChangeNewUserAddress
-                                                        }
-                                                        sx={{ width: 1 }}
-                                                    />
-                                                </Grid>
-                                                <Grid item xs={4} md={4}>
-                                                    <TextField
-                                                        size="small"
-                                                        id="apartment"
-                                                        label="Кв./Офис"
-                                                        value={
-                                                            newUserAddressApartment
-                                                        }
-                                                        onChange={
-                                                            handleChangeNewUserAddress
-                                                        }
-                                                        sx={{ width: 1 }}
-                                                    />
-                                                </Grid>
+                                                {config.CONFIG_checkout_hide_porch ===
+                                                "yes" ? null : (
+                                                    <Grid item xs={4} md={4}>
+                                                        <TextField
+                                                            size="small"
+                                                            id="porch"
+                                                            label="Подъезд"
+                                                            value={
+                                                                newUserAddressPorch
+                                                            }
+                                                            onChange={
+                                                                handleChangeNewUserAddress
+                                                            }
+                                                            sx={{ width: 1 }}
+                                                        />
+                                                    </Grid>
+                                                )}
+                                                {config.CONFIG_checkout_hide_floor ===
+                                                "yes" ? null : (
+                                                    <Grid item xs={4} md={4}>
+                                                        <TextField
+                                                            size="small"
+                                                            id="floor"
+                                                            label="Этаж"
+                                                            value={
+                                                                newUserAddressFloor
+                                                            }
+                                                            onChange={
+                                                                handleChangeNewUserAddress
+                                                            }
+                                                            sx={{ width: 1 }}
+                                                        />
+                                                    </Grid>
+                                                )}
+                                                {config.CONFIG_checkout_hide_apartment ===
+                                                "yes" ? null : (
+                                                    <Grid item xs={4} md={4}>
+                                                        <TextField
+                                                            size="small"
+                                                            id="apartment"
+                                                            label="Кв./Офис"
+                                                            value={
+                                                                newUserAddressApartment
+                                                            }
+                                                            onChange={
+                                                                handleChangeNewUserAddress
+                                                            }
+                                                            sx={{ width: 1 }}
+                                                        />
+                                                    </Grid>
+                                                )}
                                             </Grid>
                                         </div>
                                     )}
@@ -1106,7 +1115,15 @@ export default function Checkout() {
                                             md={6}
                                             sx={{ width: 1 }}
                                         >
-                                            <b>Количество персон</b>
+                                            {config.CONFIG_checkout_count_person_name ? (
+                                                <b>
+                                                    {
+                                                        config.CONFIG_checkout_count_person_name
+                                                    }
+                                                </b>
+                                            ) : (
+                                                <b>Количество персон</b>
+                                            )}
                                             <Select
                                                 id="count_peoples"
                                                 value={countUsers}

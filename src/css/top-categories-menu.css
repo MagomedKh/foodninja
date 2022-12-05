@@ -46,6 +46,7 @@
     display: block;
 }
 .sticked-top-bar ul.categories-menu li a {
+    width: fit-content;
     color: white;
     cursor: pointer;
     margin-right: 20px;
