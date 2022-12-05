@@ -13,7 +13,7 @@ import {
     faVk,
     faOdnoklassnikiSquare,
 } from "@fortawesome/free-brands-svg-icons";
-import { Header, Footer, LeafletMap } from "../components";
+import { Header, Footer } from "../components";
 import "../css/contacts.css";
 import { _getPlatform } from "../components/helpers";
 
@@ -262,7 +262,7 @@ export default function Contacts() {
                         )}
                     </Grid>
                     <Grid item sm={12} md={8} sx={{ width: 1 }}>
-                        {/* {config.CONFIG_contact_map_script ? (
+                        {config.CONFIG_contact_map_script ? (
                             <div
                                 className="contacts--custom-map"
                                 dangerouslySetInnerHTML={{
@@ -274,10 +274,10 @@ export default function Contacts() {
                             config.CONFIG_longtude && (
                                 <div className="contacts--2gis-map"></div>
                             )
-                        )} */}
-                        <div id="map" style={{ height: "500px" }}>
+                        )}
+                        {/* <div id="map" style={{ height: "500px" }}>
                             <LeafletMap />
-                        </div>
+                        </div> */}
 
                         {config.CONFIG_contact_delivery_info && (
                             <div
