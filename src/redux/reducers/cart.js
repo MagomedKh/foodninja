@@ -69,7 +69,8 @@ const cart = (state = initialState, action) => {
                                         !action.payload.categories?.some((r) =>
                                             elem.categories?.includes(r)
                                         ) &&
-                                        (!elem.options._sale_price ||
+                                        ((!elem.options._sale_price &&
+                                            !elem.variant?._sale_price) ||
                                             (action.payload
                                                 .categories_hardmode !==
                                                 "yes" &&
@@ -81,13 +82,8 @@ const cart = (state = initialState, action) => {
                                             options: {
                                                 ...elem.options,
                                                 _promocode_price:
-                                                    elem.modificatorsAmount
-                                                        ? (elem.options._price -
-                                                              elem.modificatorsAmount) *
-                                                              percentDiscount +
-                                                          elem.modificatorsAmount
-                                                        : elem.options._price *
-                                                          percentDiscount,
+                                                    elem.options._price *
+                                                    percentDiscount,
                                             },
                                         };
                                     } else {
@@ -112,7 +108,8 @@ const cart = (state = initialState, action) => {
                                         action.payload.categories?.some((r) =>
                                             elem.categories?.includes(r)
                                         ) &&
-                                        (!elem.options._sale_price ||
+                                        ((!elem.options._sale_price &&
+                                            !elem.variant?._sale_price) ||
                                             (action.payload
                                                 .categories_hardmode !==
                                                 "yes" &&
@@ -124,13 +121,8 @@ const cart = (state = initialState, action) => {
                                             options: {
                                                 ...elem.options,
                                                 _promocode_price:
-                                                    elem.modificatorsAmount
-                                                        ? (elem.options._price -
-                                                              elem.modificatorsAmount) *
-                                                              percentDiscount +
-                                                          elem.modificatorsAmount
-                                                        : elem.options._price *
-                                                          percentDiscount,
+                                                    elem.options._price *
+                                                    percentDiscount,
                                             },
                                         };
                                     } else {
@@ -149,7 +141,8 @@ const cart = (state = initialState, action) => {
                             productsWithDiscount[el].items.forEach(
                                 (elem, index, array) => {
                                     if (
-                                        !elem.options._sale_price ||
+                                        (!elem.options._sale_price &&
+                                            !elem.variant?._sale_price) ||
                                         (action.payload.categories_hardmode !==
                                             "yes" &&
                                             !action.payload.excludeSaleProduct)
@@ -159,13 +152,8 @@ const cart = (state = initialState, action) => {
                                             options: {
                                                 ...elem.options,
                                                 _promocode_price:
-                                                    elem.modificatorsAmount
-                                                        ? (elem.options._price -
-                                                              elem.modificatorsAmount) *
-                                                              percentDiscount +
-                                                          elem.modificatorsAmount
-                                                        : elem.options._price *
-                                                          percentDiscount,
+                                                    elem.options._price *
+                                                    percentDiscount,
                                             },
                                         };
                                     } else {

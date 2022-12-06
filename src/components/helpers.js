@@ -228,6 +228,22 @@ export const _checkPromocode = (promocode, items, cartTotal, typeDelivery) => {
                     message:
                         "Промокод отменен, т.к. не действует с товарами по скидке.",
                 };
+        } else if (
+            promocode.excludeSaleProduct &&
+            promocode.categories_hardmode !== "yes"
+        ) {
+            const productWithoutSale = Object.values(items).find(
+                (el) =>
+                    !el.items[0].options._sale_price &&
+                    !el.items[0].variant?._sale_price
+            );
+
+            if (!productWithoutSale)
+                return {
+                    status: "error",
+                    message:
+                        "Промокод отменен, т.к. не действует с товарами по скидке.",
+                };
         }
 
         // Проверка минимальной суммы заказа
