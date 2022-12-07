@@ -176,7 +176,7 @@ export default function Checkout() {
 
     const handlePreorderTimeChange = (time) => {
         setPreorderTime(time);
-        if (preorderDate) {
+        if (time && preorderDate) {
             const updatedPreorderDate = set(preorderDate, {
                 hours: getHours(new Date(time)),
                 minutes: getMinutes(new Date(time)),
@@ -184,7 +184,7 @@ export default function Checkout() {
                 milliseconds: 0,
             });
             setPreorderDate(updatedPreorderDate);
-        } else {
+        } else if (time) {
             const newPreorderDate = addDays(new Date(), 1);
 
             const updatedPreorderDate = set(newPreorderDate, {

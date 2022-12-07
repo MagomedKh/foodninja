@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import {
     isToday,
+    isWithinInterval,
     eachDayOfInterval,
     format,
     compareAsc,
@@ -18,8 +19,11 @@ import {
     set,
     getDayOfYear,
     getTime,
+    getDay,
     roundToNearestMinutes,
+    endOfDay,
 } from "date-fns";
+import { useEffect } from "react";
 
 const PreorderForm = forwardRef(
     (
@@ -40,19 +44,44 @@ const PreorderForm = forwardRef(
             };
         });
 
+        // Получаем выбранный пользователем день недели (0 = понедельник)
+        const preorderDayOfWeek =
+            getDay(preorderDate) === 0 ? 6 : getDay(preorderDate) - 1;
+
+        // Получаем доступное время для заказа в выбранный день
+        const preorderOrderingTime = config.orderingTime[preorderDayOfWeek] || [
+            config.CONFIG_schedule_ordering_start,
+            config.CONFIG_schedule_ordering_end,
+        ];
+
+        // Устанавливаем начальное время для заказа в формате даты
         let startWorkDate = set(new Date(), {
-            hours: config.CONFIG_schedule_ordering_start.slice(0, 2),
-            minutes: config.CONFIG_schedule_ordering_start.slice(3, 5),
-            seconds: 0,
-            milliseconds: 0,
-        });
-        let endWorkDate = set(new Date(), {
-            hours: config.CONFIG_schedule_ordering_end.slice(0, 2),
-            minutes: config.CONFIG_schedule_ordering_end.slice(3, 5),
+            hours: preorderOrderingTime[0].slice(0, 2),
+            minutes: preorderOrderingTime[0].slice(3, 5),
             seconds: 0,
             milliseconds: 0,
         });
 
+        // Устанавливаем конечное время для заказа в формате даты
+        let endWorkDate = set(new Date(), {
+            hours: preorderOrderingTime[1].slice(0, 2),
+            minutes: preorderOrderingTime[1].slice(3, 5),
+            seconds: 0,
+            milliseconds: 0,
+        });
+
+        // Если уже выбранное время после смены даты не входит в доступный интервал, сбрасываем время
+        if (
+            preorderTime &&
+            !isWithinInterval(preorderTime, {
+                start: startWorkDate,
+                end: endWorkDate,
+            })
+        ) {
+            handlePreorderTimeChange("");
+        }
+
+        // Если заказ на сегодня, прибавляем к начальному времени минимальную задержку перед заказом
         if (isToday(preorderDate)) {
             startWorkDate = addMinutes(
                 new Date(),
@@ -63,17 +92,44 @@ const PreorderForm = forwardRef(
             });
         }
 
+        // Создаем массив доступных времён для заказа в интервале
         const hoursArray = [];
-
         while (compareAsc(startWorkDate, endWorkDate) < 1) {
             hoursArray.push(startWorkDate);
             startWorkDate = addMinutes(startWorkDate, 30);
         }
 
-        const datesArray = eachDayOfInterval({
-            start: new Date(),
-            end: addDays(new Date(), 30),
-        });
+        console.log(hoursArray);
+        // Проверяем чтобы последнее доступное время не переходило на следующий день
+        const endOfTheDay = endOfDay(new Date());
+        if (compareAsc(hoursArray.at(-1), endOfTheDay) == 1) {
+            hoursArray.pop();
+        }
+
+        // Ссоздаем массив недоступных для заказ дней недели
+        const unavailableDays = config.orderingTime
+            .map((el, inx) => {
+                if (!el[0] || !el[1]) {
+                    return inx;
+                }
+            })
+            .filter((el) => {
+                if (el || el === 0) return true;
+            });
+
+        // Создаем массив доступных дней для заказа из ближайших 30
+        const datesArray = [];
+        let currentDay = new Date();
+        const forwardDay = addDays(currentDay, 30);
+
+        while (compareAsc(currentDay, forwardDay) < 1) {
+            const currentDayOfWeek =
+                getDay(currentDay) === 0 ? 6 : getDay(currentDay) - 1;
+            if (!unavailableDays.includes(currentDayOfWeek)) {
+                datesArray.push(currentDay);
+            }
+            currentDay = addDays(currentDay, 1);
+        }
 
         return (
             <Box sx={{ display: "flex" }}>
@@ -135,6 +191,7 @@ const PreorderForm = forwardRef(
                             label="Время"
                             labelId="preorder-time-select-label"
                             id="preorder-time-select"
+                            defaultValue={""}
                             value={preorderTime ? preorderTime : ""}
                             onChange={(e) => {
                                 handlePreorderTimeChange(e.target.value);
@@ -150,7 +207,7 @@ const PreorderForm = forwardRef(
                                     value={getTime(el)}
                                     divider
                                 >
-                                    {format(el, "k:mm")}
+                                    {format(el, "H:mm")}
                                 </MenuItem>
                             ))}
                         </Select>
