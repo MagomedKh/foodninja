@@ -9,7 +9,6 @@ import {
     setBonusesProducts,
 } from "./redux/actions/products";
 import { setConfig, setMainLoading } from "./redux/actions/config";
-import { setOrderTime } from "./redux/actions/orderTime";
 import { setGateways } from "./redux/actions/gateways";
 import { setBanners } from "./redux/actions/banners";
 import { logout, login } from "./redux/actions/user";
@@ -94,7 +93,6 @@ function App() {
                 dispatch(setRecommendProducts(resp.data.recommend_products));
                 dispatch(setBonusesProducts(resp.data.bonuses_products));
                 dispatch(setGateways(resp.data.gateways));
-                dispatch(setOrderTime(resp.data.availableTimeOrder));
                 dispatch(setBanners(resp.data.banners));
             });
     }, [dispatch]);
