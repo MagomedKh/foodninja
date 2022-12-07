@@ -275,7 +275,7 @@ export default function Account() {
 
                 {user.token ? (
                     <div>
-                        <div className="account-menu">
+                        <div className="account-menu button-group">
                             <Link
                                 variant="button"
                                 to="/account"
@@ -477,23 +477,25 @@ export default function Account() {
                             )}
                         </Grid>
 
-                        <LoadingButton
-                            loading={loading}
-                            sx={{ mr: 1.5 }}
-                            className="btn--action"
-                            variant="button"
-                            onClick={handleSaveUser}
-                        >
-                            Сохранить
-                        </LoadingButton>
-                        <Button
-                            className="btn--outline-dark"
-                            variant="button"
-                            onClick={handleClickLogout}
-                            sx={{ mr: 1.5 }}
-                        >
-                            Выйти
-                        </Button>
+                        <div className="button-group">
+                            <LoadingButton
+                                loading={loading}
+                                sx={{ mr: 1.5 }}
+                                className="btn--action"
+                                variant="button"
+                                onClick={handleSaveUser}
+                            >
+                                Сохранить
+                            </LoadingButton>
+                            <Button
+                                className="btn--outline-dark"
+                                variant="button"
+                                onClick={handleClickLogout}
+                                sx={{ mr: 1.5 }}
+                            >
+                                Выйти
+                            </Button>
+                        </div>
                         <hr className="account-separator" />
                         <div className="deleting-account">
                             <button
@@ -504,7 +506,11 @@ export default function Account() {
                             </button>
                         </div>
 
-                        <Dialog maxWidth="md" {...dialogProps}>
+                        <Dialog
+                            maxWidth="md"
+                            {...dialogProps}
+                            className="account-dialog"
+                        >
                             <div className="modal-alert--wrapper">
                                 <IconButton
                                     edge="start"
@@ -526,22 +532,24 @@ export default function Account() {
                                     >
                                         Все данные будут удалены безвозвратно.
                                     </Alert>
-                                    <LoadingButton
-                                        loading={loadingDelete}
-                                        sx={{ mr: 1.5 }}
-                                        className="btn--outline-dark"
-                                        variant="button"
-                                        onClick={handleDeleteUser}
-                                    >
-                                        Удалить
-                                    </LoadingButton>
-                                    <Button
-                                        variant="button"
-                                        className="btn btn--action"
-                                        onClick={toogleModalDeleting}
-                                    >
-                                        Отмена
-                                    </Button>
+                                    <div className="button-group">
+                                        <LoadingButton
+                                            loading={loadingDelete}
+                                            sx={{ mr: 1.5 }}
+                                            className="btn--outline-dark"
+                                            variant="button"
+                                            onClick={handleDeleteUser}
+                                        >
+                                            Удалить
+                                        </LoadingButton>
+                                        <Button
+                                            variant="button"
+                                            className="btn btn--action"
+                                            onClick={toogleModalDeleting}
+                                        >
+                                            Отмена
+                                        </Button>
+                                    </div>
                                 </div>
                             </div>
                         </Dialog>

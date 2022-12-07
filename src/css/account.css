@@ -128,3 +128,25 @@
     color: var(--main-color);
     font-size: inherit;
 }
+
+@media (max-width: 320px) {
+    .button-group {
+        display: flex;
+        flex-direction: column;
+    }
+    .button-group a {
+        text-align: center;
+    }
+    .button-group a,
+    .button-group button {
+        margin-left: 0;
+        margin-right: 0;
+    }
+    .button-group a:not(:first-child) {
+        margin-top: 10px;
+    }
+
+    .button-group button:not(:first-child) {
+        margin-top: 10px;
+    }
+}

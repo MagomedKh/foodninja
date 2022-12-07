@@ -171,6 +171,10 @@ a.btn {
     min-width: 500px;
 }
 
+.account-dialog .modal-alert--inner {
+    min-width: 0;
+}
+
 .w-100 {
     width: 100%;
 }
