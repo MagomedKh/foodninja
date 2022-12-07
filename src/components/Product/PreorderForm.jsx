@@ -22,8 +22,10 @@ import {
     getDay,
     roundToNearestMinutes,
     endOfDay,
+    getUnixTime,
+    fromUnixTime,
 } from "date-fns";
-import { useEffect } from "react";
+import DiscountIcon from "@mui/icons-material/Discount";
 
 const PreorderForm = forwardRef(
     (
@@ -38,6 +40,8 @@ const PreorderForm = forwardRef(
         },
         ref
     ) => {
+        const { promocode } = useSelector((state) => state.cart);
+
         const { config } = useSelector(({ config }) => {
             return {
                 config: config.data,
@@ -99,7 +103,6 @@ const PreorderForm = forwardRef(
             startWorkDate = addMinutes(startWorkDate, 30);
         }
 
-        console.log(hoursArray);
         // Проверяем чтобы последнее доступное время не переходило на следующий день
         const endOfTheDay = endOfDay(new Date());
         if (compareAsc(hoursArray.at(-1), endOfTheDay) == 1) {
@@ -121,7 +124,6 @@ const PreorderForm = forwardRef(
         const datesArray = [];
         let currentDay = new Date();
         const forwardDay = addDays(currentDay, 30);
-
         while (compareAsc(currentDay, forwardDay) < 1) {
             const currentDayOfWeek =
                 getDay(currentDay) === 0 ? 6 : getDay(currentDay) - 1;
@@ -130,6 +132,17 @@ const PreorderForm = forwardRef(
             }
             currentDay = addDays(currentDay, 1);
         }
+
+        // Ссоздаем массив недоступных для заказ дней недели у действующего промокода
+        const unavailablePromocodeDays = promocode.days
+            ?.map((el, inx) => {
+                if (!el) {
+                    return inx;
+                }
+            })
+            .filter((el) => {
+                if (el || el === 0) return true;
+            });
 
         return (
             <Box sx={{ display: "flex" }}>
@@ -159,21 +172,40 @@ const PreorderForm = forwardRef(
                                 key={"Как можно скорее"}
                                 value={"Как можно скорее"}
                                 divider
+                                sx={{
+                                    justifyContent: "center",
+                                }}
                             >
                                 Как можно скорее
                             </MenuItem>
                         )}
 
-                        {datesArray.map((el) => (
-                            <MenuItem
-                                key={getDayOfYear(el)}
-                                value={getDayOfYear(el)}
-                                sx={{ justifyContent: "center" }}
-                                divider
-                            >
-                                {format(el, "d MMMM")}
-                            </MenuItem>
-                        ))}
+                        {datesArray.map((el) => {
+                            // Блокируем дни, недоступные по действующему промокоду
+                            const disabled =
+                                unavailablePromocodeDays?.includes(
+                                    getDay(el) === 0 ? 6 : getDay(el) - 1
+                                ) || getUnixTime(el) > promocode.endDate;
+                            return (
+                                <MenuItem
+                                    key={getDayOfYear(el)}
+                                    value={getDayOfYear(el)}
+                                    sx={{
+                                        justifyContent: "center",
+                                        flexDirection: "column",
+                                    }}
+                                    divider
+                                    disabled={disabled}
+                                >
+                                    {format(el, "d MMMM")}
+                                    {disabled && (
+                                        <div style={{ fontSize: "12px" }}>
+                                            Недоступно с промокодом
+                                        </div>
+                                    )}
+                                </MenuItem>
+                            );
+                        })}
                     </Select>
                     <FormHelperText>{helperText}</FormHelperText>
                 </FormControl>
@@ -201,15 +233,24 @@ const PreorderForm = forwardRef(
                                 PaperProps: { sx: { maxHeight: 500 } },
                             }}
                         >
-                            {hoursArray.map((el) => (
-                                <MenuItem
-                                    key={getTime(el)}
-                                    value={getTime(el)}
-                                    divider
-                                >
-                                    {format(el, "H:mm")}
-                                </MenuItem>
-                            ))}
+                            {hoursArray.map((el) => {
+                                // Блокируем часы, недоступные по действующему промокоду
+                                // const currentUnixTime = getUnixTime(el);
+
+                                // const disabled =
+                                //     currentUnixTime > promocode.endTime ||
+                                //     currentUnixTime < promocode.startTime;
+                                return (
+                                    <MenuItem
+                                        key={getTime(el)}
+                                        value={getTime(el)}
+                                        divider
+                                        // disabled={disabled}
+                                    >
+                                        {format(el, "H:mm")}
+                                    </MenuItem>
+                                );
+                            })}
                         </Select>
                     </FormControl>
                 ) : null}
