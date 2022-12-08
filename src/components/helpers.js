@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { getTime, set } from "date-fns";
+import { getHours, getTime, isAfter, isBefore, set } from "date-fns";
 
 export const _declension = (value, words) => {
     value = Math.abs(value) % 100;
@@ -89,16 +89,31 @@ export const _checkPromocode = (promocode, items, cartTotal, typeDelivery) => {
                 };
             }
         }
-        // Проверка времени
-        if (
-            promocode.startTime - 60 * 60 * 5 > currentTime ||
-            currentTime > promocode.endTime - 60 * 60 * 5
-        )
-            return {
-                status: "error",
-                message: "Промокод отменен, т.к. в текущее время не действует.",
-            };
 
+        // Проверка времени
+        if (promocode.startTime && promocode.endTime) {
+            const promocodeStartTime = set(new Date(), {
+                hours: parseInt(promocode.startTime.slice(0, 2)),
+                minutes: parseInt(promocode.startTime.slice(3)),
+                seconds: 0,
+                milliseconds: 0,
+            });
+            const promocodeEndTime = set(new Date(), {
+                hours: parseInt(promocode.endTime.slice(0, 2)),
+                minutes: parseInt(promocode.endTime.slice(3)),
+                seconds: 0,
+                milliseconds: 0,
+            });
+            if (
+                isBefore(new Date(), promocodeStartTime) ||
+                isAfter(new Date(), promocodeEndTime)
+            )
+                return {
+                    status: "error",
+                    message:
+                        "Промокод отменен, т.к. в текущее время не действует.",
+                };
+        }
         // Проверка типа доставки
         if (typeDelivery) {
             if (
