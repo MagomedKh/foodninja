@@ -145,55 +145,62 @@ export const _checkPromocode = (promocode, items, cartTotal, typeDelivery) => {
         // }
 
         // Проверка категорий
-        if (promocode.type === "fixed_cart" || promocode.type === "percent") {
+
+        if (
+            promocode.categories?.length &&
+            promocode.categories_hardmode === "yes"
+        ) {
+            // Исключение категорий
+            if (promocode.excludeCategories) {
+                let hasExcludeCategory = false;
+                Object.values(items).forEach((product) => {
+                    if (
+                        product["items"][0].id == promocode.promocodeProducts.id
+                    ) {
+                        return;
+                    }
+                    const inCategories = product["items"][0].categories.filter(
+                        (item) => promocode.categories.includes(item)
+                    );
+                    if (inCategories.length) hasExcludeCategory = true;
+                });
+
+                if (hasExcludeCategory)
+                    return {
+                        status: "error",
+                        message:
+                            "Промокод отменен, т.к. не действует с выбранными товарами.",
+                    };
+            }
+
+            // Только указанные категории
             if (
-                promocode.categories.length &&
+                !promocode.excludeCategories &&
                 promocode.categories_hardmode === "yes"
             ) {
-                // Исключение категорий
-                if (promocode.excludeCategories) {
-                    let hasExcludeCategory = false;
-                    Object.values(items).forEach((product) => {
-                        const inCategories = product[
-                            "items"
-                        ][0].categories.filter((item) =>
-                            promocode.categories.includes(item)
-                        );
-                        if (inCategories.length) hasExcludeCategory = true;
-                    });
+                let notInCategory = false;
+                Object.values(items).forEach((product) => {
+                    if (
+                        product["items"][0].id ==
+                        promocode.promocodeProducts?.id
+                    ) {
+                        return;
+                    }
+                    const inCategories = product["items"][0].categories.filter(
+                        (item) => promocode.categories.includes(item)
+                    );
+                    if (!inCategories.length) notInCategory = true;
+                });
 
-                    if (hasExcludeCategory)
-                        return {
-                            status: "error",
-                            message:
-                                "Промокод отменен, т.к. не действует с выбранными товарами.",
-                        };
-                }
-
-                // Только указанные категории
-                if (
-                    !promocode.excludeCategories &&
-                    promocode.categories_hardmode === "yes"
-                ) {
-                    let notInCategory = false;
-                    Object.values(items).forEach((product) => {
-                        const inCategories = product[
-                            "items"
-                        ][0].categories.filter((item) =>
-                            promocode.categories.includes(item)
-                        );
-                        if (!inCategories.length) notInCategory = true;
-                    });
-
-                    if (notInCategory)
-                        return {
-                            status: "error",
-                            message:
-                                "Промокод отменен, т.к. действует с другими товарами.",
-                        };
-                }
+                if (notInCategory)
+                    return {
+                        status: "error",
+                        message:
+                            "Промокод отменен, т.к. действует с другими товарами.",
+                    };
             }
         }
+
         if (promocode.type === "fixed_product") {
             let hasProduct = false;
 
