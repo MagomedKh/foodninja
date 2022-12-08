@@ -11,7 +11,6 @@ import {
 import {
     isToday,
     isWithinInterval,
-    eachDayOfInterval,
     format,
     compareAsc,
     addMinutes,
@@ -23,9 +22,10 @@ import {
     roundToNearestMinutes,
     endOfDay,
     getUnixTime,
-    fromUnixTime,
+    isBefore,
+    isAfter,
+    eachDayOfInterval,
 } from "date-fns";
-import DiscountIcon from "@mui/icons-material/Discount";
 
 const PreorderForm = forwardRef(
     (
@@ -111,7 +111,7 @@ const PreorderForm = forwardRef(
 
         // Ссоздаем массив недоступных для заказ дней недели
         const unavailableDays = config.orderingTime
-            .map((el, inx) => {
+            ?.map((el, inx) => {
                 if (!el[0] || !el[1]) {
                     return inx;
                 }
@@ -121,17 +121,10 @@ const PreorderForm = forwardRef(
             });
 
         // Создаем массив доступных дней для заказа из ближайших 30
-        const datesArray = [];
-        let currentDay = new Date();
-        const forwardDay = addDays(currentDay, 30);
-        while (compareAsc(currentDay, forwardDay) < 1) {
-            const currentDayOfWeek =
-                getDay(currentDay) === 0 ? 6 : getDay(currentDay) - 1;
-            if (!unavailableDays.includes(currentDayOfWeek)) {
-                datesArray.push(currentDay);
-            }
-            currentDay = addDays(currentDay, 1);
-        }
+        const datesArray = eachDayOfInterval({
+            start: new Date(),
+            end: addDays(new Date(), 30),
+        });
 
         // Ссоздаем массив недоступных для заказ дней недели у действующего промокода
         const unavailablePromocodeDays = promocode.days
@@ -182,10 +175,16 @@ const PreorderForm = forwardRef(
 
                         {datesArray.map((el) => {
                             // Блокируем дни, недоступные по действующему промокоду
-                            const disabled =
+                            const disabledByPromocode =
                                 unavailablePromocodeDays?.includes(
                                     getDay(el) === 0 ? 6 : getDay(el) - 1
                                 ) || getUnixTime(el) > promocode.endDate;
+
+                            // Блокируем выходные дни
+                            const currentDayOfWeek =
+                                getDay(el) === 0 ? 6 : getDay(el) - 1;
+                            const disabledBySchedule =
+                                unavailableDays?.includes(currentDayOfWeek);
                             return (
                                 <MenuItem
                                     key={getDayOfYear(el)}
@@ -195,14 +194,32 @@ const PreorderForm = forwardRef(
                                         flexDirection: "column",
                                     }}
                                     divider
-                                    disabled={disabled}
+                                    disabled={
+                                        disabledByPromocode ||
+                                        disabledBySchedule
+                                    }
                                 >
                                     {format(el, "d MMMM")}
-                                    {disabled && (
-                                        <div style={{ fontSize: "12px" }}>
-                                            Недоступно с промокодом
+                                    {(disabledBySchedule && (
+                                        <div
+                                            style={{
+                                                fontSize: "12px",
+                                                lineHeight: "1",
+                                            }}
+                                        >
+                                            Нерабочий день
                                         </div>
-                                    )}
+                                    )) ||
+                                        (disabledByPromocode && (
+                                            <div
+                                                style={{
+                                                    fontSize: "12px",
+                                                    lineHeight: "1",
+                                                }}
+                                            >
+                                                Недоступно с промокодом
+                                            </div>
+                                        ))}
                                 </MenuItem>
                             );
                         })}
@@ -235,19 +252,61 @@ const PreorderForm = forwardRef(
                         >
                             {hoursArray.map((el) => {
                                 // Блокируем часы, недоступные по действующему промокоду
-                                // const currentUnixTime = getUnixTime(el);
-
-                                // const disabled =
-                                //     currentUnixTime > promocode.endTime ||
-                                //     currentUnixTime < promocode.startTime;
+                                let disabled = false;
+                                if (
+                                    promocode &&
+                                    promocode.endTime &&
+                                    promocode.startTime
+                                ) {
+                                    const promocodeStartTime = set(new Date(), {
+                                        hours: parseInt(
+                                            promocode.startTime.slice(0, 2)
+                                        ),
+                                        minutes: parseInt(
+                                            promocode.startTime.slice(3)
+                                        ),
+                                        seconds: 0,
+                                        milliseconds: 0,
+                                    });
+                                    const promocodeEndTime = set(new Date(), {
+                                        hours: parseInt(
+                                            promocode.endTime.slice(0, 2)
+                                        ),
+                                        minutes: parseInt(
+                                            promocode.endTime.slice(3)
+                                        ),
+                                        seconds: 0,
+                                        milliseconds: 0,
+                                    });
+                                    if (
+                                        isBefore(el, promocodeStartTime) ||
+                                        isAfter(el, promocodeEndTime)
+                                    ) {
+                                        disabled = true;
+                                    }
+                                }
                                 return (
                                     <MenuItem
                                         key={getTime(el)}
                                         value={getTime(el)}
                                         divider
-                                        // disabled={disabled}
+                                        disabled={disabled}
+                                        sx={{
+                                            justifyContent: "center",
+                                            flexDirection: "column",
+                                        }}
                                     >
                                         {format(el, "H:mm")}
+                                        {disabled && (
+                                            <div
+                                                style={{
+                                                    fontSize: "12px",
+                                                    lineHeight: "1",
+                                                }}
+                                            >
+                                                Недоступно с промокодом
+                                            </div>
+                                        )}
                                     </MenuItem>
                                 );
                             })}
