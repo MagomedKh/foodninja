@@ -237,8 +237,13 @@ function MiniCart() {
                                                         productCount={1}
                                                         productTotalPrice={
                                                             el.options
-                                                                ._promocode_price ??
-                                                            el.options._price
+                                                                ._promocode_price
+                                                                ? Math.ceil(
+                                                                      el.options
+                                                                          ._promocode_price
+                                                                  )
+                                                                : el.options
+                                                                      ._price
                                                         }
                                                     />
                                                 );

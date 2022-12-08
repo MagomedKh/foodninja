@@ -527,6 +527,9 @@ const cart = (state = initialState, action) => {
 
             // Добавляем товар с активным промокодом на %
             if (state.promocode.type === "percent") {
+                if (newItem.modificatorsAmount) {
+                    newItem.options._price += newItem.modificatorsAmount;
+                }
                 if (
                     state.promocode?.categories?.length &&
                     state.promocode?.excludeCategories
@@ -581,12 +584,6 @@ const cart = (state = initialState, action) => {
                                 100,
                         };
                     }
-                }
-
-                if (newItem.modificatorsAmount) {
-                    newItem.options._promocode_price +=
-                        newItem.modificatorsAmount;
-                    newItem.options._price += newItem.modificatorsAmount;
                 }
 
                 let newItems;
