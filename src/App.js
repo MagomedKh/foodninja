@@ -25,6 +25,7 @@ import {
     Maintenance,
     InstallApp,
     SystemAlerts,
+    ChooseTown,
 } from "./components";
 import {
     Cart,
@@ -257,6 +258,13 @@ function App() {
                                 <SystemAlerts />
                                 {_getPlatform() === "site" && _isMobile() ? (
                                     <InstallApp />
+                                ) : (
+                                    ""
+                                )}
+                                {config.towns !== undefined &&
+                                config.towns.length &&
+                                _getPlatform() !== "vk" ? (
+                                    <ChooseTown />
                                 ) : (
                                     ""
                                 )}

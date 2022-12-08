@@ -8,7 +8,6 @@ import {
     Header,
     Footer,
     SubscribeSnackbar,
-    ChooseTown,
 } from "../components";
 import SearchBar from "../components/SearchBar";
 import TopCategoriesMenu from "../components/TopCategoriesMenu";
@@ -65,14 +64,6 @@ export default function Home() {
         <>
             <Header />
             <div className="home">
-                {config.towns !== undefined &&
-                config.towns.length &&
-                _getPlatform() !== "vk" ? (
-                    <ChooseTown />
-                ) : (
-                    ""
-                )}
-
                 <Banners />
 
                 <TopCategoriesMenu />
