@@ -141,7 +141,13 @@ export default function Orders() {
                         {pageStatus === "loading" ? (
                             <div className="pageInner">
                                 <Grid container spacing={4}>
-                                    <Grid item xs={12} md={4} sx={{ width: 1 }}>
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={6}
+                                        lg={4}
+                                        sx={{ width: 1 }}
+                                    >
                                         <Skeleton
                                             className="user-order-skeleton"
                                             variant="rectangular"
@@ -150,7 +156,13 @@ export default function Orders() {
                                             width="100%"
                                         />
                                     </Grid>
-                                    <Grid item xs={12} md={4} sx={{ width: 1 }}>
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={6}
+                                        lg={4}
+                                        sx={{ width: 1 }}
+                                    >
                                         <Skeleton
                                             className="user-order-skeleton"
                                             variant="rectangular"
@@ -159,7 +171,13 @@ export default function Orders() {
                                             animation="wave"
                                         />
                                     </Grid>
-                                    <Grid item xs={12} md={4} sx={{ width: 1 }}>
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={6}
+                                        lg={4}
+                                        sx={{ width: 1 }}
+                                    >
                                         <Skeleton
                                             className="user-order-skeleton"
                                             variant="rectangular"
@@ -168,7 +186,13 @@ export default function Orders() {
                                             animation="wave"
                                         />
                                     </Grid>
-                                    <Grid item xs={12} md={4} sx={{ width: 1 }}>
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={6}
+                                        lg={4}
+                                        sx={{ width: 1 }}
+                                    >
                                         <Skeleton
                                             className="user-order-skeleton"
                                             variant="rectangular"
@@ -177,7 +201,13 @@ export default function Orders() {
                                             animation="wave"
                                         />
                                     </Grid>
-                                    <Grid item xs={12} md={4} sx={{ width: 1 }}>
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={6}
+                                        lg={4}
+                                        sx={{ width: 1 }}
+                                    >
                                         <Skeleton
                                             className="user-order-skeleton"
                                             variant="rectangular"
@@ -186,7 +216,13 @@ export default function Orders() {
                                             animation="wave"
                                         />
                                     </Grid>
-                                    <Grid item xs={12} md={4} sx={{ width: 1 }}>
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={6}
+                                        lg={4}
+                                        sx={{ width: 1 }}
+                                    >
                                         <Skeleton
                                             className="user-order-skeleton"
                                             variant="rectangular"
