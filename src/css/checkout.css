@@ -71,6 +71,14 @@
     border-radius: 10px;
     position: relative;
 }
+
+@media (min-width: 899px) {
+    .checkout--total-wrapper.sticked {
+        position: sticky;
+        top: 0;
+        height: fit-content;
+    }
+}
 .checkout--total-panel--title {
     display: flex;
     justify-content: space-between;

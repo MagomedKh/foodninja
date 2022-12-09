@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addPromocode, removePromocode } from "../redux/actions/cart";
 import { Link, useNavigate } from "react-router-dom";
@@ -103,6 +103,7 @@ export default function Checkout() {
         };
     });
     const navigate = useNavigate();
+    const stickedTotalPanel = useRef();
     const [loading, setLoading] = useState(false);
     const [validate, setValidate] = useState(true);
     const [error, setError] = useState(null);
@@ -136,6 +137,7 @@ export default function Checkout() {
     const [countUsers, setCountUsers] = useState(1);
     const [moneyBack, setMoneyBack] = useState("");
     const [dontRecall, setDontRecall] = useState(false);
+    const [sticked, setSticked] = useState(false);
 
     const handleAlertClose = () => {
         setOpenAlert(false);
@@ -629,6 +631,7 @@ export default function Checkout() {
             if (maxBonuses < 0) maxBonuses = 0;
         }
 
+    // Функция рендера графика работы филиала
     const currentDayOfWeek =
         getDay(new Date()) === 0 ? 6 : getDay(new Date()) - 1;
     const renderFilialLabel = (filial) => {
@@ -667,6 +670,21 @@ export default function Checkout() {
             </div>
         );
     };
+
+    // Функция отслеживания позиции блока с заказом
+    const handleScroll = () => {
+        if ((window.scrollY >= stickedTotalPanel.current.offsetTop) & !sticked)
+            setSticked(true);
+        if ((window.scrollY < stickedTotalPanel.current.offsetTop) & sticked)
+            setSticked(false);
+    };
+    useEffect(() => {
+        window.addEventListener("scroll", handleScroll);
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+        };
+    }, [sticked]);
+
     return (
         <>
             <Header />
@@ -964,8 +982,17 @@ export default function Checkout() {
                         </div>
                     </Grid>
 
-                    <Grid item sm={12} md={5} sx={{ width: 1 }}>
-                        <div className="checkout--total-panel">
+                    <Grid
+                        item
+                        sm={12}
+                        md={5}
+                        sx={{ width: 1 }}
+                        className={`checkout--total-wrapper ${
+                            sticked && "sticked"
+                        }`}
+                        ref={stickedTotalPanel}
+                    >
+                        <div className={"checkout--total-panel"}>
                             <h3 className="checkout--total-panel--title">
                                 Ваш заказ{" "}
                                 <Link onClick={handleBackToMenu} to={"/"}>
@@ -1241,7 +1268,10 @@ export default function Checkout() {
                                                 <Select
                                                     id="count_peoples"
                                                     value={countUsers}
-                                                    sx={{ width: 1, mt: 0.5 }}
+                                                    sx={{
+                                                        width: 1,
+                                                        mt: 0.5,
+                                                    }}
                                                     size="small"
                                                     onChange={
                                                         handleChangeCountUsers
@@ -1297,7 +1327,10 @@ export default function Checkout() {
                                                     onChange={
                                                         handleChangeMoneyBack
                                                     }
-                                                    sx={{ width: 1, mt: 0.5 }}
+                                                    sx={{
+                                                        width: 1,
+                                                        mt: 0.5,
+                                                    }}
                                                 />
                                             </Grid>
                                         )}
