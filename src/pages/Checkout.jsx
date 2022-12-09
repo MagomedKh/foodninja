@@ -679,7 +679,9 @@ export default function Checkout() {
             setSticked(false);
     };
     useEffect(() => {
-        window.addEventListener("scroll", handleScroll);
+        if (!_isMobile()) {
+            window.addEventListener("scroll", handleScroll);
+        }
         return () => {
             window.removeEventListener("scroll", handleScroll);
         };
