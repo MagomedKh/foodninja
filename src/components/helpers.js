@@ -258,7 +258,12 @@ export const _checkPromocode = (
                 )
                     hasSale = true;
             });
-            if (hasSale)
+            const productWithSale = Object.values(items).find(
+                (el) =>
+                    el.items[0].options._sale_price ||
+                    el.items[0].variant?._sale_price
+            );
+            if (hasSale || productWithSale)
                 return {
                     status: "error",
                     message:
