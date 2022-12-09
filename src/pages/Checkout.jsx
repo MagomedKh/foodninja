@@ -39,6 +39,7 @@ import {
     format,
     getDay,
 } from "date-fns";
+import { getItemTotalPrice } from "../redux/reducers/cart";
 const formatingStrPhone = (inputNumbersValue) => {
     var formattedPhone = "";
     if (["7", "8", "9"].indexOf(inputNumbersValue[0]) > -1) {
@@ -977,11 +978,13 @@ export default function Checkout() {
 								<CheckoutProduct key={cartProducts[key].items[0].id} productCart={cartProducts[key].items[0]} productCount={cartProducts[key].items.length} productTotalPrice={cartProducts[key].totalPrice} />
 							) } */}
 
-                                {Object.keys(cartProducts).map((key, index) =>
-                                    items[key] &&
-                                    items[key].type !== undefined &&
-                                    items[key].type === "variations" ? (
-                                        cartProducts[key].items.map(
+                                {Object.keys(cartProducts).map((key, index) => {
+                                    if (
+                                        items[key] &&
+                                        items[key].type !== undefined &&
+                                        items[key].type === "variations"
+                                    ) {
+                                        return cartProducts[key].items.map(
                                             (
                                                 keyVariantProduct,
                                                 indexVariantProduct
@@ -998,29 +1001,71 @@ export default function Checkout() {
                                                     }
                                                     productCount={1}
                                                     productTotalPrice={
-                                                        cartProducts[key].items[
-                                                            indexVariantProduct
-                                                        ].options._price
+                                                        cartProducts[key]
+                                                            .totalPrice
                                                     }
                                                 />
                                             )
-                                        )
-                                    ) : (
-                                        <CheckoutProduct
-                                            key={cartProducts[key].items[0].id}
-                                            productIndex={0}
-                                            productCart={
-                                                cartProducts[key].items[0]
+                                        );
+                                    } else {
+                                        const itemsWithoutModificators =
+                                            cartProducts[key].items?.filter(
+                                                (el) =>
+                                                    !el.choosenModificators
+                                                        ?.length
+                                            );
+                                        const itemsWithoutModificatorsTotal =
+                                            getItemTotalPrice(
+                                                itemsWithoutModificators
+                                            );
+                                        let itemWithoutModificatorRendered = false;
+                                        return cartProducts[key].items.map(
+                                            (el, inx) => {
+                                                if (
+                                                    el.choosenModificators
+                                                        ?.length
+                                                ) {
+                                                    return (
+                                                        <CheckoutProduct
+                                                            key={inx}
+                                                            productIndex={inx}
+                                                            productCart={el}
+                                                            productCount={1}
+                                                            productTotalPrice={
+                                                                el.options
+                                                                    ._promocode_price
+                                                                    ? Math.ceil(
+                                                                          el
+                                                                              .options
+                                                                              ._promocode_price
+                                                                      )
+                                                                    : el.options
+                                                                          ._price
+                                                            }
+                                                        />
+                                                    );
+                                                } else if (
+                                                    !itemWithoutModificatorRendered
+                                                ) {
+                                                    itemWithoutModificatorRendered = true;
+                                                    return (
+                                                        <CheckoutProduct
+                                                            key={inx}
+                                                            productIndex={inx}
+                                                            productCart={el}
+                                                            productCount={
+                                                                itemsWithoutModificators.length
+                                                            }
+                                                            productTotalPrice={
+                                                                itemsWithoutModificatorsTotal
+                                                            }
+                                                        />
+                                                    );
+                                                }
                                             }
-                                            productCount={
-                                                cartProducts[key].items.length
-                                            }
-                                            productTotalPrice={
-                                                cartProducts[key].totalPrice
-                                            }
-                                        />
-                                    )
-                                )}
+                                        );
+                                    }
+                                })}
 
                                 {/* { Object.keys(promocodeProducts).map( (key, index) => items[key] !== undefined &&
                                 <PromocodeCheckoutProduct productCart={promocodeProducts[key]} productCount="1" productTotalPrice={promocodeProducts[key].options._price-promocode.amount} />
@@ -1060,19 +1105,13 @@ export default function Checkout() {
                                                 :{" "}
                                             </span>
 
-                                            {promocode.type === "percent" ? (
-                                                <span className="money main-color">
-                                                    -{promocode.amount}%
-                                                </span>
-                                            ) : (
-                                                <span className="money main-color">
-                                                    -
-                                                    {cart.discount.toLocaleString(
-                                                        "ru-RU"
-                                                    )}{" "}
-                                                    &#8381;
-                                                </span>
-                                            )}
+                                            <span className="money main-color">
+                                                -
+                                                {cart.discount.toLocaleString(
+                                                    "ru-RU"
+                                                )}{" "}
+                                                &#8381;
+                                            </span>
                                         </div>
                                     </div>
 

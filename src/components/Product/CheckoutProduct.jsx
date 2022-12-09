@@ -23,6 +23,7 @@ export default function CheckoutProduct({
     });
 
     const renderCheckoutProductResult = () => {
+        // Цена по промокоду на товар в подарок
         if (promocodeProducts && promocodeProducts.id === productCart.id) {
             if (
                 productCart.type === "variations" &&
@@ -32,10 +33,7 @@ export default function CheckoutProduct({
                     productCart.variant.variant_id ==
                     promocodeProducts.variant.variant_id
                 ) {
-                    if (
-                        productCart.options._promocode_price ||
-                        productCart.options._promocode_price == 0
-                    ) {
+                    if (productCart.options._promocode_price >= 0) {
                         return (
                             <>
                                 <span>
@@ -49,27 +47,24 @@ export default function CheckoutProduct({
                                 </span>
                             </>
                         );
-                    } else {
-                        return (
-                            <span>
-                                {parseInt(
-                                    productCart.options._price
-                                ).toLocaleString("ru-RU")}{" "}
-                                &#8381;
-                            </span>
-                        );
                     }
-                } else {
-                    return (
-                        <span>
-                            {parseInt(
-                                productCart.options._price
-                            ).toLocaleString("ru-RU")}{" "}
-                            &#8381;
-                        </span>
-                    );
                 }
-            } else {
+            } else if (
+                productCart.choosenModificators?.length &&
+                productCart.options._promocode_price
+            ) {
+                return (
+                    <span>
+                        <span className="old-price">
+                            {productCart.options._price * productCount} ₽
+                        </span>
+                        &nbsp;
+                        <span className="main-color">
+                            {productCart.options._promocode_price} ₽
+                        </span>
+                    </span>
+                );
+            } else if (productCart.options._promocode_price >= 0) {
                 return (
                     <span>
                         <span className="old-price">
@@ -84,6 +79,7 @@ export default function CheckoutProduct({
             }
         }
 
+        // Цена по промокоду на %
         if (parseInt(productCart.options._promocode_price)) {
             if (productCart.type === "variations") {
                 return (
@@ -111,21 +107,46 @@ export default function CheckoutProduct({
                 );
             }
         }
+
+        // Цена товара со скидкой
         if (
+            productCart.type === "simple" &&
             parseInt(productCart.options._regular_price) >
-            parseInt(productCart.options._price)
+                parseInt(productCart.options._sale_price)
         ) {
             return (
                 <span>
                     <span className="old-price">
-                        {productCart.options._regular_price * productCount} ₽
+                        {productCart.options._regular_price * productCount +
+                            (productCart.modificatorsAmount ?? 0)}{" "}
+                        ₽
                     </span>
                     &nbsp;
                     <span className="main-color">{productTotalPrice} ₽</span>
                 </span>
             );
         }
+        if (
+            productCart.type === "variations" &&
+            parseInt(productCart.variant?._regular_price) >
+                parseInt(productCart.variant?.price)
+        ) {
+            return (
+                <span>
+                    <span className="old-price">
+                        {parseInt(productCart.variant?._regular_price) +
+                            productCart.modificatorsAmount}{" "}
+                        ₽
+                    </span>
+                    &nbsp;
+                    <span className="main-color">
+                        {productCart.options._price} ₽
+                    </span>
+                </span>
+            );
+        }
 
+        // Цена без скидкой и промокодов
         if (productCart.type === "variations") {
             return (
                 <span>
