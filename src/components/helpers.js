@@ -54,7 +54,6 @@ export const _checkPromocode = (
     config,
     typeDelivery
 ) => {
-    console.log(config);
     if (promocode) {
         //Проверка на отключенные промокоды
         if (config?.CONFIG_disable_promocodes === "on") {
