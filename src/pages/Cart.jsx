@@ -287,19 +287,13 @@ export default function Cart() {
                                             {promocode.code}
                                         </span>
                                         :
-                                        {promocode.type === "percent" ? (
-                                            <span className="money main-color">
-                                                -{cart.discount} ₽
-                                            </span>
-                                        ) : (
-                                            <span className="money main-color">
-                                                -
-                                                {cart.discount.toLocaleString(
-                                                    "ru-RU"
-                                                )}{" "}
-                                                &#8381;
-                                            </span>
-                                        )}
+                                        <span className="money main-color">
+                                            -
+                                            {cart.discount.toLocaleString(
+                                                "ru-RU"
+                                            )}{" "}
+                                            &#8381;
+                                        </span>
                                     </div>
                                 </div>
                             ) : (
