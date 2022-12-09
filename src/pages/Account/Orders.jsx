@@ -456,7 +456,12 @@ export default function Orders() {
 
                                                             {order.promocode
                                                                 .code !==
-                                                            undefined ? (
+                                                                undefined &&
+                                                            order.subtotal -
+                                                                parseInt(
+                                                                    order.total
+                                                                ) >
+                                                                0 ? (
                                                                 <>
                                                                     <div className="account--user-order--subtotal">
                                                                         <b>
@@ -484,12 +489,12 @@ export default function Orders() {
                                                                             :
                                                                         </b>
                                                                         <div className="account--user-order--promocode-discount main-color">
-                                                                            {order
-                                                                                .promocode
-                                                                                .type ===
-                                                                            "percent"
-                                                                                ? `-${order.promocode.amount}%`
-                                                                                : `-${order.promocode.amount} ₽`}
+                                                                            -{" "}
+                                                                            {order.subtotal -
+                                                                                parseInt(
+                                                                                    order.total
+                                                                                )}{" "}
+                                                                            ₽
                                                                         </div>
                                                                     </div>
                                                                 </>
