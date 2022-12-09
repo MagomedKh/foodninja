@@ -47,8 +47,23 @@ export const _clone = (object) => {
     return r;
 };
 
-export const _checkPromocode = (promocode, items, cartTotal, typeDelivery) => {
+export const _checkPromocode = (
+    promocode,
+    items,
+    cartTotal,
+    config,
+    typeDelivery
+) => {
+    console.log(config);
     if (promocode) {
+        //Проверка на отключенные промокоды
+        if (config?.CONFIG_disable_promocodes === "on") {
+            return {
+                status: "error",
+                message: "Промокод отменен",
+            };
+        }
+
         // Текущее время
         const currentTime = parseInt(new Date().getTime() / 1000);
 

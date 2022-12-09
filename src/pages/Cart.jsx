@@ -63,7 +63,10 @@ export default function Cart() {
         }
     };
 
-    if (promocode) {
+    if (
+        Object.keys(promocode).length !== 0 &&
+        promocode.constructor === Object
+    ) {
         if (
             config.selfDeliveryCoupon.code !== undefined &&
             promocode.code === config.selfDeliveryCoupon.code
@@ -73,7 +76,8 @@ export default function Cart() {
             const resultCheckPromocode = _checkPromocode(
                 promocode,
                 cartProducts,
-                cartSubTotalPrice
+                cartSubTotalPrice,
+                config
             );
             if (resultCheckPromocode.status === "error") {
                 dispatch(removePromocode());
@@ -262,7 +266,9 @@ export default function Cart() {
 
                             <MiniCartReccomends />
 
-                            <Promocode />
+                            {config.CONFIG_disable_promocodes !== "on" && (
+                                <Promocode />
+                            )}
 
                             {cart.discount ? (
                                 <div className="cart--subtotal-price">

@@ -524,7 +524,10 @@ export default function Checkout() {
         navigate("/", { replace: true });
     }, [navigate]);
 
-    if (promocode) {
+    if (
+        Object.keys(promocode).length !== 0 &&
+        promocode.constructor === Object
+    ) {
         if (
             config.selfDeliveryCoupon.code !== undefined &&
             promocode.code === config.selfDeliveryCoupon.code
@@ -534,7 +537,8 @@ export default function Checkout() {
             const resultCheckPromocode = _checkPromocode(
                 promocode,
                 cartProducts,
-                cartSubTotalPrice
+                cartSubTotalPrice,
+                config
             );
             if (resultCheckPromocode.status === "error") {
                 dispatch(removePromocode());
