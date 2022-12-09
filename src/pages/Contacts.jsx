@@ -16,6 +16,7 @@ import {
 import { Header, Footer } from "../components";
 import "../css/contacts.css";
 import { _getPlatform } from "../components/helpers";
+import { getDay } from "date-fns";
 
 export default function Contacts() {
     const { config } = useSelector(({ config }) => {
@@ -27,6 +28,10 @@ export default function Contacts() {
     const phones = config.CONFIG_home_phones
         ? config.CONFIG_home_phones.split(";")
         : [];
+
+    // Получаем сегодняшний день недели
+    const currentDayOfWeek =
+        getDay(new Date()) === 0 ? 6 : getDay(new Date()) - 1;
 
     return (
         <>
@@ -135,29 +140,65 @@ export default function Contacts() {
                                                     </a>
                                                 </div>
                                             ))}
-                                            {config.CONFIG_format_start_work &&
-                                            config.CONFIG_format_end_work ? (
-                                                <div className="contacts--schedule">
-                                                    <FontAwesomeIcon
-                                                        icon={faClock}
-                                                    />
-                                                    Сегодня с{" "}
-                                                    {
-                                                        config.CONFIG_format_start_work
-                                                    }{" "}
-                                                    до{" "}
-                                                    {
-                                                        config.CONFIG_format_end_work
-                                                    }
-                                                </div>
-                                            ) : (
-                                                <div className="contacts--schedule">
-                                                    <FontAwesomeIcon
-                                                        icon={faClock}
-                                                    />
-                                                    Сегодня закрыто
-                                                </div>
-                                            )}
+                                            {
+                                                // Если у филиала свой график работы
+                                                el.workingTime ? (
+                                                    el.workingTime[
+                                                        currentDayOfWeek
+                                                    ][0] &&
+                                                    el.workingTime[
+                                                        currentDayOfWeek
+                                                    ][1] ? (
+                                                        <div className="contacts--schedule">
+                                                            <FontAwesomeIcon
+                                                                icon={faClock}
+                                                            />
+                                                            Сегодня с{" "}
+                                                            {
+                                                                el.workingTime[
+                                                                    currentDayOfWeek
+                                                                ][0]
+                                                            }{" "}
+                                                            до{" "}
+                                                            {
+                                                                el.workingTime[
+                                                                    currentDayOfWeek
+                                                                ][1]
+                                                            }
+                                                        </div>
+                                                    ) : (
+                                                        <div className="contacts--schedule">
+                                                            <FontAwesomeIcon
+                                                                icon={faClock}
+                                                            />
+                                                            Сегодня закрыто
+                                                        </div>
+                                                    )
+                                                ) : // Если график работы филиала совпадает с основным
+                                                config.CONFIG_format_start_work &&
+                                                  config.CONFIG_format_end_work ? (
+                                                    <div className="contacts--schedule">
+                                                        <FontAwesomeIcon
+                                                            icon={faClock}
+                                                        />
+                                                        Сегодня с{" "}
+                                                        {
+                                                            config.CONFIG_format_start_work
+                                                        }{" "}
+                                                        до{" "}
+                                                        {
+                                                            config.CONFIG_format_end_work
+                                                        }
+                                                    </div>
+                                                ) : (
+                                                    <div className="contacts--schedule">
+                                                        <FontAwesomeIcon
+                                                            icon={faClock}
+                                                        />
+                                                        Сегодня закрыто
+                                                    </div>
+                                                )
+                                            }
                                             {index === arr.length - 1 ? null : (
                                                 <Divider
                                                     sx={{

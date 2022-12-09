@@ -37,6 +37,7 @@ import {
     setDayOfYear,
     addDays,
     format,
+    getDay,
 } from "date-fns";
 const formatingStrPhone = (inputNumbersValue) => {
     var formattedPhone = "";
@@ -623,6 +624,44 @@ export default function Checkout() {
             if (maxBonuses < 0) maxBonuses = 0;
         }
 
+    const currentDayOfWeek =
+        getDay(new Date()) === 0 ? 6 : getDay(new Date()) - 1;
+    const renderFilialLabel = (filial) => {
+        return (
+            <div>
+                <span>{filial.address}</span>
+                {
+                    // Если у филиала свой график работы
+                    filial.workingTime ? (
+                        filial.workingTime[currentDayOfWeek][0] &&
+                        filial.workingTime[currentDayOfWeek][1] ? (
+                            <div className="adress-schdedule">
+                                <span>Сегодня с</span>{" "}
+                                {filial.workingTime[currentDayOfWeek][0]} до{" "}
+                                {filial.workingTime[currentDayOfWeek][1]}
+                            </div>
+                        ) : (
+                            <div>
+                                <span>Сегодня закрыто</span>
+                            </div>
+                        )
+                    ) : // Если график работы филиала совпадает с основным
+                    config.CONFIG_format_start_work &&
+                      config.CONFIG_format_end_work ? (
+                        <div className="adress-schdedule">
+                            <span>Сегодня с</span>{" "}
+                            {config.CONFIG_format_start_work} до{" "}
+                            {config.CONFIG_format_end_work}
+                        </div>
+                    ) : (
+                        <div>
+                            <span>Сегодня закрыто</span>
+                        </div>
+                    )
+                }
+            </div>
+        );
+    };
     return (
         <>
             <Header />
@@ -832,7 +871,40 @@ export default function Checkout() {
                                                 className="custom-radio"
                                                 value="main"
                                                 control={<Radio size="small" />}
-                                                label={config.CONFIG_address}
+                                                label={
+                                                    <div>
+                                                        <span>
+                                                            {
+                                                                config.CONFIG_address
+                                                            }
+                                                        </span>
+                                                        {config.CONFIG_format_start_work &&
+                                                        config.CONFIG_format_end_work ? (
+                                                            <div>
+                                                                <div className="adress-schdedule">
+                                                                    <span>
+                                                                        Сегодня
+                                                                        с
+                                                                    </span>{" "}
+                                                                    {
+                                                                        config.CONFIG_format_start_work
+                                                                    }{" "}
+                                                                    до{" "}
+                                                                    {
+                                                                        config.CONFIG_format_end_work
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        ) : (
+                                                            <div>
+                                                                <span>
+                                                                    Сегодня
+                                                                    закрыто
+                                                                </span>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                }
                                             />
                                             {config.CONFIG_filials &&
                                                 config.CONFIG_filials.map(
@@ -844,16 +916,13 @@ export default function Checkout() {
                                                             control={
                                                                 <Radio size="small" />
                                                             }
-                                                            label={
-                                                                filial.address
-                                                            }
+                                                            label={renderFilialLabel(
+                                                                filial
+                                                            )}
                                                         />
                                                     )
                                                 )}
                                         </RadioGroup>
-                                        <b>Режим работы:</b>{" "}
-                                        {config.CONFIG_format_start_work} -{" "}
-                                        {config.CONFIG_format_end_work}
                                     </div>
                                 )
                             )}

@@ -18,6 +18,7 @@ import AppStoreIcon from "../img/app-store-bage-white.svg";
 import GooglePlayIcon from "../img/google-play-bage-white.svg";
 import { _getPlatform } from "./helpers";
 import "../css/footer.css";
+import { getDay } from "date-fns";
 
 export default function Footer() {
     const { pathname } = useLocation();
@@ -39,6 +40,10 @@ export default function Footer() {
         window.scrollTo(0, 0);
     };
     if (_getPlatform() !== "site") return <div className="footer-space"></div>;
+
+    // Получаем сегодняшний день недели
+    const currentDayOfWeek =
+        getDay(new Date()) === 0 ? 6 : getDay(new Date()) - 1;
 
     return (
         <div className="footer">
@@ -141,16 +146,47 @@ export default function Footer() {
                                             </div>
                                         ))}
                                     </div>
-                                    {config.CONFIG_format_start_work &&
-                                    config.CONFIG_format_end_work ? (
-                                        <div>
-                                            Сегодня с{" "}
-                                            {config.CONFIG_format_start_work} до{" "}
-                                            {config.CONFIG_format_end_work}
-                                        </div>
-                                    ) : (
-                                        <div>Сегодня закрыто</div>
-                                    )}
+                                    {
+                                        // Если у филиала свой график работы
+                                        el.workingTime ? (
+                                            el.workingTime[
+                                                currentDayOfWeek
+                                            ][0] &&
+                                            el.workingTime[
+                                                currentDayOfWeek
+                                            ][1] ? (
+                                                <div>
+                                                    Сегодня с{" "}
+                                                    {
+                                                        el.workingTime[
+                                                            currentDayOfWeek
+                                                        ][0]
+                                                    }{" "}
+                                                    до{" "}
+                                                    {
+                                                        el.workingTime[
+                                                            currentDayOfWeek
+                                                        ][1]
+                                                    }
+                                                </div>
+                                            ) : (
+                                                <div>Сегодня закрыто</div>
+                                            )
+                                        ) : // Если график работы филиала совпадает с основным
+                                        config.CONFIG_format_start_work &&
+                                          config.CONFIG_format_end_work ? (
+                                            <div>
+                                                Сегодня с{" "}
+                                                {
+                                                    config.CONFIG_format_start_work
+                                                }{" "}
+                                                до{" "}
+                                                {config.CONFIG_format_end_work}
+                                            </div>
+                                        ) : (
+                                            <div>Сегодня закрыто</div>
+                                        )
+                                    }
                                     {index === arr.length - 1 ? null : (
                                         <Divider
                                             sx={{

@@ -15,12 +15,24 @@
     border-radius: 10px;
     margin-top: 1.5rem;
 }
+
 .custom-radio.new-address .MuiFormControlLabel-label {
     font-weight: bold;
 }
 
 .checkout--type-delivery .custom-radio {
     height: auto;
+}
+
+.checkout--type-delivery
+    .checkout--self-address-panel
+    .custom-radio:not(:last-child) {
+    margin-bottom: 8px;
+}
+
+.checkout--type-delivery
+    .checkout--address-panel
+    .custom-radio:not(:last-child) {
     margin-bottom: 8px;
 }
 
@@ -115,6 +127,19 @@
 @media (max-width: 899px) {
     .time-order-modal-wrapper h2 {
         text-align: center;
+    }
+    .checkout--self-address-panel .adress-schdedule {
+        margin-top: 4px;
+    }
+    .checkout--type-delivery
+        .checkout--self-address-panel
+        .custom-radio:not(:last-child) {
+        margin-bottom: 12px;
+    }
+    .checkout--type-delivery
+        .checkout--address-panel
+        .custom-radio:not(:last-child) {
+        margin-bottom: 12px;
     }
 }
 
