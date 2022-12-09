@@ -44,8 +44,12 @@
 .account--user-order--delivery {
     margin-top: 5px;
 }
-.ccount--user-order--delivery-type {
+.account--user-order--delivery-type {
     color: var(--main-color);
+}
+.account--user-order--delivery-address {
+    margin-left: 10px;
+    text-align: right;
 }
 .account--user-order--products {
     padding: 10px 0;
@@ -57,6 +61,19 @@
     display: flex;
     font-size: 14px;
     justify-content: space-between;
+}
+.account--user-order--product-name {
+    margin-right: 10px;
+}
+.account--user-order--product-modificators {
+    font-size: 12px;
+    line-height: 1;
+    color: #aaaaaa;
+    display: flex;
+    flex-wrap: wrap;
+}
+.account--user-order--product-modificator {
+    white-space: nowrap;
 }
 .account--user-order--product-price {
     white-space: nowrap;

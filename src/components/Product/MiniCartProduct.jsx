@@ -252,11 +252,11 @@ export default function MiniCartProduct({
                                     (el, inx, array) =>
                                         inx !== array.length - 1 ? (
                                             <span key={el.id}>
-                                                {el.title} {el.count} шт,{" "}
+                                                {el.title} {el.count} шт.,{" "}
                                             </span>
                                         ) : (
                                             <span key={el.id}>
-                                                {el.title} {el.count} шт
+                                                {el.title} {el.count} шт.
                                             </span>
                                         )
                                 )}

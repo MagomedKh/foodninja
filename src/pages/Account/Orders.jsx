@@ -119,7 +119,7 @@ export default function Orders() {
             <Container>
                 <h1>Личный кабинет</h1>
 
-                <div className="account-menu">
+                <div className="account-menu button-group">
                     <Link
                         variant="button"
                         to="/account"
@@ -209,10 +209,11 @@ export default function Orders() {
                                             {Object.values(userOrders).map(
                                                 (order) => (
                                                     <Grid
-                                                        key={order.id}
+                                                        key={order.ID}
                                                         item
                                                         xs={12}
-                                                        md={4}
+                                                        sm={6}
+                                                        lg={4}
                                                         sx={{ width: 1 }}
                                                     >
                                                         <div className="account--user-order">
@@ -230,10 +231,10 @@ export default function Orders() {
                                                             {order.typeDelivery ===
                                                             "delivery" ? (
                                                                 <div className="account--user-order--delivery">
-                                                                    <div className="ccount--user-order--delivery-type">
+                                                                    <div className="account--user-order--delivery-type">
                                                                         Доставка
                                                                     </div>
-                                                                    <div className="ccount--user-order--delivery-address">
+                                                                    <div className="account--user-order--delivery-address">
                                                                         {
                                                                             order.addressDelivery
                                                                         }
@@ -241,10 +242,10 @@ export default function Orders() {
                                                                 </div>
                                                             ) : (
                                                                 <div className="account--user-order--delivery">
-                                                                    <div className="ccount--user-order--delivery-type">
+                                                                    <div className="account--user-order--delivery-type">
                                                                         Самовывоз
                                                                     </div>
-                                                                    <div className="ccount--user-order--delivery-address">
+                                                                    <div className="account--user-order--delivery-address">
                                                                         {
                                                                             order.selfDelivery
                                                                         }
@@ -284,14 +285,63 @@ export default function Orders() {
                                                                                 return (
                                                                                     <div
                                                                                         className="account--user-order--product"
-                                                                                        key={
-                                                                                            product.id
-                                                                                        }
+                                                                                        key={`${order.ID}-${product.id}-${index}`}
                                                                                     >
-                                                                                        <div className="account--user-order--product-name">
-                                                                                            {
-                                                                                                product.name
-                                                                                            }
+                                                                                        <div>
+                                                                                            <div className="account--user-order--product-name">
+                                                                                                {
+                                                                                                    product.name
+                                                                                                }
+                                                                                            </div>
+                                                                                            {product
+                                                                                                .modificators
+                                                                                                .length ? (
+                                                                                                <div className="account--user-order--product-modificators">
+                                                                                                    +
+                                                                                                    {product.modificators.map(
+                                                                                                        (
+                                                                                                            el,
+                                                                                                            inx,
+                                                                                                            array
+                                                                                                        ) =>
+                                                                                                            inx !==
+                                                                                                            array.length -
+                                                                                                                1 ? (
+                                                                                                                <span
+                                                                                                                    key={
+                                                                                                                        el.id
+                                                                                                                    }
+                                                                                                                    className="account--user-order--product-modificator"
+                                                                                                                >
+                                                                                                                    {" "}
+                                                                                                                    {
+                                                                                                                        el.title
+                                                                                                                    }{" "}
+                                                                                                                    {
+                                                                                                                        el.count
+                                                                                                                    }{" "}
+                                                                                                                    шт.,
+                                                                                                                </span>
+                                                                                                            ) : (
+                                                                                                                <span
+                                                                                                                    key={
+                                                                                                                        el.id
+                                                                                                                    }
+                                                                                                                    className="account--user-order--product-modificator"
+                                                                                                                >
+                                                                                                                    {" "}
+                                                                                                                    {
+                                                                                                                        el.title
+                                                                                                                    }{" "}
+                                                                                                                    {
+                                                                                                                        el.count
+                                                                                                                    }
+                                                                                                                    шт.
+                                                                                                                </span>
+                                                                                                            )
+                                                                                                    )}
+                                                                                                </div>
+                                                                                            ) : null}
                                                                                         </div>
                                                                                         <div className="account--user-order--product-price">
                                                                                             {product.total_price !==
