@@ -273,6 +273,11 @@
     padding-top: 10px;
     border-top: 1px solid #eee;
 }
+
+.minicart--total-block:first-child {
+    padding-top: 0;
+    border-top: 0;
+}
 .minicart--total-price {
     color: var(--main-color);
     white-space: nowrap;
