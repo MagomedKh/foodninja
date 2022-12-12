@@ -26,6 +26,7 @@ import {
     InstallApp,
     SystemAlerts,
     ChooseTown,
+    ErrorBoundary,
 } from "./components";
 import {
     Cart,
@@ -187,95 +188,102 @@ function App() {
     });
 
     return (
-        <ThemeProvider theme={foodninja}>
-            <MainTheme mainColor={mainColor} secondColor={secondColor} />
-            {config !== undefined && Object.keys(config).length ? (
-                <div>
-                    {config.site_status === "closed" ? (
-                        <Maintenance />
-                    ) : (
-                        <GoogleReCaptchaProvider
-                            reCaptchaKey={
-                                config.CONFIG_auth_recaptcha_site_token
-                            }
-                        >
-                            <div>
-                                <Routes>
-                                    <Route exact path="/" element={<Home />} />
-                                    <Route
-                                        path="/product/*"
-                                        element={<Product />}
-                                    />
-                                    <Route
-                                        exact
-                                        path="/cart"
-                                        element={<Cart />}
-                                    />
-                                    <Route
-                                        exact
-                                        path="/checkout"
-                                        element={<Checkout />}
-                                    />
-                                    <Route
-                                        exact
-                                        path="/sales"
-                                        element={<Sales />}
-                                    />
-                                    <Route
-                                        exact
-                                        path="/contacts"
-                                        element={<Contacts />}
-                                    />
-                                    <Route
-                                        exact
-                                        path="/account"
-                                        element={<Account />}
-                                    />
-                                    <Route
-                                        exact
-                                        path="/account/orders"
-                                        element={<Orders />}
-                                    />
-                                    <Route
-                                        exact
-                                        path="/order-complete"
-                                        element={<OrderComplete />}
-                                    />
-                                    <Route
-                                        exact
-                                        path="/search"
-                                        element={<SearchPage />}
-                                    />
-                                    <Route
-                                        exact
-                                        path="/category/*"
-                                        element={<CategoryPage />}
-                                    />
-                                    <Route path="*" element={<Page />} />
-                                </Routes>
-                                <ProductModal />
-                                <AuthModal />
-                                <SystemAlerts />
-                                {_getPlatform() === "site" && _isMobile() ? (
-                                    <InstallApp />
-                                ) : (
-                                    ""
-                                )}
-                                {config.towns !== undefined &&
-                                config.towns.length &&
-                                _getPlatform() !== "vk" ? (
-                                    <ChooseTown />
-                                ) : (
-                                    ""
-                                )}
-                            </div>
-                        </GoogleReCaptchaProvider>
-                    )}
-                </div>
-            ) : (
-                <BigLoader initStatus={true} />
-            )}
-        </ThemeProvider>
+        <ErrorBoundary>
+            <ThemeProvider theme={foodninja}>
+                <MainTheme mainColor={mainColor} secondColor={secondColor} />
+                {config !== undefined && Object.keys(config).length ? (
+                    <div>
+                        {config.site_status === "closed" ? (
+                            <Maintenance />
+                        ) : (
+                            <GoogleReCaptchaProvider
+                                reCaptchaKey={
+                                    config.CONFIG_auth_recaptcha_site_token
+                                }
+                            >
+                                <div>
+                                    <Routes>
+                                        <Route
+                                            exact
+                                            path="/"
+                                            element={<Home />}
+                                        />
+                                        <Route
+                                            path="/product/*"
+                                            element={<Product />}
+                                        />
+                                        <Route
+                                            exact
+                                            path="/cart"
+                                            element={<Cart />}
+                                        />
+                                        <Route
+                                            exact
+                                            path="/checkout"
+                                            element={<Checkout />}
+                                        />
+                                        <Route
+                                            exact
+                                            path="/sales"
+                                            element={<Sales />}
+                                        />
+                                        <Route
+                                            exact
+                                            path="/contacts"
+                                            element={<Contacts />}
+                                        />
+                                        <Route
+                                            exact
+                                            path="/account"
+                                            element={<Account />}
+                                        />
+                                        <Route
+                                            exact
+                                            path="/account/orders"
+                                            element={<Orders />}
+                                        />
+                                        <Route
+                                            exact
+                                            path="/order-complete"
+                                            element={<OrderComplete />}
+                                        />
+                                        <Route
+                                            exact
+                                            path="/search"
+                                            element={<SearchPage />}
+                                        />
+                                        <Route
+                                            exact
+                                            path="/category/*"
+                                            element={<CategoryPage />}
+                                        />
+                                        <Route path="*" element={<Page />} />
+                                    </Routes>
+                                    <ProductModal />
+                                    <AuthModal />
+                                    <SystemAlerts />
+                                    {_getPlatform() === "site" &&
+                                    _isMobile() ? (
+                                        <InstallApp />
+                                    ) : (
+                                        ""
+                                    )}
+                                    {config.towns !== undefined &&
+                                    config.towns.length &&
+                                    _getPlatform() !== "vk" ? (
+                                        <ChooseTown />
+                                    ) : (
+                                        ""
+                                    )}
+                                </div>
+                            </GoogleReCaptchaProvider>
+                        )}
+                    </div>
+                ) : (
+                    <BigLoader initStatus={true} />
+                )}
+            </ThemeProvider>
+        </ErrorBoundary>
     );
 }
 
