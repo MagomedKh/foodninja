@@ -56,6 +56,12 @@ export default function Home() {
                 )
             ) {
                 return false;
+            } else if (
+                product.categories.every((el) =>
+                    config.CONFIG_exclude_categories.includes(el)
+                )
+            ) {
+                return false;
             }
             return true;
         });
