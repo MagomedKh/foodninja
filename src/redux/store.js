@@ -14,6 +14,7 @@ import bonusesProductsModalReducer from "./reducers/bonusesProductsModal";
 import search from "./reducers/serach";
 import header from "./reducers/header";
 import miniCart from "./reducers/miniCart";
+import modificators from "./reducers/modificators";
 
 const rootReducer = combineReducers({
     products: productsReducer,
@@ -31,6 +32,7 @@ const rootReducer = combineReducers({
     search: search,
     header: header,
     miniCart: miniCart,
+    modificators: modificators,
 });
 
 const saveState = (state) => {

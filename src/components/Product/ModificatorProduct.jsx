@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
     addProductModificator,
     decreaseProductModificator,
-} from "../../redux/actions/productModal";
+} from "../../redux/actions/modificators";
 import Button from "@mui/material/Button";
 import "../../css/product.css";
 import "../../css/addon-product.css";
@@ -12,12 +12,11 @@ import soon from "../../img/photo-soon.svg";
 const ModificatorProduct = ({ product, disabledAddButton }) => {
     const dispatch = useDispatch();
 
-    const { productModal } = useSelector((state) => state.productModal);
+    const { choosenModificators } = useSelector((state) => state.modificators);
 
     const existModificator = useMemo(
-        () =>
-            productModal.choosenModificators.find((el) => el.id === product.id),
-        [productModal]
+        () => choosenModificators.find((el) => el.id === product.id),
+        [choosenModificators]
     );
 
     const handleAddModificator = () => {

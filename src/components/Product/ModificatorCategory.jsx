@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
     addEmptyRequiredCategory,
     deleteEmptyRequiredCategory,
-} from "../../redux/actions/productModal";
+} from "../../redux/actions/modificators";
 import { Alert, Collapse, Grid } from "@mui/material";
 import "../../css/product.css";
 import "../../css/addon-product.css";
@@ -15,7 +15,7 @@ const ModificatorCategory = ({ category, handleSetModificatorsCondition }) => {
     const dispatch = useDispatch();
     const { items: products } = useSelector((state) => state.products);
 
-    const { productModal } = useSelector((state) => state.productModal);
+    const { choosenModificators } = useSelector((state) => state.modificators);
 
     const modificatorProducts = [].concat.apply(
         [],
@@ -26,10 +26,10 @@ const ModificatorCategory = ({ category, handleSetModificatorsCondition }) => {
 
     const totalCategoryCount = useMemo(
         () =>
-            productModal.choosenModificators
+            choosenModificators
                 .filter((el) => category.products.includes(el.id))
                 .reduce((total, el) => total + el.count, 0),
-        [productModal]
+        [choosenModificators]
     );
 
     const isRequiredCategoryEmpty = useMemo(
@@ -41,7 +41,7 @@ const ModificatorCategory = ({ category, handleSetModificatorsCondition }) => {
                     totalCategoryCount < 1) ||
                 (category.count_products_type === "all" &&
                     !totalCategoryCount)),
-        [productModal]
+        [choosenModificators]
     );
 
     const disabledAddButton = useMemo(

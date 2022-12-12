@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { _clone, _isMobile } from "../../components/helpers.js";
 import {
@@ -10,6 +10,7 @@ import {
     clearModalProduct,
     setOpenModal,
 } from "../../redux/actions/productModal";
+import { clearModificators } from "../../redux/actions/modificators";
 import AddonProductModal from "../../components/Product/AddonProductModal";
 import ModificatorCategory from "./ModificatorCategory.jsx";
 import {
@@ -26,7 +27,6 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import "../../css/product-modal.css";
 import soon from "../../img/photo-soon.svg";
-import { useEffect } from "react";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -44,11 +44,17 @@ export default function ProductModal() {
                 cartProducts: cart.items,
             };
         });
-    const [choosenAttributes, setChoosenAttributes] = React.useState({});
-    const [activeVariant, setActiveVariant] = React.useState(false);
-    const [wrongVariant, setWrongVariant] = React.useState(false);
+    const {
+        choosenModificators,
+        emptyModificatorCategories,
+        modificatorsAmount,
+        modificatorsCondition,
+    } = useSelector((state) => state.modificators);
+    const [choosenAttributes, setChoosenAttributes] = useState({});
+    const [activeVariant, setActiveVariant] = useState(false);
+    const [wrongVariant, setWrongVariant] = useState(false);
 
-    React.useEffect(() => {
+    useEffect(() => {
         let dataAttributes = {};
         if (productModal.type === "variations" && productModal.attributes) {
             Object.keys(productModal.attributes).forEach((value, index) => {
@@ -114,19 +120,36 @@ export default function ProductModal() {
 
     const handleClose = () => {
         dispatch(clearModalProduct());
+        dispatch(clearModificators());
         setActiveVariant(false);
         setWrongVariant(false);
         dispatch(setOpenModal(false));
     };
-    const handleAddProduct = (productModal) => {
-        dispatch(addProductToCart(productModal));
+    const handleAddProduct = () => {
+        let product = _clone(productModal);
+        dispatch(
+            addProductToCart({
+                ...product,
+                choosenModificators: choosenModificators,
+
+                modificatorsAmount: modificatorsAmount,
+            })
+        );
+        dispatch(clearModificators());
         handleClose();
     };
     const handleAddVariantProduct = () => {
         let product = _clone(productModal);
         product.options._price = activeVariant.price;
         product.variant = activeVariant;
-        dispatch(addProductToCart(product));
+        dispatch(
+            addProductToCart({
+                ...product,
+                choosenModificators: choosenModificators,
+                modificatorsAmount: modificatorsAmount,
+            })
+        );
+        dispatch(clearModificators());
         handleClose();
     };
     const handleDecreaseProduct = (productModal) => {
@@ -150,22 +173,18 @@ export default function ProductModal() {
                     <>
                         <span className="product--old-price">
                             {parseInt(activeVariant._regular_price) +
-                                productModal.modificatorsAmount}
+                                modificatorsAmount}
                             ₽
                         </span>
                         <span className="product--sale-price main-color">
-                            {parseInt(activeVariant.price) +
-                                productModal.modificatorsAmount}{" "}
+                            {parseInt(activeVariant.price) + modificatorsAmount}{" "}
                             ₽
                         </span>
                     </>
                 );
             } else {
                 return (
-                    <span>
-                        {activeVariant.price + productModal.modificatorsAmount}{" "}
-                        ₽
-                    </span>
+                    <span>{activeVariant.price + modificatorsAmount} ₽</span>
                 );
             }
         } else {
@@ -177,13 +196,11 @@ export default function ProductModal() {
                     <>
                         <span className="product--old-price">
                             {parseInt(productModal.options._regular_price) +
-                                (productModal.modificatorsAmount ?? 0)}{" "}
+                                modificatorsAmount}{" "}
                             ₽
                         </span>
                         <span className="product--sale-price main-color">
-                            {productModal.options._price +
-                                (productModal.modificatorsAmount ?? 0)}{" "}
-                            ₽
+                            {productModal.options._price + modificatorsAmount} ₽
                         </span>
                     </>
                 );
@@ -191,7 +208,7 @@ export default function ProductModal() {
                 return (
                     <span>
                         {parseInt(productModal.options._price) +
-                            (productModal.modificatorsAmount ?? 0)}{" "}
+                            modificatorsAmount}{" "}
                         ₽
                     </span>
                 );
@@ -432,7 +449,7 @@ export default function ProductModal() {
                                         disabled={
                                             productModal.disabled ||
                                             wrongVariant ||
-                                            !productModal.modificatorsCondition
+                                            !modificatorsCondition
                                         }
                                     >
                                         Хочу
@@ -441,9 +458,7 @@ export default function ProductModal() {
                                     <Button
                                         variant="button"
                                         className="btn--action btn-buy"
-                                        onClick={() =>
-                                            handleAddProduct(productModal)
-                                        }
+                                        onClick={handleAddProduct}
                                         disabled={productModal.disabled}
                                     >
                                         Хочу
