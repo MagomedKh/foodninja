@@ -13,7 +13,7 @@ import {
     faVk,
     faOdnoklassnikiSquare,
 } from "@fortawesome/free-brands-svg-icons";
-import { Header, Footer } from "../components";
+import { Header, Footer, LeafletMap } from "../components";
 import "../css/contacts.css";
 import { _getPlatform } from "../components/helpers";
 import { getDay } from "date-fns";
@@ -311,15 +311,19 @@ export default function Contacts() {
                                 }}
                             ></div>
                         ) : (
-                            config.CONFIG_latitude &&
-                            config.CONFIG_longtude && (
-                                <div className="contacts--2gis-map"></div>
-                            )
-                        )}
-                        {/* <div id="map" style={{ height: "500px" }}>
-                            <LeafletMap />
-                        </div> */}
+                            <div
+                                id="map"
+                                style={{ height: "400px" }}
+                                className="contacts--custom-map"
+                            >
+                                <LeafletMap />
+                            </div>
 
+                            // config.CONFIG_latitude &&
+                            // config.CONFIG_longtude && (
+                            //     <div className="contacts--2gis-map"></div>
+                            // )
+                        )}
                         {config.CONFIG_contact_delivery_info && (
                             <div
                                 className="contacts--delivery-info"
