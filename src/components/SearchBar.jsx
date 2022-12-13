@@ -66,18 +66,22 @@ const SearchBar = ({
 
     const filteredPoructsList = dontShowList ? null : filteredProducts &&
       filteredProducts.length ? (
-        filteredProducts.map((el) => (
-            <Product
-                product={el.item}
-                disabled={el.item.categories.some((r) =>
-                    disabledCategoriesId?.includes(r)
-                )}
-                key={el.id}
-            />
-        ))
+        <div className="product-grid-list">
+            {filteredProducts.map((el) => (
+                <Product
+                    product={el.item}
+                    disabled={el.item.categories.some((r) =>
+                        disabledCategoriesId?.includes(r)
+                    )}
+                    key={el.id}
+                />
+            ))}
+        </div>
     ) : (
         <div>К сожалению, ничего не найдено</div>
     );
+
+    console.log(filteredProducts);
 
     return (
         <>
@@ -157,7 +161,7 @@ const SearchBar = ({
                     </Link>
                 )}
             </div>
-            <div className="product-grid-list">{filteredPoructsList}</div>
+            {filteredPoructsList}
         </>
     );
 };
