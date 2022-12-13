@@ -376,7 +376,7 @@ export default function Footer() {
                                 <div className="creators">
                                     Работает на платформе{" "}
                                     <a
-                                        href="https://iqmd.ru"
+                                        href="https://foodninja.pro"
                                         target="_blank"
                                         rel="noreferrer"
                                     >
