@@ -1,14 +1,26 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import Container from "@mui/material/Container";
 import { Link } from "react-router-dom";
 import { addProductToCart, decreaseProductInCart } from "../redux/actions/cart";
+import { clearModificators } from "../redux/actions/modificators";
 import AddonProductModal from "../components/Product/AddonProductModal";
-import Collapse from "@mui/material/Collapse";
-import Alert from "@mui/material/Alert";
-import { ToggleButtonGroup, ToggleButton, Button } from "@mui/material";
-import Zoom from "@mui/material/Zoom";
-import { Header, Footer } from "../components";
+import {
+    Alert,
+    Collapse,
+    Container,
+    ToggleButtonGroup,
+    ToggleButton,
+    Button,
+    Zoom,
+} from "@mui/material";
+import {
+    Header,
+    Footer,
+    ModificatorCategory,
+    TopCategoriesMenu,
+} from "../components";
+import { _clone } from "../components/helpers";
+import "../css/product-page.css";
 
 export default function Product() {
     const dispatch = useDispatch();
@@ -22,15 +34,27 @@ export default function Product() {
             };
         }
     );
-    const [choosenAttributes, setChoosenAttributes] = React.useState({});
-    const [activeVariant, setActiveVariant] = React.useState(false);
-    const [wrongVariant, setWrongVariant] = React.useState(false);
+    const {
+        choosenModificators,
+        emptyModificatorCategories,
+        modificatorsAmount,
+        modificatorsCondition,
+    } = useSelector((state) => state.modificators);
+    const [choosenAttributes, setChoosenAttributes] = useState({});
+    const [activeVariant, setActiveVariant] = useState(false);
+    const [wrongVariant, setWrongVariant] = useState(false);
     let productSlug = window.location.pathname.split("/");
-    const [product] = React.useState(
+    const [product] = useState(
         Object.values(products).find((item) => item.slug === productSlug[2])
     );
 
-    React.useEffect(() => {
+    useEffect(() => {
+        return () => {
+            dispatch(clearModificators());
+        };
+    }, []);
+
+    useEffect(() => {
         if (product) {
             let dataAttributes = {};
             if (product.type === "variations" && product.attributes) {
@@ -92,26 +116,94 @@ export default function Product() {
         else setWrongVariant(true);
     };
 
-    const handleAddProduct = (product) => {
-        dispatch(addProductToCart(product));
+    const handleAddProduct = () => {
+        let _product = _clone(product);
+        dispatch(
+            addProductToCart({
+                ..._product,
+                choosenModificators: choosenModificators,
+                modificatorsAmount: modificatorsAmount,
+            })
+        );
+        dispatch(clearModificators());
     };
     const handleAddVariantProduct = () => {
-        let _product = product;
+        let _product = _clone(product);
         _product.options._price = activeVariant.price;
         _product.variant = activeVariant;
-        dispatch(addProductToCart(_product));
+        dispatch(
+            addProductToCart({
+                ..._product,
+                choosenModificators: choosenModificators,
+                modificatorsAmount: modificatorsAmount,
+            })
+        );
+        dispatch(clearModificators());
     };
     const handleDecreaseProduct = (product) => {
         dispatch(decreaseProductInCart(product));
     };
 
+    const productPriceRender = () => {
+        if (activeVariant) {
+            if (
+                parseInt(activeVariant._regular_price) >
+                parseInt(activeVariant.price)
+            ) {
+                return (
+                    <>
+                        <span className="product--old-price">
+                            {parseInt(activeVariant._regular_price) +
+                                modificatorsAmount}
+                            ₽
+                        </span>
+                        <span className="product--sale-price main-color">
+                            {parseInt(activeVariant.price) + modificatorsAmount}{" "}
+                            ₽
+                        </span>
+                    </>
+                );
+            } else {
+                return (
+                    <span>{activeVariant.price + modificatorsAmount} ₽</span>
+                );
+            }
+        } else {
+            if (
+                parseInt(product.options?._regular_price) >
+                parseInt(product.options?._price)
+            ) {
+                return (
+                    <>
+                        <span className="product--old-price">
+                            {parseInt(product.options._regular_price) +
+                                modificatorsAmount}{" "}
+                            ₽
+                        </span>
+                        <span className="product--sale-price main-color">
+                            {product.options._price + modificatorsAmount} ₽
+                        </span>
+                    </>
+                );
+            } else {
+                return (
+                    <span>
+                        {parseInt(product.options._price) + modificatorsAmount}{" "}
+                        ₽
+                    </span>
+                );
+            }
+        }
+    };
+
     return (
         <>
             <Header />
+            <TopCategoriesMenu />
             <Container>
                 {product !== undefined ? (
                     <div className="product-modal">
-                        <div className="product-modal--image">
+                        <div className="product-page--image">
                             <Zoom in={true}>
                                 <img
                                     src={
@@ -226,103 +318,80 @@ export default function Product() {
                                 ""
                             )}
 
-                            {!wrongVariant ? (
-                                <div className="product-modal--buying">
-                                    {activeVariant && activeVariant.price ? (
-                                        parseInt(activeVariant._regular_price) >
-                                        parseInt(activeVariant.price) ? (
-                                            <div className="product-modal--price">
-                                                <span className="product--old-price">
-                                                    {
-                                                        activeVariant._regular_price
-                                                    }{" "}
-                                                    ₽
-                                                </span>
-                                                <span className="product--sale-price main-color">
-                                                    {activeVariant.price} ₽
-                                                </span>
-                                            </div>
-                                        ) : (
-                                            <div className="product-modal--price">
-                                                {activeVariant.price} ₽
-                                            </div>
-                                        )
-                                    ) : (
-                                        <div className="product-modal--price">
-                                            {product.options._price} ₽
-                                        </div>
-                                    )}
+                            <div className="variations-buying">
+                                <div className="product-modal--price-wrapper">
+                                    <div className="product-modal--price">
+                                        {productPriceRender()}
+                                    </div>
                                     <div className="product-modal--stats">
-                                        {product.options.weight ? (
-                                            <div className="weight">
-                                                {product.options.weight} гр.
-                                            </div>
+                                        {product.type === "variations" ? (
+                                            <>
+                                                {activeVariant &&
+                                                activeVariant.weight ? (
+                                                    <div className="weight">
+                                                        {activeVariant.weight}{" "}
+                                                        гр.
+                                                    </div>
+                                                ) : (
+                                                    ""
+                                                )}
+                                            </>
                                         ) : (
-                                            ""
-                                        )}
-                                        {product.options.count_rolls ? (
-                                            <div className="count-rolls">
-                                                {product.options.count_rolls}{" "}
-                                                шт.
-                                            </div>
-                                        ) : (
-                                            ""
+                                            <>
+                                                {product.options.weight ? (
+                                                    <div className="weight">
+                                                        {product.options.weight}{" "}
+                                                        гр.
+                                                    </div>
+                                                ) : (
+                                                    ""
+                                                )}
+                                                {product.options.count_rolls ? (
+                                                    <div className="count-rolls">
+                                                        {
+                                                            product.options
+                                                                .count_rolls
+                                                        }{" "}
+                                                        шт.
+                                                    </div>
+                                                ) : (
+                                                    ""
+                                                )}
+                                            </>
                                         )}
                                     </div>
-                                    {product.type === "variations" ? (
-                                        <Button
-                                            variant="button"
-                                            className="btn--action btn-buy"
-                                            onClick={handleAddVariantProduct}
-                                        >
-                                            Хочу
-                                        </Button>
-                                    ) : !cartProducts[product.id] ? (
-                                        <Button
-                                            variant="button"
-                                            className="btn--action btn-buy"
-                                            onClick={() =>
-                                                handleAddProduct(product)
-                                            }
-                                        >
-                                            Хочу
-                                        </Button>
-                                    ) : (
-                                        <div className="product-modal--quantity">
-                                            <Button
-                                                className="btn--default product-decrease"
-                                                onClick={() =>
-                                                    handleDecreaseProduct(
-                                                        product
-                                                    )
-                                                }
-                                            >
-                                                -
-                                            </Button>
-                                            <input
-                                                className="quantity"
-                                                type="text"
-                                                readOnly
-                                                value={
-                                                    cartProducts[product.id]
-                                                        .items.length
-                                                }
-                                                data-product_id={product.id}
-                                            />
-                                            <Button
-                                                className="btn--default product-add"
-                                                onClick={() =>
-                                                    handleAddProduct(product)
-                                                }
-                                            >
-                                                +
-                                            </Button>
-                                        </div>
-                                    )}
                                 </div>
-                            ) : (
-                                ""
-                            )}
+                                {product.type === "variations" ? (
+                                    <Button
+                                        variant="button"
+                                        className="btn--action btn-buy"
+                                        onClick={handleAddVariantProduct}
+                                        disabled={
+                                            product.disabled ||
+                                            wrongVariant ||
+                                            !modificatorsCondition
+                                        }
+                                    >
+                                        Хочу
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        variant="button"
+                                        className="btn--action btn-buy"
+                                        onClick={handleAddProduct}
+                                        disabled={product.disabled}
+                                    >
+                                        Хочу
+                                    </Button>
+                                )}
+                            </div>
+
+                            {product.product_addons?.map((category) => (
+                                <ModificatorCategory
+                                    category={category}
+                                    key={category.category_id}
+                                />
+                            ))}
 
                             {addon_products.length ? (
                                 <div className="addon-products">
