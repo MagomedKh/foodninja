@@ -52,6 +52,8 @@ const PreorderForm = forwardRef(
         const preorderDayOfWeek =
             getDay(preorderDate) === 0 ? 6 : getDay(preorderDate) - 1;
 
+        // Массив локализованных дней недели для рендера
+        const localDaysOfWeek = ["пн", "вт", "ср", "чт", "пт", "сб", "вс"];
         // Получаем доступное время для заказа в выбранный день
         const preorderOrderingTime = config.orderingTime[preorderDayOfWeek] || [
             config.CONFIG_schedule_ordering_start,
@@ -199,7 +201,11 @@ const PreorderForm = forwardRef(
                                         disabledBySchedule
                                     }
                                 >
-                                    {format(el, "d MMMM")}
+                                    <span>
+                                        {format(el, "d MMMM")}
+                                        {", "}
+                                        {localDaysOfWeek[currentDayOfWeek]}
+                                    </span>
                                     {(disabledBySchedule && (
                                         <div
                                             style={{
