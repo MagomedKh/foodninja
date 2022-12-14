@@ -796,7 +796,7 @@ const cart = (state = initialState, action) => {
             // Если удаляем простой товар без модификаторов, то проверяем, есть ли кроме простых, товары с модификаторами,
             // если есть, то оставляем только их
             else if (
-                updatedItems[action.payload.id].items.find(
+                updatedItems[action.payload.id]?.items.find(
                     (el) => el.choosenModificators?.length
                 )
             ) {

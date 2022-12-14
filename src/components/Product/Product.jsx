@@ -20,12 +20,6 @@ import soon from "../../img/photo-soon.svg";
 export default function Product({ product, disabled }) {
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        if (disabled) {
-            dispatch(removeProductFromCart(product));
-        }
-    }, [dispatch, disabled]);
-
     const { cartProducts, categoryNew, categoryHit } = useSelector(
         ({ cart, config }) => {
             return {
@@ -35,6 +29,12 @@ export default function Product({ product, disabled }) {
             };
         }
     );
+
+    useEffect(() => {
+        if (disabled && cartProducts[product.id]?.items.length) {
+            dispatch(removeProductFromCart(product));
+        }
+    }, [dispatch, disabled]);
 
     const openModalBtnClick = () => {
         dispatch(
