@@ -40,6 +40,11 @@ export default function Product() {
         modificatorsAmount,
         modificatorsCondition,
     } = useSelector((state) => state.modificators);
+    const { config } = useSelector(({ config }) => {
+        return {
+            config: config.data,
+        };
+    });
     const [choosenAttributes, setChoosenAttributes] = useState({});
     const [activeVariant, setActiveVariant] = useState(false);
     const [wrongVariant, setWrongVariant] = useState(false);
@@ -393,11 +398,16 @@ export default function Product() {
                                 />
                             ))}
 
-                            {addon_products.length ? (
+                            {!addon_products.length ||
+                            config.CONFIG_addons_category_in_product ===
+                                "hide" ||
+                            (config.CONFIG_addons_category_in_product ===
+                                "without_modificators" &&
+                                product.product_addons.length) ? null : (
                                 <div className="addon-products">
-                                    <h3 className="addon-products--title">
+                                    <div className="addon-products--title">
                                         Соусы и дополнения
-                                    </h3>
+                                    </div>
                                     <div className="addon-products--grid-list">
                                         {addon_products.map((product) => (
                                             <AddonProductModal
@@ -407,8 +417,6 @@ export default function Product() {
                                         ))}
                                     </div>
                                 </div>
-                            ) : (
-                                ""
                             )}
                         </div>
                     </div>

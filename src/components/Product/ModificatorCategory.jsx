@@ -63,10 +63,10 @@ const ModificatorCategory = ({ category, handleSetModificatorsCondition }) => {
 
     return (
         <div className="modificator-products" key={category.category_id}>
-            <h3 className="modificator-products--title">
+            <div className="modificator-products--title">
                 {category.category_title}
-            </h3>
-            <Collapse sx={{ mt: 1 }} in={isRequiredCategoryEmpty}>
+            </div>
+            <Collapse sx={{ mt: 1 }} in={isRequiredCategoryEmpty} unmountOnExit>
                 <Alert severity="info" sx={{ border: "1px solid #99dfff" }}>
                     {category.count_products_type === "manual"
                         ? `Выберите хотя бы ${category.count_products.min} ${
@@ -83,7 +83,7 @@ const ModificatorCategory = ({ category, handleSetModificatorsCondition }) => {
                         : null}
                 </Alert>
             </Collapse>
-            <Grid container spacing={1} sx={{ mt: "8px" }}>
+            <Grid container spacing={1} sx={{ mt: "6px" }}>
                 {modificatorProducts.map((product) => (
                     <Grid
                         item

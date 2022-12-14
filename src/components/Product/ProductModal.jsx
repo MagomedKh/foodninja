@@ -50,6 +50,11 @@ export default function ProductModal() {
         modificatorsAmount,
         modificatorsCondition,
     } = useSelector((state) => state.modificators);
+    const { config } = useSelector(({ config }) => {
+        return {
+            config: config.data,
+        };
+    });
     const [choosenAttributes, setChoosenAttributes] = useState({});
     const [activeVariant, setActiveVariant] = useState(false);
     const [wrongVariant, setWrongVariant] = useState(false);
@@ -376,11 +381,17 @@ export default function ProductModal() {
                                     )
                                 )}
 
-                                {addon_products.length ? (
+                                {!addon_products.length ||
+                                config.CONFIG_addons_category_in_product ===
+                                    "hide" ||
+                                (config.CONFIG_addons_category_in_product ===
+                                    "without_modificators" &&
+                                    productModal.product_addons
+                                        .length) ? null : (
                                     <div className="addon-products">
-                                        <h3 className="addon-products--title">
+                                        <div className="addon-products--title">
                                             Соусы и дополнения
-                                        </h3>
+                                        </div>
                                         <div className="addon-products--grid-list">
                                             {addon_products.map((product) => (
                                                 <AddonProductModal
@@ -390,8 +401,6 @@ export default function ProductModal() {
                                             ))}
                                         </div>
                                     </div>
-                                ) : (
-                                    ""
                                 )}
                             </div>
                             <div className="product-modal--variations-buying">
