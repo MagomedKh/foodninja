@@ -81,8 +81,6 @@ const SearchBar = ({
         <div>К сожалению, ничего не найдено</div>
     );
 
-    console.log(filteredProducts);
-
     return (
         <>
             <div style={{ display: "flex" }}>
