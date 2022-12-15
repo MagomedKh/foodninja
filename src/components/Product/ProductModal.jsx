@@ -23,6 +23,7 @@ import {
     ToggleButtonGroup,
     ToggleButton,
     Zoom,
+    Grid,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import "../../css/product-modal.css";
@@ -392,14 +393,27 @@ export default function ProductModal() {
                                         <div className="addon-products--title">
                                             Соусы и дополнения
                                         </div>
-                                        <div className="addon-products--grid-list">
+                                        <Grid
+                                            container
+                                            spacing={1}
+                                            sx={{ mt: "6px" }}
+                                        >
                                             {addon_products.map((product) => (
-                                                <AddonProductModal
-                                                    key={product.id}
-                                                    product={product}
-                                                />
+                                                <Grid
+                                                    item
+                                                    mobilexs={6}
+                                                    mobilesm={4}
+                                                    mobilemd={3}
+                                                    mobilelg={2}
+                                                    desctop={4}
+                                                >
+                                                    <AddonProductModal
+                                                        key={product.id}
+                                                        product={product}
+                                                    />
+                                                </Grid>
                                             ))}
-                                        </div>
+                                        </Grid>
                                     </div>
                                 )}
                             </div>
