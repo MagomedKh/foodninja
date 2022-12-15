@@ -60,7 +60,12 @@ const SubscribeSnackbar = () => {
             onClose={handleClose}
             TransitionComponent={TransitionRight}
             message={
-                <Box sx={{ display: "flex", flexDirection: "column" }}>
+                <Box
+                    sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                    }}
+                >
                     <Typography sx={{ fontWeight: 600, fontSize: "20px" }}>
                         {config.CONFIG_vk_mailing_title}
                     </Typography>
@@ -93,7 +98,6 @@ const SubscribeSnackbar = () => {
             sx={{
                 mb: 4,
                 "& .MuiPaper-root": {
-                    maxWidth: "320px",
                     boxShadow: "0 0 20px rgb(0 0 0 / 10%)",
                     borderRadius: "15px",
                 },
@@ -101,7 +105,11 @@ const SubscribeSnackbar = () => {
                     backgroundColor: "#fff",
                     color: "black",
                 },
+                "& .MuiSnackbarContent-message": {
+                    width: "100%",
+                },
             }}
+            className="subscribe-snackbar"
         />
     );
 };
