@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { Link } from "react-router-dom";
 import { addProductToCart, decreaseProductInCart } from "../redux/actions/cart";
 import { clearModificators } from "../redux/actions/modificators";
@@ -19,7 +19,7 @@ import {
     ModificatorCategory,
     TopCategoriesMenu,
 } from "../components";
-import { _clone } from "../components/helpers";
+import { _clone, _isCategoryDisabled } from "../components/helpers";
 import "../css/product-page.css";
 
 export default function Product() {
@@ -45,9 +45,12 @@ export default function Product() {
             config: config.data,
         };
     });
+    const { categories } = useSelector((state) => state.products, shallowEqual);
     const [choosenAttributes, setChoosenAttributes] = useState({});
     const [activeVariant, setActiveVariant] = useState(false);
     const [wrongVariant, setWrongVariant] = useState(false);
+    const [disabledProductCategory, setDisabledProductCategory] =
+        useState(null);
     let productSlug = window.location.pathname.split("/");
     const [product] = useState(
         Object.values(products).find((item) => item.slug === productSlug[2])
@@ -97,6 +100,26 @@ export default function Product() {
         }
         return;
     }, [product]);
+
+    // Создаем массив недоступных на данное время категорий
+    useEffect(() => {
+        if (categories) {
+            const disabledCategoriesArr = categories.filter((category) =>
+                _isCategoryDisabled(category)
+            );
+            // Если одна из категорий товара недоступна по времени, блокируем товар
+            if (disabledCategoriesArr.length) {
+                const disabledCategory = disabledCategoriesArr.find(
+                    (category) => product.categories.includes(category.term_id)
+                );
+                if (disabledCategory) {
+                    setDisabledProductCategory(disabledCategory);
+                }
+            } else {
+                setDisabledProductCategory(null);
+            }
+        }
+    }, [categories]);
 
     const handleChooseAttribute = (attribute, value) => {
         let dataAttributes = choosenAttributes;
@@ -371,11 +394,7 @@ export default function Product() {
                                         variant="button"
                                         className="btn--action btn-buy"
                                         onClick={handleAddVariantProduct}
-                                        disabled={
-                                            product.disabled ||
-                                            wrongVariant ||
-                                            !modificatorsCondition
-                                        }
+                                        disabled={disabledProductCategory}
                                     >
                                         Хочу
                                     </Button>
@@ -384,12 +403,25 @@ export default function Product() {
                                         variant="button"
                                         className="btn--action btn-buy"
                                         onClick={handleAddProduct}
-                                        disabled={product.disabled}
+                                        disabled={disabledProductCategory}
                                     >
                                         Хочу
                                     </Button>
                                 )}
                             </div>
+
+                            {disabledProductCategory ? (
+                                <Collapse sx={{ mt: 1 }} in={true}>
+                                    <Alert
+                                        severity="error"
+                                        className="alert--wrong-variant"
+                                    >
+                                        {`Товар доступен с ${disabledProductCategory.timeLimitStart} до ${disabledProductCategory.timeLimitEnd}`}
+                                    </Alert>
+                                </Collapse>
+                            ) : (
+                                ""
+                            )}
 
                             {product.product_addons?.map((category) => (
                                 <ModificatorCategory
