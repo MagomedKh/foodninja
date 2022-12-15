@@ -30,12 +30,6 @@ export default function Product({ product, disabled }) {
         }
     );
 
-    useEffect(() => {
-        if (disabled && cartProducts[product.id]?.items.length) {
-            dispatch(removeProductFromCart(product));
-        }
-    }, [dispatch, disabled]);
-
     const openModalBtnClick = () => {
         dispatch(
             setModalProduct({

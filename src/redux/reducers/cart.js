@@ -755,7 +755,10 @@ const cart = (state = initialState, action) => {
         case "REMOVE_PRODUCT_FROM_CART": {
             const updatedItems = state.items;
 
-            if (action.payload.variant) {
+            // Проверяем отключен ли товар, если отколючен то удаляем и с модификаторами и без
+            if (action.payload.disabled) {
+                delete updatedItems[action.payload.id];
+            } else if (action.payload.variant) {
                 const indexVar = Object.values(
                     updatedItems[action.payload.id].items
                 ).findLastIndex(
@@ -779,6 +782,7 @@ const cart = (state = initialState, action) => {
                 if (!updatedItems[action.payload.id].items.length)
                     delete updatedItems[action.payload.id];
             }
+
             // Проверяем есть ли у удаляемого простого товара модификаторы, если есть удаляем только выбранный товар
             else if (action.payload.choosenModificators?.length) {
                 updatedItems[action.payload.id].items.splice(

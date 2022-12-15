@@ -16,7 +16,6 @@ export default function MiniCartProduct({
     productCount,
     productTotalPrice,
     productIndex,
-    disabled,
 }) {
     const dispatch = useDispatch();
     const { promocodeProducts, promocode } = useSelector(({ cart }) => {
@@ -49,14 +48,6 @@ export default function MiniCartProduct({
     }
 
     const renderMinicartProductResult = () => {
-        if (disabled) {
-            return (
-                <Alert severity="error" sx={{ width: "100%" }}>
-                    Товар недоступен в данный момент
-                </Alert>
-            );
-        }
-
         // Цена по промокоду на товар в подарок
         if (promocodeProducts && promocodeProducts.id === productCart.id) {
             if (

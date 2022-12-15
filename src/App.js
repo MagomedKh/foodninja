@@ -48,10 +48,16 @@ import "./fonts/cera/CeraRoundProBold.woff2";
 import "./App.css";
 import { createGlobalStyle } from "styled-components";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { _getDomain, _getPlatform, _isMobile } from "./components/helpers";
+import {
+    _getDomain,
+    _getPlatform,
+    _isCategoryDisabled,
+    _isMobile,
+} from "./components/helpers";
 import { ru } from "date-fns/locale";
 import { setDefaultOptions } from "date-fns";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
+import { removeProductFromCart } from "./redux/actions/cart";
 
 const MainTheme = createGlobalStyle`
 	:root {
@@ -71,11 +77,17 @@ function App() {
     setDefaultOptions({ locale: ru });
 
     const { user } = useSelector((state) => state.user);
-    const { config } = useSelector(({ config }) => {
+    const { config, status } = useSelector(({ config }) => {
         return {
             config: config.data,
+            status: config.status,
         };
     }, shallowEqual);
+    const { categories } = useSelector((state) => state.products, shallowEqual);
+    const { items: cartItems } = useSelector(
+        (state) => state.cart,
+        shallowEqual
+    );
 
     useEffect(() => {
         dispatch(setMainLoading(false));
@@ -98,6 +110,39 @@ function App() {
                 dispatch(setBanners(resp.data.banners));
             });
     }, [dispatch]);
+
+    // Создаем массив айдишников недоступных на данное время категорий
+    useEffect(() => {
+        if (categories && status) {
+            const disabledCategoriesArr = categories.filter((category) =>
+                _isCategoryDisabled(category)
+            );
+            const disabledCategoriesInx = disabledCategoriesArr.map(
+                (category) => category.term_id
+            );
+            // Итерируемся по товарам в корзине и удаляем те, у которых категория недоступна
+            if (disabledCategoriesInx.length) {
+                const allProducts = [].concat.apply(
+                    [],
+                    Object.values(cartItems).map((obj) => obj.items)
+                );
+                allProducts.forEach((product) => {
+                    if (
+                        product.categories.some((id) =>
+                            disabledCategoriesInx.includes(id)
+                        )
+                    ) {
+                        dispatch(
+                            removeProductFromCart({
+                                ...product,
+                                disabled: true,
+                            })
+                        );
+                    }
+                });
+            }
+        }
+    }, [categories, status]);
 
     useEffect(() => {
         if (user.token && user.phone)
