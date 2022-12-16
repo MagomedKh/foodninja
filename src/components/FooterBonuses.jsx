@@ -168,7 +168,7 @@ export default function BonusesProductsModal() {
                     <h2 className="modal-alert--title">Выберите подарок</h2>
                     <div className="bonuses-modal__carts">
                         <Grid container spacing={1}>
-                            {bonusesItemsLocal &&
+                            {bonusesItemsLocal?.length &&
                                 bonusesItemsLocal.map((item, index) => (
                                     <Grid
                                         key={item.id}
