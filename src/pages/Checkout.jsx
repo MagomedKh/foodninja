@@ -144,12 +144,6 @@ export default function Checkout() {
     };
 
     useEffect(() => {
-        if (config.CONFIG_work_status !== "closed") {
-            handlePreorderDateChange("Как можно скорее");
-        }
-    }, [config.CONFIG_work_status]);
-
-    useEffect(() => {
         if (config.CONFIG_free_products_program_status !== "on") {
             dispatch(addBonusProductToCart({}));
         }

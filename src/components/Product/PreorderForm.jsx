@@ -1,4 +1,4 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, useEffect } from "react";
 import { useSelector } from "react-redux";
 import {
     Box,
@@ -60,6 +60,34 @@ const PreorderForm = forwardRef(
             config.CONFIG_schedule_ordering_end,
         ];
 
+        // Блок для проверки рендера опций "Как можно скорее" и сегодняшней даты
+        // Получаем сегодняшний день недели
+        const todayDayOfWeek =
+            getDay(new Date()) === 0 ? 6 : getDay(new Date()) - 1;
+        //Получаем доступное время для заказа на сегодня
+        const todayOrderingTime = config.orderingTime[todayDayOfWeek] || [
+            config.CONFIG_schedule_ordering_start,
+            config.CONFIG_schedule_ordering_end,
+        ];
+        // Устанавливаем конечное время для заказа сегодня
+        let todayEndWorkTime = set(new Date(), {
+            hours: todayOrderingTime[1].slice(0, 2),
+            minutes: todayOrderingTime[1].slice(3, 5),
+            seconds: 0,
+            milliseconds: 0,
+        });
+        useEffect(() => {
+            if (
+                config.CONFIG_work_status !== "closed" &&
+                !isAfter(
+                    addMinutes(new Date(), config.CONFIG_time_order_delay),
+                    todayEndWorkTime
+                )
+            ) {
+                handlePreorderDateChange("Как можно скорее");
+            }
+        }, [config.CONFIG_work_status]);
+
         // Устанавливаем начальное время для заказа в формате даты
         let startWorkDate = set(new Date(), {
             hours: preorderOrderingTime[0].slice(0, 2),
@@ -95,6 +123,7 @@ const PreorderForm = forwardRef(
             );
             startWorkDate = roundToNearestMinutes(startWorkDate, {
                 nearestTo: 30,
+                roundingMethod: "ceil",
             });
         }
 
@@ -124,7 +153,13 @@ const PreorderForm = forwardRef(
 
         // Создаем массив доступных дней для заказа из ближайших 30
         const datesArray = eachDayOfInterval({
-            start: new Date(),
+            start:
+                isAfter(
+                    addMinutes(new Date(), config.CONFIG_time_order_delay),
+                    todayEndWorkTime
+                ) || config.CONFIG_work_status === "closed"
+                    ? addDays(new Date(), 1)
+                    : new Date(),
             end: addDays(new Date(), 30),
         });
 
@@ -162,7 +197,14 @@ const PreorderForm = forwardRef(
                         autoWidth
                         MenuProps={{ PaperProps: { sx: { maxHeight: 500 } } }}
                     >
-                        {config.CONFIG_work_status === "closed" ? null : (
+                        {config.CONFIG_work_status === "closed" ||
+                        isAfter(
+                            addMinutes(
+                                new Date(),
+                                config.CONFIG_time_order_delay
+                            ),
+                            todayEndWorkTime
+                        ) ? null : (
                             <MenuItem
                                 key={"Как можно скорее"}
                                 value={"Как можно скорее"}
