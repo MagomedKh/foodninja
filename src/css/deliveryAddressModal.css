@@ -12,3 +12,12 @@
     height: 400px;
     width: 100%;
 }
+
+@media (max-width: 899px) {
+    .delivery-address-modal__dialog .MuiDialog-container .MuiDialog-paper {
+        border-radius: 0;
+    }
+    .delivery-address-modal__map-container {
+        border-radius: 0;
+    }
+}

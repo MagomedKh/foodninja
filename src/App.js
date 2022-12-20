@@ -165,7 +165,7 @@ function App() {
                     dispatch(setMainLoading(true));
                 });
         else dispatch(setMainLoading(true));
-    }, [dispatch, user.token, user.phone]);
+    }, [dispatch]);
 
     const mainColor = config
         ? config.CONFIG_main_color !== undefined

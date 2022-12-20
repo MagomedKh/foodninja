@@ -601,15 +601,21 @@ export default function Checkout() {
         helperText: !validate ? "Выберите дату и время" : "",
     };
 
-    if (typeof user.addresses !== "undefined" && user.addresses.length) {
+    if (user.addresses && user.addresses.length) {
         user.addresses.map((address, index) => {
-            let formateAddress = address.street + ", д. " + address.home;
-            formateAddress += address.porch ? ", под. " + address.porch : "";
-            formateAddress += address.floor ? ", этаж " + address.floor : "";
-            formateAddress += address.apartment
-                ? ", кв. " + address.apartment
-                : "";
-            user.addresses[index].formate = formateAddress;
+            if (!address.formate) {
+                let formateAddress = address.street + ", д. " + address.home;
+                formateAddress += address.porch
+                    ? ", под. " + address.porch
+                    : "";
+                formateAddress += address.floor
+                    ? ", этаж " + address.floor
+                    : "";
+                formateAddress += address.apartment
+                    ? ", кв. " + address.apartment
+                    : "";
+                user.addresses[index].formate = formateAddress;
+            }
         });
     }
 
@@ -762,17 +768,44 @@ export default function Checkout() {
                                     >
                                         {user.addresses &&
                                             Object.values(user.addresses).map(
-                                                (address, index) => (
-                                                    <FormControlLabel
-                                                        key={index}
-                                                        className="custom-radio"
-                                                        value={index}
-                                                        control={
-                                                            <Radio size="small" />
-                                                        }
-                                                        label={address.formate}
-                                                    />
-                                                )
+                                                (address, index) => {
+                                                    let formateAddress;
+                                                    if (!address.formate) {
+                                                        formateAddress =
+                                                            address.street +
+                                                            ", д. " +
+                                                            address.home;
+                                                        formateAddress +=
+                                                            address.porch
+                                                                ? ", под. " +
+                                                                  address.porch
+                                                                : "";
+                                                        formateAddress +=
+                                                            address.floor
+                                                                ? ", этаж " +
+                                                                  address.floor
+                                                                : "";
+                                                        formateAddress +=
+                                                            address.apartment
+                                                                ? ", кв. " +
+                                                                  address.apartment
+                                                                : "";
+                                                    }
+                                                    return (
+                                                        <FormControlLabel
+                                                            key={index}
+                                                            className="custom-radio"
+                                                            value={index}
+                                                            control={
+                                                                <Radio size="small" />
+                                                            }
+                                                            label={
+                                                                address.formate ||
+                                                                formateAddress
+                                                            }
+                                                        />
+                                                    );
+                                                }
                                             )}
                                         <FormControlLabel
                                             className="custom-radio new-address"
