@@ -38,21 +38,23 @@ export default function ChooseTown() {
 
     useEffect(() => {
         if (
-            !chooseTownShown &&
-            config.data.towns &&
-            config.data.towns.length > 1 &&
-            ((config.status &&
-                _getDomain() === config.data.baseDomain &&
-                config.data.CONFIG_always_choose_town === "on" &&
-                window.location.href !==
-                    `https://${config.data.baseDomain}/?saveTown=true`) ||
-                (config.status &&
+            (config.data.CONFIG_main_site_choose_town === "on" &&
+                _getDomain() === config.data.baseDomain) ||
+            (!chooseTownShown &&
+                config.data.towns &&
+                config.data.towns.length > 1 &&
+                ((config.status &&
                     _getDomain() === config.data.baseDomain &&
-                    config.data.CONFIG_always_choose_town !== "on" &&
-                    !currentTown) ||
-                (config.status &&
-                    _getDomain() !== config.data.baseDomain &&
-                    !currentTown))
+                    config.data.CONFIG_always_choose_town === "on" &&
+                    window.location.href !==
+                        `https://${config.data.baseDomain}/?saveTown=true`) ||
+                    (config.status &&
+                        _getDomain() === config.data.baseDomain &&
+                        config.data.CONFIG_always_choose_town !== "on" &&
+                        !currentTown) ||
+                    (config.status &&
+                        _getDomain() !== config.data.baseDomain &&
+                        !currentTown)))
         ) {
             dispatch(setTownModal(true));
             cookies.set("chooseTownShown", "true", {
@@ -106,15 +108,18 @@ export default function ChooseTown() {
             {config.data.towns ? (
                 <Dialog maxWidth="md" {...dialogProps}>
                     <div className="modal-alert--wrapper choose-town">
-                        <IconButton
-                            edge="start"
-                            color="inherit"
-                            onClick={handleAlertClose}
-                            aria-label="close"
-                            className="modal-close"
-                        >
-                            <CloseIcon />
-                        </IconButton>
+                        {config.data.CONFIG_main_site_choose_town === "on" &&
+                        _getDomain() === config.data.baseDomain ? null : (
+                            <IconButton
+                                edge="start"
+                                color="inherit"
+                                onClick={handleAlertClose}
+                                aria-label="close"
+                                className="modal-close"
+                            >
+                                <CloseIcon />
+                            </IconButton>
+                        )}
                         <h2>Выберите город</h2>
                         <div className="modal-alert--inner">
                             <TextField

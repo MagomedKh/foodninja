@@ -11,6 +11,7 @@ import {
 import { setConfig, setMainLoading } from "./redux/actions/config";
 import { setGateways } from "./redux/actions/gateways";
 import { setBanners } from "./redux/actions/banners";
+import { removeProductFromCart } from "./redux/actions/cart";
 import { logout, login } from "./redux/actions/user";
 import {
     setTopMenu,
@@ -57,7 +58,7 @@ import {
 import { ru } from "date-fns/locale";
 import { setDefaultOptions } from "date-fns";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
-import { removeProductFromCart } from "./redux/actions/cart";
+import { Container } from "@mui/material";
 
 const MainTheme = createGlobalStyle`
 	:root {
@@ -231,6 +232,26 @@ function App() {
             },
         },
     });
+
+    if (
+        config.CONFIG_main_site_choose_town === "on" &&
+        _getDomain() === config.baseDomain
+    ) {
+        return (
+            <>
+                <Container maxWidth="md">
+                    <div className="choose-town-page_logo-wrapper">
+                        <img
+                            src={config.CONFIG_company_logo_main}
+                            className="choose-town-page_logo"
+                            alt="Логотип"
+                        />
+                    </div>
+                    <ChooseTown />
+                </Container>
+            </>
+        );
+    }
 
     return (
         <ErrorBoundary>
