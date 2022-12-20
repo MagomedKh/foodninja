@@ -21,7 +21,12 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { CheckoutProduct, Footer, Header } from "../components";
+import {
+    CheckoutProduct,
+    Footer,
+    Header,
+    DeliveryAddressModal,
+} from "../components";
 import { _checkPromocode, _declension } from "../components/helpers.js";
 import { _isMobile, _getDomain } from "../components/helpers.js";
 import axios from "axios";
@@ -29,6 +34,7 @@ import { clearCart, addBonusProductToCart } from "../redux/actions/cart";
 import "../css/checkout.css";
 import CheckoutFreeAddons from "../components/Product/CheckoutFreeAddons";
 import { updateAlerts } from "../redux/actions/systemAlerts";
+import { setOpenDeliveryModal } from "../redux/actions/deliveryAddressModal";
 import PreorderForm from "../components/Product/PreorderForm";
 import {
     getHours,
@@ -38,6 +44,7 @@ import {
     addDays,
     format,
     getDay,
+    isAfter,
 } from "date-fns";
 import { getItemTotalPrice } from "../redux/reducers/cart";
 const formatingStrPhone = (inputNumbersValue) => {
@@ -774,6 +781,17 @@ export default function Checkout() {
                                             label="Новый адрес"
                                         />
                                     </RadioGroup>
+
+                                    <Button
+                                        onClick={() => {
+                                            dispatch(
+                                                setOpenDeliveryModal(true)
+                                            );
+                                        }}
+                                    >
+                                        Добавить адрес
+                                    </Button>
+                                    <DeliveryAddressModal />
 
                                     {deliveryAddress === "new" && (
                                         <div className="checkout--form-new-address">

@@ -17,7 +17,7 @@ export const _isMobile = () => {
 
 export const _getDomain = () => {
     return window.location.hostname === "localhost"
-        ? "demo.foodninja.pro"
+        ? "dev.foodninja.pro"
         : window.location.hostname;
 };
 

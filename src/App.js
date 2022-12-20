@@ -58,6 +58,7 @@ import {
 import { ru } from "date-fns/locale";
 import { setDefaultOptions } from "date-fns";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
+import { YMaps } from "react-yandex-maps";
 import { Container } from "@mui/material";
 
 const MainTheme = createGlobalStyle`
@@ -233,122 +234,130 @@ function App() {
         },
     });
 
-    if (
-        config.CONFIG_main_site_choose_town === "on" &&
-        _getDomain() === config.baseDomain
-    ) {
-        return (
-            <>
-                <Container maxWidth="md">
-                    <div className="choose-town-page_logo-wrapper">
-                        <img
-                            src={config.CONFIG_company_logo_main}
-                            className="choose-town-page_logo"
-                            alt="Логотип"
-                        />
-                    </div>
-                    <ChooseTown />
-                </Container>
-            </>
-        );
-    }
+    // if (
+    //     config.CONFIG_main_site_choose_town === "on" &&
+    //     _getDomain() === config.baseDomain
+    // ) {
+    //     return (
+    //         <>
+    //             <Container maxWidth="md">
+    //                 <div className="choose-town-page_logo-wrapper">
+    //                     <img
+    //                         src={config.CONFIG_company_logo_main}
+    //                         className="choose-town-page_logo"
+    //                         alt="Логотип"
+    //                     />
+    //                 </div>
+    //                 <ChooseTown />
+    //             </Container>
+    //         </>
+    //     );
+    // }
 
     return (
         <ErrorBoundary>
-            <ThemeProvider theme={foodninja}>
-                <MainTheme mainColor={mainColor} secondColor={secondColor} />
-                {config !== undefined && Object.keys(config).length ? (
-                    <div>
-                        {config.site_status === "closed" ? (
-                            <Maintenance />
-                        ) : (
-                            <GoogleReCaptchaProvider
-                                reCaptchaKey={
-                                    config.CONFIG_auth_recaptcha_site_token
-                                }
-                            >
-                                <div>
-                                    <Routes>
-                                        <Route
-                                            exact
-                                            path="/"
-                                            element={<Home />}
-                                        />
-                                        <Route
-                                            path="/product/*"
-                                            element={<Product />}
-                                        />
-                                        <Route
-                                            exact
-                                            path="/cart"
-                                            element={<Cart />}
-                                        />
-                                        <Route
-                                            exact
-                                            path="/checkout"
-                                            element={<Checkout />}
-                                        />
-                                        <Route
-                                            exact
-                                            path="/sales"
-                                            element={<Sales />}
-                                        />
-                                        <Route
-                                            exact
-                                            path="/contacts"
-                                            element={<Contacts />}
-                                        />
-                                        <Route
-                                            exact
-                                            path="/account"
-                                            element={<Account />}
-                                        />
-                                        <Route
-                                            exact
-                                            path="/account/orders"
-                                            element={<Orders />}
-                                        />
-                                        <Route
-                                            exact
-                                            path="/order-complete"
-                                            element={<OrderComplete />}
-                                        />
-                                        <Route
-                                            exact
-                                            path="/search"
-                                            element={<SearchPage />}
-                                        />
-                                        <Route
-                                            exact
-                                            path="/category/*"
-                                            element={<CategoryPage />}
-                                        />
-                                        <Route path="*" element={<Page />} />
-                                    </Routes>
-                                    <ProductModal />
-                                    <AuthModal />
-                                    <SystemAlerts />
-                                    {_getPlatform() === "site" &&
-                                    _isMobile() ? (
-                                        <InstallApp />
-                                    ) : (
-                                        ""
-                                    )}
-                                    {config.towns !== undefined &&
-                                    config.towns.length &&
-                                    _getPlatform() !== "vk" ? (
-                                        <ChooseTown />
-                                    ) : (
-                                        ""
-                                    )}
-                                </div>
-                            </GoogleReCaptchaProvider>
-                        )}
-                    </div>
-                ) : (
-                    <BigLoader initStatus={true} />
-                )}
-            </ThemeProvider>
+            <YMaps query={{ apikey: "d4f15a8f-f09c-4ef6-af56-9a3c4b8dddb2" }}>
+                <ThemeProvider theme={foodninja}>
+                    <MainTheme
+                        mainColor={mainColor}
+                        secondColor={secondColor}
+                    />
+                    {config !== undefined && Object.keys(config).length ? (
+                        <div>
+                            {config.site_status === "closed" ? (
+                                <Maintenance />
+                            ) : (
+                                <GoogleReCaptchaProvider
+                                    reCaptchaKey={
+                                        config.CONFIG_auth_recaptcha_site_token
+                                    }
+                                >
+                                    <div>
+                                        <Routes>
+                                            <Route
+                                                exact
+                                                path="/"
+                                                element={<Home />}
+                                            />
+                                            <Route
+                                                path="/product/*"
+                                                element={<Product />}
+                                            />
+                                            <Route
+                                                exact
+                                                path="/cart"
+                                                element={<Cart />}
+                                            />
+                                            <Route
+                                                exact
+                                                path="/checkout"
+                                                element={<Checkout />}
+                                            />
+                                            <Route
+                                                exact
+                                                path="/sales"
+                                                element={<Sales />}
+                                            />
+                                            <Route
+                                                exact
+                                                path="/contacts"
+                                                element={<Contacts />}
+                                            />
+                                            <Route
+                                                exact
+                                                path="/account"
+                                                element={<Account />}
+                                            />
+                                            <Route
+                                                exact
+                                                path="/account/orders"
+                                                element={<Orders />}
+                                            />
+                                            <Route
+                                                exact
+                                                path="/order-complete"
+                                                element={<OrderComplete />}
+                                            />
+                                            <Route
+                                                exact
+                                                path="/search"
+                                                element={<SearchPage />}
+                                            />
+                                            <Route
+                                                exact
+                                                path="/category/*"
+                                                element={<CategoryPage />}
+                                            />
+                                            <Route
+                                                path="*"
+                                                element={<Page />}
+                                            />
+                                        </Routes>
+                                        <ProductModal />
+                                        <AuthModal />
+                                        <SystemAlerts />
+                                        {_getPlatform() === "site" &&
+                                        _isMobile() ? (
+                                            <InstallApp />
+                                        ) : (
+                                            ""
+                                        )}
+                                        {config.towns !== undefined &&
+                                        config.towns.length &&
+                                        _getPlatform() !== "vk" ? (
+                                            <ChooseTown />
+                                        ) : (
+                                            ""
+                                        )}
+                                    </div>
+                                </GoogleReCaptchaProvider>
+                            )}
+                        </div>
+                    ) : (
+                        <BigLoader initStatus={true} />
+                    )}
+                </ThemeProvider>
+            </YMaps>
         </ErrorBoundary>
     );
 }

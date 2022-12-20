@@ -1,0 +1,14 @@
+.delivery-address-modal__dialog .MuiDialog-container .MuiDialog-paper {
+    border-radius: 20px;
+}
+
+.delivery-address-modal__wrapper {
+    padding: 50px;
+}
+
+.delivery-address-modal__map-container {
+    border-radius: 20px;
+    overflow: hidden;
+    height: 400px;
+    width: 100%;
+}

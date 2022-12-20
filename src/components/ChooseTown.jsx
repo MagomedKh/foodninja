@@ -108,18 +108,15 @@ export default function ChooseTown() {
             {config.data.towns ? (
                 <Dialog maxWidth="md" {...dialogProps}>
                     <div className="modal-alert--wrapper choose-town">
-                        {config.data.CONFIG_main_site_choose_town === "on" &&
-                        _getDomain() === config.data.baseDomain ? null : (
-                            <IconButton
-                                edge="start"
-                                color="inherit"
-                                onClick={handleAlertClose}
-                                aria-label="close"
-                                className="modal-close"
-                            >
-                                <CloseIcon />
-                            </IconButton>
-                        )}
+                        <IconButton
+                            edge="start"
+                            color="inherit"
+                            onClick={handleAlertClose}
+                            aria-label="close"
+                            className="modal-close"
+                        >
+                            <CloseIcon />
+                        </IconButton>
                         <h2>Выберите город</h2>
                         <div className="modal-alert--inner">
                             <TextField

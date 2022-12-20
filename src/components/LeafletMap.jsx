@@ -5,6 +5,56 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { getDay } from "date-fns";
 
+const storedZones = {
+    deliveryPriceType: "areaPrice",
+    apiKey: "234234",
+    fixedDeliveryPrice: "333",
+    orderMinPrice: "444",
+    zones: [
+        {
+            name: "123",
+            coordinates: [
+                [
+                    [55.43995012085324, 65.26888799830488],
+                    [55.41300619253212, 65.29772710963302],
+                    [55.42843287488746, 65.35471868678144],
+                    [55.45380538371965, 65.31695318385178],
+                    [55.43995012085324, 65.26888799830488],
+                ],
+            ],
+            fillColor: "#ff5722",
+            strokeColor: "#aa0000",
+            deliveryPrice: "111",
+            orderMinPrice: "111",
+            freeDeliveryOrder: "111",
+        },
+        {
+            name: "345",
+            coordinates: [
+                [
+                    [55.45550906658794, 65.32364656783855],
+                    [55.43091856119513, 65.35935213424479],
+                    [55.447509083295515, 65.41188051559244],
+                    [55.4658480941341, 65.35969545699874],
+                    [55.45550906658794, 65.32364656783855],
+                ],
+                [
+                    [55.453167776713514, 65.34149935104169],
+                    [55.439507470585156, 65.3638153300456],
+                    [55.44828964119679, 65.391624473112],
+                    [55.45921582345922, 65.36347200729166],
+                    [55.453167776713514, 65.34149935104169],
+                ],
+            ],
+            fillColor: "#917269",
+            strokeColor: "#241f4d",
+            deliveryPrice: "222",
+            orderMinPrice: "22",
+            freeDeliveryOrder: "22",
+        },
+    ],
+};
+
 const LeafletMap = () => {
     const mapElement = useRef(null);
 
@@ -91,16 +141,16 @@ const LeafletMap = () => {
             }
         });
 
-        // const polygon = L.polygon(
-        //     [
-        //         [55.459694, 65.34954],
-        //         [55.442621, 65.283805],
-        //         [55.430477, 65.339735],
-        //         [55.443874, 65.368874],
-        //     ],
-        //     { color: "red" }
-        // ).addTo(map);
-        // polygon.bindPopup("I am a polygon.");
+        // Рисуем зоны с бэка
+        storedZones.zones.forEach((zone) => {
+            const polygon = L.polygon(zone.coordinates, {
+                color: zone.strokeColor,
+                fillColor: zone.fillColor,
+                fillOpacity: 0.5,
+                weight: 2,
+            }).addTo(map);
+            polygon.bindPopup(zone.name);
+        });
     }, []);
 
     return <div style={{ height: "100%" }} ref={mapElement} />;
