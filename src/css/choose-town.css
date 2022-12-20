@@ -1,3 +1,7 @@
+.modal-alert--wrapper.choose-town {
+    border-radius: 20px;
+}
+
 .town-link a {
     font-size: 20px;
     border-bottom: 0;

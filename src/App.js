@@ -233,10 +233,7 @@ function App() {
         },
     });
 
-    if (
-        config.CONFIG_main_site_choose_town === "on" &&
-        _getDomain() === config.baseDomain
-    ) {
+    if (config.CONFIG_main_site_choose_town === "on") {
         return (
             <>
                 <Container maxWidth="md">
