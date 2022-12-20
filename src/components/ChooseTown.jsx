@@ -110,7 +110,7 @@ export default function ChooseTown() {
                     {...dialogProps}
                     sx={{
                         "& .MuiPaper-root": {
-                            borderRadius: "20px",
+                            borderRadius: _isMobile() ? "0px" : "20px",
                         },
                     }}
                 >

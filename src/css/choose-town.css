@@ -31,3 +31,9 @@
 .mobile-menu--choose-town svg {
     margin-right: 10px;
 }
+
+@media (max-width: 899px) {
+    .modal-alert--wrapper.choose-town {
+        border-radius: 0;
+    }
+}
