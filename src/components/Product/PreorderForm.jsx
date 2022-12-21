@@ -79,10 +79,7 @@ const PreorderForm = forwardRef(
         useEffect(() => {
             if (
                 config.CONFIG_work_status !== "closed" &&
-                !isAfter(
-                    addMinutes(new Date(), config.CONFIG_time_order_delay),
-                    todayEndWorkTime
-                )
+                !isAfter(new Date(), todayEndWorkTime)
             ) {
                 handlePreorderDateChange("Как можно скорее");
             }
@@ -115,16 +112,34 @@ const PreorderForm = forwardRef(
             handlePreorderTimeChange("");
         }
 
-        // Если заказ на сегодня, прибавляем к начальному времени минимальную задержку перед заказом
+        // Если заказ на сегодня и текущее время больше начального, передвигаем начальное время
         if (isToday(preorderDate)) {
-            startWorkDate = addMinutes(
-                new Date(),
-                config.CONFIG_time_order_delay
-            );
-            startWorkDate = roundToNearestMinutes(startWorkDate, {
-                nearestTo: 30,
-                roundingMethod: "ceil",
-            });
+            if (isAfter(new Date(), startWorkDate)) {
+                startWorkDate = new Date();
+                startWorkDate = roundToNearestMinutes(startWorkDate, {
+                    nearestTo: 30,
+                    roundingMethod: "ceil",
+                });
+            }
+        }
+
+        // Если заказ на сегодня и текущее время + задержка больше начального, передвигаем начальное время
+        if (isToday(preorderDate) && config.CONFIG_time_order_delay) {
+            if (
+                isAfter(
+                    addMinutes(new Date(), config.CONFIG_time_order_delay),
+                    startWorkDate
+                )
+            ) {
+                startWorkDate = addMinutes(
+                    new Date(),
+                    config.CONFIG_time_order_delay
+                );
+                startWorkDate = roundToNearestMinutes(startWorkDate, {
+                    nearestTo: 30,
+                    roundingMethod: "ceil",
+                });
+            }
         }
 
         // Создаем массив доступных времён для заказа в интервале
@@ -157,7 +172,7 @@ const PreorderForm = forwardRef(
                 isAfter(
                     addMinutes(new Date(), config.CONFIG_time_order_delay),
                     todayEndWorkTime
-                ) || config.CONFIG_work_status === "closed"
+                ) || !hoursArray.length
                     ? addDays(new Date(), 1)
                     : new Date(),
             end: addDays(new Date(), 30),
@@ -198,13 +213,7 @@ const PreorderForm = forwardRef(
                         MenuProps={{ PaperProps: { sx: { maxHeight: 500 } } }}
                     >
                         {config.CONFIG_work_status === "closed" ||
-                        isAfter(
-                            addMinutes(
-                                new Date(),
-                                config.CONFIG_time_order_delay
-                            ),
-                            todayEndWorkTime
-                        ) ? null : (
+                        isAfter(new Date(), todayEndWorkTime) ? null : (
                             <MenuItem
                                 key={"Как можно скорее"}
                                 value={"Как можно скорее"}
