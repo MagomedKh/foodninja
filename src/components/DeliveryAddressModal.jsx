@@ -171,22 +171,6 @@ const DeliveryAddressModal = ({ ymaps }) => {
         } else {
             setHome(null);
         }
-        // Получаем строку адреса
-        let addressLine = "";
-        [formattedArea, street, home].forEach((el, inx, array) => {
-            if (el) {
-                addressLine += el;
-                if (inx != array.length - 1) {
-                    addressLine += ", ";
-                }
-            }
-        });
-
-        if (addressLine) {
-            setFormate(addressLine);
-        } else {
-            setFormate(null);
-        }
     };
 
     const clearInputHandler = () => {
@@ -196,6 +180,18 @@ const DeliveryAddressModal = ({ ymaps }) => {
     };
 
     const addAddressHandler = () => {
+        // Получаем строку адреса
+        let addressLine = "";
+        [area, street, home, apartment, porch, floor].forEach(
+            (el, inx, array) => {
+                if (el) {
+                    addressLine += el;
+                    if (inx != array.length - 1) {
+                        addressLine += ", ";
+                    }
+                }
+            }
+        );
         const newAddress = {
             area,
             street,
@@ -203,7 +199,7 @@ const DeliveryAddressModal = ({ ymaps }) => {
             apartment,
             porch,
             floor,
-            formate,
+            formate: addressLine,
         };
         dispatch(addNewAddress(newAddress));
     };
@@ -276,6 +272,10 @@ const DeliveryAddressModal = ({ ymaps }) => {
                             <TextField
                                 size="small"
                                 label="Квартира"
+                                value={apartment}
+                                onChange={(e) => {
+                                    setApartment(e.target.value);
+                                }}
                                 sx={{
                                     minWidth: "100px",
                                     "& fieldset": {
@@ -290,6 +290,10 @@ const DeliveryAddressModal = ({ ymaps }) => {
                             <TextField
                                 size="small"
                                 label="Подъезд"
+                                value={porch}
+                                onCHange={(e) => {
+                                    setPorch(e.target.value);
+                                }}
                                 sx={{
                                     "& fieldset": {
                                         borderRadius: "20px",
@@ -303,6 +307,10 @@ const DeliveryAddressModal = ({ ymaps }) => {
                             <TextField
                                 size="small"
                                 label="Этаж"
+                                value={floor}
+                                onChange={(e) => {
+                                    setFloor(e.target.value);
+                                }}
                                 sx={{
                                     "& fieldset": {
                                         borderRadius: "20px",
