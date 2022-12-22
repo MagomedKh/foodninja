@@ -50,12 +50,12 @@ const DeliveryAddressModal = ({ ymaps }) => {
 
     const [errors, setErrors] = useState(null);
     const [searchInputValue, setSearchInputValue] = useState("");
-    const [area, setArea] = useState(null);
-    const [street, setStreet] = useState(null);
-    const [home, setHome] = useState(null);
-    const [apartment, setApartment] = useState(null);
-    const [porch, setPorch] = useState(null);
-    const [floor, setFloor] = useState(null);
+    const [area, setArea] = useState("");
+    const [street, setStreet] = useState("");
+    const [home, setHome] = useState("");
+    const [apartment, setApartment] = useState("");
+    const [porch, setPorch] = useState("");
+    const [floor, setFloor] = useState("");
     const [formate, setFormate] = useState(null);
     const [coordinates, setCoordinates] = useState(null);
     const [detachedHouse, setDetachedHouse] = useState(false);
