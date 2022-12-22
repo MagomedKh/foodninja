@@ -213,7 +213,7 @@ export default function CartProduct({
                     {productCart.title}
 
                     <div className="cart--product-description">
-                        {productCart.type === "variations" && (
+                        {productCart.type === "variations" ? (
                             <div>
                                 {productCart.variant.mini_description ? (
                                     <>{productCart.variant.mini_description}</>
@@ -228,7 +228,7 @@ export default function CartProduct({
                                     ))
                                 )}
                             </div>
-                        )}
+                        ) : null}
 
                         {productCart.choosenModificators?.length ? (
                             <div>
@@ -247,22 +247,32 @@ export default function CartProduct({
                                 )}
                             </div>
                         ) : null}
-                    </div>
 
-                    <div className="product--info">
-                        {productCart.options.weight ? (
-                            <div className="weight">
-                                {productCart.options.weight} гр.
-                            </div>
+                        {productCart.type === "variations" ? (
+                            productCart.variant.weight && (
+                                <div className="product--info">
+                                    <div className="weight">
+                                        {productCart.variant.weight} гр.
+                                    </div>
+                                </div>
+                            )
                         ) : (
-                            ""
-                        )}
-                        {productCart.options.count_rolls ? (
-                            <div className="count-rolls">
-                                {productCart.options.count_rolls} шт.
+                            <div className="product--info">
+                                {productCart.options.weight ? (
+                                    <div className="weight">
+                                        {productCart.options.weight} гр.
+                                    </div>
+                                ) : (
+                                    ""
+                                )}
+                                {productCart.options.count_rolls ? (
+                                    <div className="count-rolls">
+                                        {productCart.options.count_rolls} шт.
+                                    </div>
+                                ) : (
+                                    ""
+                                )}
                             </div>
-                        ) : (
-                            ""
                         )}
                     </div>
                 </div>

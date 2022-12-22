@@ -218,24 +218,7 @@ export default function MiniCartProduct({
                                     </div>
                                 ))}
                             </div>
-                        ) : (
-                            <>
-                                {productCart.options.weight ? (
-                                    <div className="weight">
-                                        {productCart.options.weight} гр.
-                                    </div>
-                                ) : (
-                                    ""
-                                )}
-                                {productCart.options.count_rolls ? (
-                                    <div className="count-rolls">
-                                        {productCart.options.count_rolls} шт.
-                                    </div>
-                                ) : (
-                                    ""
-                                )}
-                            </>
-                        )}
+                        ) : null}
                         {productCart.choosenModificators?.length ? (
                             <div className="minicart--product-attributes">
                                 +{" "}
@@ -253,6 +236,31 @@ export default function MiniCartProduct({
                                 )}
                             </div>
                         ) : null}
+
+                        {productCart.type === "variations" ? (
+                            productCart.variant.weight && (
+                                <div className="weight">
+                                    {productCart.variant.weight} гр.
+                                </div>
+                            )
+                        ) : (
+                            <div>
+                                {productCart.options.weight ? (
+                                    <div className="weight">
+                                        {productCart.options.weight} гр.
+                                    </div>
+                                ) : (
+                                    ""
+                                )}
+                                {productCart.options.count_rolls ? (
+                                    <div className="count-rolls">
+                                        {productCart.options.count_rolls} шт.
+                                    </div>
+                                ) : (
+                                    ""
+                                )}
+                            </div>
+                        )}
                     </div>
                     {/* <div className="minicart--product-price">{productCart.options._price.toLocaleString('ru-RU')} &#8381;</div> */}
 

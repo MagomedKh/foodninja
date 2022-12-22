@@ -199,6 +199,32 @@ export default function CheckoutProduct({
                         )}
                     </div>
                 ) : null}
+                {productCart.type === "variations" ? (
+                    productCart.variant.weight && (
+                        <div className="minicart--product-attributes">
+                            <div className="weight">
+                                {productCart.variant.weight} гр.
+                            </div>
+                        </div>
+                    )
+                ) : (
+                    <div className="minicart--product-attributes">
+                        {productCart.options.weight ? (
+                            <div className="weight">
+                                {productCart.options.weight} гр.
+                            </div>
+                        ) : (
+                            ""
+                        )}
+                        {productCart.options.count_rolls ? (
+                            <div className="count-rolls">
+                                {productCart.options.count_rolls} шт.
+                            </div>
+                        ) : (
+                            ""
+                        )}
+                    </div>
+                )}
             </div>
 
             {/* <div className="checkout--product-result">
