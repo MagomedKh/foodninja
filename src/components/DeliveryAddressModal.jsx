@@ -102,6 +102,10 @@ const DeliveryAddressModal = ({ ymaps }) => {
             // });
             setSearchInputValue(firstGeoObject.getAddressLine());
             setCoordinates(coords);
+            validateFields({
+                value: coords,
+                name: "coordinates",
+            });
         });
     }, []);
 
@@ -138,6 +142,10 @@ const DeliveryAddressModal = ({ ymaps }) => {
                 // Проверяем наличие тайлов на данном масштабе.
                 checkZoomRange: true,
             });
+            validateFields({
+                value: coords,
+                name: "coordinates",
+            });
         });
     }, []);
 
@@ -172,6 +180,10 @@ const DeliveryAddressModal = ({ ymaps }) => {
         } else {
             setHome(null);
         }
+        validateFields({
+            value: home,
+            name: "home",
+        });
     };
 
     const clearInputHandler = () => {
@@ -181,6 +193,11 @@ const DeliveryAddressModal = ({ ymaps }) => {
     };
 
     const addAddressHandler = () => {
+        // Проходим валидацию
+        if (!validateFields()) {
+            console.log("err");
+            return;
+        }
         // Получаем строку адреса
         let addressLine = "";
         if (area) {
@@ -210,16 +227,31 @@ const DeliveryAddressModal = ({ ymaps }) => {
             floor,
             formate: addressLine,
         };
-        console.log(validateFields());
         dispatch(addNewAddress(newAddress));
     };
 
-    const validateFields = () => {
-        let temp = {};
-        temp.apartment =
-            !detachedHouse && !apartment ? "Укажите номер квартиры" : "";
-        temp.coordinates = !coordinates ? "Укажите точку на карте" : "";
-        temp.home = !home ? "Укажите номер дома" : "";
+    const validateFields = (field) => {
+        let temp = { ...errors };
+        if (field) {
+            if (field.name === "apartment" && field.name in temp) {
+                temp.apartment =
+                    !detachedHouse && !field.value
+                        ? "Укажите номер квартиры"
+                        : "";
+            }
+            if (field.name === "coordinates" && field.name in temp) {
+                temp.coordinates = !field.value ? "Укажите точку на карте" : "";
+            }
+            if (field.name === "home" && field.name in temp) {
+                temp.home = !home ? "Укажите номер дома" : "";
+            }
+        } else {
+            temp.apartment =
+                !detachedHouse && !apartment ? "Укажите номер квартиры" : "";
+            temp.coordinates = !coordinates ? "Укажите точку на карте" : "";
+            temp.home = !home ? "Укажите номер дома" : "";
+        }
+
         setErrors({ ...temp });
         return Object.values(temp).every((el) => el == "");
     };
@@ -279,9 +311,13 @@ const DeliveryAddressModal = ({ ymaps }) => {
                         <Checkbox
                             sx={{ p: 0, mr: 1 }}
                             checked={detachedHouse}
-                            onChange={(event) =>
-                                setDetachedHouse(event.target.checked)
-                            }
+                            onChange={(event) => {
+                                validateFields({
+                                    value: apartment,
+                                    name: "apartment",
+                                });
+                                setDetachedHouse(event.target.checked);
+                            }}
                         />
                     }
                     label="Частный дом"
@@ -295,6 +331,10 @@ const DeliveryAddressModal = ({ ymaps }) => {
                                 label="Квартира"
                                 value={apartment}
                                 onChange={(e) => {
+                                    validateFields({
+                                        value: e.target.value,
+                                        name: "apartment",
+                                    });
                                     setApartment(e.target.value);
                                 }}
                                 error={!!errors?.apartment}
@@ -368,6 +408,11 @@ const DeliveryAddressModal = ({ ymaps }) => {
                     <GeolocationControl />
                     <FullscreenControl />
                 </Map>
+                {errors && !Object.values(errors).every((el) => el == "") && (
+                    <Alert severity="error" sx={{ mt: 2 }}>
+                        Заполните все необходимые поля
+                    </Alert>
+                )}
                 <Button
                     className="btn--action"
                     sx={{ width: 1, mt: 2 }}
