@@ -5,24 +5,36 @@ import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
 import "../../css/recommend-product.css";
 import soon from "../../img/photo-soon.svg";
+import {
+    setModalProduct,
+    setOpenModal,
+} from "../../redux/actions/productModal";
 
 export default function MiniCartReccomendProduct({ product }) {
     const dispatch = useDispatch();
-    const { cartProducts } = useSelector(({ cart }) => {
-        return {
-            cartProducts: cart.items,
-        };
-    });
 
     const handleAddProduct = () => {
         dispatch(addProductToCart(product));
+    };
+
+    const openModalBtnClick = () => {
+        dispatch(
+            setModalProduct({
+                ...product,
+            })
+        );
+        dispatch(setOpenModal(true));
     };
 
     return (
         <div
             className="product recommend-product"
             data-product_id={product.id}
-            onClick={handleAddProduct}
+            onClick={
+                product.type === "variations"
+                    ? openModalBtnClick
+                    : handleAddProduct
+            }
         >
             <div className="product-image">
                 <img
@@ -36,6 +48,7 @@ export default function MiniCartReccomendProduct({ product }) {
 
                 <div className="product--buying">
                     <div className="product--price">
+                        {product.type === "variations" && "от "}
                         {product.options._price.toLocaleString("ru-RU")} &#8381;
                     </div>
                 </div>

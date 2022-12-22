@@ -1,5 +1,5 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useSelector, shallowEqual } from "react-redux";
 import { useLocation } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
@@ -8,6 +8,7 @@ import { FreeMode, Navigation } from "swiper";
 import MiniCartReccomendProduct from "../components/Product/MiniCartReccomendProduct";
 import AddonProductMini from "../components/Product/AddonProductMini";
 import addonImg from "../img/addons.jpg";
+import { _isCategoryDisabled } from "./helpers";
 
 export default function MiniCartReccomends() {
     const { pathname } = useLocation();
@@ -26,16 +27,24 @@ export default function MiniCartReccomends() {
         }
     );
 
+    const { categories } = useSelector((state) => state.products, shallowEqual);
+
     const miniCartAddonOpenHandler = () => {
         if (pathname === "/cart")
             document.body.style.overflow = miniCartAddonOpen
                 ? "initial"
                 : "hidden";
 
-        console.log(miniCartAddonOpen);
         setMiniCartAddonOpen(!miniCartAddonOpen);
         setMiniCartAddonOpenFirst(false);
     };
+
+    // Создаем массив недоступных на данное время категорий
+
+    const disabledCategoriesArr = categories.filter((category) =>
+        _isCategoryDisabled(category)
+    );
+
     return (
         <div>
             {recommend_items.length ? (
@@ -69,7 +78,14 @@ export default function MiniCartReccomends() {
                         </SwiperSlide>
 
                         {recommend_items.map((product) => {
-                            if (!cartProducts[product.id]) {
+                            if (
+                                !cartProducts[product.id] &&
+                                !disabledCategoriesArr.find((category) =>
+                                    product.categories.includes(
+                                        category.term_id
+                                    )
+                                )
+                            ) {
                                 return (
                                     <SwiperSlide
                                         key={product.id}

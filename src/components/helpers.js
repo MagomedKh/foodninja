@@ -17,7 +17,7 @@ export const _isMobile = () => {
 
 export const _getDomain = () => {
     return window.location.hostname === "localhost"
-        ? "demo.foodninja.pro"
+        ? "dev.foodninja.pro"
         : window.location.hostname;
 };
 
@@ -314,7 +314,11 @@ export const _checkPromocode = (
 };
 
 export const _isCategoryDisabled = (category) => {
-    if (!category.timeLimitStart || !category.timeLimitEnd) {
+    if (
+        !category.useTimeLimit ||
+        !category.timeLimitStart ||
+        !category.timeLimitEnd
+    ) {
         return false;
     }
     const currentTime = getTime(new Date());
