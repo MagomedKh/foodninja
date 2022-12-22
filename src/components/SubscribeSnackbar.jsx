@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Button, Snackbar, Slide, Box, Typography } from "@mui/material";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { _isMobile } from "./helpers";
 import Cookies from "universal-cookie";
 import { addDays } from "date-fns";
@@ -12,6 +13,8 @@ function TransitionRight(props) {
 const SubscribeSnackbar = () => {
     const [subscribeOpen, setSubscribeOpen] = useState(false);
     const { data: config } = useSelector((state) => state.config);
+
+    const matches = useMediaQuery("(min-width:600px)");
 
     const cookies = new Cookies();
 
@@ -98,6 +101,7 @@ const SubscribeSnackbar = () => {
             sx={{
                 mb: 4,
                 "& .MuiPaper-root": {
+                    maxWidth: matches ? "320px" : "auto",
                     boxShadow: "0 0 20px rgb(0 0 0 / 10%)",
                     borderRadius: "15px",
                 },
