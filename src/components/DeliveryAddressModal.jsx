@@ -48,6 +48,7 @@ const DeliveryAddressModal = ({ ymaps }) => {
     const { modalOpen } = useSelector((state) => state.deliveryAddressModal);
     const { data: config } = useSelector((state) => state.config);
 
+    const [errors, setErrors] = useState(null);
     const [searchInputValue, setSearchInputValue] = useState("");
     const [area, setArea] = useState(null);
     const [street, setStreet] = useState(null);
@@ -182,16 +183,24 @@ const DeliveryAddressModal = ({ ymaps }) => {
     const addAddressHandler = () => {
         // Получаем строку адреса
         let addressLine = "";
-        [area, street, home, apartment, porch, floor].forEach(
-            (el, inx, array) => {
-                if (el) {
-                    addressLine += el;
-                    if (inx != array.length - 1) {
-                        addressLine += ", ";
-                    }
-                }
-            }
-        );
+        if (area) {
+            addressLine += `${area}, `;
+        }
+        if (street) {
+            addressLine += `${street}, `;
+        }
+        if (home) {
+            addressLine += `${home}`;
+        }
+        if (apartment) {
+            addressLine += `, кв. ${apartment}`;
+        }
+        if (porch) {
+            addressLine += `, под. ${porch}`;
+        }
+        if (floor) {
+            addressLine += `, этаж ${floor}`;
+        }
         const newAddress = {
             area,
             street,
@@ -201,9 +210,19 @@ const DeliveryAddressModal = ({ ymaps }) => {
             floor,
             formate: addressLine,
         };
+        console.log(validateFields());
         dispatch(addNewAddress(newAddress));
     };
 
+    const validateFields = () => {
+        let temp = {};
+        temp.apartment =
+            !detachedHouse && !apartment ? "Укажите номер квартиры" : "";
+        temp.coordinates = !coordinates ? "Укажите точку на карте" : "";
+        temp.home = !home ? "Укажите номер дома" : "";
+        setErrors({ ...temp });
+        return Object.values(temp).every((el) => el == "");
+    };
     return (
         <Dialog
             {...dialogProps}
@@ -233,6 +252,8 @@ const DeliveryAddressModal = ({ ymaps }) => {
                             confirmSerachHandler(searchInputValue);
                         }
                     }}
+                    error={!!errors?.coordinates || !!errors?.home}
+                    helperText={errors?.coordinates || errors?.home}
                     InputProps={{
                         endAdornment: searchInputValue ? (
                             <IconButton
@@ -268,7 +289,7 @@ const DeliveryAddressModal = ({ ymaps }) => {
                 />
                 <Collapse in={!detachedHouse}>
                     <Grid container spacing={2} sx={{ mb: 2 }}>
-                        <Grid item mobilexs={12} mobilesm={6} mobilemd={3}>
+                        <Grid item mobilexs={12} mobilesm={12} mobilemd={4}>
                             <TextField
                                 size="small"
                                 label="Квартира"
@@ -276,6 +297,8 @@ const DeliveryAddressModal = ({ ymaps }) => {
                                 onChange={(e) => {
                                     setApartment(e.target.value);
                                 }}
+                                error={!!errors?.apartment}
+                                helperText={errors?.apartment}
                                 sx={{
                                     minWidth: "100px",
                                     "& fieldset": {
@@ -286,12 +309,12 @@ const DeliveryAddressModal = ({ ymaps }) => {
                                 className="delivery-address-modal__sub-address"
                             />
                         </Grid>
-                        <Grid item mobilexs={12} mobilesm={6} mobilemd={3}>
+                        <Grid item mobilexs={12} mobilesm={12} mobilemd={4}>
                             <TextField
                                 size="small"
                                 label="Подъезд"
                                 value={porch}
-                                onCHange={(e) => {
+                                onChange={(e) => {
                                     setPorch(e.target.value);
                                 }}
                                 sx={{
@@ -303,7 +326,7 @@ const DeliveryAddressModal = ({ ymaps }) => {
                                 className="delivery-address-modal__sub-address"
                             />
                         </Grid>
-                        <Grid item mobilexs={12} mobilesm={6} mobilemd={3}>
+                        <Grid item mobilexs={12} mobilesm={12} mobilemd={4}>
                             <TextField
                                 size="small"
                                 label="Этаж"
@@ -311,19 +334,6 @@ const DeliveryAddressModal = ({ ymaps }) => {
                                 onChange={(e) => {
                                     setFloor(e.target.value);
                                 }}
-                                sx={{
-                                    "& fieldset": {
-                                        borderRadius: "20px",
-                                    },
-                                    width: "100%",
-                                }}
-                                className="delivery-address-modal__sub-address"
-                            />
-                        </Grid>
-                        <Grid item mobilexs={12} mobilesm={6} mobilemd={3}>
-                            <TextField
-                                size="small"
-                                label="Домофон"
                                 sx={{
                                     "& fieldset": {
                                         borderRadius: "20px",
