@@ -38,8 +38,7 @@ export default function ChooseTown() {
 
     useEffect(() => {
         if (
-            (config.data.CONFIG_main_site_choose_town === "on" &&
-                _getDomain() === config.data.baseDomain) ||
+            config.data.CONFIG_main_site_choose_town === "on" ||
             (!chooseTownShown &&
                 config.data.towns &&
                 config.data.towns.length > 1 &&
@@ -106,10 +105,18 @@ export default function ChooseTown() {
     return (
         <div className="choose-town--block">
             {config.data.towns ? (
-                <Dialog maxWidth="md" {...dialogProps}>
+                <Dialog
+                    maxWidth="md"
+                    {...dialogProps}
+                    sx={{
+                        "& .MuiPaper-root": {
+                            borderRadius: _isMobile() ? "0px" : "20px",
+                        },
+                    }}
+                >
                     <div className="modal-alert--wrapper choose-town">
-                        {config.data.CONFIG_main_site_choose_town === "on" &&
-                        _getDomain() === config.data.baseDomain ? null : (
+                        {config.data.CONFIG_main_site_choose_town ===
+                        "on" ? null : (
                             <IconButton
                                 edge="start"
                                 color="inherit"
