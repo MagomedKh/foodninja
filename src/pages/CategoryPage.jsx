@@ -29,14 +29,10 @@ const CategoryPage = () => {
     );
     const [activeCategoryTags, setActiveCategoryTags] = useState({});
 
-    const currentCategory = categories.find(
-        (el) =>
-            el.slug ===
-            pathname
-                .split("/")
-                .filter((element) => element)
-                .at(-1)
-    );
+    const currentCategory = categories.find((el) => {
+        const pathnameArray = pathname.split("/").filter((element) => element);
+        return el.slug === pathnameArray[pathnameArray.length - 1];
+    });
 
     useEffect(() => {
         if (currentCategory) {

@@ -151,7 +151,7 @@ const PreorderForm = forwardRef(
 
         // Проверяем чтобы последнее доступное время не переходило на следующий день
         const endOfTheDay = endOfDay(new Date());
-        if (compareAsc(hoursArray.at(-1), endOfTheDay) == 1) {
+        if (compareAsc(hoursArray[hoursArray.length - 1], endOfTheDay) == 1) {
             hoursArray.pop();
         }
 

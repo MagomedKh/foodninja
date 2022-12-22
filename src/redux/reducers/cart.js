@@ -230,9 +230,10 @@ const cart = (state = initialState, action) => {
                             },
                         };
 
-                        updatedItems[
-                            action.payload.promocodeProducts.id
-                        ].items.at(-1).options._promocode_price = parseInt(
+                        updatedItems[action.payload.promocodeProducts.id].items[
+                            updatedItems[action.payload.promocodeProducts.id]
+                                .items.length - 1
+                        ].options._promocode_price = parseInt(
                             action.payload.productPrice
                         );
 
