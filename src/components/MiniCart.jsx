@@ -384,7 +384,8 @@ function MiniCart() {
                                     className="btn--action openCheckout"
                                     sx={{ mt: 2 }}
                                 >
-                                    Оформить заказ
+                                    К оформлению заказа
+                                    <NavigateNextIcon className="button-arrow-icon" />
                                 </Button>
                             )}
                         </div>
