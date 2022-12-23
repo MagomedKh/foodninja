@@ -145,6 +145,7 @@ export default function Checkout() {
     const [moneyBack, setMoneyBack] = useState("");
     const [dontRecall, setDontRecall] = useState(false);
     const [sticked, setSticked] = useState(false);
+    const [choosenAddress, setChoosenAddress] = useState(null);
 
     const handleAlertClose = () => {
         setOpenAlert(false);
@@ -210,8 +211,9 @@ export default function Checkout() {
         setSelfDeliveryAddress(value);
     };
 
-    const handleChooseDeliveryAddress = (e, value) => {
-        setDeliveryAddress(value);
+    const handleChooseDeliveryAddress = (e, index) => {
+        setChoosenAddress(user.addresses[index]);
+        setDeliveryAddress(index);
     };
 
     const handleChangeNewUserAddress = (e) => {
@@ -321,7 +323,6 @@ export default function Checkout() {
         }
 
         if (currentValidation) {
-            console.log(userName);
             setLoading(true);
             axios
                 .post("https://" + _getDomain() + "/?rest-api=makeOrder", {
@@ -824,7 +825,11 @@ export default function Checkout() {
                                     >
                                         Добавить адрес
                                     </Button>
-                                    <DeliveryAddressModal />
+                                    <DeliveryAddressModal
+                                        choosenCoordinates={
+                                            choosenAddress?.coordinates
+                                        }
+                                    />
 
                                     {deliveryAddress === "new" && (
                                         <div className="checkout--form-new-address">

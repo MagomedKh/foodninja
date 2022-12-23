@@ -1,5 +1,6 @@
 const initialState = {
     modalOpen: false,
+    deliveryZone: null,
 };
 
 const deliveryAddressModal = (state = initialState, action) => {
@@ -9,6 +10,13 @@ const deliveryAddressModal = (state = initialState, action) => {
                 ...state,
                 modalOpen: action.payload,
             };
+
+        case "SET_DELIVERY_ZONE":
+            return {
+                ...state,
+                deliveryZone: action.payload,
+            };
+
         default:
             return state;
     }
