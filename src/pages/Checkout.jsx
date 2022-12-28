@@ -818,15 +818,33 @@ export default function Checkout() {
                                         />
                                     </RadioGroup>
 
-                                    <Button
-                                        onClick={() => {
-                                            dispatch(
-                                                setOpenDeliveryModal(true)
-                                            );
+                                    <TextField
+                                        size="small"
+                                        placeholder="Укажите адрес на карте"
+                                        value={choosenAddress?.formate || ""}
+                                        multiline
+                                        focused={false}
+                                        fullWidth
+                                        InputProps={{
+                                            readOnly: true,
+                                            endAdornment: (
+                                                <span
+                                                    className="text-field__text-adornment"
+                                                    onClick={() => {
+                                                        dispatch(
+                                                            setOpenDeliveryModal(
+                                                                true
+                                                            )
+                                                        );
+                                                    }}
+                                                >
+                                                    {choosenAddress?.formate
+                                                        ? "Изменить"
+                                                        : "Указать"}
+                                                </span>
+                                            ),
                                         }}
-                                    >
-                                        Добавить адрес
-                                    </Button>
+                                    />
                                     <DeliveryAddressModal
                                         choosenAddress={choosenAddress}
                                     />

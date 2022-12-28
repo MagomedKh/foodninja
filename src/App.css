@@ -552,3 +552,9 @@ a.btn {
 .choose-town-page_logo-wrapper img {
     width: 100%;
 }
+
+.text-field__text-adornment {
+    margin-left: 5px;
+    color: var(--main-color);
+    cursor: pointer;
+}

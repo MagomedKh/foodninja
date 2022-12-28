@@ -131,7 +131,7 @@ const DeliveryAddressModal = ({ ymaps, choosenAddress }) => {
         }
     };
     useEffect(() => {
-        if (mapRef.current) {
+        if (mapRef.current && choosenAddress) {
             if (choosenAddress.coordinates) {
                 let choosenZone = null;
                 mapRef.current.geoObjects.each((zone) => {
@@ -158,6 +158,17 @@ const DeliveryAddressModal = ({ ymaps, choosenAddress }) => {
             }
         }
     }, [choosenAddress, mapRef]);
+
+    useEffect(() => {
+        if (choosenAddress && choosenAddress.coordinates) {
+            getAddress(choosenAddress.coordinates);
+            placemarkRef.current.geometry.setCoordinates(
+                choosenAddress.coordinates
+            );
+        } else {
+            clearInputHandler();
+        }
+    }, [choosenAddress]);
 
     const getAddress = useCallback((coords) => {
         // placemarkRef.current.properties.set("iconCaption", "поиск...");
@@ -301,7 +312,9 @@ const DeliveryAddressModal = ({ ymaps, choosenAddress }) => {
     const clearInputHandler = () => {
         inputChangeHandler("");
         setCoordinates(null);
-        placemarkRef.current.geometry.setCoordinates(null);
+        if (placemarkRef.current) {
+            placemarkRef.current.geometry.setCoordinates(null);
+        }
     };
 
     const addAddressHandler = () => {
