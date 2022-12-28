@@ -2,20 +2,22 @@
     border-radius: 20px;
 }
 
-.town-link a {
+.town-link {
     font-size: 20px;
     border-bottom: 0;
     text-decoration: none;
     color: black;
     font-weight: 100;
     margin-bottom: 15px;
-    display: inline-block;
+    display: block;
+    width: fit-content;
+    cursor: pointer;
     border-bottom: 1px dashed transparent;
 }
-.town-link:last-child a {
+.town-link:last-child {
     margin-bottom: 0;
 }
-.town-link a:hover {
+.town-link:hover {
     color: black;
     border-bottom: 1px dashed;
 }

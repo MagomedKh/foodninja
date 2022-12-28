@@ -26,6 +26,7 @@ export default function ChooseTown() {
 
     const [inputValue, setInputValue] = useState("");
     const [filteredTowns, setFilteredTowns] = useState(null);
+    const [redirect, setRedirect] = useState(false);
 
     const cookies = useMemo(() => new Cookies(), []);
     const currentTown = cookies.get("currentSite");
@@ -65,6 +66,13 @@ export default function ChooseTown() {
         }
     }, [config.status]);
 
+    useEffect(() => {
+        if (redirect && !config.openTownModal) {
+            setRedirect(false);
+            window.location.href = redirect;
+        }
+    }, [redirect]);
+
     const inputChangeHandler = (event) => {
         setInputValue(event.target.value);
         if (!event.target.value) {
@@ -78,16 +86,28 @@ export default function ChooseTown() {
     const renderedTownsName = filteredTowns
         ? filteredTowns.map((value, index) => (
               <div key={index} className="town-link">
-                  <a href={`https://${value.item.url}/?saveTown=true`}>
+                  <div
+                      onClick={() => {
+                          setRedirect(
+                              `https://${value.item.url}/?saveTown=true`
+                          );
+                          handleAlertClose();
+                      }}
+                  >
                       {value.item.name}
-                  </a>
+                  </div>
               </div>
           ))
         : config.data.towns.map((value, index) => (
               <div key={index} className="town-link">
-                  <a href={`https://${value.url}/?saveTown=true`}>
+                  <div
+                      onClick={() => {
+                          setRedirect(`https://${value.url}/?saveTown=true`);
+                          handleAlertClose();
+                      }}
+                  >
                       {value.name}
-                  </a>
+                  </div>
               </div>
           ));
 
