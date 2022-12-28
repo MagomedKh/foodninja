@@ -94,7 +94,7 @@ const connectedWithYmaps = (Wrapped) => {
     return withYMaps(Wrapped, true, ["geocode", "SuggestView"]);
 };
 
-const DeliveryAddressModal = ({ ymaps, choosenCoordinates }) => {
+const DeliveryAddressModal = ({ ymaps, choosenAddress }) => {
     const dispatch = useDispatch();
     const mapRef = useRef();
     const placemarkRef = useRef(null);
@@ -132,12 +132,12 @@ const DeliveryAddressModal = ({ ymaps, choosenCoordinates }) => {
     };
     useEffect(() => {
         if (mapRef.current) {
-            if (choosenCoordinates) {
+            if (choosenAddress.coordinates) {
                 let choosenZone = null;
                 mapRef.current.geoObjects.each((zone) => {
                     if (
                         zone.geometry.getType() === "Polygon" &&
-                        zone.geometry.contains(choosenCoordinates)
+                        zone.geometry.contains(choosenAddress.coordinates)
                     ) {
                         choosenZone = {
                             name: zone.options._options.name,
@@ -157,7 +157,7 @@ const DeliveryAddressModal = ({ ymaps, choosenCoordinates }) => {
                 dispatch(setDeliveryZone(null));
             }
         }
-    }, [choosenCoordinates, mapRef]);
+    }, [choosenAddress, mapRef]);
 
     const getAddress = useCallback((coords) => {
         // placemarkRef.current.properties.set("iconCaption", "поиск...");
@@ -341,6 +341,8 @@ const DeliveryAddressModal = ({ ymaps, choosenCoordinates }) => {
             coordinates,
         };
         dispatch(addNewAddress(newAddress));
+        dispatch(setOpenDeliveryModal(false));
+        clearInputHandler();
     };
 
     const validateFields = (field) => {

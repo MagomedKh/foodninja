@@ -145,7 +145,9 @@ export default function Checkout() {
     const [moneyBack, setMoneyBack] = useState("");
     const [dontRecall, setDontRecall] = useState(false);
     const [sticked, setSticked] = useState(false);
-    const [choosenAddress, setChoosenAddress] = useState(null);
+    const [choosenAddress, setChoosenAddress] = useState(
+        user.addresses ? user.addresses[0] : null
+    );
 
     const handleAlertClose = () => {
         setOpenAlert(false);
@@ -826,9 +828,7 @@ export default function Checkout() {
                                         Добавить адрес
                                     </Button>
                                     <DeliveryAddressModal
-                                        choosenCoordinates={
-                                            choosenAddress?.coordinates
-                                        }
+                                        choosenAddress={choosenAddress}
                                     />
 
                                     {deliveryAddress === "new" && (
