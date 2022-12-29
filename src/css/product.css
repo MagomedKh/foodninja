@@ -188,6 +188,7 @@
     border-color: var(--sec-color);
 }
 .product--quantity .quantity {
+    height: 40px;
     width: 34px;
     display: inline-block;
     border: 0;
@@ -305,5 +306,8 @@
     .product--quantity .quantity {
         width: 28px;
         display: inline-block;
+    }
+    .cart--product .product--quantity .quantity {
+        height: 28px;
     }
 }
