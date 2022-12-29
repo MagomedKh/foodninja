@@ -694,9 +694,16 @@ const cart = (state = initialState, action) => {
             const newItems = [...state.items[action.payload.id].items];
 
             if (!action.payload.choosenModificators?.length) {
-                const deletedItemInx = newItems.findLastIndex(
-                    (el) => !el.choosenModificators?.length
-                );
+                // метод findLastIndex не работает на старых версиях safari
+                const polyFindLastIndex = () => {
+                    for (let i = newItems.length - 1; i >= 0; i--) {
+                        if (!newItems[i].choosenModificators?.length) {
+                            return i;
+                        }
+                    }
+                    return -1;
+                };
+                const deletedItemInx = polyFindLastIndex();
                 newItems.splice(deletedItemInx, 1);
             } else if (newItems.length > 1) {
                 newItems.pop();
@@ -760,13 +767,22 @@ const cart = (state = initialState, action) => {
             if (action.payload.disabled) {
                 delete updatedItems[action.payload.id];
             } else if (action.payload.variant) {
-                const indexVar = Object.values(
-                    updatedItems[action.payload.id].items
-                ).findLastIndex(
-                    (element) =>
-                        element.variant.variant_id ===
-                        action.payload.variant.variant_id
+                // метод findLastIndex не работает на старых версиях safari
+                const polyFindLastIndex = (arr) => {
+                    for (let i = arr.length - 1; i >= 0; i--) {
+                        if (
+                            arr[i].variant.variant_id ===
+                            action.payload.variant.variant_id
+                        ) {
+                            return i;
+                        }
+                    }
+                    return -1;
+                };
+                const indexVar = polyFindLastIndex(
+                    Object.values(updatedItems[action.payload.id].items)
                 );
+
                 if (
                     action.payload.productIndex ||
                     action.payload.productIndex == 0
