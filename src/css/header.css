@@ -217,9 +217,6 @@
         margin-right: 0 !important;
     }
     .header-logo-wrapper {
-        display: flex;
-        justify-content: end;
-        align-items: center;
         height: 56px;
     }
     .modal-alert--wrapper.choose-town .modal-alert--inner {
