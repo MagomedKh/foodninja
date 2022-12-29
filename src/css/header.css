@@ -166,11 +166,13 @@
 .mobile-menu-wrapper .header-phone {
     color: #fff;
     display: flex;
+    align-items: center;
     margin: 0 0 20px !important;
     padding: 10px 20px;
 }
 .mobile-menu--contacts {
     display: flex;
+    align-items: center;
     color: white;
     padding: 10px 20px;
 }
