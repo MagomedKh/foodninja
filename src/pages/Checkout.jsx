@@ -1237,11 +1237,13 @@ export default function Checkout() {
                                         <span className="price-title">
                                             Доставка
                                         </span>
-                                        <span className="money">
-                                            {deliveryZone.deliveryPrice.toLocaleString(
-                                                "ru-RU"
-                                            )}{" "}
-                                            &#8381;
+                                        <span>
+                                            {cartTotalPrice >
+                                            deliveryZone.freeDeliveryOrder
+                                                ? "Бесплатно"
+                                                : `${deliveryZone.deliveryPrice.toLocaleString(
+                                                      "ru-RU"
+                                                  )} ₽`}
                                         </span>
                                     </div>
                                 ) : null}
