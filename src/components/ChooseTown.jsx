@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Dialog } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { setTownModal } from "../redux/actions/config";
@@ -73,47 +73,76 @@ export default function ChooseTown() {
         }
     }, [redirect]);
 
-    const inputChangeHandler = (event) => {
+    const inputChangeHandler = useCallback((event) => {
         setInputValue(event.target.value);
         if (!event.target.value) {
-            setFilteredTowns(null);
+            setFilteredTowns(groupedTowns);
             return;
         }
-        const temp = fuse.search(event.target.value);
-        setFilteredTowns(temp);
-    };
+        const temp = fuse.search(event.target.value).map((el) => el.item);
+        setFilteredTowns(groupTowns(temp));
+    }, []);
 
-    const renderedTownsName = filteredTowns
-        ? filteredTowns.map((value, index) => (
-              <div key={index} className="town-link">
-                  <div
-                      onClick={() => {
-                          setRedirect(
-                              `https://${value.item.url}/?saveTown=true`
-                          );
-                          handleAlertClose();
-                      }}
-                  >
-                      {value.item.name}
-                  </div>
-              </div>
-          ))
-        : config.data.towns.map((value, index) => (
-              <div key={index} className="town-link">
-                  <div
-                      onClick={() => {
-                          setRedirect(`https://${value.url}/?saveTown=true`);
-                          handleAlertClose();
-                      }}
-                  >
-                      {value.name}
-                  </div>
-              </div>
-          ));
+    useEffect(() => {
+        setFilteredTowns(groupedTowns);
+    }, [config.data.towns]);
 
-    const handleAlertClose = () => {
+    const groupTowns = useCallback((arr) => {
+        const map = arr.reduce((acc, val) => {
+            let char = val.name.charAt(0).toUpperCase();
+            acc[char] = [].concat(acc[char] || [], val);
+            return acc;
+        }, {});
+        const res = Object.keys(map).map((el) => ({
+            letter: el,
+            towns: map[el],
+        }));
+        const sortedRes = res.sort((a, b) => {
+            if (a.letter < b.letter) {
+                return -1;
+            }
+            if (a.letter > b.letter) {
+                return 1;
+            }
+            return 0;
+        });
+        return sortedRes;
+    }, []);
+
+    const groupedTowns = useMemo(() => {
+        if (config.data.towns) {
+            const initial = groupTowns(config.data.towns);
+            return initial;
+        }
+    }, [config.data.towns]);
+
+    const renderedTownsName =
+        filteredTowns &&
+        filteredTowns.map((group, index) => {
+            return (
+                <div className="town-group" key={index}>
+                    <span className="town-letter">{group.letter}</span>
+                    {group.towns.map((town, index) => (
+                        <div
+                            className="town-link"
+                            onClick={() => {
+                                setRedirect(
+                                    `https://${town.url}/?saveTown=true`
+                                );
+                                handleAlertClose();
+                            }}
+                            key={index}
+                        >
+                            {town.name}
+                        </div>
+                    ))}
+                </div>
+            );
+        });
+
+    const handleAlertClose = useCallback(() => {
         dispatch(setTownModal(false));
-    };
+    }, []);
 
     let dialogProps = { open: config.openTownModal, maxWidth: "md" };
     if (_isMobile()) {

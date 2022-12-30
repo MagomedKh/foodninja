@@ -2,13 +2,28 @@
     border-radius: 20px;
 }
 
+.town-group {
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.town-letter {
+    display: block;
+    overflow-y: auto;
+    border-bottom: 0;
+    text-decoration: none;
+    font-size: 20px;
+    position: absolute;
+    left: 0;
+}
+
 .town-link {
     font-size: 20px;
     border-bottom: 0;
     text-decoration: none;
     color: black;
     font-weight: 100;
-    margin-bottom: 15px;
+    margin-left: 30px;
     display: block;
     width: fit-content;
     cursor: pointer;
