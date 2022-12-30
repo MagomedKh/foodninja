@@ -109,10 +109,16 @@
     font-size: 18px;
     font-weight: bold;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
 }
 .checkout--total-panel--result .money {
     color: var(--main-color);
+}
+
+.checkout--total-panel--result .result-delivery,
+.checkout--total-panel--result .result-total {
+    display: flex;
+    justify-content: space-between;
 }
 .checkout--user-bonuses {
     margin-top: 0.5rem;

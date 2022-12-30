@@ -6,6 +6,7 @@ import {
     Alert,
     Button,
     Container,
+    Collapse,
     Dialog,
     FormControlLabel,
     IconButton,
@@ -109,6 +110,7 @@ export default function Checkout() {
             cartSubTotalPrice: cart.subTotalPrice,
         };
     });
+    const { deliveryZone } = useSelector((state) => state.deliveryAddressModal);
     const navigate = useNavigate();
     const stickedTotalPanel = useRef();
     const [loading, setLoading] = useState(false);
@@ -697,6 +699,17 @@ export default function Checkout() {
         };
     }, [sticked]);
 
+    const getResultTotal = () => {
+        let result = cartTotalPrice;
+        if (usedBonuses) {
+            result -= usedBonuses;
+        }
+        if (deliveryZone?.deliveryPrice) {
+            result += parseInt(deliveryZone?.deliveryPrice);
+        }
+        return result;
+    };
+
     return (
         <>
             <Header />
@@ -1219,13 +1232,28 @@ export default function Checkout() {
                             )}
 
                             <div className="checkout--total-panel--result">
-                                <span className="price-title">Итого</span>
-                                <span className="money">
-                                    {(
-                                        cartTotalPrice - usedBonuses
-                                    ).toLocaleString("ru-RU")}{" "}
-                                    &#8381;
-                                </span>
+                                {deliveryZone ? (
+                                    <div className="result-delivery">
+                                        <span className="price-title">
+                                            Доставка
+                                        </span>
+                                        <span className="money">
+                                            {deliveryZone.deliveryPrice.toLocaleString(
+                                                "ru-RU"
+                                            )}{" "}
+                                            &#8381;
+                                        </span>
+                                    </div>
+                                ) : null}
+                                <div className="result-total">
+                                    <span className="price-title">Итого</span>
+                                    <span className="money">
+                                        {getResultTotal().toLocaleString(
+                                            "ru-RU"
+                                        )}{" "}
+                                        &#8381;
+                                    </span>
+                                </div>
                             </div>
 
                             {config.CONFIG_bonuses_program_status === "on" && (
@@ -1444,12 +1472,31 @@ export default function Checkout() {
                                 </Alert>
                             )}
 
+                            <Collapse
+                                sx={{ mt: 1 }}
+                                in={
+                                    deliveryZone &&
+                                    deliveryZone.orderMinPrice > cartTotalPrice
+                                }
+                                unmountOnExit
+                                sx={{ mt: 3 }}
+                            >
+                                <Alert severity="error">
+                                    Сумма заказа меньше минимальной для доставки
+                                    по указанному адресу
+                                </Alert>
+                            </Collapse>
+
                             <LoadingButton
                                 loading={loading}
                                 sx={{ width: 1, mt: 1.5 }}
                                 variant="button"
                                 className="btn--action makeOrder"
                                 onClick={handleMakeOrder}
+                                disabled={
+                                    deliveryZone &&
+                                    deliveryZone.orderMinPrice > cartTotalPrice
+                                }
                             >
                                 Подтвердить заказ
                             </LoadingButton>

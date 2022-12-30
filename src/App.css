@@ -558,3 +558,7 @@ a.btn {
     color: var(--main-color);
     cursor: pointer;
 }
+
+.text-field__text-adornment:hover {
+    text-decoration: underline;
+}

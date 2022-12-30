@@ -56,7 +56,7 @@ const storedZones = {
             fillColor: "#ff5722",
             strokeColor: "#aa0000",
             deliveryPrice: "111",
-            orderMinPrice: "111",
+            orderMinPrice: "1100",
             freeDeliveryOrder: "111",
         },
         {
@@ -80,7 +80,7 @@ const storedZones = {
             fillColor: "#917269",
             strokeColor: "#241f4d",
             deliveryPrice: "222",
-            orderMinPrice: "22",
+            orderMinPrice: "2200",
             freeDeliveryOrder: "22",
         },
     ],
