@@ -81,7 +81,7 @@ const storedZones = {
             strokeColor: "#241f4d",
             deliveryPrice: "222",
             orderMinPrice: "2200",
-            freeDeliveryOrder: "22",
+            freeDeliveryOrder: "2200",
         },
     ],
 };
@@ -113,12 +113,45 @@ const DeliveryAddressModal = ({ ymaps, choosenAddress }) => {
     const [coordinates, setCoordinates] = useState(null);
     const [detachedHouse, setDetachedHouse] = useState(false);
 
-    let dialogProps = { open: modalOpen, maxWidth: "md", keepMounted: true };
-    if (_isMobile()) {
-        dialogProps.TransitionComponent = Transition;
-        dialogProps.fullScreen = true;
-        dialogProps.scroll = "body";
-    }
+    // Initial state
+    useEffect(() => {
+        if (choosenAddress) {
+            if (choosenAddress.coordinates) {
+                getAddress(choosenAddress.coordinates);
+                placemarkRef.current.geometry.setCoordinates(
+                    choosenAddress.coordinates
+                );
+            } else {
+                clearInputHandler();
+            }
+            if (choosenAddress.apartment) {
+                setApartment(choosenAddress.apartment);
+            } else {
+                setApartment("");
+            }
+            if (choosenAddress.floor) {
+                setFloor(choosenAddress.floor);
+            } else {
+                setFloor("");
+            }
+            if (choosenAddress.porch) {
+                setPorch(choosenAddress.porch);
+            } else {
+                setPorch("");
+            }
+            if (choosenAddress.detachedHouse) {
+                setDetachedHouse(true);
+            } else {
+                setDetachedHouse(false);
+            }
+        } else {
+            clearInputHandler();
+            setApartment("");
+            setFloor("");
+            setPorch("");
+            setDetachedHouse(false);
+        }
+    }, [choosenAddress]);
 
     const handleClose = () => {
         dispatch(setOpenDeliveryModal(false));
@@ -158,17 +191,6 @@ const DeliveryAddressModal = ({ ymaps, choosenAddress }) => {
             }
         }
     }, [choosenAddress, mapRef]);
-
-    useEffect(() => {
-        if (choosenAddress && choosenAddress.coordinates) {
-            getAddress(choosenAddress.coordinates);
-            placemarkRef.current.geometry.setCoordinates(
-                choosenAddress.coordinates
-            );
-        } else {
-            clearInputHandler();
-        }
-    }, [choosenAddress]);
 
     const getAddress = useCallback((coords) => {
         // placemarkRef.current.properties.set("iconCaption", "поиск...");
@@ -352,6 +374,7 @@ const DeliveryAddressModal = ({ ymaps, choosenAddress }) => {
             floor,
             formate: addressLine,
             coordinates,
+            detachedHouse,
         };
         dispatch(addNewAddress(newAddress));
         dispatch(setOpenDeliveryModal(false));
@@ -383,6 +406,14 @@ const DeliveryAddressModal = ({ ymaps, choosenAddress }) => {
         setErrors({ ...temp });
         return Object.values(temp).every((el) => el == "");
     };
+
+    let dialogProps = { open: modalOpen, maxWidth: "md", keepMounted: true };
+    if (_isMobile()) {
+        dialogProps.TransitionComponent = Transition;
+        dialogProps.fullScreen = true;
+        dialogProps.scroll = "body";
+    }
+
     return (
         <Dialog
             {...dialogProps}
