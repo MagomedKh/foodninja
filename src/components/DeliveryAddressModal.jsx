@@ -55,9 +55,9 @@ const storedZones = {
             ],
             fillColor: "#ff5722",
             strokeColor: "#aa0000",
-            deliveryPrice: "111",
+            deliveryPrice: "150",
             orderMinPrice: "1100",
-            freeDeliveryOrder: "111",
+            freeDeliveryOrder: "1500",
         },
         {
             name: "345",
@@ -79,9 +79,9 @@ const storedZones = {
             ],
             fillColor: "#917269",
             strokeColor: "#241f4d",
-            deliveryPrice: "222",
+            deliveryPrice: "200",
             orderMinPrice: "2200",
-            freeDeliveryOrder: "2200",
+            freeDeliveryOrder: "2600",
         },
     ],
 };
@@ -228,7 +228,9 @@ const DeliveryAddressModal = ({ ymaps, choosenAddress }) => {
         storedZones.zones.forEach((zone) => {
             const myPolygon = new ymaps.Polygon(
                 [...zone.coordinates],
-                {},
+                {
+                    hintContent: `Заказ от ${zone.orderMinPrice} ₽<br> Бесплатная доставка от ${zone.freeDeliveryOrder} ₽`,
+                },
                 {
                     // Цвет заливки.
                     fillColor: zone.fillColor || "#00FF00",
@@ -565,7 +567,7 @@ const DeliveryAddressModal = ({ ymaps, choosenAddress }) => {
                     }}
                     className={"delivery-address-modal__map-container"}
                     onLoad={(ymaps) => loadSuggest(ymaps)}
-                    modules={["SuggestView", "Polygon"]}
+                    modules={["SuggestView", "Polygon", "geoObject.addon.hint"]}
                     instanceRef={mapRef}
                     options={{
                         suppressMapOpenBlock: true,
