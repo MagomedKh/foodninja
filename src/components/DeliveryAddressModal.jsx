@@ -225,16 +225,6 @@ const DeliveryAddressModal = ({ ymaps, choosenAddress }) => {
 
     const loadSuggest = (ymaps) => {
         mapRef.current.controls.remove("routeEditor");
-        const suggestView = new ymaps.SuggestView("suggest1");
-        suggestView.events.add("select", (e) => {
-            setSearchInputValue(e.get("item").value);
-            confirmSerachHandler(e.get("item").value);
-        });
-        mapRef.current.events.add("click", function (e) {
-            var coords = e.get("coords");
-            placemarkRef.current.geometry.setCoordinates(coords);
-            getAddress(coords);
-        });
         storedZones.zones.forEach((zone) => {
             const myPolygon = new ymaps.Polygon(
                 [...zone.coordinates],
@@ -265,6 +255,23 @@ const DeliveryAddressModal = ({ ymaps, choosenAddress }) => {
                 zone.freeDeliveryOrder;
             // Добавляем многоугольник на карту.
             mapRef.current.geoObjects.add(myPolygon);
+        });
+
+        // Блок подсказок для строки поиска
+        const suggestView = new ymaps.SuggestView("suggest1", {
+            // Приоритет для адресов в прямоугольнике, охватывающем все зоны доставки
+            boundedBy: mapRef.current.geoObjects.getBounds(),
+        });
+        suggestView.events.add("select", (e) => {
+            setSearchInputValue(e.get("item").value);
+            confirmSerachHandler(e.get("item").value);
+        });
+
+        // Событие клика по карте определяет адрес
+        mapRef.current.events.add("click", function (e) {
+            var coords = e.get("coords");
+            placemarkRef.current.geometry.setCoordinates(coords);
+            getAddress(coords);
         });
     };
 
