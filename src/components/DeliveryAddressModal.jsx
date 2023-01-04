@@ -115,7 +115,7 @@ const DeliveryAddressModal = ({ ymaps, choosenAddress }) => {
 
     // Initial state
     useEffect(() => {
-        if (choosenAddress) {
+        if (mapRef.current && choosenAddress) {
             if (choosenAddress.coordinates) {
                 getAddress(choosenAddress.coordinates);
                 placemarkRef.current.geometry.setCoordinates(
@@ -151,7 +151,7 @@ const DeliveryAddressModal = ({ ymaps, choosenAddress }) => {
             setPorch("");
             setDetachedHouse(false);
         }
-    }, [choosenAddress]);
+    }, [choosenAddress, mapRef.current]);
 
     const handleClose = () => {
         dispatch(setOpenDeliveryModal(false));
@@ -189,6 +189,8 @@ const DeliveryAddressModal = ({ ymaps, choosenAddress }) => {
             } else {
                 dispatch(setDeliveryZone(null));
             }
+        } else {
+            dispatch(setDeliveryZone(null));
         }
     }, [choosenAddress, mapRef]);
 
