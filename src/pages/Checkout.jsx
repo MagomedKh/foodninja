@@ -48,6 +48,9 @@ import {
     isAfter,
 } from "date-fns";
 import { getItemTotalPrice } from "../redux/reducers/cart";
+
+const test = "areaPrice";
+
 const formatingStrPhone = (inputNumbersValue) => {
     var formattedPhone = "";
     if (["7", "8", "9"].indexOf(inputNumbersValue[0]) > -1) {
@@ -310,8 +313,10 @@ export default function Checkout() {
 
         if (
             typeDelivery === "delivery" &&
-            deliveryAddress === "new" &&
-            (!newUserAddressStreet || !newUserAddressHome)
+            ((test === "fixedPrice" &&
+                deliveryAddress === "new" &&
+                (!newUserAddressStreet || !newUserAddressHome)) ||
+                (test === "areaPrice" && !user.lastAddress))
         ) {
             currentValidation = false;
             setValidate(false);
@@ -599,6 +604,16 @@ export default function Checkout() {
                 : "",
     };
 
+    const deliveryTextFieldProps = {
+        error: (!user.lastAddress || !deliveryZone) && !validate ? true : false,
+        helperText:
+            !user.lastAddress && !validate
+                ? "Поле обязательно для заполнения"
+                : !deliveryZone && !validate
+                ? "Выберите зону"
+                : "",
+    };
+
     const preorderFormProps = {
         error:
             !validate && (!preorderDate || (!preorderTime && !asSoonAsPosible)),
@@ -833,7 +848,7 @@ export default function Checkout() {
 
                                     <TextField
                                         size="small"
-                                        placeholder="Укажите адрес на карте"
+                                        placeholder="Адрес доставки не указан"
                                         value={choosenAddress?.formate || ""}
                                         multiline
                                         focused={false}
@@ -857,10 +872,14 @@ export default function Checkout() {
                                                 </span>
                                             ),
                                         }}
+                                        {...deliveryTextFieldProps}
                                     />
-                                    <DeliveryAddressModal
-                                        choosenAddress={choosenAddress}
-                                    />
+                                    {typeDelivery === "delivery" &&
+                                        test === "areaPrice" && (
+                                            <DeliveryAddressModal
+                                                choosenAddress={choosenAddress}
+                                            />
+                                        )}
 
                                     {deliveryAddress === "new" && (
                                         <div className="checkout--form-new-address">
@@ -1481,7 +1500,6 @@ export default function Checkout() {
                                     deliveryZone.orderMinPrice > cartTotalPrice
                                 }
                                 unmountOnExit
-                                sx={{ mt: 3 }}
                             >
                                 <Alert severity="error">
                                     Сумма заказа меньше минимальной для доставки
