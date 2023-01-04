@@ -6,9 +6,11 @@ import Container from "@mui/material/Container";
 import Skeleton from "@mui/material/Skeleton";
 import { Link as AnimateLink } from "react-scroll";
 import { _isMobile } from "../components/helpers.js";
+import smoothscroll from "smoothscroll-polyfill";
 import "../css/top-categories-menu.css";
 
 export default function TopCategoriesMenu() {
+    smoothscroll.polyfill();
     const stickedBarRef = useRef();
     const categoriesMenuRef = useRef();
     const { pathname } = useLocation();
@@ -119,6 +121,23 @@ export default function TopCategoriesMenu() {
             setSticked(false);
     };
 
+    const scrollCategoriesMenu = () => {
+        const activeCategory = document.querySelector(
+            ".sticked-top-bar .active"
+        );
+
+        if (activeCategory) {
+            const activeCategoryContainer = activeCategory.parentElement;
+            categoriesMenuRef.current.scrollTo({
+                left:
+                    activeCategoryContainer.offsetLeft -
+                    categoriesMenuRef.current.offsetWidth / 2 +
+                    activeCategoryContainer.offsetWidth / 2,
+                behavior: "smooth",
+            });
+        }
+    };
+
     return (
         <div
             className={`sticked-top-bar ${sticked ? "sticked" : "no-sticked"}`}
@@ -141,6 +160,11 @@ export default function TopCategoriesMenu() {
                                         smooth={true}
                                         offset={-70}
                                         duration={500}
+                                        onSetActive={
+                                            _isMobile
+                                                ? scrollCategoriesMenu
+                                                : null
+                                        }
                                     >
                                         {item.name}
                                     </AnimateLink>

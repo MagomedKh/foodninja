@@ -2,20 +2,37 @@
     border-radius: 20px;
 }
 
-.town-link a {
+.town-group {
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.town-letter {
+    display: block;
+    overflow-y: auto;
+    border-bottom: 0;
+    text-decoration: none;
+    font-size: 20px;
+    position: absolute;
+    left: 0;
+}
+
+.town-link {
     font-size: 20px;
     border-bottom: 0;
     text-decoration: none;
     color: black;
     font-weight: 100;
-    margin-bottom: 15px;
-    display: inline-block;
+    margin-left: 30px;
+    display: block;
+    width: fit-content;
+    cursor: pointer;
     border-bottom: 1px dashed transparent;
 }
-.town-link:last-child a {
+.town-link:last-child {
     margin-bottom: 0;
 }
-.town-link a:hover {
+.town-link:hover {
     color: black;
     border-bottom: 1px dashed;
 }
