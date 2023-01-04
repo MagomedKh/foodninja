@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import Container from "@mui/material/Container";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Skeleton } from "@mui/material";
 import axios from "axios";
 import { _getDomain } from "../components/helpers.js";
@@ -17,10 +17,12 @@ export default function Page() {
     const [pageStatus, setPageStatus] = React.useState("loading");
     const [pageTitle, setPageTitle] = React.useState();
     const [pageContent, setpageContent] = React.useState();
-    const currentUrl = window.location.pathname;
+    const { pathname: currentUrl } = useLocation();
 
     React.useEffect(() => {
-        if (mainLoading && pageStatus !== "loaded") {
+        console.log(currentUrl);
+        if (mainLoading) {
+            setPageStatus("loading");
             axios
                 .get(
                     "https://" +
@@ -37,7 +39,7 @@ export default function Page() {
                     } else setPageStatus("error");
                 });
         }
-    }, [mainLoading]);
+    }, [mainLoading, currentUrl]);
 
     return (
         <>
