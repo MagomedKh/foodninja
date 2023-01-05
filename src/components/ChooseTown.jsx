@@ -3,7 +3,7 @@ import { Dialog } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { setTownModal } from "../redux/actions/config";
 import "../css/choose-town.css";
-import { _isMobile, _getDomain } from "./helpers";
+import { _isMobile, _getDomain, _getPlatform } from "./helpers";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
 import { Slide, TextField } from "@mui/material";
@@ -126,9 +126,13 @@ export default function ChooseTown() {
                         <div
                             className="town-link"
                             onClick={() => {
-                                setRedirect(
-                                    `https://${town.url}/?saveTown=true`
-                                );
+                                _getPlatform() === "vk"
+                                    ? setRedirect(
+                                          `https://${town.url}/?rest-api=vk_start`
+                                      )
+                                    : setRedirect(
+                                          `https://${town.url}/?saveTown=true`
+                                      );
                                 handleAlertClose();
                             }}
                             key={index}
