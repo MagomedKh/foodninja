@@ -128,7 +128,9 @@ function Header() {
                                             sx={{ bgcolor: "#333", my: "10px" }}
                                         />
 
-                                        {config.towns && config.towns.length ? (
+                                        {config.towns &&
+                                        config.towns.length &&
+                                        _getPlatform() !== "vk" ? (
                                             <>
                                                 <div
                                                     className="mobile-menu--choose-town"
@@ -389,7 +391,9 @@ function Header() {
                                         </g>
                                     </svg>
                                     <div>
-                                        {config.towns && config.towns.length ? (
+                                        {config.towns &&
+                                        config.towns.length &&
+                                        _getPlatform() !== "vk" ? (
                                             <div className="title">
                                                 Ваш город{" "}
                                                 <b
