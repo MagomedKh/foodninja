@@ -308,19 +308,6 @@ export default function Cart() {
                                         &#8381;
                                     </span>
                                 </div>
-                                {config.CONFIG_order_min_price ? (
-                                    cartTotalPrice <
-                                    config.CONFIG_order_min_price ? (
-                                        <Alert severity="error" sx={{ mt: 2 }}>
-                                            Минимальная сумма для заказа -{" "}
-                                            {config.CONFIG_order_min_price} ₽
-                                        </Alert>
-                                    ) : (
-                                        ""
-                                    )
-                                ) : (
-                                    ""
-                                )}
                             </div>
 
                             <div className="cart--bottom-buttons">
@@ -331,38 +318,14 @@ export default function Cart() {
                                     Вернуться в меню
                                 </Button>
 
-                                {config.CONFIG_order_min_price ? (
-                                    cartTotalPrice <
-                                    config.CONFIG_order_min_price ? (
-                                        <Button
-                                            disabled
-                                            variant="button"
-                                            onClick={handleMakeOrder}
-                                            className="btn--action button-arrow btn-arrow-action"
-                                        >
-                                            К оформлению заказа
-                                            <NavigateNextIcon className="button-arrow-icon" />
-                                        </Button>
-                                    ) : (
-                                        <Button
-                                            variant="button"
-                                            onClick={handleMakeOrder}
-                                            className="btn--action button-arrow openCheckout"
-                                        >
-                                            К оформлению заказа
-                                            <NavigateNextIcon className="button-arrow-icon" />
-                                        </Button>
-                                    )
-                                ) : (
-                                    <Button
-                                        variant="button"
-                                        onClick={handleMakeOrder}
-                                        className="btn--action button-arrow openCheckout"
-                                    >
-                                        К оформлению заказа
-                                        <NavigateNextIcon className="button-arrow-icon" />
-                                    </Button>
-                                )}
+                                <Button
+                                    variant="button"
+                                    onClick={handleMakeOrder}
+                                    className="btn--action button-arrow openCheckout"
+                                >
+                                    К оформлению заказа
+                                    <NavigateNextIcon className="button-arrow-icon" />
+                                </Button>
                             </div>
                         </div>
                     </div>

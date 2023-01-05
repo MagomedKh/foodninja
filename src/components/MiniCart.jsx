@@ -347,47 +347,15 @@ function MiniCart() {
                                 </span>
                             </div>
 
-                            {config.CONFIG_order_min_price ? (
-                                cartTotalPrice <
-                                config.CONFIG_order_min_price ? (
-                                    <>
-                                        <Alert severity="error" sx={{ mb: 1 }}>
-                                            Минимальная сумма для заказа -{" "}
-                                            {config.CONFIG_order_min_price} ₽
-                                        </Alert>
-                                        <Button
-                                            disabled
-                                            variant="button"
-                                            onClick={handleMakeOrder}
-                                            className="btn--action"
-                                            sx={{ mt: 2 }}
-                                        >
-                                            К оформлению заказа
-                                            <NavigateNextIcon className="button-arrow-icon" />
-                                        </Button>
-                                    </>
-                                ) : (
-                                    <Button
-                                        variant="button"
-                                        onClick={handleMakeOrder}
-                                        className="btn--action openCheckout"
-                                        sx={{ mt: 2 }}
-                                    >
-                                        К оформлению заказа
-                                        <NavigateNextIcon className="button-arrow-icon" />
-                                    </Button>
-                                )
-                            ) : (
-                                <Button
-                                    variant="button"
-                                    onClick={handleMakeOrder}
-                                    className="btn--action openCheckout"
-                                    sx={{ mt: 2 }}
-                                >
-                                    К оформлению заказа
-                                    <NavigateNextIcon className="button-arrow-icon" />
-                                </Button>
-                            )}
+                            <Button
+                                variant="button"
+                                onClick={handleMakeOrder}
+                                className="btn--action openCheckout"
+                                sx={{ mt: 2 }}
+                            >
+                                К оформлению заказа
+                                <NavigateNextIcon className="button-arrow-icon" />
+                            </Button>
                         </div>
                     </div>
                 ) : (

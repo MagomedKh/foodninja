@@ -6,6 +6,7 @@ import {
     Alert,
     Button,
     Container,
+    Collapse,
     Dialog,
     FormControlLabel,
     IconButton,
@@ -624,6 +625,15 @@ export default function Checkout() {
             maxBonuses = cartTotalPrice - config.CONFIG_order_min_price;
             if (maxBonuses < 0) maxBonuses = 0;
         }
+
+    const deliveryOrderLess =
+        config.CONFIG_order_min_price &&
+        typeDelivery === "delivery" &&
+        cartTotalPrice < config.CONFIG_order_min_price;
+    const selfDeliveryOrderLess =
+        config.CONFIG_selforder_min_price &&
+        typeDelivery === "self" &&
+        cartTotalPrice < config.CONFIG_selforder_min_price;
 
     // Функция рендера графика работы филиала
     const currentDayOfWeek =
@@ -1370,12 +1380,41 @@ export default function Checkout() {
                                 </Alert>
                             )}
 
+                            <Collapse
+                                sx={{ mt: 1 }}
+                                in={selfDeliveryOrderLess}
+                                unmountOnExit
+                            >
+                                <Alert severity="error" sx={{ mt: 2 }}>
+                                    Минимальная сумма заказа на самовывоз{" "}
+                                    <span style={{ whiteSpace: "nowrap" }}>
+                                        {config.CONFIG_selforder_min_price} ₽
+                                    </span>
+                                </Alert>
+                            </Collapse>
+
+                            <Collapse
+                                sx={{ mt: 1 }}
+                                in={deliveryOrderLess}
+                                unmountOnExit
+                            >
+                                <Alert severity="error" sx={{ mt: 2 }}>
+                                    Минимальная сумма заказа на доставку{" "}
+                                    <span style={{ whiteSpace: "nowrap" }}>
+                                        {config.CONFIG_order_min_price} ₽
+                                    </span>
+                                </Alert>
+                            </Collapse>
+
                             <LoadingButton
                                 loading={loading}
                                 sx={{ width: 1, mt: 1.5 }}
                                 variant="button"
                                 className="btn--action makeOrder"
                                 onClick={handleMakeOrder}
+                                disabled={
+                                    selfDeliveryOrderLess || deliveryOrderLess
+                                }
                             >
                                 Подтвердить заказ
                             </LoadingButton>
