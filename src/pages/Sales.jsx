@@ -90,6 +90,13 @@ export default function Sales() {
                             <Dialog
                                 {...dialogSaleProps}
                                 className="sale-dialog"
+                                sx={{
+                                    "& .MuiPaper-root": {
+                                        borderRadius: _isMobile()
+                                            ? "0px"
+                                            : "15px",
+                                    },
+                                }}
                             >
                                 <IconButton
                                     edge="start"
