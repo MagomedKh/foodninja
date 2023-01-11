@@ -154,6 +154,7 @@ export default function BonusesProductsModal() {
                 fullWidth
                 onClose={handleClose}
                 {...dialogProps}
+                className="bonuses-modal--dialog"
             >
                 <div className="modal-alert--wrapper">
                     <IconButton
@@ -166,135 +167,156 @@ export default function BonusesProductsModal() {
                         <CloseIcon />
                     </IconButton>
                     <h2 className="modal-alert--title">Выберите подарок</h2>
-                    <div className="bonuses-modal__carts">
-                        <Grid container spacing={1}>
-                            {bonusesItemsLocal?.length &&
-                                bonusesItemsLocal.map((item, index) => (
-                                    <Grid
-                                        key={item.id}
-                                        item
-                                        sm={12}
-                                        md={4}
-                                        sx={{ width: 1 }}
-                                    >
-                                        <div
-                                            className={`bonuses-modal__cart product product-item ${
-                                                userCartBonusProduct.id ===
-                                                item.id
-                                                    ? "bonuses-modal__cart-active"
-                                                    : ""
-                                            }`}
-                                            key={`${index}_${item.title}`}
+                    <Container disableGutters={!_isMobile()}>
+                        <div className="bonuses-modal__carts">
+                            <Grid container spacing={1}>
+                                {bonusesItemsLocal?.length &&
+                                    bonusesItemsLocal.map((item, index) => (
+                                        <Grid
+                                            key={item.id}
+                                            item
+                                            sm={12}
+                                            md={4}
+                                            sx={{ width: 1 }}
                                         >
-                                            <div className="product--image ">
-                                                <img
-                                                    src={item.img}
-                                                    alt={item.title}
-                                                />
-                                            </div>
-                                            <div className="bonuses-modal__cart-price">
-                                                <strike>
-                                                    {item.options._price} ₽
-                                                </strike>{" "}
-                                                <span className="main-color">
-                                                    Бесплатно
-                                                </span>
-                                            </div>
-                                            <div className="bonuses-modal__cart-title">
-                                                {item.title}
-                                            </div>
                                             <div
-                                                className={`bonuses-modal__cart-content ${
-                                                    item.moreContent
-                                                        ? "bonuses-modal__cart-content--mod"
+                                                className={`bonuses-modal__cart product product-item ${
+                                                    userCartBonusProduct.id ===
+                                                    item.id
+                                                        ? "bonuses-modal__cart-active"
                                                         : ""
                                                 }`}
-                                                dangerouslySetInnerHTML={{
-                                                    __html: item.content,
-                                                }}
-                                            ></div>
-                                            <div className="bonuses-modal__cart-info">
-                                                <div className="bonuses-modal__cart-cost">
-                                                    от {item.limit} ₽
+                                                key={`${index}_${item.title}`}
+                                            >
+                                                <div className="product--image ">
+                                                    <img
+                                                        src={item.img}
+                                                        alt={item.title}
+                                                    />
                                                 </div>
-                                                <div className="bonuses-modal__detail-wrapper">
-                                                    {!item.moreContent && (
-                                                        <div
-                                                            className="bonuses-modal__cart-detail"
-                                                            onClick={() =>
-                                                                setBonusesContentActive(
-                                                                    item
-                                                                )
-                                                            }
-                                                        >
-                                                            Подробнее
+                                                <div className="bonuses-modal__inner-wrapper">
+                                                    <div className="bonuses-modal__cart-title">
+                                                        {item.title}
+                                                    </div>
+                                                    <div className="bonuses-modal__cart-price">
+                                                        <strike>
+                                                            {
+                                                                item.options
+                                                                    ._price
+                                                            }{" "}
+                                                            ₽
+                                                        </strike>{" "}
+                                                        <span className="main-color">
+                                                            Бесплатно
+                                                        </span>
+                                                    </div>
+
+                                                    <div
+                                                        className={`bonuses-modal__cart-content ${
+                                                            item.moreContent
+                                                                ? "bonuses-modal__cart-content--mod"
+                                                                : ""
+                                                        }`}
+                                                        dangerouslySetInnerHTML={{
+                                                            __html: item.content,
+                                                        }}
+                                                    ></div>
+                                                    <div className="bonuses-modal__cart-info">
+                                                        <div className="bonuses-modal__cart-cost">
+                                                            от {item.limit} ₽
                                                         </div>
-                                                    )}
-                                                    {item.moreContent && (
-                                                        <div
-                                                            className="bonuses-modal__cart-detail"
-                                                            onClick={() =>
-                                                                setBonusesContentNoActive(
-                                                                    item
-                                                                )
-                                                            }
-                                                        >
-                                                            Свернуть
+                                                        <div className="bonuses-modal__detail-wrapper">
+                                                            {!item.moreContent && (
+                                                                <div
+                                                                    className="bonuses-modal__cart-detail"
+                                                                    onClick={() =>
+                                                                        setBonusesContentActive(
+                                                                            item
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    Подробнее
+                                                                </div>
+                                                            )}
+                                                            {item.moreContent && (
+                                                                <div
+                                                                    className="bonuses-modal__cart-detail"
+                                                                    onClick={() =>
+                                                                        setBonusesContentNoActive(
+                                                                            item
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    Свернуть
+                                                                </div>
+                                                            )}
                                                         </div>
+                                                    </div>
+
+                                                    {cartTotalPrice >=
+                                                        item.limit &&
+                                                        userCartBonusProduct.id !==
+                                                            item.id && (
+                                                            <Button
+                                                                variant="button"
+                                                                className="btn btn--action"
+                                                                sx={{
+                                                                    width: 1,
+                                                                    mt: 2,
+                                                                }}
+                                                                onClick={() =>
+                                                                    handleChooseBonusProduct(
+                                                                        item
+                                                                    )
+                                                                }
+                                                            >
+                                                                Выбрать
+                                                            </Button>
+                                                        )}
+                                                    {cartTotalPrice >=
+                                                        item.limit &&
+                                                        userCartBonusProduct.id ===
+                                                            item.id && (
+                                                            <Button
+                                                                variant="button"
+                                                                className="btn btn--action"
+                                                                sx={{
+                                                                    width: 1,
+                                                                    mt: 2,
+                                                                }}
+                                                                onClick={() =>
+                                                                    handleChooseBonusProduct(
+                                                                        {}
+                                                                    )
+                                                                }
+                                                            >
+                                                                Отменить
+                                                            </Button>
+                                                        )}
+                                                    {cartTotalPrice <
+                                                        item.limit && (
+                                                        <Button
+                                                            disabled
+                                                            variant="button"
+                                                            sx={{
+                                                                width: 1,
+                                                                mt: 2,
+                                                            }}
+                                                            className="btn btn--outline"
+                                                        >
+                                                            Не хватает{" "}
+                                                            {item.limit -
+                                                                cartTotalPrice}{" "}
+                                                            ₽
+                                                        </Button>
                                                     )}
                                                 </div>
                                             </div>
-
-                                            {cartTotalPrice >= item.limit &&
-                                                userCartBonusProduct.id !==
-                                                    item.id && (
-                                                    <Button
-                                                        variant="button"
-                                                        className="btn btn--action"
-                                                        sx={{ width: 1, mt: 2 }}
-                                                        onClick={() =>
-                                                            handleChooseBonusProduct(
-                                                                item
-                                                            )
-                                                        }
-                                                    >
-                                                        Выбрать
-                                                    </Button>
-                                                )}
-                                            {cartTotalPrice >= item.limit &&
-                                                userCartBonusProduct.id ===
-                                                    item.id && (
-                                                    <Button
-                                                        variant="button"
-                                                        className="btn btn--action"
-                                                        sx={{ width: 1, mt: 2 }}
-                                                        onClick={() =>
-                                                            handleChooseBonusProduct(
-                                                                {}
-                                                            )
-                                                        }
-                                                    >
-                                                        Отменить
-                                                    </Button>
-                                                )}
-                                            {cartTotalPrice < item.limit && (
-                                                <Button
-                                                    disabled
-                                                    variant="button"
-                                                    sx={{ width: 1, mt: 2 }}
-                                                    className="btn btn--outline"
-                                                >
-                                                    Не хватает{" "}
-                                                    {item.limit -
-                                                        cartTotalPrice}{" "}
-                                                    ₽
-                                                </Button>
-                                            )}
-                                        </div>
-                                    </Grid>
-                                ))}
-                        </Grid>
-                    </div>
+                                        </Grid>
+                                    ))}
+                            </Grid>
+                        </div>
+                    </Container>
                 </div>
             </Dialog>
         </div>
