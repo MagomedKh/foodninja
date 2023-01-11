@@ -6,6 +6,7 @@ import {
     Button,
     Container,
     Dialog,
+    Divider,
     Grid,
     IconButton,
     Slide,
@@ -312,6 +313,13 @@ export default function BonusesProductsModal() {
                                                     )}
                                                 </div>
                                             </div>
+                                            {_isMobile() &&
+                                            index !==
+                                                bonusesItemsLocal.length - 1 ? (
+                                                <Divider
+                                                    sx={{ borderColor: "#eee" }}
+                                                />
+                                            ) : null}
                                         </Grid>
                                     ))}
                             </Grid>
