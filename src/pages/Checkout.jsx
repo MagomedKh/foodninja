@@ -49,8 +49,6 @@ import {
 } from "date-fns";
 import { getItemTotalPrice } from "../redux/reducers/cart";
 
-const test = "areaPrice";
-
 const formatingStrPhone = (inputNumbersValue) => {
     var formattedPhone = "";
     if (["7", "8", "9"].indexOf(inputNumbersValue[0]) > -1) {
@@ -313,10 +311,11 @@ export default function Checkout() {
 
         if (
             typeDelivery === "delivery" &&
-            ((test === "fixedPrice" &&
+            ((config.deliveryZones.deliveryPriceType === "fixedPrice" &&
                 deliveryAddress === "new" &&
                 (!newUserAddressStreet || !newUserAddressHome)) ||
-                (test === "areaPrice" && !user.lastAddress))
+                (config.deliveryZones.deliveryPriceType === "areaPrice" &&
+                    !user.lastAddress))
         ) {
             currentValidation = false;
             setValidate(false);
@@ -793,7 +792,8 @@ export default function Checkout() {
                                                 ></div>
                                             </Alert>
                                         )}
-                                    {test === "areaPrice" ? (
+                                    {config.deliveryZones.deliveryPriceType ===
+                                    "areaPrice" ? (
                                         <>
                                             <TextField
                                                 size="small"
