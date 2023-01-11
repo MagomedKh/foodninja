@@ -36,56 +36,6 @@ import "../css/deliveryAddressModal.css";
 import { borderRadius } from "@mui/system";
 import { addNewAddress } from "../redux/actions/user";
 
-const storedZones = {
-    deliveryPriceType: "areaPrice",
-    apiKey: "234234",
-    fixedDeliveryPrice: "333",
-    orderMinPrice: "444",
-    zones: [
-        {
-            name: "123",
-            coordinates: [
-                [
-                    [55.43995012085324, 65.26888799830488],
-                    [55.41300619253212, 65.29772710963302],
-                    [55.42843287488746, 65.35471868678144],
-                    [55.45380538371965, 65.31695318385178],
-                    [55.43995012085324, 65.26888799830488],
-                ],
-            ],
-            fillColor: "#ff5722",
-            strokeColor: "#aa0000",
-            deliveryPrice: "150",
-            orderMinPrice: "1100",
-            freeDeliveryOrder: "1500",
-        },
-        {
-            name: "345",
-            coordinates: [
-                [
-                    [55.45550906658794, 65.32364656783855],
-                    [55.43091856119513, 65.35935213424479],
-                    [55.447509083295515, 65.41188051559244],
-                    [55.4658480941341, 65.35969545699874],
-                    [55.45550906658794, 65.32364656783855],
-                ],
-                [
-                    [55.453167776713514, 65.34149935104169],
-                    [55.439507470585156, 65.3638153300456],
-                    [55.44828964119679, 65.391624473112],
-                    [55.45921582345922, 65.36347200729166],
-                    [55.453167776713514, 65.34149935104169],
-                ],
-            ],
-            fillColor: "#917269",
-            strokeColor: "#241f4d",
-            deliveryPrice: "200",
-            orderMinPrice: "2200",
-            freeDeliveryOrder: "2600",
-        },
-    ],
-};
-
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -227,7 +177,7 @@ const DeliveryAddressModal = ({ ymaps, choosenAddress }) => {
 
     const loadSuggest = (ymaps) => {
         mapRef.current.controls.remove("routeEditor");
-        storedZones.zones.forEach((zone) => {
+        config.deliveryZones.zones.forEach((zone) => {
             const myPolygon = new ymaps.Polygon(
                 [...zone.coordinates],
                 {
