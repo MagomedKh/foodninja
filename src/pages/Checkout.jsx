@@ -129,7 +129,10 @@ export default function Checkout() {
             : "delivery"
     );
     const [deliveryAddress, setDeliveryAddress] = useState(
-        user.addresses ? 0 : "new"
+        user.addresses &&
+            config.deliveryZones.deliveryPriceType === "fixedPrice"
+            ? 0
+            : "new"
     );
     const [selfDeliveryAddress, setSelfDeliveryAddress] = useState("main");
     const [activeGateway, setActiveGateway] = useState("card");
@@ -148,9 +151,7 @@ export default function Checkout() {
     const [moneyBack, setMoneyBack] = useState("");
     const [dontRecall, setDontRecall] = useState(false);
     const [sticked, setSticked] = useState(false);
-    const [choosenAddress, setChoosenAddress] = useState(
-        user.addresses ? user.addresses[0] : null
-    );
+    const [choosenAddress, setChoosenAddress] = useState(null);
 
     const handleAlertClose = () => {
         setOpenAlert(false);
@@ -217,8 +218,16 @@ export default function Checkout() {
     };
 
     const handleChooseDeliveryAddress = (e, index) => {
-        setChoosenAddress(user.addresses[index]);
         setDeliveryAddress(index);
+    };
+
+    const handleChooseZoneDeliveryAddress = (address) => {
+        setChoosenAddress(address);
+        address.street && setNewUserAddressStreet(address.street);
+        address.home && setNewUserAddressHome(address.home);
+        address.apartment && setNewUserAddressApartment(address.apartment);
+        address.porch && setNewUserAddressPorch(address.porch);
+        address.floor && setNewUserAddressFloor(address.floor);
     };
 
     const handleChangeNewUserAddress = (e) => {
@@ -311,15 +320,22 @@ export default function Checkout() {
 
         if (
             typeDelivery === "delivery" &&
-            ((config.deliveryZones.deliveryPriceType === "fixedPrice" &&
-                deliveryAddress === "new" &&
-                (!newUserAddressStreet || !newUserAddressHome)) ||
-                (config.deliveryZones.deliveryPriceType === "areaPrice" &&
-                    !user.lastAddress))
+            deliveryAddress === "new" &&
+            (!newUserAddressStreet || !newUserAddressHome)
         ) {
             currentValidation = false;
             setValidate(false);
             setError("Заполните все обязательные поля");
+            return;
+        }
+
+        if (
+            config.deliveryZones.deliveryPriceType === "areaPrice" &&
+            !deliveryZone
+        ) {
+            currentValidation = false;
+            setValidate(false);
+            setError("Выбранный адрес не попадает ни в одну зону доставки");
             return;
         }
 
@@ -604,12 +620,16 @@ export default function Checkout() {
     };
 
     const deliveryTextFieldProps = {
-        error: (!user.lastAddress || !deliveryZone) && !validate ? true : false,
+        error:
+            (!newUserAddressStreet || !newUserAddressHome || !deliveryZone) &&
+            !validate
+                ? true
+                : false,
         helperText:
-            !user.lastAddress && !validate
+            (!newUserAddressStreet || !newUserAddressHome) && !validate
                 ? "Поле обязательно для заполнения"
                 : !deliveryZone && !validate
-                ? "Выберите зону"
+                ? "Выбранный адрес не попадает ни в одну зону доставки"
                 : "",
     };
 
@@ -828,6 +848,9 @@ export default function Checkout() {
                                             />
                                             <DeliveryAddressModal
                                                 choosenAddress={choosenAddress}
+                                                handleChooseZoneDeliveryAddress={
+                                                    handleChooseZoneDeliveryAddress
+                                                }
                                             />
                                         </>
                                     ) : (

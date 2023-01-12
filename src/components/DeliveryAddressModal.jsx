@@ -12,20 +12,16 @@ import {
     Dialog,
     IconButton,
     Slide,
-    ToggleButtonGroup,
-    ToggleButton,
-    Zoom,
     Grid,
     TextField,
     FormControlLabel,
-    InputAdornment,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import ClearIcon from "@mui/icons-material/Clear";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { _isMobile } from "./helpers";
 import {
     Map,
-    SearchControl,
     withYMaps,
     Placemark,
     ZoomControl,
@@ -33,8 +29,6 @@ import {
     FullscreenControl,
 } from "react-yandex-maps";
 import "../css/deliveryAddressModal.css";
-import { borderRadius } from "@mui/system";
-import { addNewAddress } from "../redux/actions/user";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -44,7 +38,11 @@ const connectedWithYmaps = (Wrapped) => {
     return withYMaps(Wrapped, true, ["geocode", "SuggestView"]);
 };
 
-const DeliveryAddressModal = ({ ymaps, choosenAddress }) => {
+const DeliveryAddressModal = ({
+    ymaps,
+    choosenAddress,
+    handleChooseZoneDeliveryAddress,
+}) => {
     const dispatch = useDispatch();
     const mapRef = useRef();
     const placemarkRef = useRef(null);
@@ -300,6 +298,15 @@ const DeliveryAddressModal = ({ ymaps, choosenAddress }) => {
         }
     };
 
+    const handleDetachedChange = (checked) => {
+        setDetachedHouse(checked);
+        if (checked) {
+            setApartment("");
+            setFloor("");
+            setPorch("");
+        }
+    };
+
     const addAddressHandler = () => {
         // Проходим валидацию
         if (!validateFields()) {
@@ -337,7 +344,8 @@ const DeliveryAddressModal = ({ ymaps, choosenAddress }) => {
             coordinates,
             detachedHouse,
         };
-        dispatch(addNewAddress(newAddress));
+
+        handleChooseZoneDeliveryAddress(newAddress);
         dispatch(setOpenDeliveryModal(false));
         clearInputHandler();
     };
@@ -378,10 +386,10 @@ const DeliveryAddressModal = ({ ymaps, choosenAddress }) => {
     return (
         <Dialog
             {...dialogProps}
-            className={"delivery-address-modal__dialog"}
+            className={"delivery-address-modal--dialog"}
             fullWidth
         >
-            <div className={"delivery-address-modal__wrapper"}>
+            <div className="delivery-address-modal--wrapper">
                 <IconButton
                     edge="start"
                     color="inherit"
@@ -392,40 +400,45 @@ const DeliveryAddressModal = ({ ymaps, choosenAddress }) => {
                 >
                     <CloseIcon />
                 </IconButton>
-                <TextField
-                    size="small"
-                    label="Введите улицу и дом"
-                    value={searchInputValue}
-                    onChange={(e) => {
-                        inputChangeHandler(e.target.value);
-                    }}
-                    onKeyPress={(e) => {
-                        if (e.key === "Enter") {
-                            confirmSerachHandler(searchInputValue);
-                        }
-                    }}
-                    error={!!errors?.coordinates || !!errors?.home}
-                    helperText={errors?.coordinates || errors?.home}
-                    InputProps={{
-                        endAdornment: searchInputValue ? (
-                            <IconButton
-                                aria-label="delete"
-                                onClick={clearInputHandler}
-                            >
-                                <ClearIcon />
-                            </IconButton>
-                        ) : null,
-                    }}
-                    sx={{
-                        mb: 2,
-
-                        "& fieldset": {
-                            borderRadius: "20px",
-                        },
-                        width: "100%",
-                    }}
-                    id="suggest1"
-                />
+                <div className="delivery-address-modal--town-container">
+                    <div>
+                        <LocationOnIcon sx={{ color: "var(--main-color)" }} />
+                        {config.CONFIG_town}
+                    </div>
+                    <TextField
+                        size="small"
+                        label="Введите улицу и дом"
+                        value={searchInputValue}
+                        multiline={_isMobile()}
+                        onChange={(e) => {
+                            inputChangeHandler(e.target.value);
+                        }}
+                        onKeyPress={(e) => {
+                            if (e.key === "Enter") {
+                                confirmSerachHandler(searchInputValue);
+                            }
+                        }}
+                        error={!!errors?.coordinates || !!errors?.home}
+                        helperText={errors?.coordinates || errors?.home}
+                        InputProps={{
+                            endAdornment: searchInputValue ? (
+                                <IconButton
+                                    aria-label="delete"
+                                    onClick={clearInputHandler}
+                                >
+                                    <ClearIcon />
+                                </IconButton>
+                            ) : null,
+                        }}
+                        sx={{
+                            "& fieldset": {
+                                borderRadius: "20px",
+                            },
+                            flexGrow: 1,
+                        }}
+                        id="suggest1"
+                    />
+                </div>
                 <FormControlLabel
                     control={
                         <Checkbox
@@ -436,7 +449,7 @@ const DeliveryAddressModal = ({ ymaps, choosenAddress }) => {
                                     value: apartment,
                                     name: "apartment",
                                 });
-                                setDetachedHouse(event.target.checked);
+                                handleDetachedChange(event.target.checked);
                             }}
                         />
                     }
@@ -466,7 +479,7 @@ const DeliveryAddressModal = ({ ymaps, choosenAddress }) => {
                                     },
                                     width: "100%",
                                 }}
-                                className="delivery-address-modal__sub-address"
+                                className="delivery-address-modal--sub-address"
                             />
                         </Grid>
                         <Grid item mobilexs={12} mobilesm={12} mobilemd={4}>
@@ -483,7 +496,7 @@ const DeliveryAddressModal = ({ ymaps, choosenAddress }) => {
                                     },
                                     width: "100%",
                                 }}
-                                className="delivery-address-modal__sub-address"
+                                className="delivery-address-modal--sub-address"
                             />
                         </Grid>
                         <Grid item mobilexs={12} mobilesm={12} mobilemd={4}>
@@ -500,14 +513,14 @@ const DeliveryAddressModal = ({ ymaps, choosenAddress }) => {
                                     },
                                     width: "100%",
                                 }}
-                                className="delivery-address-modal__sub-address"
+                                className="delivery-address-modal--sub-address"
                             />
                         </Grid>
                     </Grid>
                 </Collapse>
                 {/* <div
                     id={"yandex-map"}
-                    className={"delivery-address-modal__map-container"}
+                    className={"delivery-address-modal--map-container"}
                 ></div> */}
                 <Map
                     defaultState={{
@@ -515,9 +528,9 @@ const DeliveryAddressModal = ({ ymaps, choosenAddress }) => {
                             config.CONFIG_latitude,
                             config.CONFIG_longitude,
                         ],
-                        zoom: 16,
+                        zoom: 13,
                     }}
-                    className={"delivery-address-modal__map-container"}
+                    className={"delivery-address-modal--map-container"}
                     onLoad={(ymaps) => loadSuggest(ymaps)}
                     modules={["SuggestView", "Polygon", "geoObject.addon.hint"]}
                     instanceRef={mapRef}

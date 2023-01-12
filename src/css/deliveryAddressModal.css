@@ -1,12 +1,20 @@
-.delivery-address-modal__dialog .MuiDialog-container .MuiDialog-paper {
+.delivery-address-modal--dialog .MuiDialog-container .MuiDialog-paper {
     border-radius: 20px;
 }
 
-.delivery-address-modal__wrapper {
-    padding: 50px;
+.delivery-address-modal--wrapper {
+    padding: 35px 50px 50px 50px;
 }
 
-.delivery-address-modal__map-container {
+.delivery-address-modal--town-container {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 16px;
+}
+
+.delivery-address-modal--map-container {
     border-radius: 20px;
     overflow: hidden;
     height: 400px;
@@ -14,10 +22,10 @@
 }
 
 @media (max-width: 899px) {
-    .delivery-address-modal__dialog .MuiDialog-container .MuiDialog-paper {
+    .delivery-address-modal--dialog .MuiDialog-container .MuiDialog-paper {
         border-radius: 0;
     }
-    .delivery-address-modal__map-container {
+    .delivery-address-modal--map-container {
         border-radius: 0;
     }
 }
