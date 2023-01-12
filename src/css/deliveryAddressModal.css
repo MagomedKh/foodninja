@@ -3,15 +3,22 @@
 }
 
 .delivery-address-modal--wrapper {
-    padding: 35px 50px 50px 50px;
+    padding: 50px;
+    overflow-y: scroll;
+    height: 100%;
 }
-
-.delivery-address-modal--town-container {
+.delivery-address-modal--wrapper h3 {
+    margin: 0 5px 0 0;
+}
+.delivery-address-modal--title-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+.delivery-address-modal--town {
     display: flex;
     justify-content: end;
     align-items: center;
-    width: 100%;
-    margin-bottom: 16px;
 }
 
 .delivery-address-modal--map-container {

@@ -400,45 +400,48 @@ const DeliveryAddressModal = ({
                 >
                     <CloseIcon />
                 </IconButton>
-                <div className="delivery-address-modal--town-container">
-                    <div>
+                <div className="delivery-address-modal--title-container">
+                    <h3>Доставка</h3>
+                    <div className="delivery-address-modal--town">
                         <LocationOnIcon sx={{ color: "var(--main-color)" }} />
                         {config.CONFIG_town}
                     </div>
-                    <TextField
-                        size="small"
-                        label="Введите улицу и дом"
-                        value={searchInputValue}
-                        multiline={_isMobile()}
-                        onChange={(e) => {
-                            inputChangeHandler(e.target.value);
-                        }}
-                        onKeyPress={(e) => {
-                            if (e.key === "Enter") {
-                                confirmSerachHandler(searchInputValue);
-                            }
-                        }}
-                        error={!!errors?.coordinates || !!errors?.home}
-                        helperText={errors?.coordinates || errors?.home}
-                        InputProps={{
-                            endAdornment: searchInputValue ? (
-                                <IconButton
-                                    aria-label="delete"
-                                    onClick={clearInputHandler}
-                                >
-                                    <ClearIcon />
-                                </IconButton>
-                            ) : null,
-                        }}
-                        sx={{
-                            "& fieldset": {
-                                borderRadius: "20px",
-                            },
-                            flexGrow: 1,
-                        }}
-                        id="suggest1"
-                    />
                 </div>
+                <TextField
+                    size="small"
+                    label="Введите улицу и дом"
+                    value={searchInputValue}
+                    multiline={_isMobile()}
+                    onChange={(e) => {
+                        inputChangeHandler(e.target.value);
+                    }}
+                    onKeyPress={(e) => {
+                        if (e.key === "Enter") {
+                            confirmSerachHandler(searchInputValue);
+                        }
+                    }}
+                    error={!!errors?.coordinates || !!errors?.home}
+                    helperText={errors?.coordinates || errors?.home}
+                    InputProps={{
+                        endAdornment: searchInputValue ? (
+                            <IconButton
+                                aria-label="delete"
+                                onClick={clearInputHandler}
+                            >
+                                <ClearIcon />
+                            </IconButton>
+                        ) : null,
+                    }}
+                    sx={{
+                        width: "100%",
+                        mb: 2,
+                        "& fieldset": {
+                            borderRadius: "20px",
+                        },
+                        flexGrow: 1,
+                    }}
+                    id="suggest1"
+                />
                 <FormControlLabel
                     control={
                         <Checkbox
