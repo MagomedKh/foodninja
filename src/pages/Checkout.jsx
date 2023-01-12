@@ -846,12 +846,6 @@ export default function Checkout() {
                                                 }}
                                                 {...deliveryTextFieldProps}
                                             />
-                                            <DeliveryAddressModal
-                                                choosenAddress={choosenAddress}
-                                                handleChooseZoneDeliveryAddress={
-                                                    handleChooseZoneDeliveryAddress
-                                                }
-                                            />
                                         </>
                                     ) : (
                                         <>
@@ -1109,6 +1103,16 @@ export default function Checkout() {
                                 )
                             )}
                         </div>
+
+                        {config.deliveryZones.deliveryPriceType ===
+                        "areaPrice" ? (
+                            <DeliveryAddressModal
+                                choosenAddress={choosenAddress}
+                                handleChooseZoneDeliveryAddress={
+                                    handleChooseZoneDeliveryAddress
+                                }
+                            />
+                        ) : null}
 
                         <div className="checkout--order-time">
                             <h3>Когда приготовить заказ?</h3>
