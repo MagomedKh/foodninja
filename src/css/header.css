@@ -210,11 +210,15 @@
         width: 100%;
         text-align: right;
     }
+
+    .header-logo-wrapper .header-logo-link {
+        display: inline-block;
+        height: 100%;
+    }
     .mobile-menu-wrapper .header-logo,
     .header-wrapper .header-logo {
+        height: 100%;
         width: auto;
-        max-width: 200px;
-        height: auto;
         max-height: 50px;
         margin-right: 0 !important;
     }

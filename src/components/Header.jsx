@@ -85,7 +85,7 @@ function Header() {
                 <Container maxWidth="lg">
                     <Toolbar className="header-wrapper">
                         <div className="header-logo-wrapper">
-                            <Link to="/">
+                            <Link to="/" className="header-logo-link">
                                 <img
                                     src={config.CONFIG_company_logo_main}
                                     className="header-logo"
