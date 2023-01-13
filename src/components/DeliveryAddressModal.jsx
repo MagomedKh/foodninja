@@ -527,11 +527,11 @@ const DeliveryAddressModal = ({
                 ></div> */}
                 <Map
                     defaultState={{
-                        center: [
-                            config.CONFIG_latitude,
-                            config.CONFIG_longitude,
-                        ],
-                        zoom: 13,
+                        center: config.deliveryZones.mapCenter || [
+                                config.CONFIG_latitude,
+                                config.CONFIG_longitude,
+                            ] || [55.76, 37.64],
+                        zoom: config.deliveryZones.mapZoom || 13,
                     }}
                     className={"delivery-address-modal--map-container"}
                     onLoad={(ymaps) => loadSuggest(ymaps)}
