@@ -35,7 +35,10 @@ import { clearCart, addBonusProductToCart } from "../redux/actions/cart";
 import "../css/checkout.css";
 import CheckoutFreeAddons from "../components/Product/CheckoutFreeAddons";
 import { updateAlerts } from "../redux/actions/systemAlerts";
-import { setOpenDeliveryModal } from "../redux/actions/deliveryAddressModal";
+import {
+    setDeliveryZone,
+    setOpenDeliveryModal,
+} from "../redux/actions/deliveryAddressModal";
 import PreorderForm from "../components/Product/PreorderForm";
 import {
     getHours,
@@ -163,6 +166,15 @@ export default function Checkout() {
         }
     }, [config.CONFIG_free_products_program_status]);
 
+    useEffect(() => {
+        if (
+            config.deliveryZones.deliveryPriceType === "fixedPrice" &&
+            deliveryZone
+        ) {
+            dispatch(setDeliveryZone(null));
+        }
+    }, []);
+
     const handlePreorderDateChange = (date) => {
         if (date === "Как можно скорее") {
             setPreorderDate(new Date());
@@ -223,11 +235,11 @@ export default function Checkout() {
 
     const handleChooseZoneDeliveryAddress = (address) => {
         setChoosenAddress(address);
-        address.street && setNewUserAddressStreet(address.street);
-        address.home && setNewUserAddressHome(address.home);
-        address.apartment && setNewUserAddressApartment(address.apartment);
-        address.porch && setNewUserAddressPorch(address.porch);
-        address.floor && setNewUserAddressFloor(address.floor);
+        setNewUserAddressStreet(address.street);
+        setNewUserAddressHome(address.home);
+        setNewUserAddressApartment(address.apartment);
+        setNewUserAddressPorch(address.porch);
+        setNewUserAddressFloor(address.floor);
     };
 
     const handleChangeNewUserAddress = (e) => {
@@ -330,6 +342,7 @@ export default function Checkout() {
         }
 
         if (
+            typeDelivery === "delivery" &&
             config.deliveryZones.deliveryPriceType === "areaPrice" &&
             !deliveryZone
         ) {
@@ -398,6 +411,13 @@ export default function Checkout() {
                     dispatch(addPromocode(config.selfDeliveryCoupon));
                 setTypeDelivery(value);
             }
+            setChoosenAddress(null);
+            dispatch(setDeliveryZone(null));
+            setNewUserAddressStreet("");
+            setNewUserAddressHome("");
+            setNewUserAddressApartment("");
+            setNewUserAddressPorch("");
+            setNewUserAddressFloor("");
         } else {
             if (
                 config.selfDeliveryCoupon &&
