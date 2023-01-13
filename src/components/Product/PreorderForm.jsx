@@ -189,6 +189,8 @@ const PreorderForm = forwardRef(
                 if (el || el === 0) return true;
             });
 
+        console.log(unavailablePromocodeDays);
+
         return (
             <Box sx={{ display: "flex" }}>
                 <FormControl sx={{ minWidth: 120 }} size="small" error={error}>
@@ -231,7 +233,9 @@ const PreorderForm = forwardRef(
                             const disabledByPromocode =
                                 unavailablePromocodeDays?.includes(
                                     getDay(el) === 0 ? 6 : getDay(el) - 1
-                                ) || getUnixTime(el) > promocode.endDate;
+                                ) ||
+                                (promocode.endDate &&
+                                    getUnixTime(el) > promocode.endDate);
 
                             // Блокируем выходные дни
                             const currentDayOfWeek =
