@@ -845,12 +845,23 @@ export default function Checkout() {
                                                 multiline
                                                 focused={false}
                                                 fullWidth
+                                                onClick={(event) => {
+                                                    event.stopPropagation();
+                                                    dispatch(
+                                                        setOpenDeliveryModal(
+                                                            true
+                                                        )
+                                                    );
+                                                }}
                                                 InputProps={{
                                                     readOnly: true,
                                                     endAdornment: (
                                                         <span
                                                             className="text-field__text-adornment"
-                                                            onClick={() => {
+                                                            onClick={(
+                                                                event
+                                                            ) => {
+                                                                event.stopPropagation();
                                                                 dispatch(
                                                                     setOpenDeliveryModal(
                                                                         true

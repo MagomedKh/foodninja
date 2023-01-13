@@ -8,10 +8,10 @@ import {
     Alert,
     Button,
     Collapse,
-    Checkbox,
     Dialog,
     IconButton,
     Slide,
+    Switch,
     Grid,
     TextField,
     FormControlLabel,
@@ -444,8 +444,7 @@ const DeliveryAddressModal = ({
                 />
                 <FormControlLabel
                     control={
-                        <Checkbox
-                            sx={{ p: 0, mr: 1 }}
+                        <Switch
                             checked={detachedHouse}
                             onChange={(event) => {
                                 validateFields({
@@ -457,34 +456,13 @@ const DeliveryAddressModal = ({
                         />
                     }
                     label="Частный дом"
-                    sx={{ mb: 2, ml: 0 }}
+                    sx={{
+                        mb: 2,
+                        ml: 0,
+                    }}
                 />
                 <Collapse in={!detachedHouse}>
                     <Grid container spacing={2} sx={{ mb: 2 }}>
-                        <Grid item mobilexs={12} mobilesm={12} mobilemd={4}>
-                            <TextField
-                                size="small"
-                                label="Квартира"
-                                value={apartment}
-                                onChange={(e) => {
-                                    validateFields({
-                                        value: e.target.value,
-                                        name: "apartment",
-                                    });
-                                    setApartment(e.target.value);
-                                }}
-                                error={!!errors?.apartment}
-                                helperText={errors?.apartment}
-                                sx={{
-                                    minWidth: "100px",
-                                    "& fieldset": {
-                                        borderRadius: "20px",
-                                    },
-                                    width: "100%",
-                                }}
-                                className="delivery-address-modal--sub-address"
-                            />
-                        </Grid>
                         <Grid item mobilexs={12} mobilesm={12} mobilemd={4}>
                             <TextField
                                 size="small"
@@ -511,6 +489,30 @@ const DeliveryAddressModal = ({
                                     setFloor(e.target.value);
                                 }}
                                 sx={{
+                                    "& fieldset": {
+                                        borderRadius: "20px",
+                                    },
+                                    width: "100%",
+                                }}
+                                className="delivery-address-modal--sub-address"
+                            />
+                        </Grid>
+                        <Grid item mobilexs={12} mobilesm={12} mobilemd={4}>
+                            <TextField
+                                size="small"
+                                label="Квартира"
+                                value={apartment}
+                                onChange={(e) => {
+                                    validateFields({
+                                        value: e.target.value,
+                                        name: "apartment",
+                                    });
+                                    setApartment(e.target.value);
+                                }}
+                                error={!!errors?.apartment}
+                                helperText={errors?.apartment}
+                                sx={{
+                                    minWidth: "100px",
                                     "& fieldset": {
                                         borderRadius: "20px",
                                     },

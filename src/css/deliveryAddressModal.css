@@ -4,7 +4,7 @@
 
 .delivery-address-modal--wrapper {
     padding: 50px;
-    overflow-y: scroll;
+    overflow-y: auto;
     height: 100%;
 }
 .delivery-address-modal--wrapper h3 {
