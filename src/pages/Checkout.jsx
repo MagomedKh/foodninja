@@ -131,12 +131,7 @@ export default function Checkout() {
             ? "self"
             : "delivery"
     );
-    const [deliveryAddress, setDeliveryAddress] = useState(
-        user.addresses &&
-            config.deliveryZones.deliveryPriceType === "fixedPrice"
-            ? 0
-            : "new"
-    );
+    const [deliveryAddress, setDeliveryAddress] = useState(null);
     const [selfDeliveryAddress, setSelfDeliveryAddress] = useState("main");
     const [activeGateway, setActiveGateway] = useState("card");
     const [openAlert, setOpenAlert] = useState(false);
@@ -148,6 +143,8 @@ export default function Checkout() {
     const [newUserAddressPorch, setNewUserAddressPorch] = useState("");
     const [newUserAddressFloor, setNewUserAddressFloor] = useState("");
     const [newUserAddressApartment, setNewUserAddressApartment] = useState("");
+    const [newUserAddressCoordinates, setNewUserAddressCoordinates] =
+        useState("");
     const [commentOrder, setCommentOrder] = useState("");
     const [usedBonuses, setUsedBonuses] = useState(0);
     const [countUsers, setCountUsers] = useState(1);
@@ -174,6 +171,30 @@ export default function Checkout() {
             dispatch(setDeliveryZone(null));
         }
     }, []);
+
+    useEffect(() => {
+        if (typeDelivery === "delivery") {
+            if (user.addresses && user.addresses.length) {
+                if (config.deliveryZones.deliveryPriceType === "areaPrice") {
+                    const addressWithCoordinates = user.addresses.findIndex(
+                        (el) => el.coordinates
+                    );
+                    if (addressWithCoordinates >= 0) {
+                        setDeliveryAddress(addressWithCoordinates);
+                        setChoosenAddress(
+                            user.addresses[addressWithCoordinates]
+                        );
+                    } else {
+                        setDeliveryAddress("new");
+                    }
+                } else {
+                    setDeliveryAddress(0);
+                }
+            } else {
+                setDeliveryAddress("new");
+            }
+        }
+    }, [typeDelivery]);
 
     const handlePreorderDateChange = (date) => {
         if (date === "Как можно скорее") {
@@ -231,6 +252,7 @@ export default function Checkout() {
 
     const handleChooseDeliveryAddress = (e, index) => {
         setDeliveryAddress(index);
+        setChoosenAddress(user.addresses[index]);
     };
 
     const handleChooseZoneDeliveryAddress = (address) => {
@@ -240,6 +262,7 @@ export default function Checkout() {
         setNewUserAddressApartment(address.apartment);
         setNewUserAddressPorch(address.porch);
         setNewUserAddressFloor(address.floor);
+        setNewUserAddressCoordinates(address.coordinates);
     };
 
     const handleChangeNewUserAddress = (e) => {
@@ -374,6 +397,7 @@ export default function Checkout() {
                     newUserAddressPorch: newUserAddressPorch,
                     newUserAddressFloor: newUserAddressFloor,
                     newUserAddressApartment: newUserAddressApartment,
+                    newUserAddressCoordinates: newUserAddressCoordinates,
                     orderTime: format(preorderDate, "dd.MM.yyyy HH:mm"),
                     commentOrder: commentOrder,
                     activeGateway: activeGateway,
@@ -412,7 +436,6 @@ export default function Checkout() {
                 setTypeDelivery(value);
             }
             setChoosenAddress(null);
-            dispatch(setDeliveryZone(null));
             setNewUserAddressStreet("");
             setNewUserAddressHome("");
             setNewUserAddressApartment("");
@@ -817,7 +840,6 @@ export default function Checkout() {
                             {typeDelivery === "delivery" ? (
                                 <div className="checkout--address-panel">
                                     <h4>Укажите адрес</h4>
-
                                     {config.CONFIG_delivery_info_text !==
                                         undefined &&
                                         config.CONFIG_delivery_info_text && (
@@ -832,114 +854,127 @@ export default function Checkout() {
                                                 ></div>
                                             </Alert>
                                         )}
-                                    {config.deliveryZones.deliveryPriceType ===
-                                    "areaPrice" ? (
-                                        <>
-                                            <TextField
-                                                size="small"
-                                                placeholder="Адрес доставки не указан"
-                                                value={
-                                                    choosenAddress?.formate ||
-                                                    ""
-                                                }
-                                                multiline
-                                                focused={false}
-                                                fullWidth
-                                                onClick={(event) => {
-                                                    event.stopPropagation();
-                                                    dispatch(
-                                                        setOpenDeliveryModal(
-                                                            true
-                                                        )
-                                                    );
-                                                }}
-                                                InputProps={{
-                                                    readOnly: true,
-                                                    endAdornment: (
-                                                        <span
-                                                            className="text-field__text-adornment"
-                                                            onClick={(
-                                                                event
-                                                            ) => {
-                                                                event.stopPropagation();
-                                                                dispatch(
-                                                                    setOpenDeliveryModal(
-                                                                        true
-                                                                    )
-                                                                );
-                                                            }}
-                                                        >
-                                                            {choosenAddress?.formate
-                                                                ? "Изменить"
-                                                                : "Указать"}
-                                                        </span>
-                                                    ),
-                                                }}
-                                                {...deliveryTextFieldProps}
-                                            />
-                                        </>
-                                    ) : (
-                                        <>
-                                            <RadioGroup
-                                                value={deliveryAddress}
-                                                aria-labelledby="deliveryAddress-label"
-                                                name="deliveryAddress"
-                                                onChange={
-                                                    handleChooseDeliveryAddress
-                                                }
-                                            >
-                                                {user.addresses &&
-                                                    Object.values(
-                                                        user.addresses
-                                                    ).map((address, index) => {
-                                                        let formateAddress;
-                                                        if (!address.formate) {
-                                                            formateAddress =
-                                                                address.street +
-                                                                ", д. " +
-                                                                address.home;
-                                                            formateAddress +=
-                                                                address.porch
-                                                                    ? ", под. " +
-                                                                      address.porch
-                                                                    : "";
-                                                            formateAddress +=
-                                                                address.floor
-                                                                    ? ", этаж " +
-                                                                      address.floor
-                                                                    : "";
-                                                            formateAddress +=
-                                                                address.apartment
-                                                                    ? ", кв. " +
-                                                                      address.apartment
-                                                                    : "";
-                                                        }
-                                                        return (
-                                                            <FormControlLabel
-                                                                key={index}
-                                                                className="custom-radio"
-                                                                value={index}
-                                                                control={
-                                                                    <Radio size="small" />
-                                                                }
-                                                                label={
-                                                                    address.formate ||
-                                                                    formateAddress
-                                                                }
-                                                            />
-                                                        );
-                                                    })}
-                                                <FormControlLabel
-                                                    className="custom-radio new-address"
-                                                    value="new"
-                                                    control={
-                                                        <Radio size="small" />
+                                    <>
+                                        <RadioGroup
+                                            value={deliveryAddress}
+                                            aria-labelledby="deliveryAddress-label"
+                                            name="deliveryAddress"
+                                            onChange={
+                                                handleChooseDeliveryAddress
+                                            }
+                                        >
+                                            {user.addresses &&
+                                                Object.values(
+                                                    user.addresses
+                                                ).map((address, index) => {
+                                                    if (
+                                                        config.deliveryZones
+                                                            .deliveryPriceType ===
+                                                            "areaPrice" &&
+                                                        !address.coordinates
+                                                    ) {
+                                                        return;
                                                     }
-                                                    label="Новый адрес"
-                                                />
-                                            </RadioGroup>
+                                                    let formateAddress;
+                                                    if (!address.formate) {
+                                                        formateAddress =
+                                                            address.street +
+                                                            ", д. " +
+                                                            address.home;
+                                                        formateAddress +=
+                                                            address.porch
+                                                                ? ", под. " +
+                                                                  address.porch
+                                                                : "";
+                                                        formateAddress +=
+                                                            address.floor
+                                                                ? ", этаж " +
+                                                                  address.floor
+                                                                : "";
+                                                        formateAddress +=
+                                                            address.apartment
+                                                                ? ", кв. " +
+                                                                  address.apartment
+                                                                : "";
+                                                    }
+                                                    return (
+                                                        <FormControlLabel
+                                                            key={index}
+                                                            className="custom-radio"
+                                                            value={index}
+                                                            control={
+                                                                <Radio size="small" />
+                                                            }
+                                                            label={
+                                                                address.formate ||
+                                                                formateAddress
+                                                            }
+                                                        />
+                                                    );
+                                                })}
+                                            <FormControlLabel
+                                                className="custom-radio new-address"
+                                                value="new"
+                                                control={<Radio size="small" />}
+                                                label="Новый адрес"
+                                            />
+                                        </RadioGroup>
 
-                                            {deliveryAddress === "new" && (
+                                        {config.deliveryZones
+                                            .deliveryPriceType ===
+                                            "areaPrice" &&
+                                        deliveryAddress === "new" ? (
+                                            <>
+                                                <TextField
+                                                    size="small"
+                                                    placeholder="Адрес доставки не указан"
+                                                    value={
+                                                        choosenAddress?.formate ||
+                                                        ""
+                                                    }
+                                                    multiline
+                                                    focused={false}
+                                                    fullWidth
+                                                    onClick={(event) => {
+                                                        event.stopPropagation();
+                                                        dispatch(
+                                                            setOpenDeliveryModal(
+                                                                true
+                                                            )
+                                                        );
+                                                    }}
+                                                    InputProps={{
+                                                        readOnly: true,
+                                                        endAdornment: (
+                                                            <span
+                                                                className="text-field__text-adornment"
+                                                                onClick={(
+                                                                    event
+                                                                ) => {
+                                                                    event.stopPropagation();
+                                                                    dispatch(
+                                                                        setOpenDeliveryModal(
+                                                                            true
+                                                                        )
+                                                                    );
+                                                                }}
+                                                            >
+                                                                {choosenAddress?.formate
+                                                                    ? "Изменить"
+                                                                    : "Указать"}
+                                                            </span>
+                                                        ),
+                                                    }}
+                                                    sx={{ mt: 1 }}
+                                                    {...deliveryTextFieldProps}
+                                                />
+                                            </>
+                                        ) : null}
+
+                                        {deliveryAddress === "new" &&
+                                            config.deliveryZones
+                                                .deliveryPriceType ===
+                                                "fixedPrice" && (
                                                 <div className="checkout--form-new-address">
                                                     <Grid container spacing={2}>
                                                         <Grid
@@ -1058,8 +1093,7 @@ export default function Checkout() {
                                                     </Grid>
                                                 </div>
                                             )}
-                                        </>
-                                    )}
+                                    </>
                                 </div>
                             ) : (
                                 typeDelivery === "self" && (
@@ -1445,7 +1479,6 @@ export default function Checkout() {
                                         aria-labelledby="activeGateway-label"
                                         name="activeGateway"
                                         onChange={handleSetActiveGateway}
-                                        sx={{ mb: 2 }}
                                     >
                                         {gateways.map((key, index) => (
                                             <FormControlLabel
@@ -1458,15 +1491,10 @@ export default function Checkout() {
                                         ))}
                                     </RadioGroup>
 
-                                    <Grid container spacing={4}>
+                                    <div className="checkout--gateways-inputs">
                                         {config.CONFIG_checkout_hide_count_person ===
                                         "yes" ? null : (
-                                            <Grid
-                                                item
-                                                sm={12}
-                                                md={6}
-                                                sx={{ width: 1 }}
-                                            >
+                                            <div className="checkout--gateways-input">
                                                 {config.CONFIG_checkout_count_person_name ? (
                                                     <b>
                                                         {
@@ -1519,16 +1547,11 @@ export default function Checkout() {
                                                         10
                                                     </MenuItem>
                                                 </Select>
-                                            </Grid>
+                                            </div>
                                         )}
 
                                         {activeGateway === "cash" && (
-                                            <Grid
-                                                item
-                                                sm={12}
-                                                md={6}
-                                                sx={{ width: 1 }}
-                                            >
+                                            <div className="checkout--gateways-input">
                                                 <b>Приготовить сдачу с</b>
                                                 <TextField
                                                     size="small"
@@ -1543,9 +1566,9 @@ export default function Checkout() {
                                                         mt: 0.5,
                                                     }}
                                                 />
-                                            </Grid>
+                                            </div>
                                         )}
-                                    </Grid>
+                                    </div>
                                 </div>
                             )}
 

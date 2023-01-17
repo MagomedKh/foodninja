@@ -44,11 +44,12 @@ const DeliveryAddressModal = ({
     handleChooseZoneDeliveryAddress,
 }) => {
     const dispatch = useDispatch();
-    const mapRef = useRef();
+    const mapRef = useRef(null);
     const placemarkRef = useRef(null);
     const { modalOpen } = useSelector((state) => state.deliveryAddressModal);
     const { data: config } = useSelector((state) => state.config);
 
+    const [map, setMap] = useState(null);
     const [errors, setErrors] = useState(null);
     const [searchInputValue, setSearchInputValue] = useState("");
     const [area, setArea] = useState("");
@@ -57,13 +58,13 @@ const DeliveryAddressModal = ({
     const [apartment, setApartment] = useState("");
     const [porch, setPorch] = useState("");
     const [floor, setFloor] = useState("");
-    const [formate, setFormate] = useState(null);
     const [coordinates, setCoordinates] = useState(null);
     const [detachedHouse, setDetachedHouse] = useState(false);
+    const [isAddressInZone, setIsAddressInZone] = useState(true);
 
     // Initial state
     useEffect(() => {
-        if (mapRef.current && choosenAddress) {
+        if (mapRef.current && choosenAddress && placemarkRef.current) {
             if (choosenAddress.coordinates) {
                 getAddress(choosenAddress.coordinates);
                 placemarkRef.current.geometry.setCoordinates(
@@ -99,7 +100,7 @@ const DeliveryAddressModal = ({
             setPorch("");
             setDetachedHouse(false);
         }
-    }, [choosenAddress, mapRef.current]);
+    }, [choosenAddress, map]);
 
     const handleClose = () => {
         dispatch(setOpenDeliveryModal(false));
@@ -112,8 +113,8 @@ const DeliveryAddressModal = ({
         }
     };
     useEffect(() => {
-        if (mapRef.current && choosenAddress) {
-            if (choosenAddress.coordinates) {
+        if (mapRef.current) {
+            if (choosenAddress && choosenAddress.coordinates) {
                 let choosenZone = null;
                 mapRef.current.geoObjects.each((zone) => {
                     if (
@@ -137,10 +138,8 @@ const DeliveryAddressModal = ({
             } else {
                 dispatch(setDeliveryZone(null));
             }
-        } else {
-            dispatch(setDeliveryZone(null));
         }
-    }, [choosenAddress, mapRef]);
+    }, [choosenAddress, map]);
 
     const getAddress = useCallback((coords) => {
         // placemarkRef.current.properties.set("iconCaption", "поиск...");
@@ -196,9 +195,6 @@ const DeliveryAddressModal = ({
                 var coords = e.get("coords");
                 placemarkRef.current.geometry.setCoordinates(coords);
                 getAddress(coords);
-                if (myPolygon.geometry.contains(coords)) {
-                    console.log(zone.name);
-                }
             });
             myPolygon.options._options.name = zone.name;
             myPolygon.options._options.deliveryPrice = zone.deliveryPrice;
@@ -309,10 +305,28 @@ const DeliveryAddressModal = ({
 
     const addAddressHandler = () => {
         // Проходим валидацию
-        if (!validateFields()) {
-            console.log("err");
+        let choosenZone = null;
+        if (coordinates) {
+            mapRef.current.geoObjects.each((zone) => {
+                if (
+                    zone.geometry.getType() === "Polygon" &&
+                    zone.geometry.contains(coordinates)
+                ) {
+                    choosenZone = {
+                        name: zone.options._options.name,
+                        deliveryPrice: zone.options._options.deliveryPrice,
+                        orderMinPrice: zone.options._options.orderMinPrice,
+                        freeDeliveryOrder:
+                            zone.options._options.freeDeliveryOrder,
+                    };
+                }
+            });
+        }
+        setIsAddressInZone(!!choosenZone);
+        if (!validateFields() || !choosenZone) {
             return;
         }
+
         // Получаем строку адреса
         let addressLine = "";
         if (area) {
@@ -536,7 +550,10 @@ const DeliveryAddressModal = ({
                         zoom: config.deliveryZones.mapZoom || 13,
                     }}
                     className={"delivery-address-modal--map-container"}
-                    onLoad={(ymaps) => loadSuggest(ymaps)}
+                    onLoad={(ymaps) => {
+                        setMap(ymaps);
+                        loadSuggest(ymaps);
+                    }}
                     modules={["SuggestView", "Polygon", "geoObject.addon.hint"]}
                     instanceRef={mapRef}
                     options={{
@@ -552,6 +569,11 @@ const DeliveryAddressModal = ({
                 {errors && !Object.values(errors).every((el) => el == "") && (
                     <Alert severity="error" sx={{ mt: 2 }}>
                         Заполните все необходимые поля
+                    </Alert>
+                )}
+                {!isAddressInZone && (
+                    <Alert severity="error" sx={{ mt: 2 }}>
+                        Выбранный адрес не попадает ни в одну зону доставки
                     </Alert>
                 )}
                 <Button
