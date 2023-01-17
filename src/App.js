@@ -256,7 +256,11 @@ function App() {
 
     return (
         <ErrorBoundary>
-            <YMaps query={{ apikey: "d4f15a8f-f09c-4ef6-af56-9a3c4b8dddb2" }}>
+            <YMaps
+                query={{
+                    apikey: config.deliveryZones.apiKey,
+                }}
+            >
                 <ThemeProvider theme={foodninja}>
                     <MainTheme
                         mainColor={mainColor}
