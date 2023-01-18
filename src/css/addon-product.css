@@ -1,15 +1,15 @@
-.cart--addon-products .addon-product{
+.cart--addon-products .addon-product {
     width: 100%;
     padding: 10px;
     padding-bottom: 71px;
     margin: 20px 0 26px;
-    box-shadow: rgba(0,0,0,.1) 0 0px 13px!important;
+    box-shadow: rgba(0, 0, 0, 0.1) 0 0px 13px !important;
 }
 .cart--addon-products .addon-slide {
     height: auto;
     display: flex;
 }
-.cart--addon-products .addon-product--image{
+.cart--addon-products .addon-product--image {
     text-align: center;
 }
 .cart--addon-products .addon-product--image img {

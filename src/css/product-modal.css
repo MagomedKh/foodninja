@@ -225,7 +225,11 @@
 }
 
 .modificator-product .modificator-product--image {
-    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    aspect-ratio: 1/1;
+    overflow: hidden;
 }
 
 .modificator-product .modificator-product--image img {
@@ -260,6 +264,7 @@
 }
 .modificator-product .product--quantity .quantity {
     width: calc(100% - 64px);
+    height: 32.5px;
 }
 
 /* Дополнения */
@@ -279,12 +284,20 @@
     margin-bottom: 0px;
 }
 .addon-product {
+    height: 100%;
     padding: 10px 10px 71px;
     border-radius: 10px;
     background: white;
     margin-bottom: 0;
     position: relative;
     border: 1px solid transparent;
+}
+.addon-product .addon-product--image {
+    aspect-ratio: 1/1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 .addon-product .addon-product--image img {
     width: 100%;
@@ -318,6 +331,7 @@
 }
 .addon-product .product--quantity .quantity {
     width: calc(100% - 64px);
+    height: 32.5px;
 }
 
 @media (max-width: 899px) {
