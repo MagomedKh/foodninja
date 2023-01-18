@@ -404,16 +404,6 @@ const DeliveryAddressModal = ({
             fullWidth
         >
             <div className="delivery-address-modal--wrapper">
-                <IconButton
-                    edge="start"
-                    color="inherit"
-                    onClick={handleClose}
-                    aria-label="close"
-                    className="modal-close"
-                    sx={{ zIndex: 1 }}
-                >
-                    <CloseIcon />
-                </IconButton>
                 <div className="delivery-address-modal--title-container">
                     <h3>Доставка</h3>
                     <div className="delivery-address-modal--town">
@@ -576,14 +566,22 @@ const DeliveryAddressModal = ({
                         Выбранный адрес не попадает ни в одну зону доставки
                     </Alert>
                 )}
-                <Button
-                    className="btn--action"
-                    sx={{ width: 1, mt: 2 }}
-                    variant="button"
-                    onClick={addAddressHandler}
-                >
-                    Сохранить адрес
-                </Button>
+                <div className="delivery-address-modal--buttons-container">
+                    <Button
+                        className="btn--outline-dark"
+                        variant="button"
+                        onClick={handleClose}
+                    >
+                        Закрыть
+                    </Button>
+                    <Button
+                        className="btn--action"
+                        variant="button"
+                        onClick={addAddressHandler}
+                    >
+                        Подтвердить адрес
+                    </Button>
+                </div>
             </div>
         </Dialog>
     );

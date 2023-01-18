@@ -927,7 +927,7 @@ export default function Checkout() {
                                             <>
                                                 <TextField
                                                     size="small"
-                                                    placeholder="Адрес доставки не указан"
+                                                    placeholder="Укажите адрес"
                                                     value={
                                                         choosenAddress?.formate ||
                                                         ""

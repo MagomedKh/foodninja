@@ -3,8 +3,8 @@
 }
 
 .delivery-address-modal--wrapper {
-    margin: 50px 0;
     padding: 0 50px;
+    margin: 50px 0;
     overflow-y: auto;
     overflow-x: hidden;
     background-color: #fff;
@@ -40,9 +40,41 @@
     width: 100%;
 }
 
+.delivery-address-modal--buttons-container {
+    display: flex;
+    margin-top: 16px;
+}
+
+.delivery-address-modal--buttons-container button:first-child {
+    margin-right: 16px;
+}
+
+.delivery-address-modal--buttons-container button {
+    width: 50%;
+}
+
+@media (max-width: 520px) {
+    .delivery-address-modal--buttons-container {
+        flex-direction: column;
+    }
+    .delivery-address-modal--buttons-container button:first-child {
+        margin-right: 0;
+        margin-bottom: 16px;
+    }
+    .delivery-address-modal--buttons-container button {
+        width: 100%;
+    }
+}
+
 @media (max-width: 899px) {
     .delivery-address-modal--dialog .MuiDialog-container .MuiDialog-paper {
+        min-height: 100%;
         border-radius: 0;
+        height: auto;
+    }
+    .delivery-address-modal--wrapper {
+        padding: 0 16px;
+        margin: 32px 0;
     }
     .delivery-address-modal--map-container {
         border-radius: 0;
