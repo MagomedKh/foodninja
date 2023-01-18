@@ -965,7 +965,17 @@ export default function Checkout() {
                                                             </span>
                                                         ),
                                                     }}
-                                                    sx={{ mt: 1 }}
+                                                    sx={{
+                                                        mt: 1,
+                                                        "& .MuiOutlinedInput-root":
+                                                            {
+                                                                cursor: "pointer",
+                                                            },
+                                                        "& .MuiOutlinedInput-input":
+                                                            {
+                                                                cursor: "pointer",
+                                                            },
+                                                    }}
                                                     {...deliveryTextFieldProps}
                                                 />
                                             </>
