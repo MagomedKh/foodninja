@@ -37,7 +37,7 @@ export default function AddonProductModal({ product }) {
             <h4 className="addon-product--title">{product.title}</h4>
             <div className="addon-product--buying">
                 <div className="addon-product--price">
-                    {product.options._price} &#8381;
+                    +{product.options._price} &#8381;
                 </div>
                 {!cartProducts[product.id] ? (
                     <Button

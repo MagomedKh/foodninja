@@ -47,7 +47,7 @@ const ModificatorProduct = ({ product, disabledAddButton }) => {
             <h4 className="modificator-product--title">{product.title}</h4>
             <div className="modificator-product--buying">
                 <div className="modificator-product--price">
-                    {product.options._price} &#8381;
+                    +{product.options._price} &#8381;
                 </div>
                 {!existModificator ? (
                     <Button
