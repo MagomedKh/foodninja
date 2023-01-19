@@ -41,6 +41,7 @@ const connectedWithYmaps = (Wrapped) => {
 const DeliveryAddressModal = ({
     ymaps,
     choosenAddress,
+    onYandexApiError,
     handleChooseZoneDeliveryAddress,
 }) => {
     const dispatch = useDispatch();
@@ -100,7 +101,7 @@ const DeliveryAddressModal = ({
             setPorch("");
             setDetachedHouse(false);
         }
-    }, [choosenAddress, map]);
+    }, [choosenAddress, map, placemarkRef.current]);
 
     const handleClose = () => {
         dispatch(setOpenDeliveryModal(false));
@@ -143,37 +144,47 @@ const DeliveryAddressModal = ({
 
     const getAddress = useCallback((coords) => {
         // placemarkRef.current.properties.set("iconCaption", "поиск...");
-        ymaps.geocode(coords).then(function (res) {
-            var firstGeoObject = res.geoObjects.get(0);
+        ymaps
+            .geocode(coords)
+            .then(function (res) {
+                var firstGeoObject = res.geoObjects.get(0);
 
-            parseAddress(firstGeoObject);
-            // placemarkRef.current.properties.set({
-            //     // Формируем строку с данными об объекте.
-            //     iconCaption: [
-            //         // Название населенного пункта или вышестоящее административно-территориальное образование.
-            //         firstGeoObject.getLocalities().length
-            //             ? firstGeoObject.getLocalities()
-            //             : firstGeoObject.getAdministrativeAreas(),
-            //         // Получаем путь до топонима, если метод вернул null, запрашиваем наименование здания.
-            //         firstGeoObject.getThoroughfare() ||
-            //             firstGeoObject.getPremise(),
-            //     ]
-            //         .filter(Boolean)
-            //         .join(", "),
-            //     // В качестве контента балуна задаем строку с адресом объекта.
-            //     balloonContent: firstGeoObject.getAddressLine(),
-            // });
-            setSearchInputValue(firstGeoObject.getAddressLine());
-            setCoordinates(coords);
-            validateFields({
-                value: coords,
-                name: "coordinates",
-            });
-        });
+                parseAddress(firstGeoObject);
+                // placemarkRef.current.properties.set({
+                //     // Формируем строку с данными об объекте.
+                //     iconCaption: [
+                //         // Название населенного пункта или вышестоящее административно-территориальное образование.
+                //         firstGeoObject.getLocalities().length
+                //             ? firstGeoObject.getLocalities()
+                //             : firstGeoObject.getAdministrativeAreas(),
+                //         // Получаем путь до топонима, если метод вернул null, запрашиваем наименование здания.
+                //         firstGeoObject.getThoroughfare() ||
+                //             firstGeoObject.getPremise(),
+                //     ]
+                //         .filter(Boolean)
+                //         .join(", "),
+                //     // В качестве контента балуна задаем строку с адресом объекта.
+                //     balloonContent: firstGeoObject.getAddressLine(),
+                // });
+                setSearchInputValue(firstGeoObject.getAddressLine());
+                setCoordinates(coords);
+                validateFields({
+                    value: coords,
+                    name: "coordinates",
+                });
+            })
+            .catch((error) => onYandexApiError(true));
     }, []);
 
     const loadSuggest = (ymaps) => {
         mapRef.current.controls.remove("routeEditor");
+
+        // Начальная проверка ответа сервера yandex API
+        ymaps
+            .geocode("Москва")
+            .then(function (res) {})
+            .catch((error) => onYandexApiError(true));
+
         config.deliveryZones.zones.forEach((zone) => {
             const myPolygon = new ymaps.Polygon(
                 [...zone.coordinates],

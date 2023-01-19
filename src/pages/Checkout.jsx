@@ -151,6 +151,7 @@ export default function Checkout() {
     const [moneyBack, setMoneyBack] = useState("");
     const [dontRecall, setDontRecall] = useState(false);
     const [sticked, setSticked] = useState(false);
+    const [yandexApiError, setYandexApiError] = useState(false);
     const [choosenAddress, setChoosenAddress] = useState(null);
 
     const handleAlertClose = () => {
@@ -165,17 +166,21 @@ export default function Checkout() {
 
     useEffect(() => {
         if (
-            config.deliveryZones.deliveryPriceType === "fixedPrice" &&
+            (config.deliveryZones.deliveryPriceType === "fixedPrice" ||
+                yandexApiError) &&
             deliveryZone
         ) {
             dispatch(setDeliveryZone(null));
         }
-    }, []);
+    }, [yandexApiError]);
 
     useEffect(() => {
         if (typeDelivery === "delivery") {
             if (user.addresses && user.addresses.length) {
-                if (config.deliveryZones.deliveryPriceType === "areaPrice") {
+                if (
+                    config.deliveryZones.deliveryPriceType === "areaPrice" &&
+                    !yandexApiError
+                ) {
                     const addressWithCoordinates = user.addresses.findIndex(
                         (el) => el.coordinates
                     );
@@ -253,6 +258,10 @@ export default function Checkout() {
     const handleChooseDeliveryAddress = (e, index) => {
         setDeliveryAddress(index);
         setChoosenAddress(user.addresses[index]);
+    };
+
+    const onYandexApiError = (hasError) => {
+        setYandexApiError(hasError);
     };
 
     const handleChooseZoneDeliveryAddress = (address) => {
@@ -367,6 +376,7 @@ export default function Checkout() {
         if (
             typeDelivery === "delivery" &&
             config.deliveryZones.deliveryPriceType === "areaPrice" &&
+            !yandexApiError &&
             !deliveryZone
         ) {
             currentValidation = false;
@@ -871,6 +881,7 @@ export default function Checkout() {
                                                         config.deliveryZones
                                                             .deliveryPriceType ===
                                                             "areaPrice" &&
+                                                        !yandexApiError &&
                                                         !address.coordinates
                                                     ) {
                                                         return;
@@ -923,6 +934,7 @@ export default function Checkout() {
                                         {config.deliveryZones
                                             .deliveryPriceType ===
                                             "areaPrice" &&
+                                        !yandexApiError &&
                                         deliveryAddress === "new" ? (
                                             <>
                                                 <TextField
@@ -982,9 +994,10 @@ export default function Checkout() {
                                         ) : null}
 
                                         {deliveryAddress === "new" &&
-                                            config.deliveryZones
+                                            (config.deliveryZones
                                                 .deliveryPriceType ===
-                                                "fixedPrice" && (
+                                                "fixedPrice" ||
+                                                yandexApiError) && (
                                                 <div className="checkout--form-new-address">
                                                     <Grid container spacing={2}>
                                                         <Grid
@@ -1180,9 +1193,10 @@ export default function Checkout() {
                         </div>
 
                         {config.deliveryZones.deliveryPriceType ===
-                        "areaPrice" ? (
+                            "areaPrice" && !yandexApiError ? (
                             <DeliveryAddressModal
                                 choosenAddress={choosenAddress}
+                                onYandexApiError={onYandexApiError}
                                 handleChooseZoneDeliveryAddress={
                                     handleChooseZoneDeliveryAddress
                                 }
