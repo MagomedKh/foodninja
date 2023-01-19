@@ -12,6 +12,7 @@ import {
     Slide,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import FooterBonusesGift from "../img/footer-bonuses-gift.svg";
 import { _isMobile } from "./helpers";
 import "../css/footer-bonuses.css";
 
@@ -113,7 +114,18 @@ export default function BonusesProductsModal() {
                             onClick={handleBonusesHandler}
                         >
                             Выбери подарок
+                            <img
+                                src={FooterBonusesGift}
+                                alt={"FooterBonusesGift"}
+                                style={{ marginLeft: 10 }}
+                            />
                         </div>
+
+                        <Divider
+                            orientation="vertical"
+                            sx={{ borderColor: "#333333" }}
+                        />
+
                         <div className="footer-bonuses__points">
                             <div
                                 className="footer-bonuses__points-bg"
