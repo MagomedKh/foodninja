@@ -123,7 +123,11 @@ export default function BonusesProductsModal() {
 
                         <Divider
                             orientation="vertical"
-                            sx={{ borderColor: "#333333" }}
+                            sx={{
+                                borderColor: "#fff",
+                                height: "40px",
+                                borderWidth: "1px",
+                            }}
                         />
 
                         <div className="footer-bonuses__points">
