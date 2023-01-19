@@ -193,7 +193,7 @@
     .cart--product-inner {
         display: block;
     }
-    .cart--product-remove {
+    .cart--product .cart--product-remove {
         position: absolute;
         top: 4px;
         right: 0;
