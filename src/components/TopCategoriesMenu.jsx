@@ -221,7 +221,7 @@ export default function TopCategoriesMenu() {
                 ) : (
                     <Skeleton variant="text" animation="wave" />
                 )}
-                {!_isMobile() && <MiniCart />}
+                <MiniCart />
             </Container>
         </div>
     );

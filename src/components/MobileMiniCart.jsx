@@ -8,6 +8,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { _declension, _isMobile } from "./helpers.js";
 // import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import "../css/minicart.css";
+import { openMiniCart } from "../redux/actions/miniCart.js";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -42,6 +43,10 @@ function MobileMiniCart() {
         window.scrollTo(0, 0);
     };
 
+    const handleOpenMiniCart = () => {
+        dispatch(openMiniCart());
+    };
+
     let dialogMiniCartProps = { open: miniCartOpenDialog };
     if (_isMobile()) {
         dialogMiniCartProps.TransitionComponent = Transition;
@@ -56,10 +61,9 @@ function MobileMiniCart() {
                     : "minicart--wrapper"
             }
         >
-            <Link
+            <div
                 className="minicart-mobile openCart"
-                onClick={handleClickToCart}
-                to={"/cart"}
+                onClick={handleOpenMiniCart}
             >
                 <span className="minicart-mobile--count-item">
                     {cartCountItems}
@@ -68,7 +72,7 @@ function MobileMiniCart() {
                 <ShoppingCartIcon />
 
                 {/* <span className="minicart--topcart--price-total btn btn--action">{cartTotalPrice.toLocaleString('ru-RU')} &#8381;</span> */}
-            </Link>
+            </div>
 
             {/* <Dialog
 				{...dialogMiniCartProps}

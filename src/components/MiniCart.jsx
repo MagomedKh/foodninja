@@ -10,7 +10,7 @@ import MiniCartProduct from "../components/Product/MiniCartProduct";
 import MiniCartBonusProduct from "../components/Product/MiniCartBonusProduct";
 import { setOpenModalAuth } from "../redux/actions/user";
 import MiniCartFreeAddons from "./Product/MiniCartFreeAddons";
-import { _checkPromocode } from "../components/helpers.js";
+import { _checkPromocode, _isMobile } from "../components/helpers.js";
 import { Promocode } from "../components";
 import MiniCartReccomends from "./MiniCartRecommends";
 import CartBonusesProducts from "./CartBonusesProducts";
@@ -129,26 +129,28 @@ function MiniCart() {
                     : "minicart--wrapper"
             }
         >
-            <button
-                className="btn--action minicart openMiniCart"
-                onClick={handleOpenMiniCart}
-            >
-                <ShoppingCartIcon className="minicart--cart-icon" />
-                <div className="minicart--separator"></div>
-                <div className="minicart--topcart--total">
-                    <span className="minicart--topcart--count-item">
-                        {cartCountItems}{" "}
-                        {_declension(cartCountItems, [
-                            "товар",
-                            "товара",
-                            "товаров",
-                        ])}
-                    </span>
-                    <span className="minicart--topcart--price-total">
-                        {cartTotalPrice.toLocaleString("ru-RU")} &#8381;
-                    </span>
-                </div>
-            </button>
+            {_isMobile() ? null : (
+                <button
+                    className="btn--action minicart openMiniCart"
+                    onClick={handleOpenMiniCart}
+                >
+                    <ShoppingCartIcon className="minicart--cart-icon" />
+                    <div className="minicart--separator"></div>
+                    <div className="minicart--topcart--total">
+                        <span className="minicart--topcart--count-item">
+                            {cartCountItems}{" "}
+                            {_declension(cartCountItems, [
+                                "товар",
+                                "товара",
+                                "товаров",
+                            ])}
+                        </span>
+                        <span className="minicart--topcart--price-total">
+                            {cartTotalPrice.toLocaleString("ru-RU")} &#8381;
+                        </span>
+                    </div>
+                </button>
+            )}
             <Drawer
                 anchor="right"
                 open={miniCartOpen}
@@ -360,6 +362,14 @@ function MiniCart() {
                     </div>
                 ) : (
                     <div className="minicart--inner">
+                        <IconButton
+                            color="inherit"
+                            onClick={handleCloseMiniCart}
+                            className="minicart--close"
+                            sx={{ position: "absolute", right: 25, top: 10 }}
+                        >
+                            <CloseIcon />
+                        </IconButton>
                         <div className="minicart--empty">
                             <img
                                 src={emptyCartImg}

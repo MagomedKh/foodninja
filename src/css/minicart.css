@@ -368,7 +368,8 @@
         font-size: 16px;
     }
     .minicart--inner {
-        width: auto;
+        width: 100vw;
+        max-width: 450px;
         padding: 0;
     }
     .minicart--topcart--total .minicart--topcart--price-total {
@@ -379,10 +380,6 @@
     .minicart--product-list {
         height: calc(100%);
         overflow: auto;
-        padding: 0 15px;
-    }
-    .minicart--inner-title {
-        display: none;
     }
     .minicart--topcart--total .minicart--topcart--count-item {
         white-space: nowrap;
