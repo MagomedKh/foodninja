@@ -242,7 +242,7 @@ export default function ProductModal() {
                             <Zoom in={true}>
                                 <img
                                     src={
-                                        activeVariant
+                                        activeVariant && activeVariant.img
                                             ? activeVariant.img
                                             : productModal.img
                                             ? productModal.img
