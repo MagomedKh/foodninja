@@ -92,9 +92,9 @@ const ModificatorCategory = ({ category, handleSetModificatorsCondition }) => {
                         mobilemd={3}
                         mobilelg={2}
                         desctop={4}
+                        key={product.id}
                     >
                         <ModificatorProduct
-                            key={product.id}
                             product={product}
                             category={category}
                             disabledAddButton={disabledAddButton}
