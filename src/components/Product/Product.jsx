@@ -47,6 +47,10 @@ export default function Product({ product, disabled }) {
         dispatch(decreaseProductInCart(product));
     };
 
+    const hasRequiredModificator = product.product_addons?.find(
+        (modificator) => modificator.required === "yes"
+    );
+
     return (
         <div className="product product-item">
             <div className="product--labels-wrapper">
@@ -154,7 +158,7 @@ export default function Product({ product, disabled }) {
                             )}
                         </div>
                     </div>
-                    {product.type === "variations" ? (
+                    {product.type === "variations" || hasRequiredModificator ? (
                         <Button
                             variant="button"
                             className="btn--action btn-buy"

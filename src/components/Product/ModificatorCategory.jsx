@@ -69,17 +69,17 @@ const ModificatorCategory = ({ category, handleSetModificatorsCondition }) => {
             <Collapse sx={{ mt: 1 }} in={isRequiredCategoryEmpty} unmountOnExit>
                 <Alert severity="info" sx={{ border: "1px solid #99dfff" }}>
                     {category.count_products_type === "manual"
-                        ? `Выберите хотя бы ${category.count_products.min} ${
+                        ? `Выберите ${category.count_products.min} ${
                               category.count_products.min == 1
-                                  ? "продукт"
-                                  : 1 <= category.count_products.min <= 4
-                                  ? "продукта"
-                                  : "продуктов"
+                                  ? "товар"
+                                  : 2 <= category.count_products.min <= 4
+                                  ? "товара"
+                                  : "товаров"
                           } из категории`
                         : category.count_products_type === "one"
-                        ? `Выберите продукт из категории`
+                        ? `Выберите товар из категории`
                         : category.count_products_type === "all"
-                        ? `Выберите хотя бы 1 продукт из категории`
+                        ? `Выберите 1 товар из категории`
                         : null}
                 </Alert>
             </Collapse>
