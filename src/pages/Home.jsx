@@ -35,14 +35,12 @@ export default function Home() {
 
     const handleClickCategoryTag = (categoryID, tagID) => {
         let tmpArray = _clone(activeCategoryTags);
-        if (!tmpArray.hasOwnProperty(categoryID))
+
+        if (!tmpArray[categoryID] || !tmpArray[categoryID].includes(tagID)) {
             tmpArray[categoryID] = [tagID];
-        else if (!tmpArray[categoryID].includes(tagID))
-            tmpArray[categoryID].push(tagID);
-        else if (tmpArray[categoryID].includes(tagID))
-            tmpArray[categoryID] = tmpArray[categoryID].filter(
-                (tag) => tag !== tagID
-            );
+        } else {
+            delete tmpArray[categoryID];
+        }
 
         setActiveCategoryTags(tmpArray);
     };
@@ -98,37 +96,39 @@ export default function Home() {
                                     </Alert>
                                 ) : null}
 
-                                {item.tags &&
-                                    Object.values(item.tags).map(
-                                        (tag, tagIndex) => (
-                                            <Button
-                                                key={`tag-${tag.term_id}`}
-                                                variant="button"
-                                                className={`btn btn--tag ${
-                                                    activeCategoryTags.hasOwnProperty(
-                                                        item.term_id
-                                                    )
-                                                        ? activeCategoryTags[
-                                                              item.term_id
-                                                          ].includes(
-                                                              tag.term_id
-                                                          )
-                                                            ? "btn--tag-active"
+                                <div className="product--category-tags-container">
+                                    {item.tags &&
+                                        Object.values(item.tags).map(
+                                            (tag, tagIndex) => (
+                                                <Button
+                                                    key={`tag-${tag.term_id}`}
+                                                    variant="button"
+                                                    className={`btn btn--tag ${
+                                                        activeCategoryTags.hasOwnProperty(
+                                                            item.term_id
+                                                        )
+                                                            ? activeCategoryTags[
+                                                                  item.term_id
+                                                              ].includes(
+                                                                  tag.term_id
+                                                              )
+                                                                ? "btn--tag-active btn--action"
+                                                                : ""
                                                             : ""
-                                                        : ""
-                                                }`}
-                                                sx={{ mr: 1, mb: 1 }}
-                                                onClick={() =>
-                                                    handleClickCategoryTag(
-                                                        item.term_id,
-                                                        tag.term_id
-                                                    )
-                                                }
-                                            >
-                                                {tag.name}
-                                            </Button>
-                                        )
-                                    )}
+                                                    }`}
+                                                    sx={{ mr: 1, mb: 1, px: 1 }}
+                                                    onClick={() =>
+                                                        handleClickCategoryTag(
+                                                            item.term_id,
+                                                            tag.term_id
+                                                        )
+                                                    }
+                                                >
+                                                    {tag.name}
+                                                </Button>
+                                            )
+                                        )}
+                                </div>
 
                                 <div
                                     key={`grid-${item.term_id}`}

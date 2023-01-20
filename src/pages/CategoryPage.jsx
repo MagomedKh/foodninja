@@ -55,14 +55,12 @@ const CategoryPage = () => {
 
     const handleClickCategoryTag = (categoryID, tagID) => {
         let tmpArray = _clone(activeCategoryTags);
-        if (!tmpArray.hasOwnProperty(categoryID))
+
+        if (!tmpArray[categoryID] || !tmpArray[categoryID].includes(tagID)) {
             tmpArray[categoryID] = [tagID];
-        else if (!tmpArray[categoryID].includes(tagID))
-            tmpArray[categoryID].push(tagID);
-        else if (tmpArray[categoryID].includes(tagID))
-            tmpArray[categoryID] = tmpArray[categoryID].filter(
-                (tag) => tag !== tagID
-            );
+        } else {
+            delete tmpArray[categoryID];
+        }
 
         setActiveCategoryTags(tmpArray);
     };
@@ -86,33 +84,37 @@ const CategoryPage = () => {
                         {currentCategory.timeLimitEnd}
                     </Alert>
                 ) : null}
-                {currentCategory.tags &&
-                    Object.values(currentCategory.tags).map((tag, tagIndex) => (
-                        <Button
-                            key={`tag-${tag.term_id}`}
-                            variant="button"
-                            className={`btn btn--tag ${
-                                activeCategoryTags.hasOwnProperty(
-                                    currentCategory.term_id
-                                )
-                                    ? activeCategoryTags[
-                                          currentCategory.term_id
-                                      ].includes(tag.term_id)
-                                        ? "btn--tag-active"
-                                        : ""
-                                    : ""
-                            }`}
-                            sx={{ mr: 1, mb: 1 }}
-                            onClick={() =>
-                                handleClickCategoryTag(
-                                    currentCategory.term_id,
-                                    tag.term_id
-                                )
-                            }
-                        >
-                            {tag.name}
-                        </Button>
-                    ))}
+                <div className="product--category-tags-container">
+                    {currentCategory.tags &&
+                        Object.values(currentCategory.tags).map(
+                            (tag, tagIndex) => (
+                                <Button
+                                    key={`tag-${tag.term_id}`}
+                                    variant="button"
+                                    className={`btn btn--tag ${
+                                        activeCategoryTags.hasOwnProperty(
+                                            currentCategory.term_id
+                                        )
+                                            ? activeCategoryTags[
+                                                  currentCategory.term_id
+                                              ].includes(tag.term_id)
+                                                ? "btn--tag-active btn--action"
+                                                : ""
+                                            : ""
+                                    }`}
+                                    sx={{ mr: 1, mb: 1 }}
+                                    onClick={() =>
+                                        handleClickCategoryTag(
+                                            currentCategory.term_id,
+                                            tag.term_id
+                                        )
+                                    }
+                                >
+                                    {tag.name}
+                                </Button>
+                            )
+                        )}
+                </div>
                 <div className="product-grid-list">
                     {filteredProducts ? (
                         filteredProducts
