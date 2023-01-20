@@ -482,7 +482,10 @@ export default function ProductModal() {
                                         variant="button"
                                         className="btn--action btn-buy"
                                         onClick={handleAddProduct}
-                                        disabled={productModal.disabled}
+                                        disabled={
+                                            productModal.disabled ||
+                                            !modificatorsCondition
+                                        }
                                     >
                                         Хочу
                                     </Button>

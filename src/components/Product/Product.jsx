@@ -121,7 +121,8 @@ export default function Product({ product, disabled }) {
                 <div className="product--buying">
                     <div className="product--price-wrapper">
                         <div className="product--price">
-                            {product.type === "variations" ? (
+                            {product.type === "variations" ||
+                            hasRequiredModificator ? (
                                 <span className="product--standart-price">
                                     от {product.options._price} ₽
                                 </span>
