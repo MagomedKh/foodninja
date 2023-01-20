@@ -1415,6 +1415,18 @@ export default function Checkout() {
                                                   )} ₽`}
                                         </span>
                                     </div>
+                                ) : config.deliveryZones?.fixedDeliveryPrice ? (
+                                    <div className="result-delivery">
+                                        <span className="price-title">
+                                            Доставка
+                                        </span>
+                                        <span>
+                                            {config.deliveryZones?.fixedDeliveryPrice.toLocaleString(
+                                                "ru-RU"
+                                            )}{" "}
+                                            ₽
+                                        </span>
+                                    </div>
                                 ) : null}
                                 <div className="result-total">
                                     <span className="price-title">Итого</span>
