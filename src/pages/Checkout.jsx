@@ -1407,15 +1407,19 @@ export default function Checkout() {
                                             Доставка
                                         </span>
                                         <span>
-                                            {cartTotalPrice >
-                                            deliveryZone.freeDeliveryOrder
+                                            {deliveryZone.freeDeliveryOrder &&
+                                            cartTotalPrice >
+                                                deliveryZone.freeDeliveryOrder
                                                 ? "Бесплатно"
                                                 : `${deliveryZone.deliveryPrice.toLocaleString(
                                                       "ru-RU"
                                                   )} ₽`}
                                         </span>
                                     </div>
-                                ) : config.deliveryZones?.fixedDeliveryPrice ? (
+                                ) : (config.deliveryZones.deliveryPriceType ===
+                                      "fixedPrice" ||
+                                      yandexApiError) &&
+                                  config.deliveryZones?.fixedDeliveryPrice ? (
                                     <div className="result-delivery">
                                         <span className="price-title">
                                             Доставка

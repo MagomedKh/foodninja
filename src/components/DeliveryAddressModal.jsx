@@ -186,10 +186,25 @@ const DeliveryAddressModal = ({
             .catch((error) => onYandexApiError(true));
 
         config.deliveryZones.zones.forEach((zone) => {
+            let hintContent = "";
+            if (zone.orderMinPrice) {
+                hintContent += `Заказ от ${zone.orderMinPrice} ₽<br>`;
+            }
+            if (zone.freeDeliveryOrder) {
+                hintContent += `Бесплатная доставка от 
+                ${zone.freeDeliveryOrder} ₽`;
+            }
             const myPolygon = new ymaps.Polygon(
                 [...zone.coordinates],
                 {
-                    hintContent: `Заказ от ${zone.orderMinPrice} ₽<br> Бесплатная доставка от ${zone.freeDeliveryOrder} ₽`,
+                    hintContent:
+                        (zone.orderMinPrice || zone.freeDeliveryOrder) &&
+                        `Заказ от ${zone.orderMinPrice} ₽<br> ${
+                            zone.freeDeliveryOrder &&
+                            "Бесплатная доставка от " +
+                                zone.freeDeliveryOrder +
+                                "₽"
+                        } `,
                 },
                 {
                     // Цвет заливки.
