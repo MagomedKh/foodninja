@@ -166,7 +166,7 @@ export default function Checkout() {
 
     useEffect(() => {
         if (
-            (config.deliveryZones.deliveryPriceType === "fixedPrice" ||
+            (config.deliveryZones.useDeliveryZones !== "yes" ||
                 yandexApiError) &&
             deliveryZone
         ) {
@@ -178,7 +178,7 @@ export default function Checkout() {
         if (typeDelivery === "delivery") {
             if (user.addresses && user.addresses.length) {
                 if (
-                    config.deliveryZones.deliveryPriceType === "areaPrice" &&
+                    config.deliveryZones.useDeliveryZones === "yes" &&
                     !yandexApiError
                 ) {
                     const addressWithCoordinates = user.addresses.findIndex(
@@ -375,7 +375,7 @@ export default function Checkout() {
 
         if (
             typeDelivery === "delivery" &&
-            config.deliveryZones.deliveryPriceType === "areaPrice" &&
+            config.deliveryZones.useDeliveryZones === "yes" &&
             !yandexApiError &&
             !deliveryZone
         ) {
@@ -879,8 +879,8 @@ export default function Checkout() {
                                                 ).map((address, index) => {
                                                     if (
                                                         config.deliveryZones
-                                                            .deliveryPriceType ===
-                                                            "areaPrice" &&
+                                                            .useDeliveryZones ===
+                                                            "yes" &&
                                                         !yandexApiError &&
                                                         !address.coordinates
                                                     ) {
@@ -932,8 +932,7 @@ export default function Checkout() {
                                         </RadioGroup>
 
                                         {config.deliveryZones
-                                            .deliveryPriceType ===
-                                            "areaPrice" &&
+                                            .useDeliveryZones === "yes" &&
                                         !yandexApiError &&
                                         deliveryAddress === "new" ? (
                                             <>
@@ -995,8 +994,7 @@ export default function Checkout() {
 
                                         {deliveryAddress === "new" &&
                                             (config.deliveryZones
-                                                .deliveryPriceType ===
-                                                "fixedPrice" ||
+                                                .useDeliveryZones !== "yes" ||
                                                 yandexApiError) && (
                                                 <div className="checkout--form-new-address">
                                                     <Grid container spacing={2}>
@@ -1192,8 +1190,8 @@ export default function Checkout() {
                             )}
                         </div>
 
-                        {config.deliveryZones.deliveryPriceType ===
-                            "areaPrice" && !yandexApiError ? (
+                        {config.deliveryZones?.useDeliveryZones === "yes" &&
+                        !yandexApiError ? (
                             <DeliveryAddressModal
                                 choosenAddress={choosenAddress}
                                 onYandexApiError={onYandexApiError}
@@ -1416,8 +1414,8 @@ export default function Checkout() {
                                                   )} ₽`}
                                         </span>
                                     </div>
-                                ) : (config.deliveryZones.deliveryPriceType ===
-                                      "fixedPrice" ||
+                                ) : (config.deliveryZones.useDeliveryZones !==
+                                      "yes" ||
                                       yandexApiError) &&
                                   config.deliveryZones?.fixedDeliveryPrice ? (
                                     <div className="result-delivery">
