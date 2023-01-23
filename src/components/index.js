@@ -32,3 +32,4 @@ export { default as SubscribeSnackbar } from "./SubscribeSnackbar.jsx";
 export { default as LeafletMap } from "./LeafletMap.jsx";
 export { default as ErrorBoundary } from "./ErrorBoundary.jsx";
 export { default as SaleModal } from "./SaleModal.jsx";
+export { default as ScrollToTop } from "./ScrollToTop.jsx";

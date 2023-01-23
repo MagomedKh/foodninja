@@ -570,3 +570,28 @@ a.btn {
 .choose-town-page_logo-wrapper img {
     width: 100%;
 }
+
+.scroll-to-top-btn {
+    position: fixed;
+    bottom: 85px;
+    font-size: 24px;
+    right: 20px;
+    width: 50px;
+    background-color: #293036;
+    color: #fff;
+    text-align: center;
+    height: 50px;
+    border-radius: 50%;
+    line-height: 50px;
+    z-index: 1;
+    cursor: pointer;
+}
+
+.scroll-to-top-btn svg {
+    -webkit-transition: color 0.2s;
+    transition: color 0.2s;
+}
+
+.scroll-to-top-btn:hover {
+    color: var(--main-color);
+}

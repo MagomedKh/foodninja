@@ -8,6 +8,7 @@ import {
     Header,
     Footer,
     SubscribeSnackbar,
+    ScrollToTop,
 } from "../components";
 import SearchBar from "../components/SearchBar";
 import TopCategoriesMenu from "../components/TopCategoriesMenu";
@@ -201,6 +202,8 @@ export default function Home() {
                 {_isMobile() ? <MobileMiniCart /> : ""}
 
                 <SubscribeSnackbar />
+
+                {_isMobile() ? null : <ScrollToTop />}
 
                 <FooterBonuses />
             </div>
