@@ -16,6 +16,12 @@ import { _isMobile, _clone, _isCategoryDisabled } from "../components/helpers";
 const CategoryPage = () => {
     const { pathname } = useLocation();
 
+    const { config } = useSelector(({ config }) => {
+        return {
+            config: config.data,
+        };
+    });
+
     const { products, categories } = useSelector(({ products }) => {
         return {
             products: products.items,
@@ -71,12 +77,14 @@ const CategoryPage = () => {
             <TopCategoriesMenu />
             <Container sx={{ flexGrow: "1" }}>
                 <h1>{currentCategory.name}</h1>
-                <SearchBar
-                    products={allProducts}
-                    dontShowList
-                    dontShowButton
-                    handleFilter={handleFilter}
-                />
+                {config.CONFIG_searching_disable ? null : (
+                    <SearchBar
+                        products={allProducts}
+                        dontShowList
+                        dontShowButton
+                        handleFilter={handleFilter}
+                    />
+                )}
                 {_isCategoryDisabled(currentCategory) ? (
                     <Alert severity="error" sx={{ mb: 1 }}>
                         Товары из данной категории доступны с{" "}

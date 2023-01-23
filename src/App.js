@@ -310,11 +310,13 @@ function App() {
                                             path="/order-complete"
                                             element={<OrderComplete />}
                                         />
-                                        <Route
-                                            exact
-                                            path="/search"
-                                            element={<SearchPage />}
-                                        />
+                                        {config.CONFIG_searching_disable ? null : (
+                                            <Route
+                                                exact
+                                                path="/search"
+                                                element={<SearchPage />}
+                                            />
+                                        )}
                                         <Route
                                             exact
                                             path="/category/*"

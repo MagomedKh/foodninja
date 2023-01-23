@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useSelector } from "react-redux";
 import {
     Product,
@@ -46,24 +46,29 @@ export default function Home() {
         setActiveCategoryTags(tmpArray);
     };
 
-    const productsForSearch = [].concat
-        .apply([], Object.values(products))
-        .filter((product) => {
-            if (
-                product.categories.includes(
-                    parseInt(config.CONFIG_bonuses_category)
-                )
-            ) {
-                return false;
-            } else if (
-                product.categories.every((el) =>
-                    config.CONFIG_exclude_categories.includes(el)
-                )
-            ) {
-                return false;
-            }
-            return true;
-        });
+    const productsForSearch = useMemo(() => {
+        if (config.CONFIG_searching_disable) {
+            return null;
+        }
+        return [].concat
+            .apply([], Object.values(products))
+            .filter((product) => {
+                if (
+                    product.categories.includes(
+                        parseInt(config.CONFIG_bonuses_category)
+                    )
+                ) {
+                    return false;
+                } else if (
+                    product.categories.every((el) =>
+                        config.CONFIG_exclude_categories.includes(el)
+                    )
+                ) {
+                    return false;
+                }
+                return true;
+            });
+    }, [products, config.CONFIG_searching_disable]);
 
     return (
         <>
@@ -74,10 +79,12 @@ export default function Home() {
                 <TopCategoriesMenu />
 
                 <Container>
-                    <SearchBar
-                        dontShowList={true}
-                        products={productsForSearch}
-                    />
+                    {config.CONFIG_searching_disable ? null : (
+                        <SearchBar
+                            dontShowList={true}
+                            products={productsForSearch}
+                        />
+                    )}
                     {categories ? (
                         categories.map((item, index) => (
                             <div
