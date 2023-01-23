@@ -34,7 +34,7 @@ const SubscribeSnackbar = () => {
     const handleConfirm = () => {
         cookies.set("agreedToSubscribe", "yes", {
             path: "/",
-            expires: addDays(new Date(), 90),
+            expires: addDays(new Date(), 30),
         });
         setSubscribeOpen(false);
     };
