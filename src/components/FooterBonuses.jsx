@@ -172,6 +172,11 @@ export default function BonusesProductsModal() {
                 onClose={handleClose}
                 {...dialogProps}
                 className="bonuses-modal--dialog"
+                sx={{
+                    "& .MuiPaper-root": {
+                        borderRadius: _isMobile() ? "0px" : "20px",
+                    },
+                }}
             >
                 <div className="modal-alert--wrapper">
                     <IconButton

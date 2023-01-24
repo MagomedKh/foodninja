@@ -280,7 +280,14 @@ export default function AuthModal() {
     }, []);
 
     return (
-        <Dialog {...dialogAuthProps}>
+        <Dialog
+            {...dialogAuthProps}
+            sx={{
+                "& .MuiPaper-root": {
+                    borderRadius: _isMobile() ? "0px" : "20px",
+                },
+            }}
+        >
             <div className="auth-modal">
                 {loading && (
                     <div className="loader-wrapper">

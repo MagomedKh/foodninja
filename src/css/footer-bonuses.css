@@ -87,6 +87,9 @@
         display: none;
     }
 }
+.bonuses-modal--dialog .modal-alert--wrapper {
+    border-radius: 20px;
+}
 .bonuses-modal__header {
     display: flex;
     justify-content: space-between;
@@ -202,6 +205,7 @@
 }
 @media (max-width: 899px) {
     .bonuses-modal--dialog .modal-alert--wrapper {
+        border-radius: 0;
         padding: 50px 0;
     }
     .bonuses-modal__carts .product {
