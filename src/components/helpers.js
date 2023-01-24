@@ -16,9 +16,8 @@ export const _isMobile = () => {
 };
 
 export const _getDomain = () => {
-    return window.location.hostname === "localhost" ||
-        window.location.hostname === "192.168.2.48"
-        ? "perm.noris.rest"
+    return window.location.hostname === "localhost"
+        ? "dev.foodninja.pro"
         : window.location.hostname;
 };
 
