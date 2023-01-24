@@ -119,6 +119,7 @@
     width: 100%;
 }
 .bonuses-modal__cart-title {
+    height: 50px;
     overflow: hidden;
     font-size: 20px;
     font-weight: bolder;
