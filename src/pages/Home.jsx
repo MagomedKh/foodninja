@@ -19,6 +19,7 @@ import {
     _isCategoryDisabled,
     _getPlatform,
 } from "../components/helpers.js";
+import "../css/home.css";
 
 export default function Home() {
     const { config } = useSelector(({ config }) => {
@@ -206,13 +207,14 @@ export default function Home() {
                     )}
                 </Container>
 
-                {_isMobile() ? <MobileMiniCart /> : ""}
-
                 <SubscribeSnackbar />
 
-                {_isMobile() ? null : <ScrollToTop />}
+                <div className="home--screen-footer">
+                    {_isMobile() ? <MobileMiniCart /> : ""}
+                    {_isMobile() ? null : <ScrollToTop />}
 
-                <FooterBonuses />
+                    <FooterBonuses />
+                </div>
             </div>
             <Footer />
         </>

@@ -572,8 +572,9 @@ a.btn {
 }
 
 .scroll-to-top-btn {
-    position: fixed;
-    bottom: 85px;
+    position: relative;
+    margin-left: auto;
+    bottom: 20px;
     font-size: 24px;
     right: 20px;
     width: 50px;

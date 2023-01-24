@@ -54,27 +54,17 @@ function MobileMiniCart() {
     }
 
     return (
-        <div
-            className={
-                bonuses_items !== undefined && bonuses_items.length
-                    ? "minicart--wrapper active-bonuses"
-                    : "minicart--wrapper"
-            }
-        >
-            <div
-                className="minicart-mobile openCart"
-                onClick={handleOpenMiniCart}
-            >
-                <span className="minicart-mobile--count-item">
-                    {cartCountItems}
-                </span>
+        <div className="minicart-mobile openCart" onClick={handleOpenMiniCart}>
+            <span className="minicart-mobile--count-item">
+                {cartCountItems}
+            </span>
 
-                <ShoppingCartIcon />
+            <ShoppingCartIcon />
 
-                {/* <span className="minicart--topcart--price-total btn btn--action">{cartTotalPrice.toLocaleString('ru-RU')} &#8381;</span> */}
-            </div>
+            {/* <span className="minicart--topcart--price-total btn btn--action">{cartTotalPrice.toLocaleString('ru-RU')} &#8381;</span> */}
+        </div>
 
-            {/* <Dialog
+        /* <Dialog
 				{...dialogMiniCartProps}
 			>
 				<h2 className="minicart-modal--title ">Корзина</h2>
@@ -118,8 +108,7 @@ function MobileMiniCart() {
 						</div>
 					</div>
 				) }
-			</Dialog> */}
-        </div>
+			</Dialog> */
     );
 }
 

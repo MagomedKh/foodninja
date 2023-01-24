@@ -292,7 +292,8 @@
     text-decoration: none;
 }
 .minicart-mobile {
-    position: fixed;
+    position: relative;
+    margin-left: auto;
     bottom: 20px;
     right: 20px;
     background: white;
