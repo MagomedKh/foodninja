@@ -19,10 +19,18 @@
     width: 100%;
 }
 
+.cart--bonuses-products .bonus-product .bonus-product--image {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 70px;
+    width: 70px;
+    margin-right: 15px;
+}
+
 .cart--bonuses-products .bonus-product img {
     width: 70px;
     max-width: initial;
-    margin-right: 15px;
 }
 
 .cart-product-list .cart--bonuses-products .cart--product-remove svg {
