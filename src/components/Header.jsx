@@ -83,7 +83,15 @@ function Header() {
 
             <AppBar position="static" className="header-bar">
                 <Container maxWidth="lg">
-                    <Toolbar className="header-wrapper">
+                    <Toolbar
+                        className="header-wrapper"
+                        sx={{
+                            minHeight: "40px",
+                            "@media (min-width: 600px)": {
+                                minHeight: "40px",
+                            },
+                        }}
+                    >
                         <div className="header-logo-wrapper">
                             <Link to="/" className="header-logo-link">
                                 <img
