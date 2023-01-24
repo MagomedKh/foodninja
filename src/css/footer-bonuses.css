@@ -221,6 +221,9 @@
     .bonuses-modal__inner-wrapper {
         flex-grow: 1;
     }
+    .bonuses-modal__cart-title {
+        height: auto;
+    }
     .bonuses-modal {
         width: 100%;
         max-width: 600px;
