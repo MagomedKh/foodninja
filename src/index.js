@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
+import { ErrorBoundary } from "./components";
 import { BrowserRouter as Router } from "react-router-dom";
 import store from "./redux/store";
 import { Provider } from "react-redux";
@@ -12,10 +13,12 @@ if (_getPlatform() === "vk") bridge.send("VKWebAppInit");
 ReactDOM.render(
     <React.StrictMode>
         <Router>
-            <Provider store={store}>
-                <ScrollToTop />
-                <App />
-            </Provider>
+            <ErrorBoundary>
+                <Provider store={store}>
+                    <ScrollToTop />
+                    <App />
+                </Provider>
+            </ErrorBoundary>
         </Router>
     </React.StrictMode>,
     document.getElementById("root")
