@@ -88,7 +88,7 @@ function Header() {
                         sx={{
                             minHeight: "40px",
                             "@media (min-width: 600px)": {
-                                minHeight: "40px",
+                                minHeight: "50px",
                             },
                         }}
                     >
