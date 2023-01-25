@@ -73,6 +73,9 @@ export default function BonusesProductsModal() {
     };
 
     const handleChooseBonusProduct = (item) => {
+        if (cartTotalPrice < item.limit) {
+            return;
+        }
         dispatch(addBonusProductToCart(item));
         dispatch(setOpenBonusesModal(false));
     };
@@ -210,14 +213,38 @@ export default function BonusesProductsModal() {
                                                 }`}
                                                 key={`${index}_${item.title}`}
                                             >
-                                                <div className="product--image ">
+                                                <div
+                                                    className="product--image "
+                                                    onClick={() => {
+                                                        userCartBonusProduct.id ===
+                                                        item.id
+                                                            ? handleChooseBonusProduct(
+                                                                  {}
+                                                              )
+                                                            : handleChooseBonusProduct(
+                                                                  item
+                                                              );
+                                                    }}
+                                                >
                                                     <img
                                                         src={item.img}
                                                         alt={item.title}
                                                     />
                                                 </div>
                                                 <div className="bonuses-modal__inner-wrapper">
-                                                    <div className="bonuses-modal__cart-title">
+                                                    <div
+                                                        className="bonuses-modal__cart-title"
+                                                        onClick={() => {
+                                                            userCartBonusProduct.id ===
+                                                            item.id
+                                                                ? handleChooseBonusProduct(
+                                                                      {}
+                                                                  )
+                                                                : handleChooseBonusProduct(
+                                                                      item
+                                                                  );
+                                                        }}
+                                                    >
                                                         {item.title}
                                                     </div>
                                                     <div className="bonuses-modal__cart-price">
