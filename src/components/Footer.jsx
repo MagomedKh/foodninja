@@ -85,17 +85,10 @@ export default function Footer() {
                                                 phone.replace(/\D+/g, "") && (
                                                     <div key={index}>
                                                         <a
-                                                            href={
-                                                                _getPlatform() ===
-                                                                    "android" ||
-                                                                _getPlatform() ===
-                                                                    "ios"
-                                                                    ? `#`
-                                                                    : `tel:${phone.replace(
-                                                                          /\D+/g,
-                                                                          ""
-                                                                      )}`
-                                                            }
+                                                            href={`tel:${config.CONFIG_format_phone.replace(
+                                                                /[^0-9]/g,
+                                                                ""
+                                                            )}`}
                                                         >
                                                             {phone}
                                                         </a>
@@ -130,16 +123,10 @@ export default function Footer() {
                                         {el.phones?.map((phone, key) => (
                                             <div key={index}>
                                                 <a
-                                                    href={
-                                                        _getPlatform() ===
-                                                            "android" ||
-                                                        _getPlatform() === "ios"
-                                                            ? `#`
-                                                            : `tel:${phone.replace(
-                                                                  /\D+/g,
-                                                                  ""
-                                                              )}`
-                                                    }
+                                                    href={`tel:${config.CONFIG_format_phone.replace(
+                                                        /[^0-9]/g,
+                                                        ""
+                                                    )}`}
                                                 >
                                                     {phone}
                                                 </a>

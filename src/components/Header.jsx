@@ -289,17 +289,10 @@ function Header() {
                                             <div>
                                                 <a
                                                     className="info"
-                                                    href={
-                                                        _getPlatform() ===
-                                                            "android" ||
-                                                        _getPlatform() === "ios"
-                                                            ? `#`
-                                                            : `tel:${
-                                                                  config
-                                                                      ? config.CONFIG_format_phone
-                                                                      : ""
-                                                              }`
-                                                    }
+                                                    href={`tel:${config.CONFIG_format_phone.replace(
+                                                        /[^0-9]/g,
+                                                        ""
+                                                    )}`}
                                                 >
                                                     {config ? (
                                                         config.CONFIG_format_phone
@@ -446,16 +439,10 @@ function Header() {
                                         )}
                                         <a
                                             className="info"
-                                            href={
-                                                _getPlatform() === "android" ||
-                                                _getPlatform() === "ios"
-                                                    ? `#`
-                                                    : `tel:${
-                                                          config
-                                                              ? config.CONFIG_format_phone
-                                                              : ""
-                                                      }`
-                                            }
+                                            href={`tel:${config.CONFIG_format_phone.replace(
+                                                /[^0-9]/g,
+                                                ""
+                                            )}`}
                                         >
                                             {config ? (
                                                 config.CONFIG_format_phone
