@@ -225,7 +225,7 @@ function App() {
                 lg: 1200,
                 xl: 1536,
                 mobilexs: 0,
-                mobilesm: 390,
+                mobilesm: 375,
                 mobilemd: 600,
                 mobilelg: 720,
                 desctop: 899,

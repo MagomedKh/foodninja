@@ -262,9 +262,17 @@
     height: 32.5px;
     position: relative;
 }
+
 .modificator-product .product--quantity .quantity {
     width: calc(100% - 64px);
     height: 32.5px;
+}
+
+@media (max-width: 899px) {
+    .modificator-product .product--quantity .product-decrease,
+    .modificator-product .product--quantity .product-add {
+        padding: 6px 16px !important;
+    }
 }
 
 /* Дополнения */
@@ -359,6 +367,11 @@
         position: sticky;
         bottom: 0;
         z-index: 10;
+    }
+
+    .addon-product .product--quantity .product-decrease,
+    .addon-product .product--quantity .product-add {
+        padding: 6px 16px !important;
     }
 }
 
