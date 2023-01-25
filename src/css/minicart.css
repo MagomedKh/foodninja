@@ -212,7 +212,7 @@
     border-color: var(--sec-color);
 }
 .minicart--product-quantity .quantity {
-    width: 34px;
+    width: 28px;
     display: inline-block;
     height: 32px;
     border: 0;
