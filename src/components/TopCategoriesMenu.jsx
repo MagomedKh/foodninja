@@ -15,9 +15,10 @@ export default function TopCategoriesMenu() {
     const categoriesMenuRef = useRef();
     const { pathname } = useLocation();
     const [sticked, setSticked] = useState(false);
-    const { categories } = useSelector(({ products }) => {
+    const { categories, products } = useSelector(({ products }) => {
         return {
             categories: products.categories,
+            products: products.items,
         };
     });
 
@@ -150,40 +151,52 @@ export default function TopCategoriesMenu() {
                         className="categories-menu"
                         ref={categoriesMenuRef}
                     >
-                        {showedCategories.map((item) => (
-                            <li key={item.term_id} className={"viewCategory"}>
-                                {pathname === "/" ? (
-                                    <AnimateLink
-                                        activeClass="active"
-                                        to={`category-${item.term_id}`}
-                                        spy={true}
-                                        smooth={true}
-                                        offset={-70}
-                                        duration={500}
-                                        onSetActive={
-                                            _isMobile
-                                                ? scrollCategoriesMenu
-                                                : null
-                                        }
-                                    >
-                                        {item.name}
-                                    </AnimateLink>
-                                ) : (
-                                    <Link
-                                        to={`/category/${item.slug}`}
-                                        style={{ textDecoration: "none" }}
-                                        className={
-                                            pathname ===
-                                            `/category/${item.slug}`
-                                                ? "active"
-                                                : ""
-                                        }
-                                    >
-                                        {item.name}
-                                    </Link>
-                                )}
-                            </li>
-                        ))}
+                        {showedCategories.map((item) => {
+                            if (
+                                !Object.values(products).find((product) =>
+                                    product.categories.includes(item.term_id)
+                                )
+                            ) {
+                                return;
+                            }
+                            return (
+                                <li
+                                    key={item.term_id}
+                                    className={"viewCategory"}
+                                >
+                                    {pathname === "/" ? (
+                                        <AnimateLink
+                                            activeClass="active"
+                                            to={`category-${item.term_id}`}
+                                            spy={true}
+                                            smooth={true}
+                                            offset={-70}
+                                            duration={500}
+                                            onSetActive={
+                                                _isMobile
+                                                    ? scrollCategoriesMenu
+                                                    : null
+                                            }
+                                        >
+                                            {item.name}
+                                        </AnimateLink>
+                                    ) : (
+                                        <Link
+                                            to={`/category/${item.slug}`}
+                                            style={{ textDecoration: "none" }}
+                                            className={
+                                                pathname ===
+                                                `/category/${item.slug}`
+                                                    ? "active"
+                                                    : ""
+                                            }
+                                        >
+                                            {item.name}
+                                        </Link>
+                                    )}
+                                </li>
+                            );
+                        })}
 
                         {restCategories.length && (
                             <li className="flexmenu--more">
