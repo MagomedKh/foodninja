@@ -51,8 +51,10 @@ const SearchPage = () => {
                 <h1>Поиск товаров</h1>
                 <SearchBar products={productsForSearch} />
             </Container>
-            {_isMobile() ? <MobileMiniCart /> : ""}
-            <FooterBonuses />
+            <div className="screen-footer">
+                {_isMobile() ? <MobileMiniCart /> : ""}
+                <FooterBonuses />
+            </div>
             <Footer />
         </Box>
     );

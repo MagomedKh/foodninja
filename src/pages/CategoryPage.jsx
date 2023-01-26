@@ -169,8 +169,10 @@ const CategoryPage = () => {
                     )}
                 </div>
             </Container>
-            {_isMobile() ? <MobileMiniCart /> : ""}
-            <FooterBonuses />
+            <div className="screen-footer">
+                {_isMobile() ? <MobileMiniCart /> : ""}
+                <FooterBonuses />
+            </div>
             <Footer />
         </Box>
     );

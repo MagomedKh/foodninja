@@ -19,7 +19,6 @@ import {
     _isCategoryDisabled,
     _getPlatform,
 } from "../components/helpers.js";
-import "../css/home.css";
 
 export default function Home() {
     const { config } = useSelector(({ config }) => {
@@ -229,7 +228,7 @@ export default function Home() {
 
                 <SubscribeSnackbar />
 
-                <div className="home--screen-footer">
+                <div className="screen-footer">
                     {_isMobile() ? <MobileMiniCart /> : ""}
                     {_isMobile() ? null : <ScrollToTop />}
 

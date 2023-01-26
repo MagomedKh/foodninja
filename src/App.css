@@ -596,3 +596,11 @@ a.btn {
 .scroll-to-top-btn:hover {
     color: var(--main-color);
 }
+
+.screen-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 10;
+    width: 100%;
+}
