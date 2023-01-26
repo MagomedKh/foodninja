@@ -38,21 +38,25 @@ const SaleModal = ({ saleOpenModal, activeSale, handleCloseSaleModal }) => {
             >
                 <CloseIcon />
             </IconButton>
-            <div className="sale-modal">
-                <img
-                    className="sale--img"
-                    src={activeSale.saleImg}
-                    alt={activeSale.saleTitle}
-                />
+            <div className="sale-modal--container">
+                <div className="sale-modal">
+                    <img
+                        className="sale--img"
+                        src={activeSale.saleImg}
+                        alt={activeSale.saleTitle}
+                    />
 
-                <h2 className="sale-modal--title">{activeSale.saleTitle}</h2>
+                    <h2 className="sale-modal--title">
+                        {activeSale.saleTitle}
+                    </h2>
 
-                <div
-                    className="sale--content"
-                    dangerouslySetInnerHTML={{
-                        __html: activeSale.saleContent,
-                    }}
-                ></div>
+                    <div
+                        className="sale--content"
+                        dangerouslySetInnerHTML={{
+                            __html: activeSale.saleContent,
+                        }}
+                    ></div>
+                </div>
             </div>
         </Dialog>
     );

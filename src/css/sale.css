@@ -48,6 +48,19 @@
     border-bottom: 1px dashed var(--main-color);
 }
 
+.sale-modal--container {
+    display: flex;
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px;
+}
+
+@media (max-width: 899px) {
+    .sale-modal--container {
+        border-radius: 0;
+    }
+}
+
 .sale-modal {
     padding: 2rem 2rem 1rem;
     position: relative;
@@ -82,13 +95,5 @@
 .sale--img {
     width: calc(100% + 64px);
     margin: -32px -32px 25px -32px;
-    border-radius: 3px 3px 0 0;
     max-width: none;
-    border-radius: 15px 15px 0 0;
-}
-
-@media (max-width: 899px) {
-    .sale--img {
-        border-radius: 0;
-    }
 }
