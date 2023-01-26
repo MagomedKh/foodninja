@@ -298,7 +298,10 @@
     background: white;
     margin-bottom: 0;
     position: relative;
-    border: 1px solid transparent;
+    border: 2px solid transparent;
+}
+.addon-product.addon-product-active {
+    border: 2px solid var(--main-color);
 }
 .addon-product .addon-product--image {
     aspect-ratio: 1/1;

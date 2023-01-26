@@ -391,7 +391,7 @@ export default function ProductModal() {
                                         .length) ? null : (
                                     <div className="addon-products">
                                         <div className="addon-products--title">
-                                            Соусы и дополнения
+                                            {config.CONFIG_addons_category_name}
                                         </div>
                                         <Grid
                                             container

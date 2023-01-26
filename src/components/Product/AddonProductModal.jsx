@@ -25,7 +25,12 @@ export default function AddonProductModal({ product }) {
     };
 
     return (
-        <div className="addon-product addon-product-modal">
+        <div
+            className={`addon-product addon-product-modal ${
+                cartProducts[product.id] ? "addon-product-active" : ""
+            }`}
+            onClick={handleAddProduct}
+        >
             <div className="addon-product--image">
                 <img
                     className="lazyload-image"
@@ -42,7 +47,10 @@ export default function AddonProductModal({ product }) {
                 {!cartProducts[product.id] ? (
                     <Button
                         className="btn--outline btn-buy"
-                        onClick={handleAddProduct}
+                        onClick={(event) => {
+                            event.stopPropagation();
+                            handleAddProduct();
+                        }}
                     >
                         Хочу
                     </Button>
@@ -50,7 +58,10 @@ export default function AddonProductModal({ product }) {
                     <div className="product--quantity">
                         <Button
                             className="btn--default product-decrease"
-                            onClick={handleDecreaseProduct}
+                            onClick={(event) => {
+                                event.stopPropagation();
+                                handleDecreaseProduct();
+                            }}
                         >
                             -
                         </Button>
@@ -62,7 +73,10 @@ export default function AddonProductModal({ product }) {
                         />
                         <Button
                             className="btn--default product-add"
-                            onClick={handleAddProduct}
+                            onClick={(event) => {
+                                event.stopPropagation();
+                                handleAddProduct();
+                            }}
                         >
                             +
                         </Button>
