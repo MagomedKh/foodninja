@@ -349,6 +349,18 @@
     display: flex;
     justify-content: space-between;
 }
+@media (min-width: 550px) and (max-width: 899px) {
+    .minicart--inner {
+        max-width: 450px;
+    }
+}
+
+@media (max-width: 550px) {
+    .minicart--inner {
+        max-width: none;
+    }
+}
+
 @media (max-width: 899px) {
     .mobile-minicart .minicart {
         position: fixed;
@@ -381,7 +393,6 @@
     }
     .minicart--inner {
         width: 100vw;
-        max-width: 450px;
         padding: 0;
     }
     .minicart--topcart--total .minicart--topcart--price-total {
