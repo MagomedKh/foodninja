@@ -10,7 +10,11 @@ import MiniCartProduct from "../components/Product/MiniCartProduct";
 import MiniCartBonusProduct from "../components/Product/MiniCartBonusProduct";
 import { setOpenModalAuth } from "../redux/actions/user";
 import MiniCartFreeAddons from "./Product/MiniCartFreeAddons";
-import { _checkPromocode, _isMobile } from "../components/helpers.js";
+import {
+    _checkPromocode,
+    _getPlatform,
+    _isMobile,
+} from "../components/helpers.js";
 import { Promocode } from "../components";
 import MiniCartReccomends from "./MiniCartRecommends";
 import CartBonusesProducts from "./CartBonusesProducts";
@@ -19,6 +23,8 @@ import { removePromocode, addBonusProductToCart } from "../redux/actions/cart";
 import { openMiniCart, closeMiniCart } from "../redux/actions/miniCart";
 import "../css/minicart.css";
 import { getItemTotalPrice } from "../redux/reducers/cart";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 
 function MiniCart() {
     const navigate = useNavigate();
@@ -159,14 +165,25 @@ function MiniCart() {
                 {cartCountItems && cartProducts ? (
                     <div className="minicart--inner">
                         <div className="minicart--product-list">
-                            <h2 className="minicart--inner-title">
-                                Корзина
+                            <h2
+                                className={`minicart--inner-title ${
+                                    _getPlatform() === "vk" ? "vk" : ""
+                                }`}
+                            >
+                                <div>Корзина</div>
                                 <IconButton
                                     color="inherit"
                                     onClick={handleCloseMiniCart}
                                     className="minicart--close"
                                 >
-                                    <CloseIcon />
+                                    {_getPlatform() === "vk" ? (
+                                        <FontAwesomeIcon
+                                            icon={faAngleLeft}
+                                            className={"minicart--angle-icon"}
+                                        />
+                                    ) : (
+                                        <CloseIcon />
+                                    )}
                                 </IconButton>
                             </h2>
 

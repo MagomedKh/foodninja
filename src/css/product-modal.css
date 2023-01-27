@@ -13,20 +13,40 @@
 .product-modal-wrapper {
     height: 100%;
 }
+
 .modal-close {
     position: absolute !important;
     right: -60px;
     top: 0;
     color: white !important;
 }
-@media (max-width: 991px) {
+
+@media (max-width: 899px) {
+    .product-modal-wrapper .modal-close {
+        right: 15px;
+        left: unset;
+    }
+    .product-modal-wrapper .modal-close.vk {
+        left: 15px;
+        right: unset;
+    }
+}
+
+/* Размер приложения вк на десктопе */
+@media (min-width: 899px) and (max-width: 991px) {
     .modal-close {
         position: absolute !important;
         right: 15px;
+        left: unset;
         top: 7px;
         color: black !important;
     }
+    .product-modal-wrapper .modal-close {
+        left: 15px;
+        right: unset;
+    }
 }
+
 .modal-close:hover svg {
     transition: transform 0.5s;
 }

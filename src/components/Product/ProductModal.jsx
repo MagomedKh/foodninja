@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { _clone, _isMobile } from "../../components/helpers.js";
+import { _clone, _getPlatform, _isMobile } from "../../components/helpers.js";
 import {
     addProductToCart,
     decreaseProductInCart,
@@ -232,7 +232,9 @@ export default function ProductModal() {
                         color="inherit"
                         onClick={handleClose}
                         aria-label="close"
-                        className="modal-close"
+                        className={`modal-close ${
+                            _getPlatform() === "vk" ? "vk" : ""
+                        }`}
                         sx={{ zIndex: 1 }}
                     >
                         <CloseIcon />
