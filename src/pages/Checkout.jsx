@@ -1,6 +1,14 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
+import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { addPromocode, removePromocode } from "../redux/actions/cart";
+import {
+    addPromocode,
+    removePromocode,
+    clearCart,
+    addBonusProductToCart,
+} from "../redux/actions/cart";
+import { updateAlerts } from "../redux/actions/systemAlerts";
+import { getItemTotalPrice } from "../redux/reducers/cart";
 import { Link, useNavigate } from "react-router-dom";
 import {
     Alert,
@@ -19,17 +27,19 @@ import {
     Slider,
     Slide,
     TextField,
+    ToggleButtonGroup,
+    ToggleButton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { CheckoutProduct, Footer, Header } from "../components";
-import { _checkPromocode, _declension } from "../components/helpers.js";
-import { _isMobile, _getDomain } from "../components/helpers.js";
-import axios from "axios";
-import { clearCart, addBonusProductToCart } from "../redux/actions/cart";
-import "../css/checkout.css";
+import {
+    _checkPromocode,
+    _declension,
+    _isMobile,
+    _getDomain,
+} from "../components/helpers.js";
 import CheckoutFreeAddons from "../components/Product/CheckoutFreeAddons";
-import { updateAlerts } from "../redux/actions/systemAlerts";
 import PreorderForm from "../components/Product/PreorderForm";
 import {
     getHours,
@@ -40,7 +50,11 @@ import {
     format,
     getDay,
 } from "date-fns";
-import { getItemTotalPrice } from "../redux/reducers/cart";
+import wallet from "../img/wallet.svg";
+import creditCard from "../img/credit-card.svg";
+import onlineCreditCard from "../img/online-credit-card.svg";
+import "../css/checkout.css";
+
 const formatingStrPhone = (inputNumbersValue) => {
     var formattedPhone = "";
     if (["7", "8", "9"].indexOf(inputNumbersValue[0]) > -1) {
@@ -234,6 +248,9 @@ export default function Checkout() {
     };
 
     const handleSetActiveGateway = (e, value) => {
+        if (!value) {
+            return;
+        }
         setActiveGateway(value);
     };
 
@@ -690,6 +707,22 @@ export default function Checkout() {
             window.removeEventListener("scroll", handleScroll);
         };
     }, [sticked]);
+
+    const getGatewayIcon = useCallback(
+        (gateway) => {
+            if (gateway.id === "cash") {
+                return <img src={wallet} alt={gateway.title} />;
+            }
+            if (gateway.id === "card") {
+                return <img src={creditCard} alt={gateway.title} />;
+            }
+            if (gateway.id === "tinkoff") {
+                return <img src={onlineCreditCard} alt={gateway.title} />;
+            }
+            return <div></div>;
+        },
+        [gateways]
+    );
 
     return (
         <>
@@ -1234,24 +1267,28 @@ export default function Checkout() {
                             {gateways && (
                                 <div className="checkout--gateways">
                                     <h4>Способ оплаты</h4>
-
-                                    <RadioGroup
-                                        defaultValue={activeGateway}
-                                        aria-labelledby="activeGateway-label"
-                                        name="activeGateway"
+                                    <ToggleButtonGroup
+                                        value={activeGateway}
                                         onChange={handleSetActiveGateway}
+                                        orientation="vertical"
+                                        exclusive
+                                        className="checkout--gateways-btn-group"
                                         sx={{ mb: 2 }}
                                     >
                                         {gateways.map((key, index) => (
-                                            <FormControlLabel
+                                            <ToggleButton
                                                 key={index}
-                                                className="custom-radio"
                                                 value={key.id}
-                                                control={<Radio size="small" />}
                                                 label={key.title}
-                                            />
+                                                className="checkout--gateways-btn"
+                                            >
+                                                <div className="checkout--gateways-title">
+                                                    {key.title}
+                                                </div>
+                                                {getGatewayIcon(key)}
+                                            </ToggleButton>
                                         ))}
-                                    </RadioGroup>
+                                    </ToggleButtonGroup>
 
                                     <Grid container spacing={4}>
                                         {config.CONFIG_checkout_hide_count_person ===
