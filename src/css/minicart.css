@@ -193,7 +193,7 @@
     width: 32px !important;
     border-radius: 50% 0 0 50%;
     line-height: 1;
-    padding: 0;
+    padding: 6px 16px !important;
     cursor: pointer;
     border: 0;
     color: #999;
@@ -223,7 +223,7 @@
     border-color: var(--sec-color);
 }
 .minicart--product-quantity .quantity {
-    width: 28px;
+    width: 40px;
     display: inline-block;
     height: 32px;
     border: 0;
