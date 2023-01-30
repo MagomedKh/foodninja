@@ -1282,8 +1282,15 @@ export default function Checkout() {
                                                 label={key.title}
                                                 className="checkout--gateways-btn"
                                             >
-                                                <div className="checkout--gateways-title">
-                                                    {key.title}
+                                                <div className="checkout--gateways-title-container">
+                                                    <Radio
+                                                        size="small"
+                                                        checked={
+                                                            activeGateway ===
+                                                            key.id
+                                                        }
+                                                    />
+                                                    <div>{key.title}</div>
                                                 </div>
                                                 {getGatewayIcon(key)}
                                             </ToggleButton>

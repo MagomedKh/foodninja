@@ -37,7 +37,7 @@
 }
 
 .checkout--type-delivery .MuiRadio-root {
-    padding: 4px 9px;
+    padding: 9px 9px;
 }
 .checkout--form-new-address {
     margin-top: 1.5rem;
@@ -171,11 +171,12 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 54px;
-    padding: 10px 26px;
+    height: 40px;
+    padding: 8.5px 26px;
+    margin-top: 0px !important;
     margin-bottom: 8px;
     border-radius: 12px !important;
-    border: 1px solid rgba(0, 0, 0, 0.12) !important;
+    border: none !important;
     color: black;
 }
 
@@ -184,8 +185,13 @@
     color: black;
 }
 
-.checkout--gateways-btn.MuiToggleButton-root.Mui-selected .MuiTouchRipple-root {
+.checkout--gateways-btn.MuiToggleButton-root.Mui-selected
+    > .MuiTouchRipple-root {
     border: 2px solid var(--main-color) !important;
+}
+
+.checkout--gateways-btn.MuiToggleButton-root > .MuiTouchRipple-root {
+    border: 1px solid rgba(0, 0, 0, 0.23) !important;
 }
 
 .checkout--gateways-btn.MuiToggleButton-root.Mui-selected:hover {
@@ -197,8 +203,20 @@
     max-width: 120px;
 }
 
-.checkout--gateways-title {
+.checkout--gateways-btn svg {
+    height: 1rem;
+}
+
+.checkout--gateways-title-container {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
     text-align: left;
     margin-right: 10px;
     line-height: 1;
+}
+
+.checkout--gateways-btn .MuiRadio-root {
+    padding: 0;
+    margin-right: 4px;
 }
