@@ -26,6 +26,7 @@ import {
     isAfter,
     eachDayOfInterval,
 } from "date-fns";
+import useWorkingStatus from "../../hooks/useWorkingStatus";
 
 const PreorderForm = forwardRef(
     (
@@ -40,6 +41,8 @@ const PreorderForm = forwardRef(
         },
         ref
     ) => {
+        const workingStatus = useWorkingStatus();
+
         const { promocode } = useSelector((state) => state.cart);
 
         const { config } = useSelector(({ config }) => {
@@ -77,13 +80,10 @@ const PreorderForm = forwardRef(
             milliseconds: 0,
         });
         useEffect(() => {
-            if (
-                config.CONFIG_work_status !== "closed" &&
-                !isAfter(new Date(), todayEndWorkTime)
-            ) {
+            if (workingStatus && !isAfter(new Date(), todayEndWorkTime)) {
                 handlePreorderDateChange("Как можно скорее");
             }
-        }, [config.CONFIG_work_status]);
+        }, [workingStatus]);
 
         // Устанавливаем начальное время для заказа в формате даты
         let startWorkDate = set(new Date(), {
@@ -189,8 +189,6 @@ const PreorderForm = forwardRef(
                 if (el || el === 0) return true;
             });
 
-        console.log(unavailablePromocodeDays);
-
         return (
             <Box sx={{ display: "flex" }}>
                 <FormControl sx={{ minWidth: 120 }} size="small" error={error}>
@@ -214,7 +212,7 @@ const PreorderForm = forwardRef(
                         autoWidth
                         MenuProps={{ PaperProps: { sx: { maxHeight: 500 } } }}
                     >
-                        {config.CONFIG_work_status === "closed" ||
+                        {!workingStatus ||
                         isAfter(new Date(), todayEndWorkTime) ? null : (
                             <MenuItem
                                 key={"Как можно скорее"}
