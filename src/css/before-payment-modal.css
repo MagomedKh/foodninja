@@ -1,0 +1,45 @@
+.before-payment-modal {
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    max-width: 400px;
+}
+.modal-alert--wrapper.before-payment-modal {
+    min-height: auto;
+    padding: 2rem;
+}
+
+.before-payment-modal h2 {
+    margin: 0 0 8px 0;
+}
+
+.before-payment-modal--content {
+    margin-bottom: 16px;
+}
+
+.before-payment-modal--buttons {
+    width: 100%;
+    display: flex;
+}
+
+.before-payment-modal--buttons button {
+    flex-basis: 50%;
+}
+
+.before-payment-modal--buttons button:first-child {
+    margin-right: 16px;
+}
+
+@media (max-width: 360px) {
+    .before-payment-modal--buttons {
+        display: flex;
+        flex-direction: column;
+    }
+    .before-payment-modal--buttons button:first-child {
+        margin-right: 0;
+        margin-bottom: 8px;
+    }
+}

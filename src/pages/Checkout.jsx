@@ -32,7 +32,12 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { CheckoutProduct, Footer, Header } from "../components";
+import {
+    BeforePaymentModal,
+    CheckoutProduct,
+    Footer,
+    Header,
+} from "../components";
 import {
     _checkPromocode,
     _declension,
@@ -153,6 +158,7 @@ export default function Checkout() {
     const [moneyBack, setMoneyBack] = useState("");
     const [dontRecall, setDontRecall] = useState(false);
     const [sticked, setSticked] = useState(false);
+    const [openBeforePaymentModal, setOpenBeforePaymentModal] = useState(false);
 
     const handleAlertClose = () => {
         setOpenAlert(false);
@@ -299,6 +305,15 @@ export default function Checkout() {
         if (e.keyCode === 8 && inputValue.length === 1) {
             e.target.value = "";
         }
+    };
+
+    const beforePaymentConfirm = () => {
+        setOpenBeforePaymentModal(false);
+        handleMakeOrder();
+    };
+
+    const beforePaymentCancel = () => {
+        setOpenBeforePaymentModal(false);
     };
 
     const handleMakeOrder = () => {
@@ -1439,7 +1454,12 @@ export default function Checkout() {
                                 sx={{ width: 1, mt: 1.5 }}
                                 variant="button"
                                 className="btn--action makeOrder"
-                                onClick={handleMakeOrder}
+                                onClick={() => {
+                                    activeGateway === "tinkoff" &&
+                                    config.CONFIG_order_text_before_payment
+                                        ? setOpenBeforePaymentModal(true)
+                                        : handleMakeOrder();
+                                }}
                                 disabled={
                                     selfDeliveryOrderLess || deliveryOrderLess
                                 }
@@ -1452,6 +1472,14 @@ export default function Checkout() {
 
                 <div className=""></div>
             </Container>
+            {config.CONFIG_order_text_before_payment ? (
+                <BeforePaymentModal
+                    openModal={openBeforePaymentModal}
+                    beforePaymentConfirm={beforePaymentConfirm}
+                    beforePaymentCancel={beforePaymentCancel}
+                    content={config.CONFIG_order_text_before_payment}
+                />
+            ) : null}
             <Footer />
         </>
     );

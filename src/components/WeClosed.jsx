@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { Dialog, IconButton, Slide } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import useWorkingStatus from "../hooks/useWorkingStatus";
 import { _isMobile } from "./helpers";
 import catSleep from "../img/cat-sleep.svg";
 import "../css/we-closed.css";
-import { useSelector } from "react-redux";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -69,19 +69,14 @@ export default function WeClosed() {
                         ? CONFIG_maintenance_title
                         : "Сейчас мы закрыты."}
                 </h2>
-                <div>
-                    {!maintenanceStatus
-                        ? CONFIG_maintenance_text
-                        : "Вы можете оформить предзаказ ко времени."}
-                </div>
+                <div
+                    dangerouslySetInnerHTML={{
+                        __html: !maintenanceStatus
+                            ? CONFIG_maintenance_text
+                            : "Вы можете оформить предзаказ ко времени.",
+                    }}
+                ></div>
             </div>
         </Dialog>
-
-        // <div className="deliveryStatus">
-        //     <div className="deliveryClosed">
-        //         <div className="main-color">Сейчас мы закрыты.</div>
-        //         <div>Вы можете оформить предзаказ ко времени.</div>
-        //     </div>
-        // </div>
     );
 }
