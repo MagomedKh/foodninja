@@ -1243,22 +1243,6 @@ export default function Checkout() {
                                         </span>{" "}
                                         от общей суммы заказа.
                                     </small>
-                                    {config.CONFIG_order_min_price !==
-                                        undefined &&
-                                        config.CONFIG_order_min_price > 0 && (
-                                            <div>
-                                                <small>
-                                                    Минимальная сумма заказа{" "}
-                                                    <b className="main-color">
-                                                        {
-                                                            config.CONFIG_order_min_price
-                                                        }{" "}
-                                                        ₽
-                                                    </b>
-                                                    .
-                                                </small>
-                                            </div>
-                                        )}
                                 </div>
                             )}
 
