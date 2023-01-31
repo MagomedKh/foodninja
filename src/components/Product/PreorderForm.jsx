@@ -25,6 +25,9 @@ import {
     isBefore,
     isAfter,
     eachDayOfInterval,
+    getHours,
+    getMinutes,
+    isEqual,
 } from "date-fns";
 import useWorkingStatus from "../../hooks/useWorkingStatus";
 
@@ -41,7 +44,12 @@ const PreorderForm = forwardRef(
         },
         ref
     ) => {
-        const workingStatus = useWorkingStatus();
+        const {
+            workingStatus,
+            maintenanceStatus,
+            maintenanceDateStart,
+            maintenanceDateEnd,
+        } = useWorkingStatus();
 
         const { promocode } = useSelector((state) => state.cart);
 
@@ -80,7 +88,11 @@ const PreorderForm = forwardRef(
             milliseconds: 0,
         });
         useEffect(() => {
-            if (workingStatus && !isAfter(new Date(), todayEndWorkTime)) {
+            if (
+                workingStatus &&
+                maintenanceStatus &&
+                !isAfter(new Date(), todayEndWorkTime)
+            ) {
                 handlePreorderDateChange("Как можно скорее");
             }
         }, [workingStatus]);
@@ -213,6 +225,7 @@ const PreorderForm = forwardRef(
                         MenuProps={{ PaperProps: { sx: { maxHeight: 500 } } }}
                     >
                         {!workingStatus ||
+                        !maintenanceStatus ||
                         isAfter(new Date(), todayEndWorkTime) ? null : (
                             <MenuItem
                                 key={"Как можно скорее"}
@@ -240,6 +253,16 @@ const PreorderForm = forwardRef(
                                 getDay(el) === 0 ? 6 : getDay(el) - 1;
                             const disabledBySchedule =
                                 unavailableDays?.includes(currentDayOfWeek);
+
+                            // Блокируем дни закрытия сайта
+                            const disabledByMaintenance =
+                                (isAfter(el, maintenanceDateStart) ||
+                                    isEqual(el, maintenanceDateStart)) &&
+                                isBefore(
+                                    set(el, { hours: 23, minutes: 50 }),
+                                    maintenanceDateEnd
+                                );
+
                             return (
                                 <MenuItem
                                     key={getDayOfYear(el)}
@@ -251,7 +274,8 @@ const PreorderForm = forwardRef(
                                     divider
                                     disabled={
                                         disabledByPromocode ||
-                                        disabledBySchedule
+                                        disabledBySchedule ||
+                                        disabledByMaintenance
                                     }
                                 >
                                     <span>
@@ -311,7 +335,7 @@ const PreorderForm = forwardRef(
                         >
                             {hoursArray.map((el) => {
                                 // Блокируем часы, недоступные по действующему промокоду
-                                let disabled = false;
+                                let disabledByPromocode = false;
                                 if (
                                     promocode &&
                                     promocode.endTime &&
@@ -341,7 +365,46 @@ const PreorderForm = forwardRef(
                                         isBefore(el, promocodeStartTime) ||
                                         isAfter(el, promocodeEndTime)
                                     ) {
-                                        disabled = true;
+                                        disabledByPromocode = true;
+                                    }
+                                }
+
+                                // Блокируем часы закрытия сайта
+                                let disabledByMaintenance = false;
+                                if (
+                                    getDayOfYear(preorderDate) ===
+                                    getDayOfYear(maintenanceDateStart)
+                                ) {
+                                    const maintenanceStartTime = set(
+                                        new Date(),
+                                        {
+                                            hours: getHours(
+                                                maintenanceDateStart
+                                            ),
+                                            minutes:
+                                                getMinutes(
+                                                    maintenanceDateStart
+                                                ),
+                                            seconds: 0,
+                                            milliseconds: 0,
+                                        }
+                                    );
+                                    if (isAfter(el, maintenanceStartTime)) {
+                                        disabledByMaintenance = true;
+                                    }
+                                }
+                                if (
+                                    getDayOfYear(preorderDate) ===
+                                    getDayOfYear(maintenanceDateEnd)
+                                ) {
+                                    const maintenanceEndTime = set(new Date(), {
+                                        hours: getHours(maintenanceDateEnd),
+                                        minutes: getMinutes(maintenanceDateEnd),
+                                        seconds: 0,
+                                        milliseconds: 0,
+                                    });
+                                    if (isBefore(el, maintenanceEndTime)) {
+                                        disabledByMaintenance = true;
                                     }
                                 }
                                 return (
@@ -349,14 +412,17 @@ const PreorderForm = forwardRef(
                                         key={getTime(el)}
                                         value={getTime(el)}
                                         divider
-                                        disabled={disabled}
+                                        disabled={
+                                            disabledByPromocode ||
+                                            disabledByMaintenance
+                                        }
                                         sx={{
                                             justifyContent: "center",
                                             flexDirection: "column",
                                         }}
                                     >
                                         {format(el, "H:mm")}
-                                        {disabled && (
+                                        {disabledByPromocode && (
                                             <div
                                                 style={{
                                                     fontSize: "12px",

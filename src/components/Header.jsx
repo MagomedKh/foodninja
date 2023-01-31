@@ -21,7 +21,6 @@ import {
     Skeleton,
     Toolbar,
 } from "@mui/material";
-import WeClosed from "./WeClosed";
 import "../css/header.css";
 
 function Header() {
@@ -79,8 +78,6 @@ function Header() {
 
     return (
         <div>
-            <WeClosed />
-
             <AppBar position="static" className="header-bar">
                 <Container maxWidth="lg">
                     <Toolbar
