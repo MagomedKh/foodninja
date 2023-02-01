@@ -408,6 +408,7 @@ export default function Checkout() {
                     newUserAddressFloor: newUserAddressFloor,
                     newUserAddressApartment: newUserAddressApartment,
                     newUserAddressCoordinates: newUserAddressCoordinates,
+                    deliveryZoneIndex: deliveryZone && deliveryZone.index,
                     orderTime: format(preorderDate, "dd.MM.yyyy HH:mm"),
                     commentOrder: commentOrder,
                     activeGateway: activeGateway,

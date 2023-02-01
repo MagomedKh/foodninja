@@ -128,6 +128,7 @@ const DeliveryAddressModal = ({
                             orderMinPrice: zone.options._options.orderMinPrice,
                             freeDeliveryOrder:
                                 zone.options._options.freeDeliveryOrder,
+                            index: zone.options._options.index,
                         };
                     }
                 });
@@ -185,7 +186,7 @@ const DeliveryAddressModal = ({
             .then(function (res) {})
             .catch((error) => onYandexApiError(true));
 
-        config.deliveryZones.zones.forEach((zone) => {
+        config.deliveryZones.zones.forEach((zone, index) => {
             let hintContent = "";
             if (zone.orderMinPrice) {
                 hintContent += `Заказ от ${zone.orderMinPrice} ₽<br>`;
@@ -227,6 +228,7 @@ const DeliveryAddressModal = ({
             myPolygon.options._options.orderMinPrice = zone.orderMinPrice;
             myPolygon.options._options.freeDeliveryOrder =
                 zone.freeDeliveryOrder;
+            myPolygon.options._options.index = index;
             // Добавляем многоугольник на карту.
             mapRef.current.geoObjects.add(myPolygon);
         });
