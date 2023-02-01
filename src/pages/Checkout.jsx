@@ -264,6 +264,20 @@ export default function Checkout() {
         setYandexApiError(hasError);
     };
 
+    const getOrderDeliveryPrice = () => {
+        if (deliveryZone) {
+            if (
+                deliveryZone.freeDeliveryOrder &&
+                cartTotalPrice > deliveryZone.freeDeliveryOrder
+            ) {
+                return 0;
+            } else {
+                return parseInt(deliveryZone.deliveryPrice);
+            }
+        }
+        return parseInt(config.CONFIG_order_delivery_price);
+    };
+
     const handleChooseZoneDeliveryAddress = (address) => {
         setChoosenAddress(address);
         setNewUserAddressStreet(address.street);
@@ -409,6 +423,7 @@ export default function Checkout() {
                     newUserAddressApartment: newUserAddressApartment,
                     newUserAddressCoordinates: newUserAddressCoordinates,
                     deliveryZoneIndex: deliveryZone && deliveryZone.index,
+                    orderDeliveryPrice: getOrderDeliveryPrice(),
                     orderTime: format(preorderDate, "dd.MM.yyyy HH:mm"),
                     commentOrder: commentOrder,
                     activeGateway: activeGateway,
@@ -1418,13 +1433,13 @@ export default function Checkout() {
                                 ) : (config.deliveryZones.useDeliveryZones !==
                                       "yes" ||
                                       yandexApiError) &&
-                                  config.deliveryZones?.fixedDeliveryPrice ? (
+                                  config.CONFIG_order_delivery_price ? (
                                     <div className="result-delivery">
                                         <span className="price-title">
                                             Доставка
                                         </span>
                                         <span>
-                                            {config.deliveryZones?.fixedDeliveryPrice.toLocaleString(
+                                            {config.CONFIG_order_delivery_price.toLocaleString(
                                                 "ru-RU"
                                             )}{" "}
                                             ₽
