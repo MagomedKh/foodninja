@@ -603,4 +603,9 @@ a.btn {
     left: 0;
     z-index: 10;
     width: 100%;
+    pointer-events: none;
+}
+
+.screen-footer > * {
+    pointer-events: auto;
 }
