@@ -47,7 +47,7 @@ import axios from "axios";
 import "./fonts/cera/CeraRoundProMedium.woff2";
 import "./fonts/cera/CeraRoundProBold.woff2";
 import "./App.css";
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle, css } from "styled-components";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import {
     _getDomain,
@@ -59,6 +59,13 @@ import { ru } from "date-fns/locale";
 import { setDefaultOptions } from "date-fns";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 import { Container } from "@mui/material";
+import {
+    CeraFont,
+    ManropeFont,
+    NunitoFont,
+    FiraSansFont,
+    PTSansFont,
+} from "./fonts/index";
 
 const MainTheme = createGlobalStyle`
 	:root {
@@ -71,7 +78,24 @@ const MainTheme = createGlobalStyle`
             props.secondColor.match(/#[a-f0-9]{6}\b/gi)
                 ? props.secondColor
                 : "#000"};
-	}`;
+	}
+    ${(props) => {
+        switch (props.font) {
+            case "cera":
+                return CeraFont;
+            case "manrope":
+                return ManropeFont;
+            case "nunito":
+                return NunitoFont;
+            case "firasans":
+                return FiraSansFont;
+            case "ptsans":
+                return PTSansFont;
+            default:
+                return CeraFont;
+        }
+    }}
+    `;
 
 function App() {
     const dispatch = useDispatch();
@@ -201,7 +225,7 @@ function App() {
             },
         },
         typography: {
-            fontFamily: `"Cera","sans-serif"`,
+            fontFamily: "inherit",
             button: {
                 textTransform: "none",
                 fontSize: 16,
@@ -252,7 +276,11 @@ function App() {
 
     return (
         <ThemeProvider theme={foodninja}>
-            <MainTheme mainColor={mainColor} secondColor={secondColor} />
+            <MainTheme
+                mainColor={mainColor}
+                secondColor={secondColor}
+                font={config.CONFIG_type_font}
+            />
             {config !== undefined && Object.keys(config).length ? (
                 <div>
                     <GoogleReCaptchaProvider
