@@ -265,17 +265,24 @@ export default function Checkout() {
     };
 
     const getOrderDeliveryPrice = () => {
-        if (deliveryZone) {
-            if (
-                deliveryZone.freeDeliveryOrder &&
-                cartTotalPrice > deliveryZone.freeDeliveryOrder
+        if (typeDelivery === "delivery") {
+            if (deliveryZone) {
+                if (
+                    deliveryZone.freeDeliveryOrder &&
+                    cartTotalPrice > deliveryZone.freeDeliveryOrder
+                ) {
+                    return 0;
+                } else {
+                    return parseInt(deliveryZone.deliveryPrice);
+                }
+            } else if (
+                config.deliveryZones.useDeliveryZones !== "yes" ||
+                yandexApiError
             ) {
-                return 0;
-            } else {
-                return parseInt(deliveryZone.deliveryPrice);
+                return parseInt(config.CONFIG_order_delivery_price);
             }
         }
-        return parseInt(config.CONFIG_order_delivery_price);
+        return 0;
     };
 
     const handleChooseZoneDeliveryAddress = (address) => {
@@ -807,11 +814,21 @@ export default function Checkout() {
         if (usedBonuses) {
             result -= usedBonuses;
         }
-        if (
-            deliveryZone?.deliveryPrice &&
-            cartTotalPrice < deliveryZone.freeDeliveryOrder
-        ) {
-            result += parseInt(deliveryZone?.deliveryPrice);
+        if (typeDelivery === "delivery") {
+            if (
+                deliveryZone &&
+                deliveryZone.deliveryPrice &&
+                (cartTotalPrice < deliveryZone.freeDeliveryOrder ||
+                    !deliveryZone.freeDeliveryOrder)
+            ) {
+                result += parseInt(deliveryZone?.deliveryPrice);
+            } else if (
+                (config.deliveryZones.useDeliveryZones !== "yes" ||
+                    yandexApiError) &&
+                config.CONFIG_order_delivery_price
+            ) {
+                result += parseInt(config.CONFIG_order_delivery_price);
+            }
         }
         return result;
     };
@@ -1415,7 +1432,7 @@ export default function Checkout() {
                             )}
 
                             <div className="checkout--total-panel--result">
-                                {deliveryZone ? (
+                                {deliveryZone && typeDelivery === "delivery" ? (
                                     <div className="result-delivery">
                                         <span className="price-title">
                                             Доставка
@@ -1433,7 +1450,8 @@ export default function Checkout() {
                                 ) : (config.deliveryZones.useDeliveryZones !==
                                       "yes" ||
                                       yandexApiError) &&
-                                  config.CONFIG_order_delivery_price ? (
+                                  config.CONFIG_order_delivery_price &&
+                                  typeDelivery === "delivery" ? (
                                     <div className="result-delivery">
                                         <span className="price-title">
                                             Доставка
