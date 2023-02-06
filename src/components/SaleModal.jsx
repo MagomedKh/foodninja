@@ -40,12 +40,6 @@ const SaleModal = ({ saleOpenModal, activeSale, handleCloseSaleModal }) => {
             </IconButton>
             <div className="sale-modal--container">
                 <div className="sale-modal">
-                    <img
-                        className="sale--img"
-                        src={activeSale.saleImg}
-                        alt={activeSale.saleTitle}
-                    />
-
                     <h2 className="sale-modal--title">
                         {activeSale.saleTitle}
                     </h2>

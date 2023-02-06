@@ -64,7 +64,7 @@
 .sale-modal {
     padding: 2rem 2rem 1rem;
     position: relative;
-    max-width: 500px;
+    max-width: 640px;
     overflow-y: auto;
 }
 .sale-modal::-webkit-scrollbar {
