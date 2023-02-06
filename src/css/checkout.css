@@ -109,10 +109,16 @@
     font-size: 18px;
     font-weight: bold;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
 }
 .checkout--total-panel--result .money {
     color: var(--main-color);
+}
+
+.checkout--total-panel--result .result-delivery,
+.checkout--total-panel--result .result-total {
+    display: flex;
+    justify-content: space-between;
 }
 .checkout--user-bonuses {
     margin-top: 0.5rem;
@@ -132,6 +138,34 @@
 .selfelivery-promocode-alert .modal-alert--wrapper {
     min-height: auto;
 }
+.checkout--promocode {
+    margin-top: 15px;
+}
+.checkout--promocode .promocode--input-wrapper {
+    display: flex;
+}
+.checkout--promocode .promocode--input-wrapper > div {
+    width: 100%;
+}
+
+.checkout--gateways {
+    margin-bottom: 16px;
+}
+
+.checkout--gateways-inputs {
+    display: flex;
+}
+
+.checkout--gateways-input {
+    width: 50%;
+    margin-left: 32px;
+    margin-top: 16px;
+}
+
+.checkout--gateways-input:first-child {
+    margin-left: 0px;
+}
+
 @media (max-width: 899px) {
     .time-order-modal-wrapper h2 {
         text-align: center;
@@ -149,20 +183,13 @@
         .custom-radio:not(:last-child) {
         margin-bottom: 12px;
     }
-}
-
-.checkout--promocode {
-    margin-top: 15px;
-}
-.checkout--promocode .promocode--input-wrapper {
-    display: flex;
-}
-.checkout--promocode .promocode--input-wrapper > div {
-    width: 100%;
-}
-
-.checkout--gateways {
-    margin-bottom: 16px;
+    .checkout--gateways-inputs {
+        flex-direction: column;
+    }
+    .checkout--gateways-input {
+        width: 100%;
+        margin-left: 0;
+    }
 }
 .checkout--gateways-btn-group {
     width: 100%;

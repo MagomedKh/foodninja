@@ -91,16 +91,16 @@ const LeafletMap = () => {
             }
         });
 
-        // const polygon = L.polygon(
-        //     [
-        //         [55.459694, 65.34954],
-        //         [55.442621, 65.283805],
-        //         [55.430477, 65.339735],
-        //         [55.443874, 65.368874],
-        //     ],
-        //     { color: "red" }
-        // ).addTo(map);
-        // polygon.bindPopup("I am a polygon.");
+        // Рисуем зоны с бэка
+        // config.deliveryZones.zones?.forEach((zone) => {
+        //     const polygon = L.polygon(zone.coordinates, {
+        //         color: zone.strokeColor,
+        //         fillColor: zone.fillColor,
+        //         fillOpacity: 0.5,
+        //         weight: 2,
+        //     }).addTo(map);
+        //     polygon.bindPopup(zone.name);
+        // });
     }, []);
 
     return <div style={{ height: "100%" }} ref={mapElement} />;

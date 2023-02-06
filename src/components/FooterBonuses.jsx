@@ -104,8 +104,8 @@ export default function BonusesProductsModal() {
                 in={
                     CONFIG_free_products_program_status === "on" &&
                     bonuses_items &&
-                    bonuses_items.length &&
-                    !Object.keys(promocode).length
+                    !!bonuses_items.length &&
+                    Object.keys(promocode).length === 0
                 }
                 mountOnEnter
                 unmountOnExit

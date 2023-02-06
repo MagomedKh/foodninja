@@ -609,3 +609,13 @@ a.btn {
 .screen-footer > * {
     pointer-events: auto;
 }
+
+.text-field__text-adornment {
+    margin-left: 5px;
+    color: var(--main-color);
+    cursor: pointer;
+}
+
+.text-field__text-adornment:hover {
+    text-decoration: underline;
+}
