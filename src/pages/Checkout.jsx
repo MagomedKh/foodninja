@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import {
     addPromocode,
     removePromocode,
@@ -128,7 +128,10 @@ export default function Checkout() {
             cartSubTotalPrice: cart.subTotalPrice,
         };
     });
-    const { deliveryZone } = useSelector((state) => state.deliveryAddressModal);
+    const { deliveryZone } = useSelector(
+        (state) => state.deliveryAddressModal,
+        shallowEqual
+    );
     const navigate = useNavigate();
     const stickedTotalPanel = useRef();
     const [loading, setLoading] = useState(false);
@@ -1588,7 +1591,6 @@ export default function Checkout() {
                                         orientation="vertical"
                                         exclusive
                                         className="checkout--gateways-btn-group"
-                                        sx={{ mb: 2 }}
                                     >
                                         {gateways.map((key, index) => (
                                             <ToggleButton
@@ -1755,18 +1757,19 @@ export default function Checkout() {
                                 </Alert>
                             </Collapse>
 
-                            <Alert
-                                severity="error"
-                                sx={{ mt: 2 }}
+                            <Collapse
+                                sx={{ mt: 1 }}
                                 in={
                                     deliveryZone &&
                                     deliveryZone.orderMinPrice > cartTotalPrice
                                 }
                                 unmountOnExit
                             >
-                                Сумма заказа меньше минимальной для доставки по
-                                указанному адресу
-                            </Alert>
+                                <Alert severity="error">
+                                    Сумма заказа меньше минимальной для доставки
+                                    по указанному адресу
+                                </Alert>
+                            </Collapse>
 
                             <LoadingButton
                                 loading={loading}
