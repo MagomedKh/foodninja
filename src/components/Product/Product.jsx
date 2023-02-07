@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
     addProductToCart,
@@ -10,12 +10,12 @@ import {
     setOpenModal,
 } from "../../redux/actions/productModal";
 import { Button } from "@mui/material";
-import "../../css/product.css";
+import GroupIcon from "@mui/icons-material/Group";
+import ProductImage from "./ProductImage";
+import PlaceholderImageProduct from "./PlaceholderImageProduct";
 import LazyLoad from "react-lazyload";
 import { _getPlatform, _isMobile } from "../helpers";
-import PlaceholderImageProduct from "./PlaceholderImageProduct";
-import GroupIcon from "@mui/icons-material/Group";
-import soon from "../../img/photo-soon.svg";
+import "../../css/product.css";
 
 export default function Product({ product, disabled }) {
     const dispatch = useDispatch();
@@ -88,13 +88,10 @@ export default function Product({ product, disabled }) {
                     <LazyLoad
                         height={210}
                         placeholder={<PlaceholderImageProduct />}
-                        debounce={100}
+                        once
+                        offset={500}
                     >
-                        <img
-                            alt={product.title}
-                            src={product.img ? product.img : soon}
-                            style={{ filter: disabled ? "grayscale(1)" : "" }}
-                        />
+                        <ProductImage product={product} disabled={disabled} />
                     </LazyLoad>
                 )}
             </div>
