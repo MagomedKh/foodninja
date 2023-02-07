@@ -12,6 +12,14 @@
 
 .product-modal-wrapper {
     height: 100%;
+    display: flex;
+    overflow: hidden;
+}
+
+@media (max-width: 899px) {
+    .product-modal-wrapper {
+        overflow: visible;
+    }
 }
 
 .modal-close {
@@ -55,12 +63,10 @@
 }
 .product-modal {
     display: flex;
-    min-height: 550px;
 }
 .product-modal--scrolling {
     overflow: auto;
-    max-height: 500px;
-    height: 100%;
+    height: 500px;
     margin-top: 25px;
     padding: 0 20px 10px 20px;
 }
@@ -373,12 +379,16 @@
         border-radius: 0;
     }
     .product-modal {
-        display: block;
+        display: flex;
+        flex-direction: column;
     }
     .product-modal .product-modal--image,
     .product-modal--info {
         border-radius: 0;
         width: 100%;
+    }
+    .product-modal--info {
+        flex-grow: 1;
     }
     .product-modal .product-modal--title {
         margin-top: 15px;
@@ -386,6 +396,8 @@
     .product-modal--scrolling {
         max-height: none !important;
         margin-top: 0px !important;
+        flex-grow: 1;
+        height: 100%;
     }
 
     .product-modal--variations-buying {
