@@ -299,7 +299,8 @@ const DeliveryAddressModal = ({
         if (street) {
             setStreet(street);
         } else {
-            setStreet(null);
+            setStreet(formattedArea);
+            setArea(null);
         }
         // Получаем номер дома
         const home = geoObject.getPremiseNumber();
