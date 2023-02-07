@@ -416,7 +416,9 @@ export default function Checkout() {
         if (
             typeDelivery === "delivery" &&
             deliveryAddress === "new" &&
-            (!newUserAddressStreet || !newUserAddressHome)
+            ((config.deliveryZones.deliveryPriceType !== "areaPrice" &&
+                !newUserAddressStreet) ||
+                !newUserAddressHome)
         ) {
             currentValidation = false;
             setValidate(false);
@@ -727,12 +729,9 @@ export default function Checkout() {
 
     const deliveryTextFieldProps = {
         error:
-            (!newUserAddressStreet || !newUserAddressHome || !deliveryZone) &&
-            !validate
-                ? true
-                : false,
+            (!newUserAddressHome || !deliveryZone) && !validate ? true : false,
         helperText:
-            (!newUserAddressStreet || !newUserAddressHome) && !validate
+            !newUserAddressHome && !validate
                 ? "Поле обязательно для заполнения"
                 : !deliveryZone && !validate
                 ? "Выбранный адрес не попадает ни в одну зону доставки"
