@@ -65,6 +65,7 @@ import {
     NunitoFont,
     FiraSansFont,
     PTSansFont,
+    RubikFont,
 } from "./fonts/index";
 
 const MainTheme = createGlobalStyle`
@@ -91,6 +92,8 @@ const MainTheme = createGlobalStyle`
                 return FiraSansFont;
             case "ptsans":
                 return PTSansFont;
+            case "rubik":
+                return RubikFont;
             default:
                 return CeraFont;
         }
