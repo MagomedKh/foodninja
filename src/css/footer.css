@@ -35,6 +35,13 @@
     color: #fff;
 }
 
+.footer--logo {
+    width: auto;
+    height: 50px;
+    max-width: none;
+    margin-bottom: 0.5rem;
+}
+
 .footer--adress-list {
     margin-top: 10px;
 }
@@ -54,7 +61,6 @@
 
 .contacts--social-links {
     display: flex;
-    margin-top: 15px;
 }
 
 .contacts--social-links a:not(:first-child) {
@@ -78,6 +84,7 @@
 }
 .mobile-apps a {
     display: block;
+    width: fit-content;
     line-height: 1;
 }
 .mobile-apps a:hover img {
