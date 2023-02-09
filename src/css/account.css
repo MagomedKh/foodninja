@@ -26,7 +26,7 @@
     height: 100%;
     position: relative;
 }
-.account--user-order--total,
+
 .account--user-order--header,
 .account--user-order--delivery {
     display: flex;
@@ -112,6 +112,14 @@
 .account--user-order--total {
     margin-top: 15px;
 }
+
+.account--user-order--total-delivery,
+.account--user-order--total-amount {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+}
+
 .user-order-skeleton {
     box-shadow: 0 0 10px rgb(0 0 0 / 10%);
     border-radius: 10px;

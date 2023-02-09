@@ -1,24 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Container, Skeleton } from "@mui/material";
 import Pagination from "@mui/material/Pagination";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { setOpenModalAuth } from "../../redux/actions/user";
-import {
-    addBonusProductToCart,
-    addProductToCart,
-    addPromocode,
-    clearCart,
-} from "../../redux/actions/cart";
-import { Header, Footer } from "../../components";
+
+import { Header, Footer, UserOrder } from "../../components";
 import Grid from "@mui/material/Grid";
 import axios from "axios";
-import { _getDomain } from "../../components/helpers.js";
+import { _clone, _getDomain } from "../../components/helpers.js";
 
 export default function Orders() {
     const dispatch = useDispatch();
     const { user, mainLoading, products, bonuses_products } = useSelector(
-        ({ user, config, products }) => {
+        ({ user, config, products, cart }) => {
             return {
                 products: products.items,
                 bonuses_products: products.bonuses_items,
@@ -31,6 +26,7 @@ export default function Orders() {
     const [pages, setPageCountPages] = React.useState(0);
     const [activePage, setActivePage] = React.useState(1);
     const [userOrders, setUserOrders] = React.useState();
+    const [disableRepeatButtons, setDisableRepeatButtons] = useState(false);
 
     React.useEffect(() => {
         if (mainLoading && pageStatus !== "loaded") {
@@ -52,47 +48,6 @@ export default function Orders() {
 
     const handleOpenAuthModal = () => {
         dispatch(setOpenModalAuth(true));
-    };
-
-    const navigate = useNavigate();
-    const handleRepeatOrder = (order) => {
-        dispatch(clearCart());
-        Object.values(order.products).forEach((item) => {
-            if (
-                products[item.id] !== undefined &&
-                item.price === item.total_price
-            )
-                dispatch(addProductToCart(products[item.id]));
-        });
-
-        if (order.bonusProduct.id !== undefined) {
-            Object.values(bonuses_products).forEach((item) => {
-                if (item.id === order.bonusProduct.id)
-                    dispatch(addBonusProductToCart(item));
-            });
-        }
-
-        if (order.promocode.code !== undefined)
-            dispatch(addPromocode(order.promocode));
-
-        navigate("/checkout", { replace: true });
-    };
-
-    const handleToggleOrderInfo = (orderID) => {
-        setUserOrders(
-            Object.values(userOrders).map((order) => {
-                if (order.ID === orderID)
-                    return {
-                        ...order,
-                        fullInfo:
-                            order.fullInfo !== undefined
-                                ? !order.fullInfo
-                                : true,
-                    };
-
-                return order;
-            })
-        );
     };
 
     const handleChangePage = (e, p) => {
@@ -252,292 +207,19 @@ export default function Orders() {
                                                         lg={4}
                                                         sx={{ width: 1 }}
                                                     >
-                                                        <div className="account--user-order">
-                                                            <div className="account--user-order--header">
-                                                                <div className="account--user-order--time">
-                                                                    {order.time}
-                                                                </div>
-                                                                <div className="account--user-order--status">
-                                                                    {
-                                                                        order.status
-                                                                    }
-                                                                </div>
-                                                            </div>
-
-                                                            {order.typeDelivery ===
-                                                            "delivery" ? (
-                                                                <div className="account--user-order--delivery">
-                                                                    <div className="account--user-order--delivery-type">
-                                                                        Доставка
-                                                                    </div>
-                                                                    <div className="account--user-order--delivery-address">
-                                                                        {
-                                                                            order.addressDelivery
-                                                                        }
-                                                                    </div>
-                                                                </div>
-                                                            ) : (
-                                                                <div className="account--user-order--delivery">
-                                                                    <div className="account--user-order--delivery-type">
-                                                                        Самовывоз
-                                                                    </div>
-                                                                    <div className="account--user-order--delivery-address">
-                                                                        {
-                                                                            order.selfDelivery
-                                                                        }
-                                                                    </div>
-                                                                </div>
-                                                            )}
-
-                                                            {order.products && (
-                                                                <div
-                                                                    className={`account--user-order--products ${
-                                                                        order.fullInfo !==
-                                                                            undefined &&
-                                                                        order.fullInfo
-                                                                            ? "active"
-                                                                            : "no-active"
-                                                                    }`}
-                                                                >
-                                                                    {Object.values(
-                                                                        order.products
-                                                                    ).map(
-                                                                        (
-                                                                            product,
-                                                                            index
-                                                                        ) => {
-                                                                            if (
-                                                                                (order.fullInfo !==
-                                                                                    undefined &&
-                                                                                    !order.fullInfo &&
-                                                                                    index <=
-                                                                                        2) ||
-                                                                                order.fullInfo ===
-                                                                                    undefined ||
-                                                                                (order.fullInfo !==
-                                                                                    undefined &&
-                                                                                    order.fullInfo)
-                                                                            ) {
-                                                                                return (
-                                                                                    <div
-                                                                                        className="account--user-order--product"
-                                                                                        key={`${order.ID}-${product.id}-${index}`}
-                                                                                    >
-                                                                                        <div>
-                                                                                            <div className="account--user-order--product-name">
-                                                                                                {
-                                                                                                    product.name
-                                                                                                }
-                                                                                            </div>
-                                                                                            {product
-                                                                                                .modificators
-                                                                                                .length ? (
-                                                                                                <div className="account--user-order--product-modificators">
-                                                                                                    +
-                                                                                                    {product.modificators.map(
-                                                                                                        (
-                                                                                                            el,
-                                                                                                            inx,
-                                                                                                            array
-                                                                                                        ) =>
-                                                                                                            inx !==
-                                                                                                            array.length -
-                                                                                                                1 ? (
-                                                                                                                <span
-                                                                                                                    key={
-                                                                                                                        el.id
-                                                                                                                    }
-                                                                                                                    className="account--user-order--product-modificator"
-                                                                                                                >
-                                                                                                                    {" "}
-                                                                                                                    {
-                                                                                                                        el.title
-                                                                                                                    }{" "}
-                                                                                                                    {
-                                                                                                                        el.count
-                                                                                                                    }{" "}
-                                                                                                                    шт.,
-                                                                                                                </span>
-                                                                                                            ) : (
-                                                                                                                <span
-                                                                                                                    key={
-                                                                                                                        el.id
-                                                                                                                    }
-                                                                                                                    className="account--user-order--product-modificator"
-                                                                                                                >
-                                                                                                                    {" "}
-                                                                                                                    {
-                                                                                                                        el.title
-                                                                                                                    }{" "}
-                                                                                                                    {
-                                                                                                                        el.count
-                                                                                                                    }
-                                                                                                                    шт.
-                                                                                                                </span>
-                                                                                                            )
-                                                                                                    )}
-                                                                                                </div>
-                                                                                            ) : null}
-                                                                                        </div>
-                                                                                        <div className="account--user-order--product-price">
-                                                                                            {product.total_price !==
-                                                                                            product.price ? (
-                                                                                                <>
-                                                                                                    <span className="default-price">
-                                                                                                        {
-                                                                                                            product.price
-                                                                                                        }{" "}
-                                                                                                        ₽
-                                                                                                    </span>
-                                                                                                    <span className="sale-price">
-                                                                                                        {
-                                                                                                            product.total_price
-                                                                                                        }{" "}
-                                                                                                        ₽
-                                                                                                    </span>
-                                                                                                </>
-                                                                                            ) : (
-                                                                                                `${product.total_price} ₽`
-                                                                                            )}
-                                                                                        </div>
-                                                                                    </div>
-                                                                                );
-                                                                            } else {
-                                                                                return null;
-                                                                            }
-                                                                        }
-                                                                    )}
-
-                                                                    {order
-                                                                        .bonusProduct
-                                                                        .id !==
-                                                                        undefined && (
-                                                                        <div
-                                                                            className="account--user-order--product"
-                                                                            key={
-                                                                                order
-                                                                                    .bonusProduct
-                                                                                    .id
-                                                                            }
-                                                                        >
-                                                                            <div className="account--user-order--product-name">
-                                                                                {
-                                                                                    order
-                                                                                        .bonusProduct
-                                                                                        .name
-                                                                                }
-                                                                            </div>
-                                                                            <div className="account--user-order--product-price main-color">
-                                                                                Подарок
-                                                                            </div>
-                                                                        </div>
-                                                                    )}
-                                                                </div>
-                                                            )}
-
-                                                            {Object.values(
-                                                                order.products
-                                                            ).length > 3 && (
-                                                                <div
-                                                                    className="account--user-order--product-toggle-more"
-                                                                    onClick={() =>
-                                                                        handleToggleOrderInfo(
-                                                                            order.ID
-                                                                        )
-                                                                    }
-                                                                >
-                                                                    {order.fullInfo !==
-                                                                        undefined &&
-                                                                    order.fullInfo
-                                                                        ? "Скрыть"
-                                                                        : "Подробнее"}
-                                                                </div>
-                                                            )}
-
-                                                            {order.promocode
-                                                                .code !==
-                                                                undefined &&
-                                                            order.subtotal -
-                                                                parseInt(
-                                                                    order.total
-                                                                ) >
-                                                                0 ? (
-                                                                <>
-                                                                    <div className="account--user-order--subtotal">
-                                                                        <b>
-                                                                            Сумма
-                                                                            заказа:
-                                                                        </b>{" "}
-                                                                        <b>
-                                                                            {
-                                                                                order.subtotal
-                                                                            }{" "}
-                                                                            ₽
-                                                                        </b>
-                                                                    </div>
-
-                                                                    <div className="account--user-order--promocode">
-                                                                        <b>
-                                                                            Промокод{" "}
-                                                                            <span className="main-color">
-                                                                                {
-                                                                                    order
-                                                                                        .promocode
-                                                                                        .code
-                                                                                }
-                                                                            </span>
-                                                                            :
-                                                                        </b>
-                                                                        <div className="account--user-order--promocode-discount main-color">
-                                                                            -{" "}
-                                                                            {order.subtotal -
-                                                                                parseInt(
-                                                                                    order.total
-                                                                                )}{" "}
-                                                                            ₽
-                                                                        </div>
-                                                                    </div>
-                                                                </>
-                                                            ) : (
-                                                                ""
-                                                            )}
-                                                            <div className="account--user-order--total">
-                                                                <b>Итого:</b>{" "}
-                                                                <b>
-                                                                    {
-                                                                        order.total
-                                                                    }{" "}
-                                                                    ₽
-                                                                </b>
-                                                            </div>
-
-                                                            <Button
-                                                                variant="button"
-                                                                className="btn btn--dark repeat-order"
-                                                                onClick={() =>
-                                                                    handleRepeatOrder(
-                                                                        order
-                                                                    )
-                                                                }
-                                                            >
-                                                                Повторить заказ
-                                                            </Button>
-                                                        </div>
+                                                        <UserOrder
+                                                            order={order}
+                                                            setDisableRepeatButtons={
+                                                                setDisableRepeatButtons
+                                                            }
+                                                            disableRepeatButtons={
+                                                                disableRepeatButtons
+                                                            }
+                                                        />
                                                     </Grid>
                                                 )
                                             )}
                                         </Grid>
-
-                                        {pages ? (
-                                            <Pagination
-                                                defaultPage={activePage}
-                                                onChange={handleChangePage}
-                                                sx={{ mt: 4 }}
-                                                count={pages}
-                                            />
-                                        ) : (
-                                            ""
-                                        )}
                                     </div>
                                 ) : (
                                     <div className="account--no-rders">
@@ -545,6 +227,16 @@ export default function Orders() {
                                     </div>
                                 )}
                             </div>
+                        )}
+                        {pages ? (
+                            <Pagination
+                                defaultPage={activePage}
+                                onChange={handleChangePage}
+                                sx={{ mt: 4 }}
+                                count={pages}
+                            />
+                        ) : (
+                            ""
                         )}
                     </div>
                 ) : (

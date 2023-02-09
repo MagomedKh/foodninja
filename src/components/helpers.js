@@ -67,7 +67,7 @@ export const _checkPromocode = (
         const currentTime = parseInt(new Date().getTime() / 1000);
 
         // Проверка даты
-
+        console.log(promocode.startDate, promocode.endDate);
         if (
             (promocode.startDate && promocode.startDate > currentTime) ||
             (promocode.endDate && currentTime > promocode.endDate)
