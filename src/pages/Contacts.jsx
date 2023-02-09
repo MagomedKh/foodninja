@@ -13,7 +13,7 @@ import {
     faVk,
     faOdnoklassnikiSquare,
 } from "@fortawesome/free-brands-svg-icons";
-import { Header, Footer, LeafletMap } from "../components";
+import { Header, Footer, LeafletMap, ContactsYandexMap } from "../components";
 import "../css/contacts.css";
 import { _getPlatform } from "../components/helpers";
 import { getDay } from "date-fns";
@@ -289,26 +289,20 @@ export default function Contacts() {
                         )}
                     </Grid>
                     <Grid item sm={12} md={8} sx={{ width: 1 }}>
-                        {config.CONFIG_contact_map_script ? (
+                        {config.CONFIG_contact_map_type === "deliveryZones" ? (
+                            <ContactsYandexMap />
+                        ) : config.CONFIG_contact_map_type === "iframe" &&
+                          config.CONFIG_contact_map_script ? (
                             <div
-                                className="contacts--custom-map"
+                                className="contacts--map"
                                 dangerouslySetInnerHTML={{
                                     __html: config.CONFIG_contact_map_script,
                                 }}
                             ></div>
                         ) : (
-                            <div
-                                id="map"
-                                style={{ height: "400px" }}
-                                className="contacts--custom-map"
-                            >
+                            <div id="map" className="contacts--map">
                                 <LeafletMap />
                             </div>
-
-                            // config.CONFIG_latitude &&
-                            // config.CONFIG_longtude && (
-                            //     <div className="contacts--2gis-map"></div>
-                            // )
                         )}
                         {config.CONFIG_contact_delivery_info && (
                             <div

@@ -556,10 +556,6 @@ const DeliveryAddressModal = ({
                         </Grid>
                     </Grid>
                 </Collapse>
-                {/* <div
-                    id={"yandex-map"}
-                    className={"delivery-address-modal--map-container"}
-                ></div> */}
                 <Map
                     defaultState={{
                         center: config.deliveryZones.mapCenter || [

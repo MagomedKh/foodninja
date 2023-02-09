@@ -36,3 +36,4 @@ export { default as ScrollToTop } from "./ScrollToTop.jsx";
 export { default as BeforePaymentModal } from "./BeforePaymentModal.jsx";
 export { default as DeliveryAddressModal } from "./DeliveryAddressModal.jsx";
 export { default as UserOrder } from "./UserOrder.jsx";
+export { default as ContactsYandexMap } from "./ContactsYandexMap.jsx";

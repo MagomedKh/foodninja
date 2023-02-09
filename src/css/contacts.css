@@ -8,13 +8,13 @@
 .contacts--block:last-child {
     margin-bottom: 0;
 }
-.contacts--custom-map {
+.contacts--map {
     box-shadow: 0 0 20px rgb(0 0 0 / 10%);
     border-radius: 10px;
     position: relative;
     margin-bottom: 2rem;
     overflow: hidden;
-    max-height: 400px;
+    height: 400px;
 }
 
 .contacts--main-address,
