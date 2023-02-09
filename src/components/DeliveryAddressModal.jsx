@@ -19,7 +19,6 @@ import {
 import ClearIcon from "@mui/icons-material/Clear";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { _isMobile } from "./helpers";
-import { getDay } from "date-fns";
 import {
     Map,
     withYMaps,
@@ -215,60 +214,6 @@ const DeliveryAddressModal = ({
             myPolygon.options._options.index = index;
             // Добавляем многоугольник на карту.
             mapRef.current.geoObjects.add(myPolygon);
-        });
-
-        // Определяем график работы основного адреса
-        const mainSchedule =
-            config.CONFIG_format_start_work && config.CONFIG_format_end_work
-                ? `Сегодня с ${config.CONFIG_format_start_work} до 
-                    ${config.CONFIG_format_end_work}`
-                : "Сегодня закрыто";
-
-        const mainPlacemarkBalloonContent = `<b>${config.CONFIG_address}</b><br>${mainSchedule}`;
-
-        const mainPlacemark = new ymaps.Placemark(
-            [config.CONFIG_latitude, config.CONFIG_longitude],
-            {
-                balloonContent: mainPlacemarkBalloonContent,
-            }
-        );
-
-        mapRef.current.geoObjects.add(mainPlacemark);
-
-        // Определяем текущий день недели
-        const currentDayOfWeek =
-            getDay(new Date()) === 0 ? 6 : getDay(new Date()) - 1;
-
-        // Добавляем метки филиалов на карту
-        config.CONFIG_filials.forEach((filial) => {
-            if (filial.latitude && filial.longitude) {
-                // Определяем график работы филиала
-                const filialSchedule = filial.workingTime
-                    ? filial.workingTime[currentDayOfWeek][0] &&
-                      filial.workingTime[currentDayOfWeek][1]
-                        ? `Сегодня с ${filial.workingTime[currentDayOfWeek][0]} до 
-                        ${filial.workingTime[currentDayOfWeek][1]}`
-                        : "Сегодня закрыто"
-                    : // Если график работы филиала совпадает с основным
-                    config.CONFIG_format_start_work &&
-                      config.CONFIG_format_end_work
-                    ? `Сегодня с 
-                    ${config.CONFIG_format_start_work} 
-                    до 
-                    ${config.CONFIG_format_end_work}`
-                    : "Сегодня закрыто";
-
-                const filialPlacemarkBalloonContent = `<b>${filial.address}</b><br>${filialSchedule}`;
-
-                const filialPlacemark = new ymaps.Placemark(
-                    [filial.latitude, filial.longitude],
-                    {
-                        balloonContent: filialPlacemarkBalloonContent,
-                    }
-                );
-
-                mapRef.current.geoObjects.add(filialPlacemark);
-            }
         });
 
         // Блок подсказок для строки поиска
