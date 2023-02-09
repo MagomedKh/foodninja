@@ -150,7 +150,7 @@ export default function Checkout() {
     );
     const [deliveryAddress, setDeliveryAddress] = useState(null);
     const [selfDeliveryAddress, setSelfDeliveryAddress] = useState("main");
-    const [activeGateway, setActiveGateway] = useState("card");
+    const [activeGateway, setActiveGateway] = useState(gateways[0].id);
     const [openAlert, setOpenAlert] = useState(false);
     const [preorderDate, setPreorderDate] = useState(null);
     const [preorderTime, setPreorderTime] = useState("");
