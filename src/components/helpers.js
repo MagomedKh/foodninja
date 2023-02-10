@@ -67,7 +67,6 @@ export const _checkPromocode = (
         const currentTime = parseInt(new Date().getTime() / 1000);
 
         // Проверка даты
-        console.log(promocode.startDate, promocode.endDate);
         if (
             (promocode.startDate && promocode.startDate > currentTime) ||
             (promocode.endDate && currentTime > promocode.endDate)
@@ -298,8 +297,6 @@ export const _checkPromocode = (
             parseInt(promocode.minimumPrice) &&
             parseInt(promocode.minimumPrice) > cartTotal
         ) {
-            console.log(parseInt(promocode.minimumPrice));
-            console.log(cartTotal);
             return {
                 status: "error",
                 message:
