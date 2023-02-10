@@ -25,7 +25,7 @@ const LeafletMap = () => {
         );
 
         L.tileLayer(
-            "http://tile2.maps.2gis.com/tiles?x={x}&y={y}&z={z}",
+            "https://tile2.maps.2gis.com/tiles?x={x}&y={y}&z={z}",
             {}
         ).addTo(map);
         map.attributionControl.setPrefix("");
