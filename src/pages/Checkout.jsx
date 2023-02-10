@@ -661,33 +661,36 @@ export default function Checkout() {
         navigate("/", { replace: true });
     }, [navigate]);
 
-    if (
-        Object.keys(promocode).length !== 0 &&
-        promocode.constructor === Object
-    ) {
+    useEffect(() => {
         if (
-            config.selfDeliveryCoupon.code !== undefined &&
-            promocode.code === config.selfDeliveryCoupon.code
+            Object.keys(promocode).length !== 0 &&
+            promocode.constructor === Object
         ) {
-            dispatch(removePromocode());
-        } else {
-            const resultCheckPromocode = _checkPromocode(
-                promocode,
-                cartProducts,
-                cartSubTotalPrice,
-                config
-            );
-            if (resultCheckPromocode.status === "error") {
+            if (
+                config.selfDeliveryCoupon.code !== undefined &&
+                promocode.code === config.selfDeliveryCoupon.code
+            ) {
                 dispatch(removePromocode());
-                dispatch(
-                    updateAlerts({
-                        open: true,
-                        message: resultCheckPromocode.message,
-                    })
+            } else {
+                const resultCheckPromocode = _checkPromocode(
+                    promocode,
+                    cartProducts,
+                    cartSubTotalPrice,
+                    config,
+                    typeDelivery
                 );
+                if (resultCheckPromocode.status === "error") {
+                    dispatch(removePromocode());
+                    dispatch(
+                        updateAlerts({
+                            open: true,
+                            message: resultCheckPromocode.message,
+                        })
+                    );
+                }
             }
         }
-    }
+    }, [config, promocode, typeDelivery]);
 
     const userNameProps = {
         error: !userName && !validate ? true : false,
