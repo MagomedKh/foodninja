@@ -252,19 +252,19 @@ function App() {
     }
 
     return (
-        <YMaps
-            query={{
-                apikey: config.deliveryZones?.apiKey,
-            }}
-        >
-            <ThemeProvider theme={foodninja}>
-                <MainTheme mainColor={mainColor} secondColor={secondColor} />
-                {config !== undefined && Object.keys(config).length ? (
-                    <div>
-                        <GoogleReCaptchaProvider
-                            reCaptchaKey={
-                                config.CONFIG_auth_recaptcha_site_token
-                            }
+        <ThemeProvider theme={foodninja}>
+            <MainTheme mainColor={mainColor} secondColor={secondColor} />
+            {config !== undefined && Object.keys(config).length ? (
+                <div>
+                    <GoogleReCaptchaProvider
+                        reCaptchaKey={config.CONFIG_auth_recaptcha_site_token}
+                    >
+                        <YMaps
+                            query={{
+                                apikey: config.deliveryZones
+                                    ? config.deliveryZones.apiKey
+                                    : "",
+                            }}
                         >
                             <div>
                                 <Routes>
@@ -339,13 +339,13 @@ function App() {
                                 )}
                                 <WeClosed />
                             </div>
-                        </GoogleReCaptchaProvider>
-                    </div>
-                ) : (
-                    <BigLoader initStatus={true} />
-                )}
-            </ThemeProvider>
-        </YMaps>
+                        </YMaps>
+                    </GoogleReCaptchaProvider>
+                </div>
+            ) : (
+                <BigLoader initStatus={true} />
+            )}
+        </ThemeProvider>
     );
 }
 
