@@ -67,7 +67,7 @@ export default function Contacts() {
                                                                 icon={faPhone}
                                                             />
                                                             <a
-                                                                href={`tel:${config.CONFIG_format_phone.replace(
+                                                                href={`tel:${phone.replace(
                                                                     /[^0-9]/g,
                                                                     ""
                                                                 )}`}
@@ -111,21 +111,25 @@ export default function Contacts() {
                                                 />
                                                 {el.address}
                                             </div>
-                                            {el.phones.map((phone) => (
-                                                <div className="contacts--phone">
-                                                    <FontAwesomeIcon
-                                                        icon={faPhone}
-                                                    />
-                                                    <a
-                                                        href={`tel:${config.CONFIG_format_phone.replace(
-                                                            /[^0-9]/g,
-                                                            ""
-                                                        )}`}
-                                                    >
-                                                        {phone}
-                                                    </a>
-                                                </div>
-                                            ))}
+                                            {el.phones.map((phone) => {
+                                                if (phone) {
+                                                    return (
+                                                        <div className="contacts--phone">
+                                                            <FontAwesomeIcon
+                                                                icon={faPhone}
+                                                            />
+                                                            <a
+                                                                href={`tel:${phone.replace(
+                                                                    /[^0-9]/g,
+                                                                    ""
+                                                                )}`}
+                                                            >
+                                                                {phone}
+                                                            </a>
+                                                        </div>
+                                                    );
+                                                }
+                                            })}
                                             {
                                                 // Если у филиала свой график работы
                                                 el.workingTime ? (
