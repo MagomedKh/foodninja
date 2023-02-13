@@ -188,7 +188,6 @@ const cart = (state = initialState, action) => {
                     // );
                     return {
                         ...state,
-                        bonusProduct: {},
                         items: productsWithDiscount,
                         discount: discount,
                         promocode: action.payload,
@@ -205,7 +204,6 @@ const cart = (state = initialState, action) => {
                     const totalPrice = getTotalPrice(allProducts);
                     return {
                         ...state,
-                        bonusProduct: {},
                         discount: discount,
                         promocode: action.payload,
                         subTotalPrice: totalPrice,
@@ -470,7 +468,6 @@ const cart = (state = initialState, action) => {
                             const totalPrice = getDiscountTotalPrice(allPrices);
                             return {
                                 ...state,
-                                bonusProduct: {},
                                 items: updatedItems,
                                 discount: discount,
                                 promocode: action.payload,

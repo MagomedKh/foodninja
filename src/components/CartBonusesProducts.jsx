@@ -52,6 +52,16 @@ export default function CartBonusesProducts(minicart = false) {
         }
     }, [cart.bonusProduct]);
 
+    useEffect(() => {
+        if (
+            cart.promocode &&
+            Object.keys(cart.promocode).length > 0 &&
+            config.CONFIG_promocode_with_bonus_program !== "on"
+        ) {
+            dispatch(addBonusProductToCart({}));
+        }
+    }, [cart.promocode]);
+
     const handleChooseBonusProduct = (product) => {
         if (
             Object.keys(userCartBonusProduct).length &&
@@ -62,7 +72,8 @@ export default function CartBonusesProducts(minicart = false) {
         } else {
             if (
                 ((config.CONFIG_promocode_with_bonus_program !== "on" &&
-                    !cart.discount) ||
+                    (!cart.promocode ||
+                        Object.keys(cart.promocode).length === 0)) ||
                     config.CONFIG_promocode_with_bonus_program === "on") &&
                 cartTotalPrice >= product.limit
             ) {
@@ -133,7 +144,10 @@ export default function CartBonusesProducts(minicart = false) {
                                                 !!(
                                                     cartTotalPrice <=
                                                         product.limit ||
-                                                    (cart.discount &&
+                                                    (cart.promocode &&
+                                                        Object.keys(
+                                                            cart.promocode
+                                                        ).length > 0 &&
                                                         config.CONFIG_promocode_with_bonus_program !==
                                                             "on")
                                                 )
@@ -150,7 +164,10 @@ export default function CartBonusesProducts(minicart = false) {
                                                     !!(
                                                         cartTotalPrice <=
                                                             product.limit ||
-                                                        (cart.discount &&
+                                                        (cart.promocode &&
+                                                            Object.keys(
+                                                                cart.promocode
+                                                            ).length > 0 &&
                                                             config.CONFIG_promocode_with_bonus_program !==
                                                                 "on")
                                                     )

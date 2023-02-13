@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { setOpenBonusesModal } from "../redux/actions/bonusesProductsModal";
 import { addBonusProductToCart } from "../redux/actions/cart";
@@ -39,17 +39,42 @@ export default function BonusesProductsModal() {
             promocode: cart.promocode,
         };
     }, shallowEqual);
-    const { CONFIG_free_products_program_status } = useSelector((state) => {
+    const {
+        CONFIG_free_products_program_status,
+        CONFIG_promocode_with_bonus_program,
+    } = useSelector((state) => {
         return state.config.data;
     }, shallowEqual);
 
     const [bonusesItemsLocal, setBonusesItemsLocal] = useState(null);
+
+    const bonusesDisabled = useMemo(
+        () =>
+            CONFIG_free_products_program_status !== "on" ||
+            !bonuses_items ||
+            !bonuses_items.length ||
+            (CONFIG_promocode_with_bonus_program !== "on" &&
+                promocode &&
+                Object.keys(promocode).length > 0),
+        [
+            promocode,
+            bonuses_items,
+            CONFIG_free_products_program_status,
+            CONFIG_promocode_with_bonus_program,
+        ]
+    );
 
     useEffect(() => {
         if (bonuses_items) {
             setBonusesItemsLocal(bonuses_items);
         }
     }, [bonuses_items]);
+
+    useEffect(() => {
+        if (bonusesDisabled && openBonusesProductsModal) {
+            dispatch(setOpenBonusesModal(false));
+        }
+    }, [bonusesDisabled]);
 
     const setBonusesContentActive = (item) => {
         setBonusesItemsLocal(
@@ -91,22 +116,21 @@ export default function BonusesProductsModal() {
                 maxBonusesPrice = element.limit;
         });
 
-    let dialogProps = { open: openBonusesProductsModal, maxWidth: "md" };
+    let dialogProps = {
+        open: openBonusesProductsModal,
+        maxWidth: "md",
+    };
     if (_isMobile()) {
         dialogProps.TransitionComponent = Transition;
         dialogProps.fullScreen = true;
         dialogProps.scroll = "body";
     }
+
     return (
         <div>
             <Slide
                 direction="up"
-                in={
-                    CONFIG_free_products_program_status === "on" &&
-                    bonuses_items &&
-                    !!bonuses_items.length &&
-                    Object.keys(promocode).length === 0
-                }
+                in={!bonusesDisabled}
                 mountOnEnter
                 unmountOnExit
             >
