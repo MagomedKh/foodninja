@@ -56,15 +56,21 @@ const useWorkingStatus = () => {
           })
         : null;
 
+    // Баг фикс, если строка конца дня = 00:00, конец рабочего дня устанавливается в 23:59
+    const isEndWorkStrZero = workingTime?.[todayDayOfWeek][1] === "00:00";
+
     const todayEndWorkTime = workingTime?.[todayDayOfWeek][1]
         ? set(new Date(), {
-              hours: workingTime[todayDayOfWeek][1].slice(0, 2),
-              minutes: workingTime[todayDayOfWeek][1].slice(3, 5),
-              seconds: 0,
+              hours: isEndWorkStrZero
+                  ? 23
+                  : workingTime[todayDayOfWeek][1].slice(0, 2),
+              minutes: isEndWorkStrZero
+                  ? 59
+                  : workingTime[todayDayOfWeek][1].slice(3, 5),
+              seconds: isEndWorkStrZero ? 59 : 0,
               milliseconds: 0,
           })
         : null;
-
     const workingStatus =
         workingTime.length &&
         todayStartWorkTime &&
