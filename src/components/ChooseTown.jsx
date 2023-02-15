@@ -89,9 +89,11 @@ export default function ChooseTown() {
 
     const groupTowns = useCallback((arr) => {
         const map = arr.reduce((acc, val) => {
-            let char = val.name.charAt(0).toUpperCase();
-            acc[char] = [].concat(acc[char] || [], val);
-            return acc;
+            if (val.name) {
+                let char = val.name.charAt(0).toUpperCase();
+                acc[char] = [].concat(acc[char] || [], val);
+                return acc;
+            } else return acc;
         }, {});
         const res = Object.keys(map).map((el) => ({
             letter: el,
