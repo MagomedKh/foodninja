@@ -9,6 +9,7 @@ import {
     Footer,
     SubscribeSnackbar,
     ScrollToTop,
+    StoriesList,
 } from "../components";
 import SearchBar from "../components/SearchBar";
 import TopCategoriesMenu from "../components/TopCategoriesMenu";
@@ -75,6 +76,8 @@ export default function Home() {
             <Header />
             <div className="home">
                 <Banners />
+
+                <StoriesList />
 
                 <TopCategoriesMenu />
 
