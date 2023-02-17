@@ -42,15 +42,20 @@ const stories = [
         id: 2,
         isViewed: false,
         previewImage:
-            "https://sushi45.ru/wp-content/uploads/2020/05/dr-sajt-mobail-5.jpg",
+            "https://sun9-28.userapi.com/impg/vWJUNJSnxIhBXkPJj1LzMF3AipuMELDqtFbCTQ/ikvHWPM01yo.jpg?size=1080x1080&quality=96&sign=70545fe6d3d216a1ca78de8daaf5cbae&type=album",
         stories: [
             {
-                url: "https://sushi45.ru/wp-content/uploads/2020/05/dr-sajt-mobail-5.jpg",
+                url: "https://sun9-28.userapi.com/impg/vWJUNJSnxIhBXkPJj1LzMF3AipuMELDqtFbCTQ/ikvHWPM01yo.jpg?size=1080x1080&quality=96&sign=70545fe6d3d216a1ca78de8daaf5cbae&type=album",
                 type: "image",
                 seeMore: "yeeeas",
             },
             {
-                url: "https://sun9-28.userapi.com/impg/vWJUNJSnxIhBXkPJj1LzMF3AipuMELDqtFbCTQ/ikvHWPM01yo.jpg?size=1080x1080&quality=96&sign=70545fe6d3d216a1ca78de8daaf5cbae&type=album",
+                url: "https://sun9-55.userapi.com/impg/dUOiao52hxvPlsfski0dFvyTCIN7ueCsTmKIug/jKUzBbmJ1XM.jpg?size=1000x1000&quality=96&sign=8102abeaed49b38fe16878cb8fa77273&type=album",
+                type: "image",
+                seeMore: "yeeeas",
+            },
+            {
+                url: "https://sushi45.ru/wp-content/uploads/2020/05/dr-sajt-mobail-5.jpg",
                 type: "image",
                 seeMore: "yeeeas",
             },
