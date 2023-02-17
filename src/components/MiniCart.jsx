@@ -383,9 +383,21 @@ function MiniCart() {
                             color="inherit"
                             onClick={handleCloseMiniCart}
                             className="minicart--close"
-                            sx={{ position: "absolute", right: 25, top: 10 }}
+                            sx={{
+                                position: "absolute",
+                                right: _getPlatform() === "vk" ? "auto" : 25,
+                                left: _getPlatform() === "vk" ? 25 : "auto",
+                                top: 10,
+                            }}
                         >
-                            <CloseIcon />
+                            {_getPlatform() === "vk" ? (
+                                <FontAwesomeIcon
+                                    icon={faAngleLeft}
+                                    className={"minicart--angle-icon"}
+                                />
+                            ) : (
+                                <CloseIcon />
+                            )}
                         </IconButton>
                         <div className="minicart--empty">
                             <img
