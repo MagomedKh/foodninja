@@ -11,14 +11,14 @@
 
 .stories-slide--read-wrapper {
     padding: 4px;
-    border: 2px var(--main-color) solid;
+    border: 3px var(--main-color) solid;
     border-radius: 20px;
     -webkit-transition: border 0.2s;
     transition: border 0.2s;
 }
 
 .stories-slide--read-wrapper.viewed {
-    border: 2px #fff solid;
+    border: 3px #fff solid;
 }
 
 .stories-slide--container {
@@ -34,6 +34,15 @@
 .stories-slide--container img {
     height: 100%;
     width: auto;
+}
+
+.stories--dialog {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none;
 }
 
 .stories--dialog img {
@@ -52,6 +61,7 @@
 
 .stories--dialog-left-arrow,
 .stories--dialog-right-arrow {
+    color: white;
     position: absolute;
     top: 50%;
     font-size: 40px;
@@ -64,12 +74,6 @@
 
 .stories--dialog-right-arrow {
     right: -30px;
-}
-
-.stories--dialog-left-arrow,
-.stories--dialog-right-arrow {
-    -webkit-transition: color 0.2s;
-    transition: color 0.2s;
 }
 
 .stories--dialog-left-arrow:hover,
@@ -213,4 +217,11 @@
 .navigation-panels-container .right-panel {
     width: 50%;
     z-index: 999;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none;
+    touch-action: none;
 }
