@@ -12,6 +12,7 @@ import { _isMobile } from "../helpers";
 import StoriesProgressBar from "./StoriesProgressBar";
 
 const StoriesStack = ({ stack, handleOpenPrevStack, handleOpenNextStack }) => {
+    const stackContainerRef = useRef(null);
     const videoRef = useRef(null);
     const longPressRef = useRef(false);
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -28,9 +29,23 @@ const StoriesStack = ({ stack, handleOpenPrevStack, handleOpenNextStack }) => {
         if (paused) {
             setPaused(false);
         }
+        if (_isMobile()) {
+            const appHeight = () => {
+                if (stackContainerRef.current) {
+                    stackContainerRef.current.style.height = `${window.innerHeight}px`;
+                    stackContainerRef.current.style.width = `${window.innerWidth}px`;
+                }
+            };
+            window.addEventListener("resize", appHeight);
+            appHeight();
+        }
     }, [stack]);
 
-    const onMouseDown = () => {
+    const onMouseDown = (event) => {
+        // if (_isMobile()) {
+        //     event.preventDefault();
+        // }
+        event.stopPropagation();
         timerId = setTimeout(() => {
             longPressRef.current = true;
             setPaused(true);
@@ -102,6 +117,17 @@ const StoriesStack = ({ stack, handleOpenPrevStack, handleOpenNextStack }) => {
             videoRef.current.play();
         }
     };
+
+    const getStoryInterval = (video) => {
+        if (video) {
+            const tempPideo = document.createElement("video");
+            tempPideo.src = video;
+            tempPideo.preload = "metadata";
+            return video.duration * 1000;
+        } else {
+            return 5000;
+        }
+    };
     return (
         <Box
             className="stories-stack-container"
@@ -115,6 +141,7 @@ const StoriesStack = ({ stack, handleOpenPrevStack, handleOpenNextStack }) => {
                       }
                     : {}
             }
+            ref={stackContainerRef}
         >
             <Box
                 className="progress-bar-container"
@@ -130,9 +157,9 @@ const StoriesStack = ({ stack, handleOpenPrevStack, handleOpenNextStack }) => {
                         paused={paused}
                         playNextStory={playNextStory}
                         interval={
-                            videoRef.current
-                                ? videoRef.current.duration * 1000
-                                : 5000
+                            story.type === "video"
+                                ? getStoryInterval(story.url)
+                                : 2000
                         }
                         key={index}
                         stack={stack}
@@ -161,13 +188,17 @@ const StoriesStack = ({ stack, handleOpenPrevStack, handleOpenNextStack }) => {
             <div className="navigation-panels-container">
                 <div
                     className="left-panel"
-                    onMouseUp={playPrevStory}
-                    onMouseDown={onMouseDown}
+                    onMouseDown={_isMobile() ? null : onMouseDown}
+                    onMouseUp={_isMobile() ? null : playPrevStory}
+                    onTouchStart={onMouseDown}
+                    onTouchEnd={playPrevStory}
                 ></div>
                 <div
                     className="right-panel"
-                    onMouseUp={playNextStory}
-                    onMouseDown={onMouseDown}
+                    onMouseDown={_isMobile() ? null : onMouseDown}
+                    onMouseUp={_isMobile() ? null : playNextStory}
+                    onTouchStart={onMouseDown}
+                    onTouchEnd={playNextStory}
                 ></div>
             </div>
             {stack.stories[currentIndex].seeMore ? (
