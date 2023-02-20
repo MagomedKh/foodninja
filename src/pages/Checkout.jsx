@@ -478,12 +478,10 @@ export default function Checkout() {
                 .then((resp) => {
                     setLoading(false);
                     if (resp.data.status === "success") {
-                        dispatch(clearCart());
                         window.scrollTo(0, 0);
                         navigate("/order-complete", { replace: true });
                     } else if (resp.data.status === "need_payment") {
                         window.location.href = resp.data.redirect;
-                        dispatch(clearCart());
                     } else {
                         // Всплывающй алерт
                         setError(resp.data.text);
