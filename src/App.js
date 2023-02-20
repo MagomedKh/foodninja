@@ -85,7 +85,10 @@ function App() {
             status: config.status,
         };
     }, shallowEqual);
-    const { categories } = useSelector((state) => state.products, shallowEqual);
+    const { categories, items: products } = useSelector(
+        (state) => state.products,
+        shallowEqual
+    );
     const { items: cartItems } = useSelector(
         (state) => state.cart,
         shallowEqual
@@ -115,24 +118,32 @@ function App() {
 
     // Создаем массив айдишников недоступных на данное время категорий
     useEffect(() => {
-        if (categories && status) {
+        if (categories && status && products) {
             const disabledCategoriesArr = categories.filter((category) =>
                 _isCategoryDisabled(category)
             );
             const disabledCategoriesInx = disabledCategoriesArr.map(
                 (category) => category.term_id
             );
-            // Итерируемся по товарам в корзине и удаляем те, у которых категория недоступна
-            if (disabledCategoriesInx.length) {
-                const allProducts = [].concat.apply(
-                    [],
-                    Object.values(cartItems).map((obj) => obj.items)
-                );
-                allProducts.forEach((product) => {
+
+            const allCartProducts = [].concat.apply(
+                [],
+                Object.values(cartItems).map((obj) => obj.items)
+            );
+            // Удаляем товары с недоступными категориями, товары с измененной ценой и удалённые товары
+            allCartProducts.forEach((product) => {
+                if (product.type === "simple") {
+                    let productPrice = parseInt(product.options._price);
+                    if (product.modificatorsAmount) {
+                        productPrice -= parseInt(product.modificatorsAmount);
+                    }
                     if (
                         product.categories?.some((id) =>
                             disabledCategoriesInx.includes(id)
-                        )
+                        ) ||
+                        !products[product.id] ||
+                        productPrice !=
+                            parseInt(products[product.id].options._price)
                     ) {
                         dispatch(
                             removeProductFromCart({
@@ -141,10 +152,31 @@ function App() {
                             })
                         );
                     }
-                });
-            }
+                } else if (product.type === "variations") {
+                    if (
+                        product.categories?.some((id) =>
+                            disabledCategoriesInx.includes(id)
+                        ) ||
+                        !products[product.id] ||
+                        !products[product.id]?.variants[
+                            product.variant.variant_id
+                        ] ||
+                        product.variant.price !=
+                            products[product.id].variants[
+                                product.variant.variant_id
+                            ].price
+                    ) {
+                        dispatch(
+                            removeProductFromCart({
+                                ...product,
+                                disabled: true,
+                            })
+                        );
+                    }
+                }
+            });
         }
-    }, [categories, status]);
+    }, [categories, products, status]);
 
     useEffect(() => {
         if (user.token && user.phone)
