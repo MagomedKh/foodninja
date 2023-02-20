@@ -1777,7 +1777,8 @@ export default function Checkout() {
                                 variant="button"
                                 className="btn--action makeOrder"
                                 onClick={() => {
-                                    activeGateway === "tinkoff" &&
+                                    activeGateway !== "card" &&
+                                    activeGateway !== "cash" &&
                                     config.CONFIG_order_text_before_payment
                                         ? setOpenBeforePaymentModal(true)
                                         : handleMakeOrder();
