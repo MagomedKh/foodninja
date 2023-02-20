@@ -241,6 +241,9 @@ const StoriesList = () => {
                     maxWidth="md"
                     fullWidth
                     {...dialogProps}
+                    BackdropProps={{
+                        style: { backgroundColor: "rgba(0,0,0,0.8)" },
+                    }}
                     sx={{
                         "& .MuiPaper-root": {
                             width: "auto",
