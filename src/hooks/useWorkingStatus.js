@@ -6,6 +6,7 @@ import {
     isBefore,
     isWithinInterval,
     set,
+    startOfDay,
     toDate,
 } from "date-fns";
 
@@ -56,27 +57,55 @@ const useWorkingStatus = () => {
           })
         : null;
 
-    // Баг фикс, если строка конца дня = 00:00, конец рабочего дня устанавливается в 23:59
-    const isEndWorkStrZero = workingTime?.[todayDayOfWeek][1] === "00:00";
+    // Если конец дня переходит на след. день, конец рабочего дня устанавливается в 23:59
+    const isTodayWorkAfterMidnight =
+        parseInt(workingTime?.[todayDayOfWeek][0].slice(0, 2)) >=
+        parseInt(workingTime?.[todayDayOfWeek][1].slice(0, 2));
 
     const todayEndWorkTime = workingTime?.[todayDayOfWeek][1]
         ? set(new Date(), {
-              hours: isEndWorkStrZero
+              hours: isTodayWorkAfterMidnight
                   ? 23
                   : workingTime[todayDayOfWeek][1].slice(0, 2),
-              minutes: isEndWorkStrZero
+              minutes: isTodayWorkAfterMidnight
                   ? 59
                   : workingTime[todayDayOfWeek][1].slice(3, 5),
-              seconds: isEndWorkStrZero ? 59 : 0,
+              seconds: isTodayWorkAfterMidnight ? 59 : 0,
               milliseconds: 0,
           })
         : null;
+
+    // Если конец прошлого дня переходит на сегодняшний, учитываем это время
+    const yesterdayDayOfWeek = useMemo(
+        () => (todayDayOfWeek === 0 ? 6 : todayDayOfWeek - 1),
+        []
+    );
+    const isYesterdayWorkAfterMidnight =
+        parseInt(workingTime?.[yesterdayDayOfWeek][0].slice(0, 2)) >=
+        parseInt(workingTime?.[yesterdayDayOfWeek][1].slice(0, 2));
+
+    const yesterdayAfterMidnightEndWorkTime = isYesterdayWorkAfterMidnight
+        ? set(new Date(), {
+              hours: workingTime?.[yesterdayDayOfWeek][1].slice(0, 2),
+              minutes: workingTime?.[yesterdayDayOfWeek][1].slice(3, 5),
+              seconds: 0,
+              milliseconds: 0,
+          })
+        : null;
+
     const workingStatus =
         workingTime.length &&
-        todayStartWorkTime &&
-        todayEndWorkTime &&
-        isBefore(todayStartWorkTime, new Date()) &&
-        isAfter(todayEndWorkTime, new Date());
+        ((todayStartWorkTime &&
+            todayEndWorkTime &&
+            isWithinInterval(new Date(), {
+                start: todayStartWorkTime,
+                end: todayEndWorkTime,
+            })) ||
+            (yesterdayAfterMidnightEndWorkTime &&
+                isWithinInterval(new Date(), {
+                    start: startOfDay(new Date()),
+                    end: yesterdayAfterMidnightEndWorkTime,
+                })));
 
     const maintenanceStatus = !isWithinInterval(new Date(), {
         start: maintenanceDateStart,
