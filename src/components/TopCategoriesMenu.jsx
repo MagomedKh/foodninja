@@ -62,7 +62,6 @@ export default function TopCategoriesMenu() {
 
         allLi = document.querySelectorAll("#topCategoriesMenu li");
         allLiLength = 100;
-        console.log(allLi);
         for (let i = 0; i < allLi.length; i++) {
             allLiLength += allLi[i].offsetWidth;
 
