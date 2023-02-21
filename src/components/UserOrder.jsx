@@ -73,19 +73,21 @@ const UserOrder = ({
                 products[item.id] !== undefined &&
                 item.price === item.total_price
             ) {
-                let product = _clone(products[item.id]);
-                const modificatorsAmount = item.modificators.reduce(
-                    (acc, modificator) => acc + parseInt(modificator.price),
-                    0
-                );
-                dispatch(
-                    addProductToCart({
-                        ...product,
-                        choosenModificators: item.modificators,
-                        modificatorsAmount: modificatorsAmount,
-                    })
-                );
-                cartTotalAmount += products[item.id].options._price;
+                for (let i = 1; i <= item.count; i++) {
+                    let product = _clone(products[item.id]);
+                    const modificatorsAmount = item.modificators.reduce(
+                        (acc, modificator) => acc + parseInt(modificator.price),
+                        0
+                    );
+                    dispatch(
+                        addProductToCart({
+                            ...product,
+                            choosenModificators: item.modificators,
+                            modificatorsAmount: modificatorsAmount,
+                        })
+                    );
+                    cartTotalAmount += products[item.id].options._price;
+                }
             }
         });
 
@@ -177,7 +179,14 @@ const UserOrder = ({
                                     <div>
                                         <div className="account--user-order--product-name">
                                             {product.name}
+                                            <span
+                                                style={{ whiteSpace: "nowrap" }}
+                                            >
+                                                {" "}
+                                                x {product.count} шт.
+                                            </span>
                                         </div>
+
                                         {product.modificators.length ? (
                                             <div className="account--user-order--product-modificators">
                                                 +
