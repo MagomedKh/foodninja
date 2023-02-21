@@ -8,6 +8,7 @@ const StoriesProgressBar = ({
     playNextStory,
     interval,
     stack,
+    videoRef,
 }) => {
     const [progress, setProgress] = useState(0);
 
@@ -25,7 +26,7 @@ const StoriesProgressBar = ({
         return () => {
             clearTimeout(timer);
         };
-    }, [paused, currentIndex, progress]);
+    }, [paused, currentIndex, progress, interval]);
 
     useEffect(() => {
         let timer;
@@ -59,7 +60,7 @@ const StoriesProgressBar = ({
         return () => {
             clearInterval(timer);
         };
-    }, [currentIndex, paused]);
+    }, [currentIndex, paused, interval]);
 
     return (
         <Box

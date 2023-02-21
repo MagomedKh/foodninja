@@ -10,6 +10,7 @@ import SeeMoreCollapsed from "./SeeMoreCollapsed";
 import SeeMoreContent from "./SeeMoreContent";
 import { _isMobile } from "../helpers";
 import StoriesProgressBar from "./StoriesProgressBar";
+import StoriesContent from "./StoriesContent";
 
 const StoriesStack = ({ stack, handleOpenPrevStack, handleOpenNextStack }) => {
     const stackContainerRef = useRef(null);
@@ -18,6 +19,7 @@ const StoriesStack = ({ stack, handleOpenPrevStack, handleOpenNextStack }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [paused, setPaused] = useState(false);
     const [seeMoreOpened, setSeeMoreOpened] = useState(false);
+    const [duration, setDuration] = useState(2000);
 
     let timerId;
 
@@ -40,6 +42,12 @@ const StoriesStack = ({ stack, handleOpenPrevStack, handleOpenNextStack }) => {
             appHeight();
         }
     }, [stack]);
+
+    // useEffect(()=> {
+    //     if (stack.stories[currentIndex].type === "video") {
+
+    //     }
+    // },[currentIndex, stack])
 
     const onMouseDown = (event) => {
         // if (_isMobile()) {
@@ -118,16 +126,18 @@ const StoriesStack = ({ stack, handleOpenPrevStack, handleOpenNextStack }) => {
         }
     };
 
-    const getStoryInterval = (video) => {
-        if (video) {
-            const tempPideo = document.createElement("video");
-            tempPideo.src = video;
-            tempPideo.preload = "metadata";
-            return video.duration * 1000;
-        } else {
-            return 5000;
-        }
+    const pause = () => {
+        setPaused(true);
     };
+
+    const play = () => {
+        setPaused(false);
+    };
+
+    const updateStoryDuration = (duration) => {
+        setDuration(duration);
+    };
+
     return (
         <Box
             className="stories-stack-container"
@@ -156,35 +166,20 @@ const StoriesStack = ({ stack, handleOpenPrevStack, handleOpenNextStack }) => {
                         currentIndex={currentIndex}
                         paused={paused}
                         playNextStory={playNextStory}
-                        interval={
-                            story.type === "video"
-                                ? getStoryInterval(story.url)
-                                : 2000
-                        }
+                        interval={duration}
                         key={index}
                         stack={stack}
+                        videoRef={videoRef}
                     />
                 ))}
             </Box>
-            <div className="story-container">
-                <Box
-                    className="stories--background"
-                    sx={{
-                        backgroundImage: `url(${stack.stories[currentIndex].url})`,
-                    }}
-                />
-                {stack.stories[currentIndex].type === "video" ? (
-                    <video
-                        src={stack.stories[currentIndex].url}
-                        playsInline
-                        autoPlay
-                        ref={videoRef}
-                        className="stories-video"
-                    />
-                ) : (
-                    <img src={stack.stories[currentIndex].url} />
-                )}
-            </div>
+            <StoriesContent
+                story={stack.stories[currentIndex]}
+                ref={videoRef}
+                pause={pause}
+                play={play}
+                updateStoryDuration={updateStoryDuration}
+            />
             <div className="navigation-panels-container">
                 <div
                     className="left-panel"
