@@ -32,7 +32,7 @@ export default function WeClosed() {
         setOpenWeClosedModal(false);
     };
 
-    if (workingStatus && maintenanceStatus) return null;
+    if ((workingStatus && maintenanceStatus) || window.adminAccess) return null;
 
     let dialogProps = { open: openWeClosedModal, maxWidth: "md" };
     if (_isMobile()) {
