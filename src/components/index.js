@@ -37,3 +37,5 @@ export { default as BeforePaymentModal } from "./BeforePaymentModal.jsx";
 export { default as DeliveryAddressModal } from "./DeliveryAddressModal.jsx";
 export { default as UserOrder } from "./UserOrder.jsx";
 export { default as ContactsYandexMap } from "./ContactsYandexMap.jsx";
+export { default as IntersectionObserverWrapper } from "./IntersectionObserverWrapper.jsx";
+export { default as OverflowMenu } from "./OverflowMenu.jsx";
