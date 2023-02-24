@@ -183,16 +183,6 @@ export default function Checkout() {
     }, [config.CONFIG_free_products_program_status]);
 
     useEffect(() => {
-        if (
-            (config.deliveryZones.deliveryPriceType !== "areaPrice" ||
-                yandexApiError) &&
-            deliveryZone
-        ) {
-            dispatch(setDeliveryZone(null));
-        }
-    }, [yandexApiError]);
-
-    useEffect(() => {
         if (typeDelivery === "delivery") {
             if (user.addresses && user.addresses.length) {
                 if (
@@ -278,13 +268,18 @@ export default function Checkout() {
         setChoosenAddress(user.addresses[index]);
     };
 
-    const onYandexApiError = (hasError) => {
-        setYandexApiError(hasError);
+    const onYandexApiError = () => {
+        setYandexApiError(true);
+        dispatch(setDeliveryZone(null));
     };
 
     const getOrderDeliveryPrice = () => {
         if (typeDelivery === "delivery") {
-            if (deliveryZone) {
+            if (
+                config.deliveryZones.deliveryPriceType === "areaPrice" &&
+                deliveryZone &&
+                !yandexApiError
+            ) {
                 if (
                     deliveryZone.freeDeliveryOrder &&
                     cartTotalPrice > deliveryZone.freeDeliveryOrder
@@ -294,8 +289,8 @@ export default function Checkout() {
                     return parseInt(deliveryZone.deliveryPrice);
                 }
             } else if (
-                config.deliveryZones.deliveryPriceType !== "areaPrice" ||
-                yandexApiError
+                config.deliveryZones.deliveryPriceType !== "areaPrice" &&
+                config.CONFIG_order_delivery_price
             ) {
                 return parseInt(config.CONFIG_order_delivery_price);
             }
@@ -870,6 +865,8 @@ export default function Checkout() {
         }
         if (typeDelivery === "delivery") {
             if (
+                config.deliveryZones.deliveryPriceType === "areaPrice" &&
+                !yandexApiError &&
                 deliveryZone &&
                 deliveryZone.deliveryPrice &&
                 (cartTotalPrice < deliveryZone.freeDeliveryOrder ||
@@ -877,8 +874,7 @@ export default function Checkout() {
             ) {
                 result += parseInt(deliveryZone?.deliveryPrice);
             } else if (
-                (config.deliveryZones.deliveryPriceType !== "areaPrice" ||
-                    yandexApiError) &&
+                config.deliveryZones.deliveryPriceType !== "areaPrice" &&
                 config.CONFIG_order_delivery_price
             ) {
                 result += parseInt(config.CONFIG_order_delivery_price);
@@ -951,259 +947,279 @@ export default function Checkout() {
                                                 ></div>
                                             </Alert>
                                         )}
-                                    <>
-                                        <RadioGroup
-                                            value={deliveryAddress}
-                                            aria-labelledby="deliveryAddress-label"
-                                            name="deliveryAddress"
-                                            onChange={
-                                                handleChooseDeliveryAddress
-                                            }
+
+                                    {yandexApiError ? (
+                                        <Alert
+                                            severity="error"
+                                            sx={{ mt: 2, mb: 2 }}
                                         >
-                                            {user.addresses &&
-                                                Object.values(
-                                                    user.addresses
-                                                ).map((address, index) => {
-                                                    if (
-                                                        config.deliveryZones
-                                                            .deliveryPriceType ===
-                                                            "areaPrice" &&
-                                                        !yandexApiError &&
-                                                        !address.coordinates
-                                                    ) {
-                                                        return;
-                                                    }
-                                                    let formateAddress;
-                                                    if (!address.formate) {
-                                                        formateAddress =
-                                                            address.street +
-                                                            ", д. " +
-                                                            address.home;
-                                                        formateAddress +=
-                                                            address.porch
-                                                                ? ", под. " +
-                                                                  address.porch
-                                                                : "";
-                                                        formateAddress +=
-                                                            address.floor
-                                                                ? ", этаж " +
-                                                                  address.floor
-                                                                : "";
-                                                        formateAddress +=
-                                                            address.apartment
-                                                                ? ", кв. " +
-                                                                  address.apartment
-                                                                : "";
-                                                    }
-                                                    return (
-                                                        <FormControlLabel
-                                                            key={index}
-                                                            className="custom-radio"
-                                                            value={index}
-                                                            control={
-                                                                <Radio size="small" />
-                                                            }
-                                                            label={
-                                                                address.formate ||
-                                                                formateAddress
-                                                            }
-                                                        />
-                                                    );
-                                                })}
-                                            <FormControlLabel
-                                                className="custom-radio new-address"
-                                                value="new"
-                                                control={<Radio size="small" />}
-                                                label="Новый адрес"
-                                            />
-                                        </RadioGroup>
-
-                                        {config.deliveryZones
-                                            .deliveryPriceType ===
-                                            "areaPrice" &&
-                                        !yandexApiError &&
-                                        deliveryAddress === "new" ? (
-                                            <>
-                                                <TextField
-                                                    size="small"
-                                                    placeholder="Укажите адрес"
-                                                    value={
-                                                        choosenAddress?.formate ||
-                                                        ""
-                                                    }
-                                                    multiline
-                                                    focused={false}
-                                                    fullWidth
-                                                    onClick={(event) => {
-                                                        event.stopPropagation();
-                                                        dispatch(
-                                                            setOpenDeliveryModal(
-                                                                true
-                                                            )
+                                            <div>
+                                                Потеряно соединение с Яндекс
+                                                картой. Пожалуйста,
+                                                перезагрузите страницу
+                                            </div>
+                                        </Alert>
+                                    ) : (
+                                        <>
+                                            <RadioGroup
+                                                value={deliveryAddress}
+                                                aria-labelledby="deliveryAddress-label"
+                                                name="deliveryAddress"
+                                                onChange={
+                                                    handleChooseDeliveryAddress
+                                                }
+                                            >
+                                                {user.addresses &&
+                                                    Object.values(
+                                                        user.addresses
+                                                    ).map((address, index) => {
+                                                        if (
+                                                            config.deliveryZones
+                                                                .deliveryPriceType ===
+                                                                "areaPrice" &&
+                                                            !address.coordinates
+                                                        ) {
+                                                            return;
+                                                        }
+                                                        let formateAddress;
+                                                        if (!address.formate) {
+                                                            formateAddress =
+                                                                address.street +
+                                                                ", д. " +
+                                                                address.home;
+                                                            formateAddress +=
+                                                                address.porch
+                                                                    ? ", под. " +
+                                                                      address.porch
+                                                                    : "";
+                                                            formateAddress +=
+                                                                address.floor
+                                                                    ? ", этаж " +
+                                                                      address.floor
+                                                                    : "";
+                                                            formateAddress +=
+                                                                address.apartment
+                                                                    ? ", кв. " +
+                                                                      address.apartment
+                                                                    : "";
+                                                        }
+                                                        return (
+                                                            <FormControlLabel
+                                                                key={index}
+                                                                className="custom-radio"
+                                                                value={index}
+                                                                control={
+                                                                    <Radio size="small" />
+                                                                }
+                                                                label={
+                                                                    address.formate ||
+                                                                    formateAddress
+                                                                }
+                                                            />
                                                         );
-                                                    }}
-                                                    InputProps={{
-                                                        readOnly: true,
-                                                        endAdornment: (
-                                                            <span
-                                                                className="text-field__text-adornment"
-                                                                onClick={(
-                                                                    event
-                                                                ) => {
-                                                                    event.stopPropagation();
-                                                                    dispatch(
-                                                                        setOpenDeliveryModal(
-                                                                            true
-                                                                        )
-                                                                    );
-                                                                }}
-                                                            >
-                                                                {choosenAddress?.formate
-                                                                    ? "Изменить"
-                                                                    : "Указать"}
-                                                            </span>
-                                                        ),
-                                                    }}
-                                                    sx={{
-                                                        mt: 1,
-                                                        "& .MuiOutlinedInput-root":
-                                                            {
-                                                                cursor: "pointer",
-                                                            },
-                                                        "& .MuiOutlinedInput-input":
-                                                            {
-                                                                cursor: "pointer",
-                                                            },
-                                                    }}
-                                                    {...deliveryTextFieldProps}
+                                                    })}
+                                                <FormControlLabel
+                                                    className="custom-radio new-address"
+                                                    value="new"
+                                                    control={
+                                                        <Radio size="small" />
+                                                    }
+                                                    label="Новый адрес"
                                                 />
-                                            </>
-                                        ) : null}
+                                            </RadioGroup>
 
-                                        {deliveryAddress === "new" &&
-                                            (config.deliveryZones
-                                                .deliveryPriceType !==
-                                                "areaPrice" ||
-                                                yandexApiError) && (
-                                                <div className="checkout--form-new-address">
-                                                    <Grid container spacing={2}>
+                                            {config.deliveryZones
+                                                .deliveryPriceType ===
+                                                "areaPrice" &&
+                                            deliveryAddress === "new" ? (
+                                                <>
+                                                    <TextField
+                                                        size="small"
+                                                        placeholder="Укажите адрес"
+                                                        value={
+                                                            choosenAddress?.formate ||
+                                                            ""
+                                                        }
+                                                        multiline
+                                                        focused={false}
+                                                        fullWidth
+                                                        onClick={(event) => {
+                                                            event.stopPropagation();
+                                                            dispatch(
+                                                                setOpenDeliveryModal(
+                                                                    true
+                                                                )
+                                                            );
+                                                        }}
+                                                        InputProps={{
+                                                            readOnly: true,
+                                                            endAdornment: (
+                                                                <span
+                                                                    className="text-field__text-adornment"
+                                                                    onClick={(
+                                                                        event
+                                                                    ) => {
+                                                                        event.stopPropagation();
+                                                                        dispatch(
+                                                                            setOpenDeliveryModal(
+                                                                                true
+                                                                            )
+                                                                        );
+                                                                    }}
+                                                                >
+                                                                    {choosenAddress?.formate
+                                                                        ? "Изменить"
+                                                                        : "Указать"}
+                                                                </span>
+                                                            ),
+                                                        }}
+                                                        sx={{
+                                                            mt: 1,
+                                                            "& .MuiOutlinedInput-root":
+                                                                {
+                                                                    cursor: "pointer",
+                                                                },
+                                                            "& .MuiOutlinedInput-input":
+                                                                {
+                                                                    cursor: "pointer",
+                                                                },
+                                                        }}
+                                                        {...deliveryTextFieldProps}
+                                                    />
+                                                </>
+                                            ) : null}
+
+                                            {deliveryAddress === "new" &&
+                                                config.deliveryZones
+                                                    .deliveryPriceType !==
+                                                    "areaPrice" && (
+                                                    <div className="checkout--form-new-address">
                                                         <Grid
-                                                            item
-                                                            xs={8}
-                                                            md={6}
-                                                            sx={{ width: 1 }}
+                                                            container
+                                                            spacing={2}
                                                         >
-                                                            <TextField
-                                                                size="small"
-                                                                id="street"
-                                                                label="Улица"
-                                                                value={
-                                                                    newUserAddressStreet
-                                                                }
-                                                                onChange={
-                                                                    handleChangeNewUserAddress
-                                                                }
+                                                            <Grid
+                                                                item
+                                                                xs={8}
+                                                                md={6}
                                                                 sx={{
                                                                     width: 1,
                                                                 }}
-                                                                {...streetProps}
-                                                            />
-                                                        </Grid>
-                                                        <Grid
-                                                            item
-                                                            xs={4}
-                                                            md={6}
-                                                            sx={{ width: 1 }}
-                                                        >
-                                                            <TextField
-                                                                size="small"
-                                                                id="home"
-                                                                label="Дом"
-                                                                value={
-                                                                    newUserAddressHome
-                                                                }
-                                                                onChange={
-                                                                    handleChangeNewUserAddress
-                                                                }
+                                                            >
+                                                                <TextField
+                                                                    size="small"
+                                                                    id="street"
+                                                                    label="Улица"
+                                                                    value={
+                                                                        newUserAddressStreet
+                                                                    }
+                                                                    onChange={
+                                                                        handleChangeNewUserAddress
+                                                                    }
+                                                                    sx={{
+                                                                        width: 1,
+                                                                    }}
+                                                                    {...streetProps}
+                                                                />
+                                                            </Grid>
+                                                            <Grid
+                                                                item
+                                                                xs={4}
+                                                                md={6}
                                                                 sx={{
                                                                     width: 1,
                                                                 }}
-                                                                {...homeProps}
-                                                            />
+                                                            >
+                                                                <TextField
+                                                                    size="small"
+                                                                    id="home"
+                                                                    label="Дом"
+                                                                    value={
+                                                                        newUserAddressHome
+                                                                    }
+                                                                    onChange={
+                                                                        handleChangeNewUserAddress
+                                                                    }
+                                                                    sx={{
+                                                                        width: 1,
+                                                                    }}
+                                                                    {...homeProps}
+                                                                />
+                                                            </Grid>
+                                                            {config.CONFIG_checkout_hide_porch ===
+                                                            "yes" ? null : (
+                                                                <Grid
+                                                                    item
+                                                                    xs={4}
+                                                                    md={4}
+                                                                >
+                                                                    <TextField
+                                                                        size="small"
+                                                                        id="porch"
+                                                                        label="Подъезд"
+                                                                        value={
+                                                                            newUserAddressPorch
+                                                                        }
+                                                                        onChange={
+                                                                            handleChangeNewUserAddress
+                                                                        }
+                                                                        sx={{
+                                                                            width: 1,
+                                                                        }}
+                                                                    />
+                                                                </Grid>
+                                                            )}
+                                                            {config.CONFIG_checkout_hide_floor ===
+                                                            "yes" ? null : (
+                                                                <Grid
+                                                                    item
+                                                                    xs={4}
+                                                                    md={4}
+                                                                >
+                                                                    <TextField
+                                                                        size="small"
+                                                                        id="floor"
+                                                                        label="Этаж"
+                                                                        value={
+                                                                            newUserAddressFloor
+                                                                        }
+                                                                        onChange={
+                                                                            handleChangeNewUserAddress
+                                                                        }
+                                                                        sx={{
+                                                                            width: 1,
+                                                                        }}
+                                                                    />
+                                                                </Grid>
+                                                            )}
+                                                            {config.CONFIG_checkout_hide_apartment ===
+                                                            "yes" ? null : (
+                                                                <Grid
+                                                                    item
+                                                                    xs={4}
+                                                                    md={4}
+                                                                >
+                                                                    <TextField
+                                                                        size="small"
+                                                                        id="apartment"
+                                                                        label="Кв./Офис"
+                                                                        value={
+                                                                            newUserAddressApartment
+                                                                        }
+                                                                        onChange={
+                                                                            handleChangeNewUserAddress
+                                                                        }
+                                                                        sx={{
+                                                                            width: 1,
+                                                                        }}
+                                                                    />
+                                                                </Grid>
+                                                            )}
                                                         </Grid>
-                                                        {config.CONFIG_checkout_hide_porch ===
-                                                        "yes" ? null : (
-                                                            <Grid
-                                                                item
-                                                                xs={4}
-                                                                md={4}
-                                                            >
-                                                                <TextField
-                                                                    size="small"
-                                                                    id="porch"
-                                                                    label="Подъезд"
-                                                                    value={
-                                                                        newUserAddressPorch
-                                                                    }
-                                                                    onChange={
-                                                                        handleChangeNewUserAddress
-                                                                    }
-                                                                    sx={{
-                                                                        width: 1,
-                                                                    }}
-                                                                />
-                                                            </Grid>
-                                                        )}
-                                                        {config.CONFIG_checkout_hide_floor ===
-                                                        "yes" ? null : (
-                                                            <Grid
-                                                                item
-                                                                xs={4}
-                                                                md={4}
-                                                            >
-                                                                <TextField
-                                                                    size="small"
-                                                                    id="floor"
-                                                                    label="Этаж"
-                                                                    value={
-                                                                        newUserAddressFloor
-                                                                    }
-                                                                    onChange={
-                                                                        handleChangeNewUserAddress
-                                                                    }
-                                                                    sx={{
-                                                                        width: 1,
-                                                                    }}
-                                                                />
-                                                            </Grid>
-                                                        )}
-                                                        {config.CONFIG_checkout_hide_apartment ===
-                                                        "yes" ? null : (
-                                                            <Grid
-                                                                item
-                                                                xs={4}
-                                                                md={4}
-                                                            >
-                                                                <TextField
-                                                                    size="small"
-                                                                    id="apartment"
-                                                                    label="Кв./Офис"
-                                                                    value={
-                                                                        newUserAddressApartment
-                                                                    }
-                                                                    onChange={
-                                                                        handleChangeNewUserAddress
-                                                                    }
-                                                                    sx={{
-                                                                        width: 1,
-                                                                    }}
-                                                                />
-                                                            </Grid>
-                                                        )}
-                                                    </Grid>
-                                                </div>
-                                            )}
-                                    </>
+                                                    </div>
+                                                )}
+                                        </>
+                                    )}
                                 </div>
                             ) : (
                                 typeDelivery === "self" && (
@@ -1488,26 +1504,28 @@ export default function Checkout() {
                             )}
 
                             <div className="checkout--total-panel--result">
-                                {deliveryZone && typeDelivery === "delivery" ? (
+                                {typeDelivery === "delivery" &&
+                                deliveryZone &&
+                                !yandexApiError ? (
                                     <div className="result-delivery">
                                         <span className="price-title">
                                             Доставка
                                         </span>
                                         <span>
-                                            {deliveryZone.freeDeliveryOrder &&
-                                            cartTotalPrice >
-                                                deliveryZone.freeDeliveryOrder
+                                            {(deliveryZone.freeDeliveryOrder &&
+                                                cartTotalPrice >
+                                                    deliveryZone.freeDeliveryOrder) ||
+                                            !deliveryZone.deliveryPrice
                                                 ? "Бесплатно"
                                                 : `${deliveryZone.deliveryPrice.toLocaleString(
                                                       "ru-RU"
                                                   )} ₽`}
                                         </span>
                                     </div>
-                                ) : (config.deliveryZones.deliveryPriceType !==
-                                      "areaPrice" ||
-                                      yandexApiError) &&
-                                  config.CONFIG_order_delivery_price &&
-                                  typeDelivery === "delivery" ? (
+                                ) : typeDelivery === "delivery" &&
+                                  config.deliveryZones.deliveryPriceType !==
+                                      "areaPrice" &&
+                                  config.CONFIG_order_delivery_price ? (
                                     <div className="result-delivery">
                                         <span className="price-title">
                                             Доставка
@@ -1784,9 +1802,18 @@ export default function Checkout() {
                                         : handleMakeOrder();
                                 }}
                                 disabled={
-                                    selfDeliveryOrderLess ||
-                                    deliveryOrderLess ||
-                                    (deliveryZone &&
+                                    (typeDelivery === "self" &&
+                                        selfDeliveryOrderLess) ||
+                                    (typeDelivery === "delivery" &&
+                                        deliveryOrderLess) ||
+                                    (typeDelivery === "delivery" &&
+                                        config.deliveryZones
+                                            .deliveryPriceType ===
+                                            "areaPrice" &&
+                                        yandexApiError) ||
+                                    (config.deliveryZones.deliveryPriceType ===
+                                        "areaPrice" &&
+                                        deliveryZone &&
                                         deliveryZone.orderMinPrice >
                                             cartTotalPrice)
                                 }

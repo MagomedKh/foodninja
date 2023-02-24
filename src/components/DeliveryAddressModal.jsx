@@ -156,7 +156,7 @@ const DeliveryAddressModal = ({
                     name: "coordinates",
                 });
             })
-            .catch((error) => onYandexApiError(true));
+            .catch((error) => onYandexApiError());
     }, []);
 
     const loadSuggest = (ymaps) => {
@@ -166,7 +166,7 @@ const DeliveryAddressModal = ({
         ymaps
             .geocode("Москва")
             .then(function (res) {})
-            .catch((error) => onYandexApiError(true));
+            .catch((error) => onYandexApiError());
 
         // Добавляем зоны на карту
         config.deliveryZones.zones.forEach((zone, index) => {
