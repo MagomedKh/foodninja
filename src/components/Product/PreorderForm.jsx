@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect } from "react";
+import React, { forwardRef, useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 import {
     Box,
@@ -28,6 +28,7 @@ import {
     getHours,
     getMinutes,
     isEqual,
+    startOfDay,
 } from "date-fns";
 import useWorkingStatus from "../../hooks/useWorkingStatus";
 
@@ -80,13 +81,24 @@ const PreorderForm = forwardRef(
             config.CONFIG_schedule_ordering_start,
             config.CONFIG_schedule_ordering_end,
         ];
+
+        // Если конец сегодняшнего дня переходит на след. день, конец дня устанавливается в 23:59
+        const isTodayWorkAfterMidnight =
+            parseInt(todayOrderingTime[0].slice(0, 2)) >=
+            parseInt(todayOrderingTime[1].slice(0, 2));
+
         // Устанавливаем конечное время для заказа сегодня
         let todayEndWorkTime = set(new Date(), {
-            hours: todayOrderingTime[1].slice(0, 2),
-            minutes: todayOrderingTime[1].slice(3, 5),
+            hours: isTodayWorkAfterMidnight
+                ? 23
+                : todayOrderingTime[1].slice(0, 2),
+            minutes: isTodayWorkAfterMidnight
+                ? 59
+                : todayOrderingTime[1].slice(3, 5),
             seconds: 0,
             milliseconds: 0,
         });
+
         useEffect(() => {
             if (
                 workingStatus &&
@@ -95,7 +107,7 @@ const PreorderForm = forwardRef(
             ) {
                 handlePreorderDateChange("Как можно скорее");
             }
-        }, [workingStatus]);
+        }, [workingStatus, maintenanceStatus]);
 
         // Устанавливаем начальное время для заказа в формате даты
         let startWorkDate = set(new Date(), {
@@ -105,26 +117,68 @@ const PreorderForm = forwardRef(
             milliseconds: 0,
         });
 
+        // Если конец дня предзаказа переходит на след. день, конец дня устанавливается в 23:59
+        const isPreorderWorkAfterMidnight =
+            parseInt(preorderOrderingTime[0].slice(0, 2)) >=
+            parseInt(preorderOrderingTime[1].slice(0, 2));
+
         // Устанавливаем конечное время для заказа в формате даты
         let endWorkDate = set(new Date(), {
-            hours: preorderOrderingTime[1].slice(0, 2),
-            minutes: preorderOrderingTime[1].slice(3, 5),
+            hours: isPreorderWorkAfterMidnight
+                ? 23
+                : preorderOrderingTime[1].slice(0, 2),
+            minutes: isPreorderWorkAfterMidnight
+                ? 59
+                : preorderOrderingTime[1].slice(3, 5),
+            seconds: 0,
+            milliseconds: 0,
+        });
+
+        // Если конец прошлого дня переходит на сегодняшний, учитываем это время
+        const dayBeforeDayOfWeek =
+            preorderDayOfWeek === 0 ? 6 : preorderDayOfWeek - 1;
+
+        // Получаем доступное время для заказа в предыдущий перед выбранным днем
+        const dayBeforeOrderingTime = config.orderingTime[
+            dayBeforeDayOfWeek
+        ] || [
+            config.CONFIG_schedule_ordering_start,
+            config.CONFIG_schedule_ordering_end,
+        ];
+
+        const isDayBeforeWorkAfterMidnight =
+            parseInt(dayBeforeOrderingTime[0].slice(0, 2)) >=
+            parseInt(dayBeforeOrderingTime[1].slice(0, 2));
+
+        const dayBeforeAfterMidnightEndWorkTime = set(new Date(), {
+            hours: dayBeforeOrderingTime[1].slice(0, 2),
+            minutes: dayBeforeOrderingTime[1].slice(3, 5),
             seconds: 0,
             milliseconds: 0,
         });
 
         // Если уже выбранное время после смены даты не входит в доступный интервал, сбрасываем время
-        if (
-            preorderTime &&
-            !isWithinInterval(preorderTime, {
-                start: startWorkDate,
-                end: endWorkDate,
-            })
-        ) {
-            handlePreorderTimeChange("");
+        if (preorderTime) {
+            if (
+                !isWithinInterval(preorderTime, {
+                    start: isToday(preorderDate) ? new Date() : startWorkDate,
+                    end: endWorkDate,
+                })
+            ) {
+                if (!isDayBeforeWorkAfterMidnight) {
+                    handlePreorderTimeChange("");
+                } else if (
+                    !isWithinInterval(preorderTime, {
+                        start: startOfDay(new Date()),
+                        end: dayBeforeAfterMidnightEndWorkTime,
+                    })
+                ) {
+                    handlePreorderTimeChange("");
+                }
+            }
         }
 
-        // Если заказ на сегодня и текущее время больше начального, передвигаем начальное время
+        // Если заказ на сегодня, устанавливаем начальное время от текущего времени
         if (isToday(preorderDate)) {
             if (isAfter(new Date(), startWorkDate)) {
                 startWorkDate = new Date();
@@ -154,23 +208,76 @@ const PreorderForm = forwardRef(
             }
         }
 
-        // Создаем массив доступных времён для заказа в интервале
+        // Создаем массив доступных времён для заказа
         const hoursArray = [];
-        while (compareAsc(startWorkDate, endWorkDate) < 1) {
-            hoursArray.push(startWorkDate);
-            startWorkDate = addMinutes(startWorkDate, 30);
+
+        // Добавляем в массив время работы вчерашнего дня после полуночи
+        if (isDayBeforeWorkAfterMidnight) {
+            let tempDate;
+
+            // Если выбран сегодняшний день, добавляем часы в промежутке от текущего времени до конца вчерашнего рабочего дня
+            if (isToday(preorderDate)) {
+                tempDate = new Date();
+                if (config.CONFIG_time_order_delay) {
+                    tempDate = addMinutes(
+                        new Date(),
+                        config.CONFIG_time_order_delay
+                    );
+                }
+                tempDate = roundToNearestMinutes(tempDate, {
+                    nearestTo: 30,
+                    roundingMethod: "ceil",
+                });
+            }
+            // Если выбран не сегодняшний день, добавляем часы в промежутке от полуночи до конца вчерашнего рабочего дня
+            else {
+                tempDate = startOfDay(new Date());
+            }
+
+            while (
+                compareAsc(tempDate, dayBeforeAfterMidnightEndWorkTime) < 1
+            ) {
+                hoursArray.push(tempDate);
+                tempDate = addMinutes(tempDate, 30);
+            }
+        }
+
+        // Добавляем в массив сегодняшнее время работы
+        if (preorderOrderingTime[0] && preorderOrderingTime[1]) {
+            while (compareAsc(startWorkDate, endWorkDate) < 1) {
+                hoursArray.push(startWorkDate);
+                startWorkDate = addMinutes(startWorkDate, 30);
+            }
         }
 
         // Проверяем чтобы последнее доступное время не переходило на следующий день
-        const endOfTheDay = endOfDay(new Date());
-        if (compareAsc(hoursArray[hoursArray.length - 1], endOfTheDay) == 1) {
+        if (
+            compareAsc(
+                hoursArray[hoursArray.length - 1],
+                endOfDay(new Date())
+            ) == 1
+        ) {
             hoursArray.pop();
         }
 
-        // Ссоздаем массив недоступных для заказ дней недели
+        // Создаем массив недоступных для заказа дней недели, проверкой есть ли в этот день доступное время
         const unavailableDays = config.orderingTime
             ?.map((el, inx) => {
-                if (!el[0] || !el[1]) {
+                // Добавляем к промежутку доступного времени, время работы вчерашнего дня после полуночи
+                const dayBeforeDayOfWeek = inx === 0 ? 6 : inx - 1;
+
+                const dayBeforeOrderingTime = config.orderingTime[
+                    dayBeforeDayOfWeek
+                ] || [
+                    config.CONFIG_schedule_ordering_start,
+                    config.CONFIG_schedule_ordering_end,
+                ];
+
+                const isDayBeforeWorkAfterMidnight =
+                    parseInt(dayBeforeOrderingTime[0].slice(0, 2)) >=
+                    parseInt(dayBeforeOrderingTime[1].slice(0, 2));
+
+                if ((!el[0] || !el[1]) && !isDayBeforeWorkAfterMidnight) {
                     return inx;
                 }
             })
@@ -179,14 +286,42 @@ const PreorderForm = forwardRef(
             });
 
         // Создаем массив доступных дней для заказа из ближайших 30
+        // Добавляем к промежутку доступного времени, время работы вчерашнего дня после полуночи
+        const yesterdayDayOfWeek =
+            todayDayOfWeek === 0 ? 6 : todayDayOfWeek - 1;
+
+        const yesterdayOrderingTime = config.orderingTime[
+            yesterdayDayOfWeek
+        ] || [
+            config.CONFIG_schedule_ordering_start,
+            config.CONFIG_schedule_ordering_end,
+        ];
+
+        const isYesterdayWorkAfterMidnight =
+            parseInt(yesterdayOrderingTime[0].slice(0, 2)) >=
+            parseInt(yesterdayOrderingTime[1].slice(0, 2));
+
+        const yesterdayAfterMidnightEndWorkTime = set(new Date(), {
+            hours: yesterdayOrderingTime[1].slice(0, 2),
+            minutes: yesterdayOrderingTime[1].slice(3, 5),
+            seconds: 0,
+            milliseconds: 0,
+        });
+
         const datesArray = eachDayOfInterval({
             start:
-                isAfter(
+                // Определяем, нужно ли добавлять в массив сегодняшний день
+                isBefore(
                     addMinutes(new Date(), config.CONFIG_time_order_delay),
                     todayEndWorkTime
-                ) || !hoursArray.length
-                    ? addDays(new Date(), 1)
-                    : new Date(),
+                ) ||
+                (isYesterdayWorkAfterMidnight &&
+                    isBefore(
+                        addMinutes(new Date(), config.CONFIG_time_order_delay),
+                        yesterdayAfterMidnightEndWorkTime
+                    ))
+                    ? new Date()
+                    : addDays(new Date(), 1),
             end: addDays(new Date(), 30),
         });
 
