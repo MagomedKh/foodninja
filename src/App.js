@@ -332,11 +332,6 @@ function App() {
                                     />
                                     <Route
                                         exact
-                                        path="/account/orders"
-                                        element={<Orders />}
-                                    />
-                                    <Route
-                                        exact
                                         path="/order-complete"
                                         element={<OrderComplete />}
                                     />
