@@ -55,18 +55,22 @@
     border-radius: 15px;
 }
 
-@media (max-width: 899px) {
-    .sale-modal--container {
-        border-radius: 0;
-    }
-}
-
 .sale-modal {
     padding: 2rem 2rem 1rem;
     position: relative;
     max-width: 640px;
     overflow-y: auto;
 }
+
+@media (max-width: 899px) {
+    .sale-modal--container {
+        border-radius: 0;
+    }
+    .sale-modal {
+        padding: 80px 2rem 1rem;
+    }
+}
+
 .sale-modal::-webkit-scrollbar {
     width: 6px;
 }
