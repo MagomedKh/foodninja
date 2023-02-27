@@ -169,75 +169,86 @@ const UserOrder = ({
                         showFullInfo ? "active" : "no-active"
                     }`}
                 >
-                    {Object.values(order.products).map((product, index) => {
-                        if ((!showFullInfo && index <= 2) || showFullInfo) {
-                            return (
-                                <div
-                                    className="account--user-order--product"
-                                    key={`${order.ID}-${product.id}-${index}`}
-                                >
-                                    <div>
-                                        <div className="account--user-order--product-name">
-                                            {product.name}
-                                            <span
-                                                style={{ whiteSpace: "nowrap" }}
-                                            >
-                                                {" "}
-                                                x {product.count} шт.
-                                            </span>
-                                        </div>
-
-                                        {product.modificators.length ? (
-                                            <div className="account--user-order--product-modificators">
-                                                +
-                                                {product.modificators.map(
-                                                    (el, inx, array) =>
-                                                        inx !==
-                                                        array.length - 1 ? (
-                                                            <span
-                                                                key={el.id}
-                                                                className="account--user-order--product-modificator"
-                                                            >
-                                                                {" "}
-                                                                {el.title}{" "}
-                                                                {el.count} шт.,
-                                                            </span>
-                                                        ) : (
-                                                            <span
-                                                                key={el.id}
-                                                                className="account--user-order--product-modificator"
-                                                            >
-                                                                {" "}
-                                                                {el.title}{" "}
-                                                                {el.count}
-                                                                шт.
-                                                            </span>
-                                                        )
-                                                )}
+                    {Object.values(order.products).length ? (
+                        Object.values(order.products).map((product, index) => {
+                            if ((!showFullInfo && index <= 2) || showFullInfo) {
+                                return (
+                                    <div
+                                        className="account--user-order--product"
+                                        key={`${order.ID}-${product.id}-${index}`}
+                                    >
+                                        <div>
+                                            <div className="account--user-order--product-name">
+                                                {product.name}
+                                                <span
+                                                    style={{
+                                                        whiteSpace: "nowrap",
+                                                    }}
+                                                >
+                                                    {" "}
+                                                    x {product.count} шт.
+                                                </span>
                                             </div>
-                                        ) : null}
+
+                                            {product.modificators.length ? (
+                                                <div className="account--user-order--product-modificators">
+                                                    +
+                                                    {product.modificators.map(
+                                                        (el, inx, array) =>
+                                                            inx !==
+                                                            array.length - 1 ? (
+                                                                <span
+                                                                    key={el.id}
+                                                                    className="account--user-order--product-modificator"
+                                                                >
+                                                                    {" "}
+                                                                    {
+                                                                        el.title
+                                                                    }{" "}
+                                                                    {el.count}{" "}
+                                                                    шт.,
+                                                                </span>
+                                                            ) : (
+                                                                <span
+                                                                    key={el.id}
+                                                                    className="account--user-order--product-modificator"
+                                                                >
+                                                                    {" "}
+                                                                    {
+                                                                        el.title
+                                                                    }{" "}
+                                                                    {el.count}
+                                                                    шт.
+                                                                </span>
+                                                            )
+                                                    )}
+                                                </div>
+                                            ) : null}
+                                        </div>
+                                        <div className="account--user-order--product-price">
+                                            {product.total_price !==
+                                            product.price ? (
+                                                <>
+                                                    <span className="default-price">
+                                                        {product.price} ₽
+                                                    </span>
+                                                    <span className="sale-price">
+                                                        {product.total_price} ₽
+                                                    </span>
+                                                </>
+                                            ) : (
+                                                `${product.total_price} ₽`
+                                            )}
+                                        </div>
                                     </div>
-                                    <div className="account--user-order--product-price">
-                                        {product.total_price !==
-                                        product.price ? (
-                                            <>
-                                                <span className="default-price">
-                                                    {product.price} ₽
-                                                </span>
-                                                <span className="sale-price">
-                                                    {product.total_price} ₽
-                                                </span>
-                                            </>
-                                        ) : (
-                                            `${product.total_price} ₽`
-                                        )}
-                                    </div>
-                                </div>
-                            );
-                        } else {
-                            return null;
-                        }
-                    })}
+                                );
+                            } else {
+                                return null;
+                            }
+                        })
+                    ) : (
+                        <span>Товары недоступны</span>
+                    )}
 
                     {order.bonusProduct.id !== undefined && (
                         <div
@@ -308,6 +319,7 @@ const UserOrder = ({
                 variant="button"
                 className="btn btn--dark repeat-order"
                 onClick={disableRepeatButtons ? null : handleRepeatOrder}
+                disabled={!Object.values(order.products).length}
                 loadingPosition="start"
             >
                 Повторить заказ
