@@ -89,6 +89,26 @@
 }
 .bonuses-modal--dialog .modal-alert--wrapper {
     border-radius: 20px;
+    padding: 50px 0;
+}
+
+.bonuses-modal--wrapper {
+    overflow: hidden;
+    display: flex;
+}
+.bonuses-modal--inner-wrapper {
+    overflow-y: scroll;
+    padding: 0 50px;
+}
+.bonuses-modal--inner-wrapper::-webkit-scrollbar {
+    width: 6px;
+}
+.bonuses-modal--inner-wrapper::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+.bonuses-modal--inner-wrapper::-webkit-scrollbar-track {
+    background: #f2f5f7;
 }
 .bonuses-modal__header {
     display: flex;
@@ -208,6 +228,10 @@
     .bonuses-modal--dialog .modal-alert--wrapper {
         border-radius: 0;
         padding: 50px 0;
+    }
+    .bonuses-modal--inner-wrapper {
+        overflow-y: visible;
+        padding: 0;
     }
     .bonuses-modal__carts .product {
         width: 100%;
