@@ -6,6 +6,7 @@ import React, {
     useRef,
 } from "react";
 import OverflowMenu from "./OverflowMenu";
+import "intersection-observer";
 
 const IntersectionObserverWrapper = React.forwardRef(({ children }, ref) => {
     const navRef = useRef(null);
