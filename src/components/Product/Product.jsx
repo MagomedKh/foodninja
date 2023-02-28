@@ -20,15 +20,15 @@ import soon from "../../img/photo-soon.svg";
 export default function Product({ product, disabled }) {
     const dispatch = useDispatch();
 
-    const { cartProducts, categoryNew, categoryHit } = useSelector(
-        ({ cart, config }) => {
+    const { cartProducts, categoryNew, categoryHit, productLayout } =
+        useSelector(({ cart, config }) => {
             return {
                 cartProducts: cart.items,
                 categoryNew: config.data.CONFIG_new_category,
                 categoryHit: config.data.CONFIG_hit_category,
+                productLayout: config.data.CONFIG_type_products,
             };
-        }
-    );
+        });
 
     const openModalBtnClick = () => {
         dispatch(
@@ -52,7 +52,11 @@ export default function Product({ product, disabled }) {
     );
 
     return (
-        <div className="product-grid-item">
+        <div
+            className={`product-grid-item ${
+                productLayout === "one" ? "one-layout" : ""
+            }`}
+        >
             <div className="product product-item">
                 <div className="product--labels-wrapper">
                     {product.options?._count_peoples ? (
