@@ -190,11 +190,11 @@ const StoriesList = () => {
     }
 
     return (
-        <Container>
+        <Container sx={{ paddingTop: _isMobile() ? "16px" : 0 }}>
             <div className="stories-list--container">
                 <Swiper
                     slidesPerView="auto"
-                    spaceBetween={20}
+                    spaceBetween={_isMobile() ? 10 : 20}
                     // breakpoints={{
                     //     320: {
                     //         slidesPerView: 1,

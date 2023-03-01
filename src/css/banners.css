@@ -1,7 +1,25 @@
-.banners-swiper {
+.banners-wrapper {
+    overflow-x: hidden;
+}
+
+.banners-swiper.swiper {
     margin-bottom: 2rem;
     border-radius: 25px;
 }
+
+.banners-swiper.swiper.fullwidth {
+    overflow: visible;
+}
+
+.banners-swiper.fullwidth .swiper-slide {
+    opacity: 0.4;
+    transition: opacity 0.5s;
+}
+
+.banners-swiper.fullwidth .swiper-slide.swiper-slide-active {
+    opacity: 1;
+}
+
 .banners-swiper img {
     border-radius: 25px;
     width: 100%;
@@ -73,6 +91,23 @@
 }
 .banners-swiper {
     line-height: 1;
+}
+
+.bannersMobile-swiper {
+    width: 100%;
+}
+
+.bannersMobile-swiper.fullwidth {
+    width: 90%;
+}
+
+.bannersMobile-swiper.fullwidth .swiper-slide {
+    opacity: 0.4;
+    transition: opacity 0.5s;
+}
+
+.bannersMobile-swiper.fullwidth .swiper-slide.swiper-slide-active {
+    opacity: 1;
 }
 
 .bannersMobile-swiper img {

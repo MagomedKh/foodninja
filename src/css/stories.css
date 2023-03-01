@@ -3,7 +3,14 @@
     width: 100%;
     height: 250px;
     display: flex;
-    margin-bottom: 2rem;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 899px) {
+    .stories-list--container {
+        height: 200px;
+        margin-bottom: 10px;
+    }
 }
 .stories-list--container .swiper-slide {
     width: auto;
@@ -29,6 +36,12 @@
     height: 100%;
     width: 190px;
     cursor: pointer;
+}
+
+@media (max-width: 899px) {
+    .stories-slide--container {
+        width: 152px;
+    }
 }
 
 .stories-slide--container img {

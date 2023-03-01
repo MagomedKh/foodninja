@@ -17,15 +17,19 @@ export default function Footer() {
         };
     });
 
-    const { banners, bannersMobile } = useSelector(({ banners }) => {
-        return {
-            banners: banners.banners,
-            bannersMobile: banners.bannersMobile,
-        };
-    });
+    const { banners, bannersMobile, bannerType } = useSelector(
+        ({ banners, config }) => {
+            return {
+                banners: banners.banners,
+                bannersMobile: banners.bannersMobile,
+                bannerType: config.data.CONFIG_type_slider,
+            };
+        }
+    );
 
     const [activeSale, setActiveSale] = useState(false);
     const [saleOpenModal, setSaleOpenModal] = useState(false);
+    const [swiper, setSwiper] = useState();
 
     const handleCloseSaleModal = useCallback(() => {
         setSaleOpenModal(false);
@@ -59,7 +63,11 @@ export default function Footer() {
 
     let swiperProps = { pagination: true, slidesPerView: 1 };
     if (_isMobile()) {
-        swiperProps.spaceBetween = 30;
+        if (bannerType === "fullwidth") {
+            swiperProps.spaceBetween = 15;
+        } else {
+            swiperProps.spaceBetween = 30;
+        }
         if (bannersMobile.autoplay) {
             swiperProps.autoplay = {
                 delay: bannersMobile.autoplay,
@@ -75,58 +83,83 @@ export default function Footer() {
     }
 
     return (
-        <Container>
+        <>
             {!_isMobile() && banners.banners && banners.banners.length ? (
                 <div className="banners-wrapper">
-                    <Swiper
-                        {...swiperProps}
-                        modules={[Autoplay, Navigation, Pagination]}
-                        className="banners-swiper"
-                    >
-                        {banners.banners.map((banner, key) => (
-                            <SwiperSlide key={key} className="banner-slide">
-                                {banner.link ? (
-                                    <img
-                                        src={banner.img}
-                                        alt={banner.alt}
-                                        style={{ cursor: "pointer" }}
-                                        onClick={() =>
-                                            handleBannerClick(banner.link)
-                                        }
-                                    />
-                                ) : (
-                                    <img src={banner.img} alt={banner.alt} />
-                                )}
-                            </SwiperSlide>
-                        ))}
-                    </Swiper>
+                    <Container>
+                        <Swiper
+                            {...swiperProps}
+                            modules={[Autoplay, Navigation, Pagination]}
+                            className={`banners-swiper ${
+                                bannerType === "fullwidth" ? "fullwidth" : ""
+                            }`}
+                            spaceBetween={80}
+                            onSwiper={(swiper) => setSwiper(swiper)}
+                        >
+                            {banners.banners.map((banner, key) => (
+                                <SwiperSlide key={key} className="banner-slide">
+                                    {({ isPrev, isNext }) => {
+                                        return (
+                                            <img
+                                                src={banner.img}
+                                                alt={banner.alt}
+                                                style={{
+                                                    cursor: banner.link
+                                                        ? "pointer"
+                                                        : "auto",
+                                                }}
+                                                onClick={() => {
+                                                    if (isNext) {
+                                                        swiper.slideNext();
+                                                    } else if (isPrev) {
+                                                        swiper.slidePrev();
+                                                    } else if (banner.link) {
+                                                        handleBannerClick(
+                                                            banner.link
+                                                        );
+                                                    }
+                                                }}
+                                            />
+                                        );
+                                    }}
+                                </SwiperSlide>
+                            ))}
+                        </Swiper>
+                    </Container>
                 </div>
             ) : _isMobile() &&
               bannersMobile.banners &&
               bannersMobile.banners.length ? (
                 <div className="mobile-banners-wrapper">
-                    <Swiper
-                        {...swiperProps}
-                        modules={[Autoplay, Pagination]}
-                        className="bannersMobile-swiper"
-                    >
-                        {bannersMobile.banners.map((banner, key) => (
-                            <SwiperSlide key={key} className="banner-slide">
-                                {banner.link ? (
-                                    <img
-                                        src={banner.img}
-                                        alt={banner.alt}
-                                        style={{ cursor: "pointer" }}
-                                        onClick={() =>
-                                            handleBannerClick(banner.link)
-                                        }
-                                    />
-                                ) : (
-                                    <img src={banner.img} alt={banner.alt} />
-                                )}
-                            </SwiperSlide>
-                        ))}
-                    </Swiper>
+                    <Container>
+                        <Swiper
+                            {...swiperProps}
+                            modules={[Autoplay, Pagination]}
+                            className={`bannersMobile-swiper ${
+                                bannerType === "fullwidth" ? "fullwidth" : ""
+                            }`}
+                        >
+                            {bannersMobile.banners.map((banner, key) => (
+                                <SwiperSlide key={key} className="banner-slide">
+                                    {banner.link ? (
+                                        <img
+                                            src={banner.img}
+                                            alt={banner.alt}
+                                            style={{ cursor: "pointer" }}
+                                            onClick={() =>
+                                                handleBannerClick(banner.link)
+                                            }
+                                        />
+                                    ) : (
+                                        <img
+                                            src={banner.img}
+                                            alt={banner.alt}
+                                        />
+                                    )}
+                                </SwiperSlide>
+                            ))}
+                        </Swiper>
+                    </Container>
                 </div>
             ) : (
                 ""
@@ -136,6 +169,6 @@ export default function Footer() {
                 activeSale={activeSale}
                 handleCloseSaleModal={handleCloseSaleModal}
             />
-        </Container>
+        </>
     );
 }

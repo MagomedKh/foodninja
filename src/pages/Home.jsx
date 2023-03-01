@@ -75,9 +75,11 @@ export default function Home() {
         <>
             <Header />
             <div className="home">
-                <Banners />
-
-                <StoriesList />
+                {config.CONFIG_type_slider === "stories" ? (
+                    <StoriesList />
+                ) : (
+                    <Banners />
+                )}
 
                 <TopCategoriesMenu />
 
