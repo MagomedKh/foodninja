@@ -20,6 +20,7 @@
     align-items: center;
     justify-content: center;
     text-align: center;
+    min-width: 600px;
 }
 
 .we-closed-modal .cat-sleep-img {
@@ -30,5 +31,6 @@
     .we-closed-modal {
         border-radius: 0px;
         height: 100%;
+        min-width: unset;
     }
 }
