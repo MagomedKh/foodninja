@@ -1,7 +1,7 @@
 import React from "react";
 import { Dialog, IconButton, Slide } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { _isMobile } from "./helpers";
+import { _getPlatform, _isMobile } from "./helpers";
 import "../css/sale.css";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -35,6 +35,14 @@ const SaleModal = ({ saleOpenModal, activeSale, handleCloseSaleModal }) => {
                 onClick={handleCloseSaleModal}
                 aria-label="close"
                 className="modal-close"
+                sx={
+                    _getPlatform !== "vk" && _isMobile()
+                        ? {
+                              right: "17px",
+                              left: "unset",
+                          }
+                        : {}
+                }
             >
                 <CloseIcon />
             </IconButton>
