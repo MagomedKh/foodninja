@@ -506,7 +506,42 @@ const PreorderForm = forwardRef(
 
                                 // Блокируем часы закрытия сайта
                                 let disabledByMaintenance = false;
+
                                 if (
+                                    getDayOfYear(preorderDate) ===
+                                        getDayOfYear(maintenanceDateStart) &&
+                                    getDayOfYear(preorderDate) ===
+                                        getDayOfYear(maintenanceDateEnd)
+                                ) {
+                                    const maintenanceStartTime = set(
+                                        new Date(),
+                                        {
+                                            hours: getHours(
+                                                maintenanceDateStart
+                                            ),
+                                            minutes:
+                                                getMinutes(
+                                                    maintenanceDateStart
+                                                ),
+                                            seconds: 0,
+                                            milliseconds: 0,
+                                        }
+                                    );
+                                    const maintenanceEndTime = set(new Date(), {
+                                        hours: getHours(maintenanceDateEnd),
+                                        minutes: getMinutes(maintenanceDateEnd),
+                                        seconds: 0,
+                                        milliseconds: 0,
+                                    });
+                                    if (
+                                        isWithinInterval(el, {
+                                            start: maintenanceStartTime,
+                                            end: maintenanceEndTime,
+                                        })
+                                    ) {
+                                        disabledByMaintenance = true;
+                                    }
+                                } else if (
                                     getDayOfYear(preorderDate) ===
                                     getDayOfYear(maintenanceDateStart)
                                 ) {
@@ -527,8 +562,7 @@ const PreorderForm = forwardRef(
                                     if (isAfter(el, maintenanceStartTime)) {
                                         disabledByMaintenance = true;
                                     }
-                                }
-                                if (
+                                } else if (
                                     getDayOfYear(preorderDate) ===
                                     getDayOfYear(maintenanceDateEnd)
                                 ) {
