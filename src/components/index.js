@@ -35,3 +35,4 @@ export { default as SaleModal } from "./SaleModal.jsx";
 export { default as ScrollToTop } from "./ScrollToTop.jsx";
 export { default as BeforePaymentModal } from "./BeforePaymentModal.jsx";
 export { default as StoriesList } from "./StoriesList/StoriesList.jsx";
+export { default as IntersectionObserverWrapper } from "./IntersectionObserverWrapper.jsx";
