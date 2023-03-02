@@ -18,15 +18,16 @@ const ContactsYandexMap = () => {
             }
             let hintContent = "";
             if (zone.orderMinPrice) {
-                hintContent += `Заказ от ${zone.orderMinPrice} ₽<br>`;
+                hintContent += `Минимальная сумма заказа от ${zone.orderMinPrice} ₽<br>`;
+            }
+            if (zone.deliveryPrice) {
+                hintContent += `Стоимость доставки ${zone.deliveryPrice} ₽<br>`;
             }
             if (zone.freeDeliveryOrder) {
-                hintContent += `Бесплатная доставка от 
-                ${zone.freeDeliveryOrder} ₽<br>`;
+                hintContent += `Бесплатная доставка от ${zone.freeDeliveryOrder} ₽<br>`;
             }
             if (zone.deliveryTime) {
-                hintContent += `Время доставки 
-                ${zone.deliveryTime} мин.`;
+                hintContent += `Время доставки  от ${zone.deliveryTime} мин.`;
             }
             const myPolygon = new ymaps.Polygon(
                 [...zone.coordinates],
