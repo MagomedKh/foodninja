@@ -107,10 +107,11 @@ const useWorkingStatus = () => {
                     end: yesterdayAfterMidnightEndWorkTime,
                 })));
 
-    const maintenanceStatus = !isWithinInterval(new Date(), {
-        start: maintenanceDateStart,
-        end: maintenanceDateEnd,
-    });
+    const maintenanceStatus =
+        !isWithinInterval(new Date(), {
+            start: maintenanceDateStart,
+            end: maintenanceDateEnd,
+        }) && !window.location.href.includes("maintenance_preview");
 
     return {
         workingStatus,

@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 import { Dialog, IconButton, Slide } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import useWorkingStatus from "../hooks/useWorkingStatus";
-import { useLocation } from "react-router-dom";
 import { _isMobile } from "./helpers";
 import catSleep from "../img/cat-sleep.svg";
 import "../css/we-closed.css";
@@ -13,7 +12,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 export default function WeClosed() {
-    const { pathname } = useLocation();
     const { workingStatus, maintenanceStatus } = useWorkingStatus();
 
     const {
@@ -36,7 +34,8 @@ export default function WeClosed() {
 
     if (
         (workingStatus && maintenanceStatus) ||
-        (window.adminAccess && !pathname.includes("maintenance_preview"))
+        (window.adminAccess &&
+            !window.location.href.includes("maintenance_preview"))
     )
         return null;
 
