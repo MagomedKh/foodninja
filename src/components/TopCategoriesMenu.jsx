@@ -88,15 +88,12 @@ export default function TopCategoriesMenu() {
             >
                 <Container className="inner-wrapper">
                     {categoriesWithProducts ? (
-                        <ul
-                            className={"categories-menu"}
-                            ref={categoriesMenuRef}
-                        >
+                        <ul className="categories-menu" ref={categoriesMenuRef}>
                             {categoriesWithProducts.map((item) => {
                                 return (
                                     <li
                                         key={item.term_id}
-                                        className={"viewCategory"}
+                                        className="viewCategory"
                                         data-targetid={item.term_id}
                                     >
                                         {pathname === "/" ? (
@@ -119,12 +116,11 @@ export default function TopCategoriesMenu() {
                                                 style={{
                                                     textDecoration: "none",
                                                 }}
-                                                className={
+                                                className={clsx(
                                                     pathname ===
-                                                    `/category/${item.slug}`
-                                                        ? "active"
-                                                        : ""
-                                                }
+                                                        `/category/${item.slug}` &&
+                                                        "active"
+                                                )}
                                             >
                                                 {item.name}
                                             </Link>
@@ -158,7 +154,7 @@ export default function TopCategoriesMenu() {
                             return (
                                 <li
                                     key={item.term_id}
-                                    className={"viewCategory"}
+                                    className="viewCategory"
                                     data-targetid={item.term_id}
                                 >
                                     {pathname === "/" ? (
@@ -178,12 +174,11 @@ export default function TopCategoriesMenu() {
                                             style={{
                                                 textDecoration: "none",
                                             }}
-                                            className={
+                                            className={clsx(
                                                 pathname ===
-                                                `/category/${item.slug}`
-                                                    ? "active"
-                                                    : ""
-                                            }
+                                                    `/category/${item.slug}` &&
+                                                    "active"
+                                            )}
                                         >
                                             {item.name}
                                         </Link>
