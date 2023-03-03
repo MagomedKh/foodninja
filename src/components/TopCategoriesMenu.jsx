@@ -7,6 +7,7 @@ import Skeleton from "@mui/material/Skeleton";
 import { Link as AnimateLink } from "react-scroll";
 import { _isMobile } from "../components/helpers.js";
 import smoothscroll from "smoothscroll-polyfill";
+import clsx from "clsx";
 import "../css/top-categories-menu.css";
 
 export default function TopCategoriesMenu() {
@@ -78,9 +79,11 @@ export default function TopCategoriesMenu() {
     if (_isMobile()) {
         return (
             <div
-                className={`sticked-top-bar ${
-                    sticked ? "sticked" : "no-sticked"
-                }`}
+                className={clsx("sticked-top-bar", {
+                    sticked: sticked,
+                    white: categoriesMenuType === "one",
+                    filled: categoriesMenuType === "two",
+                })}
                 ref={stickedBarRef}
             >
                 <Container className="inner-wrapper">
@@ -141,7 +144,11 @@ export default function TopCategoriesMenu() {
 
     return (
         <div
-            className={`sticked-top-bar ${sticked ? "sticked" : "no-sticked"}`}
+            className={clsx("sticked-top-bar", {
+                sticked: sticked,
+                white: categoriesMenuType === "one",
+                filled: categoriesMenuType === "two",
+            })}
             ref={stickedBarRef}
         >
             <Container className="inner-wrapper">

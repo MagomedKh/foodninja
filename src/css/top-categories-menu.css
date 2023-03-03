@@ -7,6 +7,28 @@
     padding: 15px 0;
     transition: background-color 0.5s ease-in-out;
 }
+.sticked-top-bar.white {
+    background-color: #fff;
+    box-shadow: 0 0 10px rgb(0 0 0 / 10%);
+}
+
+.sticked-top-bar.filled {
+    background-color: var(--main-color);
+}
+
+.sticked-top-bar.sticked {
+    background-color: rgba(255, 255, 255, 1);
+    box-shadow: 0 0 10px rgb(0 0 0 / 10%);
+    position: sticky;
+    top: -1px;
+    z-index: 10;
+    transition: background-color 0.5s ease-in-out;
+}
+
+.sticked-top-bar.sticked.filled {
+    background-color: var(--main-color);
+}
+
 .sticked-top-bar ul.categories-menu {
     display: flex;
     align-items: center;
@@ -67,6 +89,14 @@
     margin-right: 20px;
     border-bottom: 1px solid rgba(0, 0, 0, 0);
 }
+.sticked-top-bar.white ul.categories-menu li a {
+    color: black;
+}
+
+.sticked-top-bar.filled ul.categories-menu li a {
+    color: #fff;
+}
+
 .sticked-top-bar ul.categories-menu li a:hover {
     text-decoration: none;
     border-bottom: 1px dashed;
@@ -74,21 +104,15 @@
 .sticked-top-bar ul.categories-menu li a.active {
     color: var(--main-color) !important;
 }
-@media (max-width: 899px) {
-    .sticked-top-bar ul.categories-menu .scroll-container {
-        padding: 10px 0;
-    }
+.sticked-top-bar.filled ul.categories-menu li a.active {
+    color: var(--sec-color) !important;
 }
-.sticked-top-bar.sticked {
-    background-color: rgba(255, 255, 255, 1);
-    box-shadow: 0 0 10px rgb(0 0 0 / 10%);
-    position: sticky;
-    top: -1px;
-    z-index: 10;
-    transition: background-color 0.5s ease-in-out;
-}
+
 .sticked-top-bar.sticked ul.categories-menu li a {
     color: black;
+}
+.sticked-top-bar.sticked.filled ul.categories-menu li a {
+    color: #fff;
 }
 @media (max-width: 899px) {
     .sticked-top-bar {
@@ -114,6 +138,14 @@
         line-height: 32px;
         margin-right: 15px;
     }
+    .sticked-top-bar.filled ul.categories-menu li a {
+        background-color: #fff;
+        color: var(--main-color);
+    }
+    .sticked-top-bar.sticked.filled ul.categories-menu li a {
+        background-color: #fff;
+        color: var(--main-color);
+    }
     .sticked-top-bar ul.categories-menu li:last-child a {
         margin-right: 0px;
     }
@@ -125,12 +157,19 @@
         background-color: var(--main-color);
         color: #fff !important;
     }
+    .sticked-top-bar.filled ul.categories-menu li a.active {
+        background-color: var(--sec-color);
+        color: #fff !important;
+    }
     .modal-close {
         position: absolute !important;
         right: auto;
         left: 17px;
         top: 7px;
         color: black !important;
+    }
+    .sticked-top-bar ul.categories-menu .scroll-container {
+        padding: 10px 0;
     }
 }
 .sticked-top-bar ul.categories-menu li .categoriesPopupMenu {

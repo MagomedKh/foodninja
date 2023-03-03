@@ -20,6 +20,7 @@
         "@testing-library/user-event": "^12.8.3",
         "@vkontakte/vk-bridge": "^2.5.3",
         "axios": "^0.21.1",
+        "clsx": "^1.2.1",
         "date-fns": "^2.29.3",
         "fuse.js": "^6.6.2",
         "leaflet": "^1.9.3",
