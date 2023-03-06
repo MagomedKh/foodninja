@@ -4,11 +4,12 @@ import { useSelector } from "react-redux";
 import { Container } from "@mui/material";
 import { _isMobile } from "./helpers.js";
 import { Swiper, SwiperSlide } from "swiper/react/swiper-react";
-import { Autoplay, Navigation, Pagination } from "swiper";
+import { Autoplay, Navigation, Pagination, EffectCoverflow } from "swiper";
 import "swiper/swiper.min.css";
 import "swiper/modules/navigation/navigation.min.css";
 import "swiper/modules/pagination/pagination.min.css";
 import { SaleModal } from "./";
+import clsx from "clsx";
 
 export default function Footer() {
     const { sales } = useSelector(({ pages }) => {
@@ -61,10 +62,24 @@ export default function Footer() {
         }
     }, []);
 
-    let swiperProps = { pagination: true, slidesPerView: 1 };
+    let swiperProps = {
+        pagination: true,
+        slidesPerView: 1,
+        modules: [Autoplay, Pagination],
+    };
     if (_isMobile()) {
         if (bannerType === "fullwidth") {
             swiperProps.spaceBetween = 15;
+            swiperProps.modules.push(EffectCoverflow);
+            swiperProps.effect = "coverflow";
+            swiperProps.coverflowEffect = {
+                rotate: 0,
+                stretch: 25,
+                scale: 0.85,
+                depth: 0,
+                modifier: 1,
+                slideShadows: false,
+            };
         } else {
             swiperProps.spaceBetween = 30;
         }
@@ -74,10 +89,24 @@ export default function Footer() {
             };
         }
     } else {
+        swiperProps.modules.push(Pagination);
         swiperProps.navigation = true;
         if (banners.autoplay) {
             swiperProps.autoplay = {
                 delay: banners.autoplay,
+            };
+        }
+        if (bannerType === "fullwidth") {
+            swiperProps.modules.push(EffectCoverflow);
+            swiperProps.speed = 500;
+            swiperProps.effect = "coverflow";
+            swiperProps.coverflowEffect = {
+                rotate: 0,
+                stretch: 0,
+                scale: 0.85,
+                depth: 0,
+                modifier: 1,
+                slideShadows: false,
             };
         }
     }
@@ -89,11 +118,10 @@ export default function Footer() {
                     <Container>
                         <Swiper
                             {...swiperProps}
-                            modules={[Autoplay, Navigation, Pagination]}
-                            className={`banners-swiper ${
-                                bannerType === "fullwidth" ? "fullwidth" : ""
-                            }`}
-                            spaceBetween={80}
+                            className={clsx(
+                                "banners-swiper",
+                                bannerType === "fullwidth" && "fullwidth"
+                            )}
                             onSwiper={(swiper) => setSwiper(swiper)}
                         >
                             {banners.banners.map((banner, key) => (
@@ -134,10 +162,10 @@ export default function Footer() {
                     <Container>
                         <Swiper
                             {...swiperProps}
-                            modules={[Autoplay, Pagination]}
-                            className={`bannersMobile-swiper ${
-                                bannerType === "fullwidth" ? "fullwidth" : ""
-                            }`}
+                            className={clsx(
+                                "bannersMobile-swiper",
+                                bannerType === "fullwidth" && "fullwidth"
+                            )}
                         >
                             {bannersMobile.banners.map((banner, key) => (
                                 <SwiperSlide key={key} className="banner-slide">
