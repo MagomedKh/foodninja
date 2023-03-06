@@ -1,77 +1,79 @@
 import * as React from "react";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Container, Grid } from "@mui/material";
+import { Container, Divider, Grid } from "@mui/material";
 import { _getPlatform } from "../helpers";
 import FooterAddressList from "./FooterAddressList";
 import FooterMenu from "./FooterMenu";
 import FooterSocialLinks from "./FooterSocialLinks";
 import "../../css/footer.css";
+import clsx from "clsx";
 
 export default function Footer() {
     const { pathname } = useLocation();
-    const { config } = useSelector(({ config }) => {
+    const { config, footerType } = useSelector(({ config }) => {
         return {
             config: config.data,
+            footerType: config.data.CONFIG_type_footer,
         };
     });
 
     if (_getPlatform() !== "site") return <div className="footer-space"></div>;
 
     return (
-        <div className="footer">
+        <div className={clsx("footer", footerType === "one" && "white")}>
             <Container className="footer--container">
                 {pathname === "/" && (
                     <div className="about">
+                        {footerType === "one" ? (
+                            <Divider
+                                sx={{
+                                    my: "6px",
+                                    borderColor:
+                                        footerType === "one"
+                                            ? "rgba(0, 0, 0, 0.12)"
+                                            : "#3c3b3b",
+                                }}
+                            />
+                        ) : null}
                         <h1>{config.siteTitle}</h1>
                         <div
                             dangerouslySetInnerHTML={{
                                 __html: config.CONFIG_footer_text,
                             }}
                         ></div>
-                        <hr className="about-divider" />
+                        {footerType === "one" ? null : (
+                            <hr className="about-divider" />
+                        )}
                     </div>
                 )}
+                {footerType === "one" ? (
+                    <Divider
+                        sx={{
+                            my: "3rem",
+                            borderColor:
+                                footerType === "one"
+                                    ? "rgba(0, 0, 0, 0.12)"
+                                    : "#3c3b3b",
+                        }}
+                    />
+                ) : null}
 
                 <Grid container spacing={5}>
                     <Grid item sm={12} md={4} sx={{ width: 1 }}>
-                        {config.CONFIG_type_footer !== "one" &&
-                            config.CONFIG_type_footer !== "two" && (
-                                <>
-                                    <img
-                                        src={config.CONFIG_company_logo_footer}
-                                        className="footer--logo"
-                                        alt="Логотип"
-                                    />
-                                    <FooterAddressList />
-                                </>
-                            )}
-
-                        {(config.CONFIG_type_footer === "one" ||
-                            config.CONFIG_type_footer === "two") && (
-                            <FooterMenu />
-                        )}
+                        <img
+                            src={
+                                footerType === "one"
+                                    ? config.CONFIG_company_logo_main
+                                    : config.CONFIG_company_logo_footer
+                            }
+                            className="footer--logo"
+                            alt="Логотип"
+                        />
+                        <FooterAddressList />
                     </Grid>
                     <Grid item sm={12} md={4} sx={{ width: 1 }}>
-                        {config.CONFIG_type_footer !== "one" &&
-                            config.CONFIG_type_footer !== "two" && (
-                                <FooterMenu />
-                            )}
-
-                        {config.CONFIG_type_footer === "one" && (
-                            <FooterAddressList />
-                        )}
-
-                        {config.CONFIG_type_footer === "two" && (
-                            <>
-                                <img
-                                    src={config.CONFIG_company_logo_footer}
-                                    className="footer--logo"
-                                    alt="Логотип"
-                                />
-                                <FooterSocialLinks />
-                            </>
-                        )}
+                        <FooterMenu />
                     </Grid>
                     <Grid
                         item
@@ -80,50 +82,12 @@ export default function Footer() {
                         sx={{ width: 1 }}
                         className="right-col"
                     >
-                        {config.CONFIG_type_footer !== "one" &&
-                            config.CONFIG_type_footer !== "two" && (
-                                <>
-                                    <h4>
-                                        <a
-                                            href={`tel:${config.CONFIG_format_phone}`}
-                                        >
-                                            {config.CONFIG_format_phone}
-                                        </a>
-                                    </h4>
-                                    <FooterSocialLinks />
-                                </>
-                            )}
-
-                        {config.CONFIG_type_footer === "one" && (
-                            <>
-                                <img
-                                    src={config.CONFIG_company_logo_footer}
-                                    className="footer--logo"
-                                    alt="Логотип"
-                                />
-                                <h4>
-                                    <a
-                                        href={`tel:${config.CONFIG_format_phone}`}
-                                    >
-                                        {config.CONFIG_format_phone}
-                                    </a>
-                                </h4>
-                                <FooterSocialLinks />
-                            </>
-                        )}
-
-                        {config.CONFIG_type_footer === "two" && (
-                            <>
-                                <h4>
-                                    <a
-                                        href={`tel:${config.CONFIG_format_phone}`}
-                                    >
-                                        {config.CONFIG_format_phone}
-                                    </a>
-                                </h4>
-                                <FooterAddressList />
-                            </>
-                        )}
+                        <h4>
+                            <a href={`tel:${config.CONFIG_format_phone}`}>
+                                {config.CONFIG_format_phone}
+                            </a>
+                        </h4>
+                        <FooterSocialLinks />
                     </Grid>
                 </Grid>
 

@@ -3,9 +3,10 @@ import { Divider } from "@mui/material";
 import { getDay } from "date-fns";
 
 const FooterAddressList = () => {
-    const { config } = useSelector(({ config }) => {
+    const { config, footerType } = useSelector(({ config }) => {
         return {
             config: config.data,
+            footerType: config.data.CONFIG_type_footer,
         };
     });
 
@@ -59,7 +60,10 @@ const FooterAddressList = () => {
                         <Divider
                             sx={{
                                 my: "6px",
-                                borderColor: "#3c3b3b",
+                                borderColor:
+                                    footerType === "one"
+                                        ? "rgba(0, 0, 0, 0.12)"
+                                        : "#3c3b3b",
                                 width: "200px",
                             }}
                         />
@@ -110,7 +114,10 @@ const FooterAddressList = () => {
                             <Divider
                                 sx={{
                                     my: "6px",
-                                    borderColor: "#3c3b3b",
+                                    borderColor:
+                                        footerType === "one"
+                                            ? "rgba(0, 0, 0, 0.12)"
+                                            : "#3c3b3b",
                                     width: "200px",
                                 }}
                             />
