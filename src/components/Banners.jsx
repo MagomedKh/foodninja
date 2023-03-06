@@ -89,7 +89,7 @@ export default function Footer() {
             };
         }
     } else {
-        swiperProps.modules.push(Pagination);
+        swiperProps.modules.push(Navigation);
         swiperProps.navigation = true;
         if (banners.autoplay) {
             swiperProps.autoplay = {
