@@ -9,7 +9,6 @@
 }
 .sticked-top-bar.white {
     background-color: #fff;
-    box-shadow: 0 0 10px rgb(0 0 0 / 10%);
 }
 
 .sticked-top-bar.filled {
@@ -118,6 +117,7 @@
     .sticked-top-bar {
         background: white;
         padding: 8px 0;
+        margin-bottom: 16px;
     }
     .sticked-top-bar ul.categories-menu {
         overflow-y: auto;
