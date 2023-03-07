@@ -149,7 +149,13 @@ export default function ChooseTown() {
 
     let dialogProps = { open: config.openTownModal, maxWidth: "md" };
     if (_isMobile()) {
-        dialogProps.TransitionComponent = Transition;
+        if (
+            !config.data.CONFIG_main_site_choose_town ||
+            config.data.CONFIG_main_site_choose_town !== "on"
+        ) {
+            dialogProps.TransitionComponent = Transition;
+        }
+
         dialogProps.fullScreen = true;
         dialogProps.scroll = "body";
     }
@@ -179,7 +185,11 @@ export default function ChooseTown() {
                                 <CloseIcon />
                             </IconButton>
                         )}
-                        <h2>Выберите город</h2>
+                        <img
+                            src={config.data.CONFIG_company_logo_main}
+                            className="choose-town--logo"
+                            alt="Логотип"
+                        />
                         <div className="modal-alert--inner">
                             <TextField
                                 size="small"

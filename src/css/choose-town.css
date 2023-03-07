@@ -39,6 +39,11 @@
 .choosenTown {
     color: var(--main-color);
 }
+.choose-town--logo {
+    width: auto;
+    height: 50px;
+    margin-bottom: 16px;
+}
 .mobile-menu--choose-town {
     display: flex;
     padding: 10px 20px;
