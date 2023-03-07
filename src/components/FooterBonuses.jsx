@@ -196,7 +196,11 @@ export default function BonusesProductsModal() {
             <Dialog
                 maxWidth="md"
                 fullWidth
-                onClose={handleClose}
+                onClose={(event, reason) => {
+                    if (reason === "escapeKeyDown") {
+                        handleClose();
+                    }
+                }}
                 {...dialogProps}
                 className="bonuses-modal--dialog"
                 sx={{

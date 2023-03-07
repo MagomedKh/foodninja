@@ -89,6 +89,11 @@ export default function Promocode() {
                     id="promocode"
                     label="Промокод"
                     onInput={handleChangePromocode}
+                    onKeyPress={(e) => {
+                        if (e.key === "Enter") {
+                            handleApplyPromocode();
+                        }
+                    }}
                     value={promocode || ""}
                     disabled={
                         (cartPromocode.code !== undefined &&

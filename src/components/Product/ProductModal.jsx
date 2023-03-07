@@ -162,7 +162,10 @@ export default function ProductModal() {
         dispatch(decreaseProductInCart(productModal));
     };
 
-    let dialogProps = { open: openProductModal, maxWidth: "md" };
+    let dialogProps = {
+        open: openProductModal,
+        maxWidth: "md",
+    };
     if (_isMobile()) {
         dialogProps.TransitionComponent = Transition;
         dialogProps.fullScreen = true;
@@ -223,7 +226,15 @@ export default function ProductModal() {
     };
 
     return (
-        <Dialog {...dialogProps} className={"product-modal-dialog"}>
+        <Dialog
+            {...dialogProps}
+            className={"product-modal-dialog"}
+            onClose={(event, reason) => {
+                if (reason === "escapeKeyDown") {
+                    handleClose();
+                }
+            }}
+        >
             {" "}
             {productModal ? (
                 <div className="product-modal-wrapper">
