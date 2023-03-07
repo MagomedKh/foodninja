@@ -16,6 +16,7 @@ import { _getPlatform, _isMobile } from "../helpers";
 import PlaceholderImageProduct from "./PlaceholderImageProduct";
 import GroupIcon from "@mui/icons-material/Group";
 import soon from "../../img/photo-soon.svg";
+import clsx from "clsx";
 
 export default function Product({ product, disabled }) {
     const dispatch = useDispatch();
@@ -53,9 +54,10 @@ export default function Product({ product, disabled }) {
 
     return (
         <div
-            className={`product-grid-item ${
-                productLayout === "one" ? "one-layout" : ""
-            }`}
+            className={clsx(
+                "product-grid-item",
+                productLayout === "one" && "one-layout"
+            )}
         >
             <div className="product product-item">
                 <div className="product--labels-wrapper">

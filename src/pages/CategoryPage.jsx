@@ -16,9 +16,10 @@ import { _isMobile, _clone, _isCategoryDisabled } from "../components/helpers";
 const CategoryPage = () => {
     const { pathname } = useLocation();
 
-    const { config } = useSelector(({ config }) => {
+    const { config, productLayout } = useSelector(({ config }) => {
         return {
             config: config.data,
+            productLayout: config.data.CONFIG_type_products,
         };
     });
 
@@ -92,37 +93,48 @@ const CategoryPage = () => {
                         {currentCategory.timeLimitEnd}
                     </Alert>
                 ) : null}
-                <div className="product--category-tags-container">
-                    {currentCategory.tags &&
-                        Object.values(currentCategory.tags).map(
-                            (tag, tagIndex) => (
-                                <Button
-                                    key={`tag-${tag.term_id}`}
-                                    variant="button"
-                                    className={`btn btn--tag ${
-                                        activeCategoryTags.hasOwnProperty(
-                                            currentCategory.term_id
-                                        )
-                                            ? activeCategoryTags[
-                                                  currentCategory.term_id
-                                              ].includes(tag.term_id)
-                                                ? "btn--tag-active btn--action"
+                {Object.values(currentCategory.tags).length ? (
+                    <Box
+                        className="product--category-tags-container"
+                        sx={
+                            productLayout === "one"
+                                ? {
+                                      mb: "8px",
+                                  }
+                                : {}
+                        }
+                    >
+                        {currentCategory.tags &&
+                            Object.values(currentCategory.tags).map(
+                                (tag, tagIndex) => (
+                                    <Button
+                                        key={`tag-${tag.term_id}`}
+                                        variant="button"
+                                        className={`btn btn--tag ${
+                                            activeCategoryTags.hasOwnProperty(
+                                                currentCategory.term_id
+                                            )
+                                                ? activeCategoryTags[
+                                                      currentCategory.term_id
+                                                  ].includes(tag.term_id)
+                                                    ? "btn--tag-active btn--action"
+                                                    : ""
                                                 : ""
-                                            : ""
-                                    }`}
-                                    sx={{ mr: 1, mb: 1 }}
-                                    onClick={() =>
-                                        handleClickCategoryTag(
-                                            currentCategory.term_id,
-                                            tag.term_id
-                                        )
-                                    }
-                                >
-                                    {tag.name}
-                                </Button>
-                            )
-                        )}
-                </div>
+                                        }`}
+                                        sx={{ mr: 1, mb: 1 }}
+                                        onClick={() =>
+                                            handleClickCategoryTag(
+                                                currentCategory.term_id,
+                                                tag.term_id
+                                            )
+                                        }
+                                    >
+                                        {tag.name}
+                                    </Button>
+                                )
+                            )}
+                    </Box>
+                ) : null}
                 <div className="product-grid-list">
                     {filteredProducts ? (
                         filteredProducts

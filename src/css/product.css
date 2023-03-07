@@ -2,6 +2,10 @@
     font-size: 0;
 }
 
+.product-grid-list:has(.product-grid-item.one-layout) {
+    margin: -16px 0 0 -16px;
+}
+
 .product-grid-item {
     width: 25%;
     display: inline-block;
@@ -30,9 +34,14 @@
     background: white;
     overflow: hidden;
 }
+.product-grid-item.one-layout .product {
+    box-shadow: 0 0 20px rgb(0 0 0 / 10%);
+}
+
 .product.disabled {
     opacity: 0.5;
 }
+
 .product:hover {
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
     z-index: 1;
@@ -40,6 +49,10 @@
     border-radius: 15px;
     transition: box-shadow 0.15s;
 }
+.product-grid-item.one-layout .product:hover {
+    box-shadow: 0 0 20px rgb(0 0 0 / 20%);
+}
+
 .product .lazyload-wrapper {
     height: 100%;
     display: flex;
@@ -73,6 +86,7 @@
 
 .product--image .placeholder img {
     width: 100%;
+    left: 0;
 }
 .product--image img,
 .product.open .product--image img {
@@ -285,8 +299,24 @@
     .product--category-container {
         padding: 0;
     }
+    .product-grid-list:has(.product-grid-item.one-layout) {
+        margin: -16px 0 0 -16px;
+    }
     .product-grid-item {
+        margin-bottom: 20px !important;
+        border-bottom: 1px solid #eee;
+        border-radius: 0;
+        padding: 0 0 25px;
         width: 100%;
+    }
+    .product-grid-item.one-layout {
+        margin-bottom: 0 !important;
+        margin: 16px 0 0 16px;
+        border-bottom: unset;
+        padding: 0;
+        margin: 16px 0 0 16px;
+        width: calc(50% - 16px);
+        display: inline-block;
     }
     .product {
         padding: 0;
@@ -296,15 +326,16 @@
         display: flex;
         border-radius: 0;
     }
-    .product-grid-item {
-        margin-bottom: 20px !important;
-        border-bottom: 1px solid #eee;
-        border-radius: 0;
-        padding: 0 0 25px;
-        width: 100%;
+    .product-grid-item.one-layout .product {
+        display: block;
+        border-radius: 15px;
     }
     .product-grid-list:last-child {
         border-bottom: none !important;
+    }
+    .product--image .placeholder img {
+        width: 100%;
+        left: 0;
     }
     .product .product--image {
         min-width: 130px !important;
@@ -313,6 +344,17 @@
         padding: 0;
         height: auto;
     }
+
+    .product-grid-item.one-layout .product .product--image {
+        min-width: unset !important;
+        margin-right: 0;
+        width: 100%;
+        padding: 0;
+        height: auto;
+        position: relative;
+        padding: 0 0 75% 0;
+    }
+
     .product .product--image img {
         border-radius: 10px;
         position: initial;
@@ -322,11 +364,26 @@
         left: 0;
         transform: translate(0);
     }
+    .product-grid-item.one-layout .product .product--image img {
+        border-radius: 0;
+        position: absolute;
+        top: 0;
+        left: auto;
+    }
+
+    .product-grid-item.one-layout .product .product--image .placeholder img {
+        left: 0;
+    }
+
     .product--labels-wrapper {
         display: block;
         width: 150px;
         top: 0;
         left: 0;
+    }
+    .product-grid-item.one-layout .product--labels-wrapper {
+        top: 20px;
+        left: 20px;
     }
     .product--label {
         display: inline-block;
@@ -336,9 +393,16 @@
         margin-top: 0;
         min-height: auto;
     }
+    .product-grid-item.one-layout .product--title {
+        margin-top: 10px;
+        min-height: 50px;
+    }
     .product--inner-wrapper {
         width: 100%;
         padding: 0;
+    }
+    .product-grid-item.one-layout .product--inner-wrapper {
+        padding: 0 20px 20px 20px;
     }
     .product:hover {
         box-shadow: none;
@@ -359,5 +423,19 @@
     }
     .cart--product .product--quantity .quantity {
         height: 28px;
+    }
+}
+
+@media (max-width: 500px) {
+    .product-grid-list:has(.product-grid-item.one-layout) {
+        margin: 0;
+    }
+    .product-grid-item.one-layout {
+        width: 100%;
+        margin: 0 0 20px 0;
+        margin-bottom: 20px !important;
+    }
+    .product-grid-item.one-layout .product--title {
+        min-height: unset;
     }
 }
