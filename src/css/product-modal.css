@@ -33,6 +33,7 @@
     .product-modal-wrapper .modal-close {
         right: 15px;
         left: unset;
+        background-color: #fff;
     }
     .product-modal-wrapper .modal-close.vk {
         left: 15px;
@@ -52,6 +53,7 @@
     .product-modal-wrapper .modal-close {
         left: 15px;
         right: unset;
+        background-color: #fff;
     }
 }
 
