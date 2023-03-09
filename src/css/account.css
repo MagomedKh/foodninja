@@ -25,6 +25,7 @@
     backface-visibility: hidden;
     height: 100%;
     position: relative;
+    background-color: white;
 }
 .account--user-order--total,
 .account--user-order--header,

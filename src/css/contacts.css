@@ -4,6 +4,7 @@
     border-radius: 10px;
     position: relative;
     margin-bottom: 2rem;
+    background-color: white;
 }
 .contacts--block:last-child {
     margin-bottom: 0;

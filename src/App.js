@@ -58,7 +58,7 @@ import {
 import { ru } from "date-fns/locale";
 import { setDefaultOptions } from "date-fns";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
-import { Container } from "@mui/material";
+import { Box, Container } from "@mui/material";
 import {
     CeraFont,
     ManropeFont,
@@ -105,12 +105,16 @@ function App() {
     setDefaultOptions({ locale: ru });
 
     const { user } = useSelector((state) => state.user);
-    const { config, status } = useSelector(({ config }) => {
-        return {
-            config: config.data,
-            status: config.status,
-        };
-    }, shallowEqual);
+    const { config, status, siteBackgroundColor } = useSelector(
+        ({ config }) => {
+            return {
+                config: config.data,
+                status: config.status,
+                siteBackgroundColor: config.data.CONFIG_background_color,
+            };
+        },
+        shallowEqual
+    );
     const { categories } = useSelector((state) => state.products, shallowEqual);
     const { items: cartItems } = useSelector(
         (state) => state.cart,
@@ -289,7 +293,14 @@ function App() {
                     <GoogleReCaptchaProvider
                         reCaptchaKey={config.CONFIG_auth_recaptcha_site_token}
                     >
-                        <div>
+                        <Box
+                            sx={
+                                siteBackgroundColor &&
+                                siteBackgroundColor !== "default"
+                                    ? { bgcolor: siteBackgroundColor }
+                                    : {}
+                            }
+                        >
                             <Routes>
                                 <Route exact path="/" element={<Home />} />
                                 <Route
@@ -357,7 +368,7 @@ function App() {
                                 ""
                             )}
                             <WeClosed />
-                        </div>
+                        </Box>
                     </GoogleReCaptchaProvider>
                 </div>
             ) : (
