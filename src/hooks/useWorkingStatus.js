@@ -1,14 +1,6 @@
 import React, { useMemo } from "react";
 import { useSelector } from "react-redux";
-import {
-    getDay,
-    isAfter,
-    isBefore,
-    isWithinInterval,
-    set,
-    startOfDay,
-    toDate,
-} from "date-fns";
+import { getDay, isWithinInterval, set, startOfDay } from "date-fns";
 
 const useWorkingStatus = () => {
     const workingTime = useSelector((state) => state.config.data.workingTime);
@@ -93,25 +85,57 @@ const useWorkingStatus = () => {
           })
         : null;
 
-    const workingStatus =
-        workingTime.length &&
-        ((todayStartWorkTime &&
-            todayEndWorkTime &&
-            isWithinInterval(new Date(), {
+    const isWithinWorkDates = () => {
+        try {
+            return isWithinInterval(new Date(), {
                 start: todayStartWorkTime,
                 end: todayEndWorkTime,
-            })) ||
+            });
+        } catch (error) {
+            console.log(
+                `${error.message}, Something wrong in working interval`
+            );
+            return true;
+        }
+    };
+
+    const isWithinAfterMidnightWorkDates = () => {
+        try {
+            return isWithinInterval(new Date(), {
+                start: startOfDay(new Date()),
+                end: yesterdayAfterMidnightEndWorkTime,
+            });
+        } catch (error) {
+            console.log(
+                `${error.message}, Something wrong in after midnight interval`
+            );
+            return false;
+        }
+    };
+
+    const workingStatus =
+        workingTime.length &&
+        ((todayStartWorkTime && todayEndWorkTime && isWithinWorkDates()) ||
             (yesterdayAfterMidnightEndWorkTime &&
-                isWithinInterval(new Date(), {
-                    start: startOfDay(new Date()),
-                    end: yesterdayAfterMidnightEndWorkTime,
-                })));
+                isWithinAfterMidnightWorkDates()));
+
+    const isWithinMaintenanceDates = () => {
+        try {
+            return isWithinInterval(new Date(), {
+                start: maintenanceDateStart,
+                end: maintenanceDateEnd,
+            });
+        } catch (error) {
+            console.log(
+                `${error.message}, Something wrong in maintenance interval`
+            );
+            return false;
+        }
+    };
 
     const maintenanceStatus =
-        !isWithinInterval(new Date(), {
-            start: maintenanceDateStart,
-            end: maintenanceDateEnd,
-        }) && !window.location.href.includes("maintenance_preview");
+        !isWithinMaintenanceDates() &&
+        !window.location.href.includes("maintenance_preview");
 
     return {
         workingStatus,
