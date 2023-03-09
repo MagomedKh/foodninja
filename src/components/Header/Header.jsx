@@ -23,6 +23,7 @@ import HeaderMobileMenu from "./HeaderMobileMenu";
 import { ReactComponent as HeaderPhoneIcon } from "../../img/header-phone.svg";
 import { ReactComponent as HeaderClockIcon } from "../../img/header-clock.svg";
 import HeaderTopMenu from "./HeaderTopMenu";
+import clsx from "clsx";
 
 function Header() {
     const dispatch = useDispatch();
@@ -31,14 +32,17 @@ function Header() {
 
     useEffect(() => dispatch(closeMobileMenu()), [dispatch]);
 
-    const { config, topMenu, user } = useSelector(({ config, pages, user }) => {
-        return {
-            configStatus: config.status,
-            config: config.data,
-            topMenu: pages.topMenu,
-            user: user.user,
-        };
-    });
+    const { config, topMenu, user, headerType } = useSelector(
+        ({ config, pages, user }) => {
+            return {
+                configStatus: config.status,
+                config: config.data,
+                topMenu: pages.topMenu,
+                user: user.user,
+                headerType: config.data.CONFIG_type_header,
+            };
+        }
+    );
     const { mobileMenuOpen } = useSelector((state) => state.header);
 
     const hadleClickAccount = useCallback(() => {
@@ -64,23 +68,25 @@ function Header() {
             <AppBar position="static" className="header-bar">
                 <Container maxWidth="lg">
                     <Toolbar
-                        className="header-wrapper"
-                        sx={{
-                            minHeight: "40px",
-                            "@media (min-width: 600px)": {
-                                minHeight: "50px",
-                            },
-                        }}
+                        className={clsx(
+                            "header-wrapper",
+                            headerType === "one" && "one-type"
+                        )}
                     >
-                        <div className="header-logo-wrapper">
-                            <Link to="/" className="header-logo-link">
-                                <img
-                                    src={config.CONFIG_company_logo_main}
-                                    className="header-logo"
-                                    alt="Логотип"
-                                />
-                            </Link>
-                        </div>
+                        {headerType === "one" &&
+                        !stepperPage.includes(pathname) ? (
+                            <div></div>
+                        ) : (
+                            <div className="header-logo-wrapper">
+                                <Link to="/" className="header-logo-link">
+                                    <img
+                                        src={config.CONFIG_company_logo_main}
+                                        className="header-logo"
+                                        alt="Логотип"
+                                    />
+                                </Link>
+                            </div>
+                        )}
 
                         {_isMobile() && (
                             <HeaderMobileMenu
@@ -94,7 +100,7 @@ function Header() {
                             <div className="standart-header">
                                 <div className="header-phone">
                                     <HeaderPhoneIcon className="icn" />
-                                    <div>
+                                    <div className="header-phone--content">
                                         {config.towns &&
                                         config.towns.length &&
                                         _getPlatform() !== "vk" ? (
@@ -158,27 +164,48 @@ function Header() {
                                         </a>
                                     </div>
                                 </div>
-                                <div className="header-work">
-                                    <HeaderClockIcon className="icn" />
-                                    <div className="info-wrapper">
-                                        {config &&
-                                        config.CONFIG_format_start_work &&
-                                        config.CONFIG_format_end_work ? (
-                                            <>
-                                                <div className="title">
-                                                    Мы работаем
-                                                </div>
+
+                                {headerType !== "one" ? (
+                                    <div className="header-work">
+                                        <HeaderClockIcon className="icn" />
+                                        <div className="info-wrapper">
+                                            {config &&
+                                            config.CONFIG_format_start_work &&
+                                            config.CONFIG_format_end_work ? (
+                                                <>
+                                                    <div className="title">
+                                                        Мы работаем
+                                                    </div>
+                                                    <div className="info">
+                                                        {`с ${config.CONFIG_format_start_work} до ${config.CONFIG_format_end_work}`}
+                                                    </div>
+                                                </>
+                                            ) : (
                                                 <div className="info">
-                                                    {`с ${config.CONFIG_format_start_work} до ${config.CONFIG_format_end_work}`}
+                                                    Сегодня мы не работаем
                                                 </div>
-                                            </>
-                                        ) : (
-                                            <div className="info">
-                                                Сегодня мы не работаем
-                                            </div>
-                                        )}
+                                            )}
+                                        </div>
                                     </div>
-                                </div>
+                                ) : null}
+
+                                {headerType === "one" ? (
+                                    <div className="header-logo-wrapper">
+                                        <Link
+                                            to="/"
+                                            className="header-logo-link"
+                                        >
+                                            <img
+                                                src={
+                                                    config.CONFIG_company_logo_main
+                                                }
+                                                className="header-logo"
+                                                alt="Логотип"
+                                            />
+                                        </Link>
+                                    </div>
+                                ) : null}
+
                                 {!_isMobile() &&
                                     config.CONFIG_auth_type !== "noauth" && (
                                         <div className="header--right-col">
