@@ -173,6 +173,11 @@
     background: black;
     color: white;
 }
+.mobile-menu.white .MuiDrawer-paper {
+    background: white;
+    color: black;
+}
+
 .mobile-menu-wrapper {
     width: 350px;
 }
@@ -183,6 +188,10 @@
     background: black;
     padding: 10px 20px;
 }
+.mobile-menu.white .mobile-menu-wrapper ul {
+    background: white;
+}
+
 .mobile-menu--user-account-button {
     padding: 20px 20px 10px 20px;
 }
@@ -196,6 +205,10 @@
     padding-left: 3px;
     text-decoration: none;
 }
+.mobile-menu.white .mobile-menu-wrapper li a {
+    color: black;
+}
+
 .mobile-menu-wrapper li a:hover {
     color: var(--main-color);
 }
@@ -216,22 +229,35 @@
     margin: 0 0 20px !important;
     padding: 10px 20px;
 }
+.mobile-menu.white .header-work,
+.mobile-menu.white .header-phone {
+    color: black;
+}
+
 .mobile-menu--contacts {
     display: flex;
     align-items: center;
     color: white;
     padding: 10px 20px;
 }
+
 .mobile-menu--contacts svg {
     width: 28px;
     fill: var(--main-color);
     margin-right: 1rem !important;
 }
+
 .mobile-menu--contacts a {
     text-decoration: none;
     font-size: 20px;
     color: white;
+    font-weight: bold;
 }
+.mobile-menu.white .mobile-menu--contacts a {
+    color: black;
+    font-weight: bold;
+}
+
 .modal-alert--wrapper.choose-town .modal-alert--inner button {
     width: 100%;
     padding: 0px !important;

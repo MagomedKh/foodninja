@@ -9,6 +9,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import { _getPlatform } from "../helpers";
 import HeaderTopMenu from "./HeaderTopMenu";
+import clsx from "clsx";
 
 const HeaderMobileMenu = ({
     activeTopMenu,
@@ -20,14 +21,17 @@ const HeaderMobileMenu = ({
     const dispatch = useDispatch();
 
     const { mobileMenuOpen } = useSelector((state) => state.header);
-    const { config, topMenu, user } = useSelector(({ config, pages, user }) => {
-        return {
-            configStatus: config.status,
-            config: config.data,
-            topMenu: pages.topMenu,
-            user: user.user,
-        };
-    });
+    const { config, topMenu, user, mobileMenuType } = useSelector(
+        ({ config, pages, user }) => {
+            return {
+                configStatus: config.status,
+                config: config.data,
+                topMenu: pages.topMenu,
+                user: user.user,
+                mobileMenuType: config.data.CONFIG_type_mobile_menu,
+            };
+        }
+    );
 
     const toggleMobileMenu = () => {
         if (!mobileMenuOpen) {
@@ -45,7 +49,10 @@ const HeaderMobileMenu = ({
                 anchor="left"
                 open={mobileMenuOpen}
                 onClose={toggleMobileMenu}
-                className="mobile-menu"
+                className={clsx(
+                    "mobile-menu",
+                    mobileMenuType === "one" && "white"
+                )}
             >
                 <div className="mobile-menu-wrapper">
                     <div className="mobile-menu--header">
@@ -58,14 +65,26 @@ const HeaderMobileMenu = ({
                         </IconButton>
                         <div className="header-logo-wrapper">
                             <img
-                                src={config.CONFIG_company_logo_footer}
+                                src={
+                                    mobileMenuType === "one"
+                                        ? config.CONFIG_company_logo_main
+                                        : config.CONFIG_company_logo_footer
+                                }
                                 className="header-logo"
                                 alt="Логотип"
                             />
                         </div>
                     </div>
 
-                    <Divider sx={{ bgcolor: "#333", my: "10px" }} />
+                    <Divider
+                        sx={{
+                            bgcolor:
+                                mobileMenuType === "one"
+                                    ? "rgba(0, 0, 0, 0.12)"
+                                    : "#333",
+                            my: "10px",
+                        }}
+                    />
 
                     {config.towns &&
                     config.towns.length &&
@@ -108,7 +127,10 @@ const HeaderMobileMenu = ({
                             </div>
                             <Divider
                                 sx={{
-                                    bgcolor: "#333",
+                                    bgcolor:
+                                        mobileMenuType === "one"
+                                            ? "rgba(0, 0, 0, 0.12)"
+                                            : "#333",
                                     my: "10px",
                                 }}
                             />
@@ -146,7 +168,15 @@ const HeaderMobileMenu = ({
                         </div>
                     )}
 
-                    <Divider sx={{ bgcolor: "#333", my: "10px" }} />
+                    <Divider
+                        sx={{
+                            bgcolor:
+                                mobileMenuType === "one"
+                                    ? "rgba(0, 0, 0, 0.12)"
+                                    : "#333",
+                            my: "10px",
+                        }}
+                    />
 
                     <div className="mobile-menu--contacts">
                         <svg
