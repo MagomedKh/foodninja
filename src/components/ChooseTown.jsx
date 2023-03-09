@@ -171,6 +171,14 @@ export default function ChooseTown() {
                             borderRadius: _isMobile() ? "0px" : "20px",
                         },
                     }}
+                    onClose={(event, reason) => {
+                        if (
+                            reason === "escapeKeyDown" &&
+                            config.data.CONFIG_main_site_choose_town !== "on"
+                        ) {
+                            handleAlertClose();
+                        }
+                    }}
                 >
                     <div className="modal-alert--wrapper choose-town">
                         {config.data.CONFIG_main_site_choose_town ===

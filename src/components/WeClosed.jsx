@@ -54,6 +54,18 @@ export default function WeClosed() {
                     borderRadius: _isMobile() ? "0px" : "20px",
                 },
             }}
+            onClose={(event, reason) => {
+                if (reason === "escapeKeyDown") {
+                    if (
+                        !maintenanceStatus &&
+                        CONFIG_maintenance_type !== "canViewSite"
+                    ) {
+                        return;
+                    } else {
+                        handleModalClose();
+                    }
+                }
+            }}
         >
             <div className="modal-alert--wrapper we-closed-modal">
                 {!maintenanceStatus &&
