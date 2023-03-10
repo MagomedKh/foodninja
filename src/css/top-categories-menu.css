@@ -120,14 +120,14 @@
 @media (max-width: 899px) {
     .sticked-top-bar {
         background: white;
-        padding: 8px 0;
+        padding: 0;
         margin-bottom: 16px;
     }
     .sticked-top-bar ul.categories-menu {
         overflow-y: auto;
         white-space: nowrap;
         margin: 0 -16px;
-        padding: 0 16px;
+        padding: 8px 16px;
     }
     .sticked-top-bar ul.categories-menu li a {
         font-size: 14px;
