@@ -73,7 +73,7 @@ const CategoryPage = () => {
     };
 
     return (
-        <Box sx={{ display: "flex", flexDirection: "column", height: "100vh" }}>
+        <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
             <Header />
             <TopCategoriesMenu />
             <Container sx={{ flexGrow: "1" }}>
@@ -121,7 +121,7 @@ const CategoryPage = () => {
                                                     : ""
                                                 : ""
                                         }`}
-                                        sx={{ mr: 1, mb: 1 }}
+                                        sx={{ mr: 1, mb: 1, bgcolor: "#fff" }}
                                         onClick={() =>
                                             handleClickCategoryTag(
                                                 currentCategory.term_id,

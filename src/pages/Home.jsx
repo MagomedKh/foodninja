@@ -155,6 +155,7 @@ export default function Home() {
                                                                 mr: 1,
                                                                 mb: 1,
                                                                 px: 1,
+                                                                bgcolor: "#fff",
                                                             }}
                                                             onClick={() =>
                                                                 handleClickCategoryTag(
