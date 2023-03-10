@@ -533,13 +533,19 @@ const PreorderForm = forwardRef(
                                         seconds: 0,
                                         milliseconds: 0,
                                     });
-                                    if (
-                                        isWithinInterval(el, {
-                                            start: maintenanceStartTime,
-                                            end: maintenanceEndTime,
-                                        })
-                                    ) {
-                                        disabledByMaintenance = true;
+                                    try {
+                                        if (
+                                            isWithinInterval(el, {
+                                                start: maintenanceStartTime,
+                                                end: maintenanceEndTime,
+                                            })
+                                        ) {
+                                            disabledByMaintenance = true;
+                                        }
+                                    } catch (error) {
+                                        console.log(
+                                            `${error.message}, Something wrong in maintenance interval`
+                                        );
                                     }
                                 } else if (
                                     getDayOfYear(preorderDate) ===
