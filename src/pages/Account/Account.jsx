@@ -299,7 +299,13 @@ export default function Account() {
                                     label="Ваше имя"
                                     onInput={handleChangeName}
                                     value={userName}
-                                    sx={{ width: 1, mb: 4 }}
+                                    sx={{
+                                        width: 1,
+                                        mb: 4,
+                                        "& .MuiInputBase-root": {
+                                            bgcolor: "#fff",
+                                        },
+                                    }}
                                     {...userNameProps}
                                 />
 
@@ -342,6 +348,9 @@ export default function Account() {
                                                 minWidth: "80px",
                                                 border: "none",
                                                 mr: "10px",
+                                                "& .MuiInputBase-root": {
+                                                    bgcolor: "#fff",
+                                                },
                                             }}
                                             SelectProps={{
                                                 MenuProps: {
@@ -376,7 +385,12 @@ export default function Account() {
                                             select
                                             disabled={!!user.monthBirthday}
                                             label="Месяц"
-                                            sx={{ width: 0.7 }}
+                                            sx={{
+                                                width: 0.7,
+                                                "& .MuiInputBase-root": {
+                                                    bgcolor: "#fff",
+                                                },
+                                            }}
                                             onChange={handleBirthMonthChange}
                                             SelectProps={{
                                                 MenuProps: {
@@ -443,7 +457,13 @@ export default function Account() {
                                     label="Профиль ВКонтакте"
                                     onInput={handleVKInput}
                                     value={userVK}
-                                    sx={{ width: 1, mb: 4 }}
+                                    sx={{
+                                        width: 1,
+                                        mb: 4,
+                                        "& .MuiInputBase-root": {
+                                            bgcolor: "#fff",
+                                        },
+                                    }}
                                 />
                             </Grid>
 

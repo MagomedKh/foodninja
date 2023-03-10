@@ -223,6 +223,9 @@ const PreorderForm = forwardRef(
                         }}
                         autoWidth
                         MenuProps={{ PaperProps: { sx: { maxHeight: 500 } } }}
+                        sx={{
+                            bgcolor: "#fff",
+                        }}
                     >
                         {!workingStatus ||
                         !maintenanceStatus ||
@@ -331,6 +334,9 @@ const PreorderForm = forwardRef(
                             autoWidth
                             MenuProps={{
                                 PaperProps: { sx: { maxHeight: 500 } },
+                            }}
+                            sx={{
+                                bgcolor: "#fff",
                             }}
                         >
                             {hoursArray.map((el) => {
