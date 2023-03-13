@@ -23,11 +23,14 @@
 .footer.white b {
     color: black;
 }
+.footer .about {
+    margin-bottom: 3rem;
+}
 
 .footer .about-divider {
     border: 0;
     border-bottom: 1px solid #3c3b3b;
-    margin: 3rem 0;
+    margin-bottom: 3rem;
 }
 
 .footer h4 {

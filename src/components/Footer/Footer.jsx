@@ -24,33 +24,35 @@ export default function Footer() {
         <div className={clsx("footer", footerType === "one" && "white")}>
             <Container className="footer--container">
                 {pathname === "/" && (
-                    <div className="about">
-                        {footerType === "one" ? (
-                            <Divider
-                                sx={{
-                                    my: "6px",
-                                    borderColor:
-                                        footerType === "one"
-                                            ? "rgba(0, 0, 0, 0.12)"
-                                            : "#3c3b3b",
+                    <>
+                        <div className="about">
+                            {footerType === "one" ? (
+                                <Divider
+                                    sx={{
+                                        my: "6px",
+                                        borderColor:
+                                            footerType === "one"
+                                                ? "rgba(0, 0, 0, 0.12)"
+                                                : "#3c3b3b",
+                                    }}
+                                />
+                            ) : null}
+                            <h1>{config.siteTitle}</h1>
+                            <div
+                                dangerouslySetInnerHTML={{
+                                    __html: config.CONFIG_footer_text,
                                 }}
-                            />
-                        ) : null}
-                        <h1>{config.siteTitle}</h1>
-                        <div
-                            dangerouslySetInnerHTML={{
-                                __html: config.CONFIG_footer_text,
-                            }}
-                        ></div>
+                            ></div>
+                        </div>
                         {footerType === "one" ? null : (
                             <hr className="about-divider" />
                         )}
-                    </div>
+                    </>
                 )}
                 {footerType === "one" ? (
                     <Divider
                         sx={{
-                            my: "3rem",
+                            mb: "3rem",
                             borderColor:
                                 footerType === "one"
                                     ? "rgba(0, 0, 0, 0.12)"
