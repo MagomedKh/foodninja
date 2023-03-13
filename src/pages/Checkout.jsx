@@ -528,6 +528,11 @@ export default function Checkout() {
                             value="delivery"
                             aria-labelledby="typeDelivery-label"
                             name="typeDelivery"
+                            sx={{
+                                "& .MuiFormControlLabel-root": {
+                                    alignItems: "start",
+                                },
+                            }}
                         >
                             <FormControlLabel
                                 className="custom-radio"
@@ -544,6 +549,11 @@ export default function Checkout() {
                             value="self"
                             aria-labelledby="typeDelivery-label"
                             name="typeDelivery"
+                            sx={{
+                                "& .MuiFormControlLabel-root": {
+                                    alignItems: "start",
+                                },
+                            }}
                         >
                             <FormControlLabel
                                 className="custom-radio"
@@ -569,6 +579,11 @@ export default function Checkout() {
                                 aria-labelledby="typeDelivery-label"
                                 name="typeDelivery"
                                 onChange={handleChangeTypeDelivery}
+                                sx={{
+                                    "& .MuiFormControlLabel-root": {
+                                        alignItems: "start",
+                                    },
+                                }}
                             >
                                 <FormControlLabel
                                     className="custom-radio"
@@ -968,6 +983,12 @@ export default function Checkout() {
                                                 onChange={
                                                     handleChooseDeliveryAddress
                                                 }
+                                                sx={{
+                                                    "& .MuiFormControlLabel-root":
+                                                        {
+                                                            alignItems: "start",
+                                                        },
+                                                }}
                                             >
                                                 {user.addresses &&
                                                     Object.values(
@@ -1232,7 +1253,12 @@ export default function Checkout() {
                                             onChange={
                                                 handleChooseSelfDeliveryAddress
                                             }
-                                            sx={{ mb: 2 }}
+                                            sx={{
+                                                mb: 2,
+                                                "& .MuiFormControlLabel-root": {
+                                                    alignItems: "start",
+                                                },
+                                            }}
                                         >
                                             <FormControlLabel
                                                 className="custom-radio"

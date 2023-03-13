@@ -16,6 +16,10 @@
     margin-top: 1.5rem;
 }
 
+.checkout--self-address-panel .adress-schdedule {
+    color: rgba(0, 0, 0, 0.65);
+}
+
 .custom-radio.new-address .MuiFormControlLabel-label {
     font-weight: bold;
 }
@@ -37,7 +41,8 @@
 }
 
 .checkout--type-delivery .MuiRadio-root {
-    padding: 9px 9px;
+    padding: 5px 9px 9px 9px;
+    height: fit-content;
 }
 .checkout--form-new-address {
     margin-top: 1.5rem;
@@ -169,9 +174,6 @@
 @media (max-width: 899px) {
     .time-order-modal-wrapper h2 {
         text-align: center;
-    }
-    .checkout--self-address-panel .adress-schdedule {
-        margin-top: 4px;
     }
     .checkout--type-delivery
         .checkout--self-address-panel

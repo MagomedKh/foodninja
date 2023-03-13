@@ -295,11 +295,6 @@ a.btn {
     font-size: 16px;
     margin-left: -5px;
 }
-@media (max-width: 899px) {
-    .custom-radio .MuiFormControlLabel-label {
-        line-height: 1;
-    }
-}
 .custom-alert {
     color: black;
     background-color: rgb(255 87 34 / 10%) !important;
