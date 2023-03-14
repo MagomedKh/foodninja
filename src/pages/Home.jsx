@@ -2,6 +2,7 @@ import React, { useState, useMemo } from "react";
 import { useSelector } from "react-redux";
 import {
     Product,
+    ProductModal,
     MobileMiniCart,
     Banners,
     FooterBonuses,
@@ -26,12 +27,15 @@ export default function Home() {
             config: config.data,
         };
     });
-    const { products, categories } = useSelector(({ products }) => {
-        return {
-            products: products.items,
-            categories: products.categories,
-        };
-    });
+    const { products, categories, productModalOpen } = useSelector(
+        ({ products, productModal }) => {
+            return {
+                products: products.items,
+                categories: products.categories,
+                productModalOpen: productModal.openProductModal,
+            };
+        }
+    );
     const [activeCategoryTags, setActiveCategoryTags] = useState({});
 
     const handleClickCategoryTag = (categoryID, tagID) => {
@@ -225,6 +229,8 @@ export default function Home() {
                         <Skeleton variant="text" animation="wave" />
                     )}
                 </Container>
+
+                {productModalOpen ? <ProductModal /> : null}
 
                 <SubscribeSnackbar />
 

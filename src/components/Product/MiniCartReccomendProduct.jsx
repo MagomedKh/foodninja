@@ -18,6 +18,7 @@ export default function MiniCartReccomendProduct({ product }) {
     };
 
     const openModalBtnClick = () => {
+        window.location.hash = "product-modal";
         dispatch(
             setModalProduct({
                 ...product,

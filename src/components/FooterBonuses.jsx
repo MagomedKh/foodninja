@@ -93,7 +93,35 @@ export default function BonusesProductsModal() {
         );
     };
 
+    if (!openBonusesProductsModal && window.location.hash === "bonuses-modal") {
+        window.history.replaceState(
+            "",
+            document.title,
+            window.location.pathname
+        );
+    }
+
+    const hashEventListener = (event) => {
+        if (!window.location.hash && event.oldURL.includes("#bonuses-modal")) {
+            handleClose();
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener("hashchange", hashEventListener);
+        return () => {
+            window.removeEventListener("hashchange", hashEventListener);
+        };
+    }, []);
+
     const handleClose = () => {
+        if (window.location.hash === "#bonuses-modal") {
+            window.history.replaceState(
+                "",
+                document.title,
+                window.location.pathname
+            );
+        }
         dispatch(setOpenBonusesModal(false));
     };
 
@@ -106,6 +134,7 @@ export default function BonusesProductsModal() {
     };
 
     const handleBonusesHandler = () => {
+        window.location.hash = "bonuses-modal";
         dispatch(setOpenBonusesModal(true));
     };
 

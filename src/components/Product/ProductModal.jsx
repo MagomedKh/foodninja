@@ -124,7 +124,31 @@ export default function ProductModal() {
         else setWrongVariant(true);
     };
 
+    const hashEventListener = (event) => {
+        if (
+            (!window.location.hash ||
+                !event.newURL.includes("#product-modal")) &&
+            event.oldURL.includes("#product-modal")
+        ) {
+            handleClose();
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener("hashchange", hashEventListener);
+        return () => {
+            window.removeEventListener("hashchange", hashEventListener);
+        };
+    }, []);
+
     const handleClose = () => {
+        if (window.location.hash === "#product-modal") {
+            window.history.replaceState(
+                "",
+                document.title,
+                window.location.pathname
+            );
+        }
         dispatch(clearModalProduct());
         dispatch(clearModificators());
         setActiveVariant(false);

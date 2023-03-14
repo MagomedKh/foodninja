@@ -349,7 +349,6 @@ function App() {
                                     />
                                     <Route path="*" element={<Page />} />
                                 </Routes>
-                                <ProductModal />
                                 <AuthModal />
                                 <SystemAlerts />
                                 {_getPlatform() === "site" && _isMobile() ? (

@@ -31,6 +31,7 @@ export default function Product({ product, disabled }) {
     );
 
     const openModalBtnClick = () => {
+        window.location.hash = "product-modal";
         dispatch(
             setModalProduct({
                 ...product,

@@ -65,11 +65,40 @@ function MiniCart() {
 
     const { miniCartOpen } = useSelector((state) => state.miniCart);
 
+    const hashEventListener = (event) => {
+        if (!window.location.hash && event.oldURL.includes("#minicart")) {
+            handleCloseMiniCart();
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener("hashchange", hashEventListener);
+        return () => {
+            window.removeEventListener("hashchange", hashEventListener);
+        };
+    }, []);
+
+    if (!miniCartOpen && window.location.hash === "minicart") {
+        window.history.replaceState(
+            "",
+            document.title,
+            window.location.pathname
+        );
+    }
+
     const handleOpenMiniCart = () => {
+        window.location.hash = "minicart";
         dispatch(openMiniCart());
     };
 
     const handleCloseMiniCart = () => {
+        if (window.location.hash === "#bonuses-modal") {
+            window.history.replaceState(
+                "",
+                document.title,
+                window.location.pathname
+            );
+        }
         dispatch(closeMiniCart());
     };
 

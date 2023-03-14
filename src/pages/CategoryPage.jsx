@@ -8,6 +8,7 @@ import {
     TopCategoriesMenu,
     MobileMiniCart,
     Product,
+    ProductModal,
     SearchBar,
     FooterBonuses,
 } from "../components";
@@ -22,12 +23,15 @@ const CategoryPage = () => {
         };
     });
 
-    const { products, categories } = useSelector(({ products }) => {
-        return {
-            products: products.items,
-            categories: products.categories,
-        };
-    });
+    const { products, categories, productModalOpen } = useSelector(
+        ({ products, productModal }) => {
+            return {
+                products: products.items,
+                categories: products.categories,
+                productModalOpen: productModal.openProductModal,
+            };
+        }
+    );
 
     const [allProducts, setAllProducts] = useState([]);
     const [filteredProducts, setFilteredProducts] = useState(
@@ -169,6 +173,7 @@ const CategoryPage = () => {
                     )}
                 </div>
             </Container>
+            {productModalOpen ? <ProductModal /> : null}
             <div className="screen-footer">
                 {_isMobile() ? <MobileMiniCart /> : ""}
                 <FooterBonuses />
