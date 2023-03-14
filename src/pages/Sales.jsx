@@ -29,6 +29,7 @@ export default function Sales() {
     }, []);
 
     const handleSetActiveSale = useCallback((sale) => {
+        window.location.hash = "sale-modal";
         setSaleOpenModal(true);
         setActiveSale(sale);
     }, []);

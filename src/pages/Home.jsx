@@ -27,12 +27,11 @@ export default function Home() {
             config: config.data,
         };
     });
-    const { products, categories, productModalOpen } = useSelector(
+    const { products, categories } = useSelector(
         ({ products, productModal }) => {
             return {
                 products: products.items,
                 categories: products.categories,
-                productModalOpen: productModal.openProductModal,
             };
         }
     );
@@ -230,7 +229,7 @@ export default function Home() {
                     )}
                 </Container>
 
-                {productModalOpen ? <ProductModal /> : null}
+                <ProductModal />
 
                 <SubscribeSnackbar />
 

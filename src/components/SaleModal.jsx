@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Dialog, IconButton, Slide } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { _getPlatform, _isMobile } from "./helpers";
@@ -14,6 +14,19 @@ const SaleModal = ({ saleOpenModal, activeSale, handleCloseSaleModal }) => {
         dialogSaleProps.TransitionComponent = Transition;
         dialogSaleProps.fullScreen = true;
     }
+
+    const hashEventListener = (event) => {
+        if (!window.location.hash && event.oldURL.includes("#sale-modal")) {
+            handleCloseSaleModal();
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener("hashchange", hashEventListener);
+        return () => {
+            window.removeEventListener("hashchange", hashEventListener);
+        };
+    }, []);
 
     if (!activeSale) {
         return null;

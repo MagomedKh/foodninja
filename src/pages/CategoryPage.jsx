@@ -23,12 +23,11 @@ const CategoryPage = () => {
         };
     });
 
-    const { products, categories, productModalOpen } = useSelector(
+    const { products, categories } = useSelector(
         ({ products, productModal }) => {
             return {
                 products: products.items,
                 categories: products.categories,
-                productModalOpen: productModal.openProductModal,
             };
         }
     );
@@ -173,7 +172,7 @@ const CategoryPage = () => {
                     )}
                 </div>
             </Container>
-            {productModalOpen ? <ProductModal /> : null}
+            <ProductModal />
             <div className="screen-footer">
                 {_isMobile() ? <MobileMiniCart /> : ""}
                 <FooterBonuses />

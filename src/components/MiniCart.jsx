@@ -92,7 +92,7 @@ function MiniCart() {
     };
 
     const handleCloseMiniCart = () => {
-        if (window.location.hash === "#bonuses-modal") {
+        if (window.location.hash === "#minicart") {
             window.history.replaceState(
                 "",
                 document.title,
