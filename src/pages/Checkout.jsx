@@ -29,6 +29,7 @@ import {
     TextField,
     ToggleButtonGroup,
     ToggleButton,
+    Divider,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -789,12 +790,14 @@ export default function Checkout() {
                             </Grid>
                         </div>
 
-                        <div className="checkout--type-delivery">
-                            <div className="checkout--choose-type-panel">
+                        <div className="checkout--delivery">
+                            <div className="checkout--delivery-type">
                                 <h3>Как хотите получить заказ?</h3>
                                 <p>Выберите удобный для вас способ.</p>
                                 {renderTypeOrdering()}
                             </div>
+
+                            <Divider sx={{ my: "20px", borderColor: "#ccc" }} />
 
                             {typeDelivery === "delivery" ? (
                                 <div className="checkout--address-panel">

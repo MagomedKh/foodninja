@@ -1,5 +1,5 @@
 .checkout--user,
-.checkout--type-delivery,
+.checkout--delivery,
 .checkout--order-time {
     margin-bottom: 3rem;
 }
@@ -8,8 +8,8 @@
     border-radius: 10px;
     padding: 1.5rem;
 }
-.checkout--address-panel,
-.checkout--self-address-panel {
+
+.checkout--delivery {
     box-shadow: 0 0 20px rgb(0 0 0 / 10%);
     padding: 25px;
     border-radius: 10px;
@@ -21,23 +21,21 @@
     font-weight: bold;
 }
 
-.checkout--type-delivery .custom-radio {
+.checkout--delivery .custom-radio {
     height: auto;
 }
 
-.checkout--type-delivery
+.checkout--delivery
     .checkout--self-address-panel
     .custom-radio:not(:last-child) {
     margin-bottom: 8px;
 }
 
-.checkout--type-delivery
-    .checkout--address-panel
-    .custom-radio:not(:last-child) {
+.checkout--delivery .checkout--address-panel .custom-radio:not(:last-child) {
     margin-bottom: 8px;
 }
 
-.checkout--type-delivery .MuiRadio-root {
+.checkout--delivery .MuiRadio-root {
     padding: 9px 9px;
 }
 .checkout--form-new-address {
@@ -141,12 +139,12 @@
     .checkout--self-address-panel .adress-schdedule {
         margin-top: 4px;
     }
-    .checkout--type-delivery
+    .checkout--delivery
         .checkout--self-address-panel
         .custom-radio:not(:last-child) {
         margin-bottom: 12px;
     }
-    .checkout--type-delivery
+    .checkout--delivery
         .checkout--address-panel
         .custom-radio:not(:last-child) {
         margin-bottom: 12px;
