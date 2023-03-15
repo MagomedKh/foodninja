@@ -20,6 +20,7 @@ import {
     Container,
     Collapse,
     Dialog,
+    Divider,
     FormControlLabel,
     IconButton,
     Grid,
@@ -938,12 +939,14 @@ export default function Checkout() {
                             </Grid>
                         </div>
 
-                        <div className="checkout--type-delivery">
-                            <div className="checkout--choose-type-panel">
+                        <div className="checkout--delivery">
+                            <div className="checkout--delivery-type">
                                 <h3>Как хотите получить заказ?</h3>
                                 <p>Выберите удобный для вас способ.</p>
                                 {renderTypeOrdering()}
                             </div>
+
+                            <Divider sx={{ my: "20px", borderColor: "#ccc" }} />
 
                             {typeDelivery === "delivery" ? (
                                 <div className="checkout--address-panel">
