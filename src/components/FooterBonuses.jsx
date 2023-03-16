@@ -16,7 +16,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import FooterBonusesGift from "../img/footer-bonuses-gift.svg";
 import { _isMobile } from "./helpers";
 import "../css/footer-bonuses.css";
-import { getTotalPrice } from "../redux/reducers/cart";
+import useBonusProducts from "../hooks/useBonusProducts";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -25,98 +25,25 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function BonusesProductsModal() {
     const dispatch = useDispatch();
 
+    const { bonuses_items, userCartBonusProduct, openBonusesProductsModal } =
+        useSelector(({ products, cart, bonusesProductsModal }) => {
+            return {
+                bonuses_items: products.bonuses_items,
+                userCartBonusProduct: cart.bonusProduct,
+                openBonusesProductsModal:
+                    bonusesProductsModal.openBonusesProductsModal,
+            };
+        }, shallowEqual);
+
     const {
-        bonuses_items,
-        userCartBonusProduct,
-        openBonusesProductsModal,
-        promocode,
-        cartProducts,
-        productCategories,
-    } = useSelector(({ products, cart, bonusesProductsModal }) => {
-        return {
-            bonuses_items: products.bonuses_items,
-            userCartBonusProduct: cart.bonusProduct,
-            cartProducts: cart.items,
-            openBonusesProductsModal:
-                bonusesProductsModal.openBonusesProductsModal,
-            promocode: cart.promocode,
-            productCategories: products.categories,
-        };
-    }, shallowEqual);
-    const {
-        CONFIG_free_products_program_status,
-        CONFIG_promocode_with_bonus_program,
-        CONFIG_bonuses_not_allowed_categories: disabledCategories,
-        CONFIG_bonuses_not_allowed_categories_hardmode: bonusesHardmod,
-    } = useSelector((state) => {
-        return state.config.data;
-    }, shallowEqual);
+        cartTotalPrice,
+        bonusesDisabledByCategory,
+        disabledCategories,
+        disabledCategoriesNames,
+        bonusesDisabled,
+    } = useBonusProducts();
 
     const [bonusesItemsLocal, setBonusesItemsLocal] = useState(null);
-
-    const allProducts = [].concat.apply(
-        [],
-        Object.values(cartProducts).map((obj) => obj.items)
-    );
-
-    const productsWithoutCategories = allProducts.filter((product) => {
-        if (disabledCategories?.length) {
-            if (
-                product.categories?.some((category) =>
-                    disabledCategories.includes(category)
-                )
-            ) {
-                return false;
-            }
-        }
-        return true;
-    });
-
-    const bonusesDisabledByCategory =
-        bonusesHardmod === "yes" &&
-        !!allProducts.find((product) => {
-            if (disabledCategories?.length) {
-                if (
-                    product.categories?.some((category) =>
-                        disabledCategories.includes(category)
-                    )
-                ) {
-                    return true;
-                }
-            }
-            return false;
-        });
-
-    const disabledCategoriesNames = disabledCategories
-        .map((id) => {
-            const category = productCategories.find(
-                (category) => category.term_id === id
-            );
-            if (category) {
-                return `"${category.name}"`;
-            } else {
-                return "";
-            }
-        })
-        .filter((el) => el);
-
-    const cartTotalPrice = getTotalPrice(productsWithoutCategories);
-
-    const bonusesDisabled = useMemo(
-        () =>
-            CONFIG_free_products_program_status !== "on" ||
-            !bonuses_items ||
-            !bonuses_items.length ||
-            (CONFIG_promocode_with_bonus_program !== "on" &&
-                promocode &&
-                Object.keys(promocode).length > 0),
-        [
-            promocode,
-            bonuses_items,
-            CONFIG_free_products_program_status,
-            CONFIG_promocode_with_bonus_program,
-        ]
-    );
 
     useEffect(() => {
         if (bonuses_items) {
@@ -180,7 +107,7 @@ export default function BonusesProductsModal() {
     };
 
     const handleChooseBonusProduct = (item) => {
-        if (cartTotalPrice < item.limit) {
+        if (cartTotalPrice < item.limit || bonusesDisabledByCategory) {
             return;
         }
         dispatch(addBonusProductToCart(item));
@@ -306,21 +233,21 @@ export default function BonusesProductsModal() {
                         <h2 className="modal-alert--title">Выберите подарок</h2>
 
                         <Container disableGutters={!_isMobile()}>
-                            {bonusesDisabledByCategory && (
+                            {bonusesDisabledByCategory ? (
                                 <Alert severity="info" sx={{ my: 2 }}>
                                     Товары из категории:{" "}
                                     {disabledCategoriesNames.join(", ")} нельзя
                                     использовать вместе со шкалой подарков.
                                 </Alert>
-                            )}
+                            ) : null}
                             {disabledCategories?.length &&
-                                !bonusesDisabledByCategory && (
-                                    <Alert severity="info" sx={{ my: 2 }}>
-                                        Товары из категории:{" "}
-                                        {disabledCategoriesNames.join(", ")} не
-                                        участвуют в шкале подарков.
-                                    </Alert>
-                                )}
+                            !bonusesDisabledByCategory ? (
+                                <Alert severity="info" sx={{ my: 2 }}>
+                                    Товары из категории:{" "}
+                                    {disabledCategoriesNames.join(", ")} не
+                                    участвуют в шкале подарков.
+                                </Alert>
+                            ) : null}
                             <div className="bonuses-modal__carts">
                                 <Grid container spacing={1}>
                                     {bonusesItemsLocal?.length &&

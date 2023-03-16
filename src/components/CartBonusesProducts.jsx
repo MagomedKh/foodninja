@@ -13,6 +13,7 @@ import {
 import CartBonusProduct from "../components/Product/CartBonusProduct";
 import CloseIcon from "@mui/icons-material/Close";
 import { useEffect } from "react";
+import useBonusProducts from "../hooks/useBonusProducts";
 
 const BootstrapTooltip = styled(({ className, ...props }) => (
     <Tooltip {...props} arrow classes={{ popper: className }} />
@@ -27,21 +28,24 @@ const BootstrapTooltip = styled(({ className, ...props }) => (
 
 export default function CartBonusesProducts(minicart = false) {
     const dispatch = useDispatch();
+    const { cart, config, bonuses_items, userCartBonusProduct } = useSelector(
+        ({ config, cart, products }) => {
+            return {
+                cart: cart,
+                config: config.data,
+                bonuses_items: products.bonuses_items,
+                userCartBonusProduct: cart.bonusProduct,
+            };
+        }
+    );
+
     const {
-        cart,
-        config,
-        bonuses_items,
-        userCartBonusProduct,
+        programStatus,
         cartTotalPrice,
-    } = useSelector(({ config, cart, products }) => {
-        return {
-            cart: cart,
-            config: config.data,
-            bonuses_items: products.bonuses_items,
-            cartTotalPrice: cart.totalPrice,
-            userCartBonusProduct: cart.bonusProduct,
-        };
-    });
+        bonusesDisabledByCategory,
+        disabledCategoriesNames,
+    } = useBonusProducts();
+
     const [choosenProductId, setChoosenProductId] = useState(null);
 
     useEffect(() => {
@@ -51,16 +55,6 @@ export default function CartBonusesProducts(minicart = false) {
             setChoosenProductId(null);
         }
     }, [cart.bonusProduct]);
-
-    useEffect(() => {
-        if (
-            cart.promocode &&
-            Object.keys(cart.promocode).length > 0 &&
-            config.CONFIG_promocode_with_bonus_program !== "on"
-        ) {
-            dispatch(addBonusProductToCart({}));
-        }
-    }, [cart.promocode]);
 
     const handleChooseBonusProduct = (product) => {
         if (
@@ -75,7 +69,8 @@ export default function CartBonusesProducts(minicart = false) {
                     (!cart.promocode ||
                         Object.keys(cart.promocode).length === 0)) ||
                     config.CONFIG_promocode_with_bonus_program === "on") &&
-                cartTotalPrice >= product.limit
+                cartTotalPrice >= product.limit &&
+                !bonusesDisabledByCategory
             ) {
                 dispatch(addBonusProductToCart(product));
                 setChoosenProductId(product.id);
@@ -83,7 +78,7 @@ export default function CartBonusesProducts(minicart = false) {
         }
     };
 
-    if (config.CONFIG_free_products_program_status !== "on") {
+    if (!programStatus) {
         return null;
     }
 
@@ -100,7 +95,7 @@ export default function CartBonusesProducts(minicart = false) {
                         <Alert
                             severity="info"
                             className="custom-alert"
-                            sx={{ mb: 4 }}
+                            sx={{ mb: 4, mr: 2, ml: 2 }}
                         >
                             Бонусные товары нельзя выбрать при использовании
                             промокода.
@@ -108,6 +103,18 @@ export default function CartBonusesProducts(minicart = false) {
                     ) : (
                         ""
                     )}
+
+                    {bonusesDisabledByCategory ? (
+                        <Alert
+                            severity="info"
+                            sx={{ mb: 4, mr: 2, ml: 2 }}
+                            className="custom-alert"
+                        >
+                            Товары из категории:{" "}
+                            {disabledCategoriesNames.join(", ")} нельзя
+                            использовать вместе со шкалой подарков.
+                        </Alert>
+                    ) : null}
 
                     <RadioGroup
                         name="bonusesProducts"
@@ -149,7 +156,8 @@ export default function CartBonusesProducts(minicart = false) {
                                                             cart.promocode
                                                         ).length > 0 &&
                                                         config.CONFIG_promocode_with_bonus_program !==
-                                                            "on")
+                                                            "on") ||
+                                                    bonusesDisabledByCategory
                                                 )
                                             }
                                             className="bonus-product-choose"
@@ -169,7 +177,8 @@ export default function CartBonusesProducts(minicart = false) {
                                                                 cart.promocode
                                                             ).length > 0 &&
                                                             config.CONFIG_promocode_with_bonus_program !==
-                                                                "on")
+                                                                "on") ||
+                                                        bonusesDisabledByCategory
                                                     )
                                                 }
                                                 value={product.id}

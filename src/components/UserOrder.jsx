@@ -33,6 +33,9 @@ const UserOrder = ({
             };
         }
     );
+    const disabledCategories = useSelector(
+        (state) => state.config.data.CONFIG_bonuses_not_allowed_categories
+    );
 
     const handleToggleOrderInfo = () => {
         setShowFullInfo(!showFullInfo);
@@ -63,9 +66,17 @@ const UserOrder = ({
                         modificatorsAmount: modificatorsAmount,
                     })
                 );
-                cartTotalAmount +=
-                    products[item.parent].variants[item.id].price +
-                    modificatorsAmount;
+
+                if (
+                    !disabledCategories.length ||
+                    !product.categories?.some((category) =>
+                        disabledCategories.includes(category)
+                    )
+                ) {
+                    cartTotalAmount +=
+                        products[item.parent].variants[item.id].price +
+                        modificatorsAmount;
+                }
             }
 
             if (
@@ -86,7 +97,14 @@ const UserOrder = ({
                             modificatorsAmount: modificatorsAmount,
                         })
                     );
-                    cartTotalAmount += products[item.id].options._price;
+                    if (
+                        !disabledCategories.length ||
+                        !product.categories?.some((category) =>
+                            disabledCategories.includes(category)
+                        )
+                    ) {
+                        cartTotalAmount += products[item.id].options._price;
+                    }
                 }
             }
         });
