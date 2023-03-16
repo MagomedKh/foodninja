@@ -13,7 +13,7 @@ const initialState = {
     totalPrice: 0,
 };
 
-const getTotalPrice = (products) =>
+export const getTotalPrice = (products) =>
     products.reduce((total, item) => total + parseInt(item.options._price), 0);
 
 const getDiscountTotalPrice = (products) =>

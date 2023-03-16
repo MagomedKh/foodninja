@@ -3,6 +3,7 @@ import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { setOpenBonusesModal } from "../redux/actions/bonusesProductsModal";
 import { addBonusProductToCart } from "../redux/actions/cart";
 import {
+    Alert,
     Button,
     Container,
     Dialog,
@@ -15,6 +16,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import FooterBonusesGift from "../img/footer-bonuses-gift.svg";
 import { _isMobile } from "./helpers";
 import "../css/footer-bonuses.css";
+import { getTotalPrice } from "../redux/reducers/cart";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -25,28 +27,80 @@ export default function BonusesProductsModal() {
 
     const {
         bonuses_items,
-        cartTotalPrice,
         userCartBonusProduct,
         openBonusesProductsModal,
         promocode,
+        cartProducts,
+        productCategories,
     } = useSelector(({ products, cart, bonusesProductsModal }) => {
         return {
             bonuses_items: products.bonuses_items,
             userCartBonusProduct: cart.bonusProduct,
-            cartTotalPrice: cart.totalPrice,
+            cartProducts: cart.items,
             openBonusesProductsModal:
                 bonusesProductsModal.openBonusesProductsModal,
             promocode: cart.promocode,
+            productCategories: products.categories,
         };
     }, shallowEqual);
     const {
         CONFIG_free_products_program_status,
         CONFIG_promocode_with_bonus_program,
+        CONFIG_bonuses_not_allowed_categories: disabledCategories,
+        CONFIG_bonuses_not_allowed_categories_hardmode: bonusesHardmod,
     } = useSelector((state) => {
         return state.config.data;
     }, shallowEqual);
 
     const [bonusesItemsLocal, setBonusesItemsLocal] = useState(null);
+
+    const allProducts = [].concat.apply(
+        [],
+        Object.values(cartProducts).map((obj) => obj.items)
+    );
+
+    const productsWithoutCategories = allProducts.filter((product) => {
+        if (disabledCategories?.length) {
+            if (
+                product.categories?.some((category) =>
+                    disabledCategories.includes(category)
+                )
+            ) {
+                return false;
+            }
+        }
+        return true;
+    });
+
+    const bonusesDisabledByCategory =
+        bonusesHardmod === "yes" &&
+        !!allProducts.find((product) => {
+            if (disabledCategories?.length) {
+                if (
+                    product.categories?.some((category) =>
+                        disabledCategories.includes(category)
+                    )
+                ) {
+                    return true;
+                }
+            }
+            return false;
+        });
+
+    const disabledCategoriesNames = disabledCategories
+        .map((id) => {
+            const category = productCategories.find(
+                (category) => category.term_id === id
+            );
+            if (category) {
+                return `"${category.name}"`;
+            } else {
+                return "";
+            }
+        })
+        .filter((el) => el);
+
+    const cartTotalPrice = getTotalPrice(productsWithoutCategories);
 
     const bonusesDisabled = useMemo(
         () =>
@@ -233,7 +287,7 @@ export default function BonusesProductsModal() {
                 {...dialogProps}
                 className="bonuses-modal--dialog"
                 sx={{
-                    "& .MuiPaper-root": {
+                    "& .MuiDialog-paper": {
                         borderRadius: _isMobile() ? "0px" : "20px",
                     },
                 }}
@@ -250,7 +304,23 @@ export default function BonusesProductsModal() {
                             <CloseIcon />
                         </IconButton>
                         <h2 className="modal-alert--title">Выберите подарок</h2>
+
                         <Container disableGutters={!_isMobile()}>
+                            {bonusesDisabledByCategory && (
+                                <Alert severity="info" sx={{ my: 2 }}>
+                                    Товары из категории:{" "}
+                                    {disabledCategoriesNames.join(", ")} нельзя
+                                    использовать вместе со шкалой подарков.
+                                </Alert>
+                            )}
+                            {disabledCategories?.length &&
+                                !bonusesDisabledByCategory && (
+                                    <Alert severity="info" sx={{ my: 2 }}>
+                                        Товары из категории:{" "}
+                                        {disabledCategoriesNames.join(", ")} не
+                                        участвуют в шкале подарков.
+                                    </Alert>
+                                )}
                             <div className="bonuses-modal__carts">
                                 <Grid container spacing={1}>
                                     {bonusesItemsLocal?.length &&
@@ -376,6 +446,9 @@ export default function BonusesProductsModal() {
                                                                         handleChooseBonusProduct(
                                                                             item
                                                                         )
+                                                                    }
+                                                                    disabled={
+                                                                        bonusesDisabledByCategory
                                                                     }
                                                                 >
                                                                     Выбрать
