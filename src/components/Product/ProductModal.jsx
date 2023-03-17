@@ -443,9 +443,9 @@ export default function ProductModal() {
                                                     mobilemd={3}
                                                     mobilelg={2}
                                                     desctop={4}
+                                                    key={product.id}
                                                 >
                                                     <AddonProductModal
-                                                        key={product.id}
                                                         product={product}
                                                     />
                                                 </Grid>
