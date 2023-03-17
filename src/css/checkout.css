@@ -83,12 +83,7 @@
 }
 .checkout--total-panel--title {
     display: flex;
-    justify-content: space-between;
-}
-.checkout--total-panel--title a {
-    font-size: 15px;
-    position: relative;
-    top: 13px;
+    justify-content: start;
 }
 .checkout--total-panel--separator {
     border: 1px solid #ccc;
@@ -245,4 +240,32 @@
 .checkout--gateways-btn .MuiRadio-root {
     padding: 0;
     margin-right: 4px;
+}
+
+.checkout--button-container {
+    display: flex;
+    align-items: center;
+    margin-top: 16px;
+}
+
+.checkout--button-container button {
+    flex-basis: 50%;
+    width: 100%;
+}
+
+.checkout--button-container button:first-child {
+    margin-right: 16px;
+}
+
+@media (max-width: 480px) {
+    .checkout--button-container {
+        flex-direction: column;
+    }
+    .checkout--button-container button {
+        flex-basis: 100%;
+    }
+    .checkout--button-container button:first-child {
+        margin-right: 0;
+        margin-bottom: 16px;
+    }
 }

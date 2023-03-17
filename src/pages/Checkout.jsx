@@ -65,6 +65,8 @@ import {
 import wallet from "../img/wallet.svg";
 import creditCard from "../img/credit-card.svg";
 import onlineCreditCard from "../img/online-credit-card.svg";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import "../css/checkout.css";
 
 const formatingStrPhone = (inputNumbersValue) => {
@@ -904,130 +906,434 @@ export default function Checkout() {
             <Header />
             <Container className="checkout checkout-wrapper">
                 <h1>Оформление заказа</h1>
-                <Grid container spacing={5}>
-                    <Grid item sm={12} md={7}>
-                        <div className="checkout--user">
-                            <Grid container spacing={4}>
-                                <Grid item sm={12} md={6} sx={{ width: 1 }}>
-                                    <div className="checkout--user-name">
-                                        <TextField
-                                            size="small"
-                                            id="userName"
-                                            label="Ваше имя"
-                                            onInput={handleChangeName}
-                                            value={userName}
-                                            sx={{ width: 1 }}
-                                            {...userNameProps}
-                                        />
-                                    </div>
+                <Grid container>
+                    <Grid
+                        item
+                        xs={12}
+                        container
+                        spacing={5}
+                        sx={{ mb: "2rem" }}
+                    >
+                        <Grid item sm={12} md={7}>
+                            <div className="checkout--user">
+                                <Grid container spacing={4}>
+                                    <Grid item sm={12} md={6} sx={{ width: 1 }}>
+                                        <div className="checkout--user-name">
+                                            <TextField
+                                                size="small"
+                                                id="userName"
+                                                label="Ваше имя"
+                                                onInput={handleChangeName}
+                                                value={userName}
+                                                sx={{ width: 1 }}
+                                                {...userNameProps}
+                                            />
+                                        </div>
+                                    </Grid>
+                                    <Grid item sm={12} md={6} sx={{ width: 1 }}>
+                                        <div className="checkout--user-phone">
+                                            <TextField
+                                                size="small"
+                                                id="userPhone"
+                                                label="Номер телефона"
+                                                onKeyDown={handlePhoneKeyDown}
+                                                onInput={handlePhoneInput}
+                                                onPaste={handlePhonePaste}
+                                                value={userPhone}
+                                                sx={{ width: 1 }}
+                                                {...userPhoneProps}
+                                            />
+                                        </div>
+                                    </Grid>
                                 </Grid>
-                                <Grid item sm={12} md={6} sx={{ width: 1 }}>
-                                    <div className="checkout--user-phone">
-                                        <TextField
-                                            size="small"
-                                            id="userPhone"
-                                            label="Номер телефона"
-                                            onKeyDown={handlePhoneKeyDown}
-                                            onInput={handlePhoneInput}
-                                            onPaste={handlePhonePaste}
-                                            value={userPhone}
-                                            sx={{ width: 1 }}
-                                            {...userPhoneProps}
-                                        />
-                                    </div>
-                                </Grid>
-                            </Grid>
-                        </div>
-
-                        <div className="checkout--delivery">
-                            <div className="checkout--delivery-type">
-                                <h3>Как хотите получить заказ?</h3>
-                                <p>Выберите удобный для вас способ.</p>
-                                {renderTypeOrdering()}
                             </div>
 
-                            <Divider sx={{ my: "20px", borderColor: "#ccc" }} />
+                            <div className="checkout--delivery">
+                                <div className="checkout--delivery-type">
+                                    <h3>Как хотите получить заказ?</h3>
+                                    <p>Выберите удобный для вас способ.</p>
+                                    {renderTypeOrdering()}
+                                </div>
 
-                            {typeDelivery === "delivery" ? (
-                                <div className="checkout--address-panel">
-                                    <h4>Укажите адрес</h4>
-                                    {config.CONFIG_delivery_info_text !==
-                                        undefined &&
-                                        config.CONFIG_delivery_info_text && (
+                                <Divider
+                                    sx={{ my: "20px", borderColor: "#ccc" }}
+                                />
+
+                                {typeDelivery === "delivery" ? (
+                                    <div className="checkout--address-panel">
+                                        <h4>Укажите адрес</h4>
+                                        {config.CONFIG_delivery_info_text !==
+                                            undefined &&
+                                            config.CONFIG_delivery_info_text && (
+                                                <Alert
+                                                    severity="info"
+                                                    sx={{ mt: 2, mb: 2 }}
+                                                >
+                                                    <div
+                                                        dangerouslySetInnerHTML={{
+                                                            __html: config.CONFIG_delivery_info_text,
+                                                        }}
+                                                    ></div>
+                                                </Alert>
+                                            )}
+
+                                        {yandexApiError ? (
                                             <Alert
-                                                severity="info"
+                                                severity="error"
                                                 sx={{ mt: 2, mb: 2 }}
                                             >
-                                                <div
-                                                    dangerouslySetInnerHTML={{
-                                                        __html: config.CONFIG_delivery_info_text,
-                                                    }}
-                                                ></div>
+                                                <div>
+                                                    Потеряно соединение с Яндекс
+                                                    картой. Пожалуйста,
+                                                    перезагрузите страницу
+                                                </div>
                                             </Alert>
-                                        )}
+                                        ) : (
+                                            <>
+                                                <RadioGroup
+                                                    value={deliveryAddress}
+                                                    aria-labelledby="deliveryAddress-label"
+                                                    name="deliveryAddress"
+                                                    onChange={
+                                                        handleChooseDeliveryAddress
+                                                    }
+                                                    sx={{
+                                                        "& .MuiFormControlLabel-root":
+                                                            {
+                                                                alignItems:
+                                                                    "start",
+                                                            },
+                                                    }}
+                                                >
+                                                    {user.addresses &&
+                                                        Object.values(
+                                                            user.addresses
+                                                        ).map(
+                                                            (
+                                                                address,
+                                                                index
+                                                            ) => {
+                                                                if (
+                                                                    config
+                                                                        .deliveryZones
+                                                                        .deliveryPriceType ===
+                                                                        "areaPrice" &&
+                                                                    !address.coordinates
+                                                                ) {
+                                                                    return;
+                                                                }
+                                                                let formateAddress;
+                                                                if (
+                                                                    !address.formate
+                                                                ) {
+                                                                    formateAddress =
+                                                                        address.street +
+                                                                        ", д. " +
+                                                                        address.home;
+                                                                    formateAddress +=
+                                                                        address.porch
+                                                                            ? ", под. " +
+                                                                              address.porch
+                                                                            : "";
+                                                                    formateAddress +=
+                                                                        address.floor
+                                                                            ? ", этаж " +
+                                                                              address.floor
+                                                                            : "";
+                                                                    formateAddress +=
+                                                                        address.apartment
+                                                                            ? ", кв. " +
+                                                                              address.apartment
+                                                                            : "";
+                                                                }
+                                                                return (
+                                                                    <FormControlLabel
+                                                                        key={
+                                                                            index
+                                                                        }
+                                                                        className="custom-radio"
+                                                                        value={
+                                                                            index
+                                                                        }
+                                                                        control={
+                                                                            <Radio size="small" />
+                                                                        }
+                                                                        label={
+                                                                            address.formate ||
+                                                                            formateAddress
+                                                                        }
+                                                                    />
+                                                                );
+                                                            }
+                                                        )}
+                                                    <FormControlLabel
+                                                        className="custom-radio new-address"
+                                                        value="new"
+                                                        control={
+                                                            <Radio size="small" />
+                                                        }
+                                                        label="Новый адрес"
+                                                    />
+                                                </RadioGroup>
 
-                                    {yandexApiError ? (
-                                        <Alert
-                                            severity="error"
-                                            sx={{ mt: 2, mb: 2 }}
-                                        >
-                                            <div>
-                                                Потеряно соединение с Яндекс
-                                                картой. Пожалуйста,
-                                                перезагрузите страницу
-                                            </div>
-                                        </Alert>
-                                    ) : (
-                                        <>
+                                                {config.deliveryZones
+                                                    .deliveryPriceType ===
+                                                    "areaPrice" &&
+                                                deliveryAddress === "new" ? (
+                                                    <>
+                                                        <TextField
+                                                            size="small"
+                                                            placeholder="Укажите адрес"
+                                                            value={
+                                                                choosenAddress?.formate ||
+                                                                ""
+                                                            }
+                                                            multiline
+                                                            focused={false}
+                                                            fullWidth
+                                                            onClick={(
+                                                                event
+                                                            ) => {
+                                                                event.stopPropagation();
+                                                                dispatch(
+                                                                    setOpenDeliveryModal(
+                                                                        true
+                                                                    )
+                                                                );
+                                                            }}
+                                                            InputProps={{
+                                                                readOnly: true,
+                                                                endAdornment: (
+                                                                    <span
+                                                                        className="text-field__text-adornment"
+                                                                        onClick={(
+                                                                            event
+                                                                        ) => {
+                                                                            event.stopPropagation();
+                                                                            dispatch(
+                                                                                setOpenDeliveryModal(
+                                                                                    true
+                                                                                )
+                                                                            );
+                                                                        }}
+                                                                    >
+                                                                        {choosenAddress?.formate
+                                                                            ? "Изменить"
+                                                                            : "Указать"}
+                                                                    </span>
+                                                                ),
+                                                            }}
+                                                            sx={{
+                                                                mt: 1,
+                                                                "& .MuiOutlinedInput-root":
+                                                                    {
+                                                                        cursor: "pointer",
+                                                                    },
+                                                                "& .MuiOutlinedInput-input":
+                                                                    {
+                                                                        cursor: "pointer",
+                                                                    },
+                                                            }}
+                                                            {...deliveryTextFieldProps}
+                                                        />
+                                                    </>
+                                                ) : null}
+
+                                                {deliveryAddress === "new" &&
+                                                    config.deliveryZones
+                                                        .deliveryPriceType !==
+                                                        "areaPrice" && (
+                                                        <div className="checkout--form-new-address">
+                                                            <Grid
+                                                                container
+                                                                spacing={2}
+                                                            >
+                                                                <Grid
+                                                                    item
+                                                                    xs={8}
+                                                                    md={6}
+                                                                    sx={{
+                                                                        width: 1,
+                                                                    }}
+                                                                >
+                                                                    <TextField
+                                                                        size="small"
+                                                                        id="street"
+                                                                        label="Улица"
+                                                                        value={
+                                                                            newUserAddressStreet
+                                                                        }
+                                                                        onChange={
+                                                                            handleChangeNewUserAddress
+                                                                        }
+                                                                        sx={{
+                                                                            width: 1,
+                                                                        }}
+                                                                        {...streetProps}
+                                                                    />
+                                                                </Grid>
+                                                                <Grid
+                                                                    item
+                                                                    xs={4}
+                                                                    md={6}
+                                                                    sx={{
+                                                                        width: 1,
+                                                                    }}
+                                                                >
+                                                                    <TextField
+                                                                        size="small"
+                                                                        id="home"
+                                                                        label="Дом"
+                                                                        value={
+                                                                            newUserAddressHome
+                                                                        }
+                                                                        onChange={
+                                                                            handleChangeNewUserAddress
+                                                                        }
+                                                                        sx={{
+                                                                            width: 1,
+                                                                        }}
+                                                                        {...homeProps}
+                                                                    />
+                                                                </Grid>
+                                                                {config.CONFIG_checkout_hide_porch ===
+                                                                "yes" ? null : (
+                                                                    <Grid
+                                                                        item
+                                                                        xs={4}
+                                                                        md={4}
+                                                                    >
+                                                                        <TextField
+                                                                            size="small"
+                                                                            id="porch"
+                                                                            label="Подъезд"
+                                                                            value={
+                                                                                newUserAddressPorch
+                                                                            }
+                                                                            onChange={
+                                                                                handleChangeNewUserAddress
+                                                                            }
+                                                                            sx={{
+                                                                                width: 1,
+                                                                            }}
+                                                                        />
+                                                                    </Grid>
+                                                                )}
+                                                                {config.CONFIG_checkout_hide_floor ===
+                                                                "yes" ? null : (
+                                                                    <Grid
+                                                                        item
+                                                                        xs={4}
+                                                                        md={4}
+                                                                    >
+                                                                        <TextField
+                                                                            size="small"
+                                                                            id="floor"
+                                                                            label="Этаж"
+                                                                            value={
+                                                                                newUserAddressFloor
+                                                                            }
+                                                                            onChange={
+                                                                                handleChangeNewUserAddress
+                                                                            }
+                                                                            sx={{
+                                                                                width: 1,
+                                                                            }}
+                                                                        />
+                                                                    </Grid>
+                                                                )}
+                                                                {config.CONFIG_checkout_hide_apartment ===
+                                                                "yes" ? null : (
+                                                                    <Grid
+                                                                        item
+                                                                        xs={4}
+                                                                        md={4}
+                                                                    >
+                                                                        <TextField
+                                                                            size="small"
+                                                                            id="apartment"
+                                                                            label="Кв./Офис"
+                                                                            value={
+                                                                                newUserAddressApartment
+                                                                            }
+                                                                            onChange={
+                                                                                handleChangeNewUserAddress
+                                                                            }
+                                                                            sx={{
+                                                                                width: 1,
+                                                                            }}
+                                                                        />
+                                                                    </Grid>
+                                                                )}
+                                                            </Grid>
+                                                        </div>
+                                                    )}
+                                            </>
+                                        )}
+                                    </div>
+                                ) : (
+                                    typeDelivery === "self" && (
+                                        <div className="checkout--self-address-panel">
+                                            <h4>Выберите адрес</h4>
                                             <RadioGroup
-                                                value={deliveryAddress}
-                                                aria-labelledby="deliveryAddress-label"
-                                                name="deliveryAddress"
+                                                value={selfDeliveryAddress}
+                                                aria-labelledby="selfDeliveryAddress-label"
+                                                name="selfDeliveryAddress"
                                                 onChange={
-                                                    handleChooseDeliveryAddress
+                                                    handleChooseSelfDeliveryAddress
                                                 }
                                                 sx={{
+                                                    mb: 2,
                                                     "& .MuiFormControlLabel-root":
                                                         {
                                                             alignItems: "start",
                                                         },
                                                 }}
                                             >
-                                                {user.addresses &&
-                                                    Object.values(
-                                                        user.addresses
-                                                    ).map((address, index) => {
-                                                        if (
-                                                            config.deliveryZones
-                                                                .deliveryPriceType ===
-                                                                "areaPrice" &&
-                                                            !address.coordinates
-                                                        ) {
-                                                            return;
-                                                        }
-                                                        let formateAddress;
-                                                        if (!address.formate) {
-                                                            formateAddress =
-                                                                address.street +
-                                                                ", д. " +
-                                                                address.home;
-                                                            formateAddress +=
-                                                                address.porch
-                                                                    ? ", под. " +
-                                                                      address.porch
-                                                                    : "";
-                                                            formateAddress +=
-                                                                address.floor
-                                                                    ? ", этаж " +
-                                                                      address.floor
-                                                                    : "";
-                                                            formateAddress +=
-                                                                address.apartment
-                                                                    ? ", кв. " +
-                                                                      address.apartment
-                                                                    : "";
-                                                        }
-                                                        return (
+                                                <FormControlLabel
+                                                    className="custom-radio"
+                                                    value="main"
+                                                    control={
+                                                        <Radio size="small" />
+                                                    }
+                                                    label={
+                                                        <div>
+                                                            <span>
+                                                                {
+                                                                    config.CONFIG_address
+                                                                }
+                                                            </span>
+                                                            {config.CONFIG_format_start_work &&
+                                                            config.CONFIG_format_end_work ? (
+                                                                <div>
+                                                                    <div className="adress-schdedule">
+                                                                        <span>
+                                                                            Сегодня
+                                                                            с
+                                                                        </span>{" "}
+                                                                        {
+                                                                            config.CONFIG_format_start_work
+                                                                        }{" "}
+                                                                        до{" "}
+                                                                        {
+                                                                            config.CONFIG_format_end_work
+                                                                        }
+                                                                    </div>
+                                                                </div>
+                                                            ) : (
+                                                                <div>
+                                                                    <span>
+                                                                        Сегодня
+                                                                        закрыто
+                                                                    </span>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    }
+                                                />
+                                                {config.CONFIG_filials &&
+                                                    config.CONFIG_filials.map(
+                                                        (filial, index) => (
                                                             <FormControlLabel
                                                                 key={index}
                                                                 className="custom-radio"
@@ -1035,728 +1341,471 @@ export default function Checkout() {
                                                                 control={
                                                                     <Radio size="small" />
                                                                 }
-                                                                label={
-                                                                    address.formate ||
-                                                                    formateAddress
-                                                                }
+                                                                label={renderFilialLabel(
+                                                                    filial
+                                                                )}
                                                             />
-                                                        );
-                                                    })}
-                                                <FormControlLabel
-                                                    className="custom-radio new-address"
-                                                    value="new"
-                                                    control={
-                                                        <Radio size="small" />
-                                                    }
-                                                    label="Новый адрес"
-                                                />
+                                                        )
+                                                    )}
                                             </RadioGroup>
-
-                                            {config.deliveryZones
-                                                .deliveryPriceType ===
-                                                "areaPrice" &&
-                                            deliveryAddress === "new" ? (
-                                                <>
-                                                    <TextField
-                                                        size="small"
-                                                        placeholder="Укажите адрес"
-                                                        value={
-                                                            choosenAddress?.formate ||
-                                                            ""
-                                                        }
-                                                        multiline
-                                                        focused={false}
-                                                        fullWidth
-                                                        onClick={(event) => {
-                                                            event.stopPropagation();
-                                                            dispatch(
-                                                                setOpenDeliveryModal(
-                                                                    true
-                                                                )
-                                                            );
-                                                        }}
-                                                        InputProps={{
-                                                            readOnly: true,
-                                                            endAdornment: (
-                                                                <span
-                                                                    className="text-field__text-adornment"
-                                                                    onClick={(
-                                                                        event
-                                                                    ) => {
-                                                                        event.stopPropagation();
-                                                                        dispatch(
-                                                                            setOpenDeliveryModal(
-                                                                                true
-                                                                            )
-                                                                        );
-                                                                    }}
-                                                                >
-                                                                    {choosenAddress?.formate
-                                                                        ? "Изменить"
-                                                                        : "Указать"}
-                                                                </span>
-                                                            ),
-                                                        }}
-                                                        sx={{
-                                                            mt: 1,
-                                                            "& .MuiOutlinedInput-root":
-                                                                {
-                                                                    cursor: "pointer",
-                                                                },
-                                                            "& .MuiOutlinedInput-input":
-                                                                {
-                                                                    cursor: "pointer",
-                                                                },
-                                                        }}
-                                                        {...deliveryTextFieldProps}
-                                                    />
-                                                </>
-                                            ) : null}
-
-                                            {deliveryAddress === "new" &&
-                                                config.deliveryZones
-                                                    .deliveryPriceType !==
-                                                    "areaPrice" && (
-                                                    <div className="checkout--form-new-address">
-                                                        <Grid
-                                                            container
-                                                            spacing={2}
-                                                        >
-                                                            <Grid
-                                                                item
-                                                                xs={8}
-                                                                md={6}
-                                                                sx={{
-                                                                    width: 1,
-                                                                }}
-                                                            >
-                                                                <TextField
-                                                                    size="small"
-                                                                    id="street"
-                                                                    label="Улица"
-                                                                    value={
-                                                                        newUserAddressStreet
-                                                                    }
-                                                                    onChange={
-                                                                        handleChangeNewUserAddress
-                                                                    }
-                                                                    sx={{
-                                                                        width: 1,
-                                                                    }}
-                                                                    {...streetProps}
-                                                                />
-                                                            </Grid>
-                                                            <Grid
-                                                                item
-                                                                xs={4}
-                                                                md={6}
-                                                                sx={{
-                                                                    width: 1,
-                                                                }}
-                                                            >
-                                                                <TextField
-                                                                    size="small"
-                                                                    id="home"
-                                                                    label="Дом"
-                                                                    value={
-                                                                        newUserAddressHome
-                                                                    }
-                                                                    onChange={
-                                                                        handleChangeNewUserAddress
-                                                                    }
-                                                                    sx={{
-                                                                        width: 1,
-                                                                    }}
-                                                                    {...homeProps}
-                                                                />
-                                                            </Grid>
-                                                            {config.CONFIG_checkout_hide_porch ===
-                                                            "yes" ? null : (
-                                                                <Grid
-                                                                    item
-                                                                    xs={4}
-                                                                    md={4}
-                                                                >
-                                                                    <TextField
-                                                                        size="small"
-                                                                        id="porch"
-                                                                        label="Подъезд"
-                                                                        value={
-                                                                            newUserAddressPorch
-                                                                        }
-                                                                        onChange={
-                                                                            handleChangeNewUserAddress
-                                                                        }
-                                                                        sx={{
-                                                                            width: 1,
-                                                                        }}
-                                                                    />
-                                                                </Grid>
-                                                            )}
-                                                            {config.CONFIG_checkout_hide_floor ===
-                                                            "yes" ? null : (
-                                                                <Grid
-                                                                    item
-                                                                    xs={4}
-                                                                    md={4}
-                                                                >
-                                                                    <TextField
-                                                                        size="small"
-                                                                        id="floor"
-                                                                        label="Этаж"
-                                                                        value={
-                                                                            newUserAddressFloor
-                                                                        }
-                                                                        onChange={
-                                                                            handleChangeNewUserAddress
-                                                                        }
-                                                                        sx={{
-                                                                            width: 1,
-                                                                        }}
-                                                                    />
-                                                                </Grid>
-                                                            )}
-                                                            {config.CONFIG_checkout_hide_apartment ===
-                                                            "yes" ? null : (
-                                                                <Grid
-                                                                    item
-                                                                    xs={4}
-                                                                    md={4}
-                                                                >
-                                                                    <TextField
-                                                                        size="small"
-                                                                        id="apartment"
-                                                                        label="Кв./Офис"
-                                                                        value={
-                                                                            newUserAddressApartment
-                                                                        }
-                                                                        onChange={
-                                                                            handleChangeNewUserAddress
-                                                                        }
-                                                                        sx={{
-                                                                            width: 1,
-                                                                        }}
-                                                                    />
-                                                                </Grid>
-                                                            )}
-                                                        </Grid>
-                                                    </div>
-                                                )}
-                                        </>
-                                    )}
-                                </div>
-                            ) : (
-                                typeDelivery === "self" && (
-                                    <div className="checkout--self-address-panel">
-                                        <h4>Выберите адрес</h4>
-                                        <RadioGroup
-                                            value={selfDeliveryAddress}
-                                            aria-labelledby="selfDeliveryAddress-label"
-                                            name="selfDeliveryAddress"
-                                            onChange={
-                                                handleChooseSelfDeliveryAddress
-                                            }
-                                            sx={{
-                                                mb: 2,
-                                                "& .MuiFormControlLabel-root": {
-                                                    alignItems: "start",
-                                                },
-                                            }}
-                                        >
-                                            <FormControlLabel
-                                                className="custom-radio"
-                                                value="main"
-                                                control={<Radio size="small" />}
-                                                label={
-                                                    <div>
-                                                        <span>
-                                                            {
-                                                                config.CONFIG_address
-                                                            }
-                                                        </span>
-                                                        {config.CONFIG_format_start_work &&
-                                                        config.CONFIG_format_end_work ? (
-                                                            <div>
-                                                                <div className="adress-schdedule">
-                                                                    <span>
-                                                                        Сегодня
-                                                                        с
-                                                                    </span>{" "}
-                                                                    {
-                                                                        config.CONFIG_format_start_work
-                                                                    }{" "}
-                                                                    до{" "}
-                                                                    {
-                                                                        config.CONFIG_format_end_work
-                                                                    }
-                                                                </div>
-                                                            </div>
-                                                        ) : (
-                                                            <div>
-                                                                <span>
-                                                                    Сегодня
-                                                                    закрыто
-                                                                </span>
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                }
-                                            />
-                                            {config.CONFIG_filials &&
-                                                config.CONFIG_filials.map(
-                                                    (filial, index) => (
-                                                        <FormControlLabel
-                                                            key={index}
-                                                            className="custom-radio"
-                                                            value={index}
-                                                            control={
-                                                                <Radio size="small" />
-                                                            }
-                                                            label={renderFilialLabel(
-                                                                filial
-                                                            )}
-                                                        />
-                                                    )
-                                                )}
-                                        </RadioGroup>
-                                    </div>
-                                )
-                            )}
-                        </div>
-
-                        {config.deliveryZones?.deliveryPriceType ===
-                            "areaPrice" && !yandexApiError ? (
-                            <DeliveryAddressModal
-                                choosenAddress={choosenAddress}
-                                onYandexApiError={onYandexApiError}
-                                handleChooseZoneDeliveryAddress={
-                                    handleChooseZoneDeliveryAddress
-                                }
-                            />
-                        ) : null}
-
-                        <div className="checkout--order-time">
-                            <h3>Когда приготовить заказ?</h3>
-
-                            <PreorderForm
-                                preorderDate={preorderDate}
-                                preorderTime={preorderTime}
-                                handlePreorderDateChange={
-                                    handlePreorderDateChange
-                                }
-                                handlePreorderTimeChange={
-                                    handlePreorderTimeChange
-                                }
-                                asSoonAsPosible={asSoonAsPosible}
-                                {...preorderFormProps}
-                            />
-                        </div>
-
-                        <div className="checkout--comment-order">
-                            <h3>Комментарий к заказу</h3>
-                            <TextField
-                                id="commentOrder"
-                                label="Введите пожелание к заказу"
-                                multiline
-                                maxRows={8}
-                                value={commentOrder}
-                                onInput={handleChangeCommentOrder}
-                                sx={{ width: 1 }}
-                            />
-                        </div>
-                    </Grid>
-
-                    <Grid
-                        item
-                        sm={12}
-                        md={5}
-                        sx={{ width: 1 }}
-                        className={`checkout--total-wrapper ${
-                            sticked && "sticked"
-                        }`}
-                        ref={stickedTotalPanel}
-                    >
-                        <div className={"checkout--total-panel"}>
-                            <h3 className="checkout--total-panel--title">
-                                Ваш заказ{" "}
-                                <Link onClick={handleBackToMenu} to={"/"}>
-                                    Изменить
-                                </Link>
-                            </h3>
-
-                            <div className="checkout--products">
-                                {/* { Object.keys(cartProducts).map( (key, index) => 
-								<CheckoutProduct key={cartProducts[key].items[0].id} productCart={cartProducts[key].items[0]} productCount={cartProducts[key].items.length} productTotalPrice={cartProducts[key].totalPrice} />
-							) } */}
-
-                                {Object.keys(cartProducts).map((key, index) => {
-                                    if (
-                                        items[key] &&
-                                        items[key].type !== undefined &&
-                                        items[key].type === "variations"
-                                    ) {
-                                        return cartProducts[key].items.map(
-                                            (
-                                                keyVariantProduct,
-                                                indexVariantProduct
-                                            ) => (
-                                                <CheckoutProduct
-                                                    key={indexVariantProduct}
-                                                    productIndex={
-                                                        indexVariantProduct
-                                                    }
-                                                    productCart={
-                                                        cartProducts[key].items[
-                                                            indexVariantProduct
-                                                        ]
-                                                    }
-                                                    productCount={1}
-                                                    productTotalPrice={
-                                                        cartProducts[key]
-                                                            .totalPrice
-                                                    }
-                                                />
-                                            )
-                                        );
-                                    } else {
-                                        const itemsWithoutModificators =
-                                            cartProducts[key].items?.filter(
-                                                (el) =>
-                                                    !el.choosenModificators
-                                                        ?.length
-                                            );
-                                        const itemsWithoutModificatorsTotal =
-                                            getItemTotalPrice(
-                                                itemsWithoutModificators
-                                            );
-                                        let itemWithoutModificatorRendered = false;
-                                        return cartProducts[key].items.map(
-                                            (el, inx) => {
-                                                if (
-                                                    el.choosenModificators
-                                                        ?.length
-                                                ) {
-                                                    return (
-                                                        <CheckoutProduct
-                                                            key={inx}
-                                                            productIndex={inx}
-                                                            productCart={el}
-                                                            productCount={1}
-                                                            productTotalPrice={
-                                                                el.options
-                                                                    ._promocode_price
-                                                                    ? Math.ceil(
-                                                                          el
-                                                                              .options
-                                                                              ._promocode_price
-                                                                      )
-                                                                    : el.options
-                                                                          ._price
-                                                            }
-                                                        />
-                                                    );
-                                                } else if (
-                                                    !itemWithoutModificatorRendered
-                                                ) {
-                                                    itemWithoutModificatorRendered = true;
-                                                    return (
-                                                        <CheckoutProduct
-                                                            key={inx}
-                                                            productIndex={inx}
-                                                            productCart={el}
-                                                            productCount={
-                                                                itemsWithoutModificators.length
-                                                            }
-                                                            productTotalPrice={
-                                                                itemsWithoutModificatorsTotal
-                                                            }
-                                                        />
-                                                    );
-                                                }
-                                            }
-                                        );
-                                    }
-                                })}
-
-                                {/* { Object.keys(promocodeProducts).map( (key, index) => items[key] !== undefined &&
-                                <PromocodeCheckoutProduct productCart={promocodeProducts[key]} productCount="1" productTotalPrice={promocodeProducts[key].options._price-promocode.amount} />
-                             ) } */}
-
-                                {userCartBonusProduct.id && (
-                                    <CheckoutProduct
-                                        productCart={userCartBonusProduct}
-                                        productCount={1}
-                                        productTotalPrice={0}
-                                    />
+                                        </div>
+                                    )
                                 )}
-
-                                <CheckoutFreeAddons />
                             </div>
 
-                            <hr className="checkout--total-panel--separator" />
-
-                            {cart.discount ? (
-                                <div>
-                                    <div className="checkout--subtotal-price">
-                                        <div className="price">
-                                            Сумма заказа:{" "}
-                                            <span className="money">
-                                                {cart.subTotalPrice.toLocaleString(
-                                                    "ru-RU"
-                                                )}{" "}
-                                                &#8381;
-                                            </span>
-                                        </div>
-                                        <div className="promocode">
-                                            <span>
-                                                Промокод{" "}
-                                                <span className="main-color">
-                                                    {promocode.code}
-                                                </span>
-                                                :{" "}
-                                            </span>
-
-                                            <span className="money main-color">
-                                                -
-                                                {cart.discount.toLocaleString(
-                                                    "ru-RU"
-                                                )}{" "}
-                                                &#8381;
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <hr className="checkout--total-panel--separator" />
-                                </div>
-                            ) : (
-                                ""
-                            )}
-
-                            <div className="checkout--total-panel--result">
-                                {typeDelivery === "delivery" &&
-                                deliveryZone &&
-                                !yandexApiError ? (
-                                    <div className="result-delivery">
-                                        <span className="price-title">
-                                            Доставка
-                                        </span>
-                                        <span>
-                                            {(deliveryZone.freeDeliveryOrder &&
-                                                cartTotalPrice >
-                                                    deliveryZone.freeDeliveryOrder) ||
-                                            !deliveryZone.deliveryPrice
-                                                ? "Бесплатно"
-                                                : `${deliveryZone.deliveryPrice.toLocaleString(
-                                                      "ru-RU"
-                                                  )} ₽`}
-                                        </span>
-                                    </div>
-                                ) : typeDelivery === "delivery" &&
-                                  config.deliveryZones.deliveryPriceType !==
-                                      "areaPrice" &&
-                                  config.CONFIG_order_delivery_price ? (
-                                    <div className="result-delivery">
-                                        <span className="price-title">
-                                            Доставка
-                                        </span>
-                                        <span>
-                                            {config.CONFIG_order_delivery_price.toLocaleString(
-                                                "ru-RU"
-                                            )}{" "}
-                                            ₽
-                                        </span>
-                                    </div>
-                                ) : null}
-                                <div className="result-total">
-                                    <span className="price-title">Итого</span>
-                                    <span className="money">
-                                        {getResultTotal().toLocaleString(
-                                            "ru-RU"
-                                        )}{" "}
-                                        &#8381;
-                                    </span>
-                                </div>
-                            </div>
-
-                            {config.CONFIG_bonuses_program_status === "on" && (
-                                <div className="checkout--user-bonuses">
-                                    <div className="checkout--user-bonuses-info">
-                                        У вас{" "}
-                                        <span className="main-color">{`${
-                                            user.bonuses
-                                        } ${_declension(user.bonuses, [
-                                            "бонус",
-                                            "бонуса",
-                                            "бонусов",
-                                        ])}`}</span>
-                                    </div>
-
-                                    <Slider
-                                        onChange={handleChangeCheckoutBonus}
-                                        defaultValue={0}
-                                        aria-label="Default"
-                                        valueLabelDisplay="auto"
-                                        min={0}
-                                        max={maxBonuses}
-                                    />
-
-                                    <div className="checkout--bonuses-payming">
-                                        <span className="title">
-                                            Оплата бонусами
-                                        </span>
-                                        <span className="bonuses-price">
-                                            <span className="money">
-                                                {usedBonuses.toLocaleString(
-                                                    "ru-RU"
-                                                )}
-                                            </span>{" "}
-                                            &#8381;
-                                        </span>
-                                    </div>
-
-                                    <small>
-                                        Бонусами можно оплатить до{" "}
-                                        <span className="main-color">
-                                            {
-                                                config.CONFIG_bonus_program_order_limit
-                                            }
-                                            %
-                                        </span>{" "}
-                                        от общей суммы заказа.
-                                    </small>
-                                </div>
-                            )}
-
-                            <hr className="checkout--total-panel--separator" />
-
-                            {gateways && (
-                                <div className="checkout--gateways">
-                                    <h4>Способ оплаты</h4>
-                                    <ToggleButtonGroup
-                                        value={activeGateway}
-                                        onChange={handleSetActiveGateway}
-                                        orientation="vertical"
-                                        exclusive
-                                        className="checkout--gateways-btn-group"
-                                    >
-                                        {gateways.map((key, index) => (
-                                            <ToggleButton
-                                                key={index}
-                                                value={key.id}
-                                                label={key.title}
-                                                className="checkout--gateways-btn"
-                                            >
-                                                <div className="checkout--gateways-title-container">
-                                                    <Radio
-                                                        size="small"
-                                                        checked={
-                                                            activeGateway ===
-                                                            key.id
-                                                        }
-                                                    />
-                                                    <div>{key.title}</div>
-                                                </div>
-                                                {getGatewayIcon(key)}
-                                            </ToggleButton>
-                                        ))}
-                                    </ToggleButtonGroup>
-
-                                    <div className="checkout--gateways-inputs">
-                                        {config.CONFIG_checkout_hide_count_person ===
-                                        "yes" ? null : (
-                                            <div className="checkout--gateways-input">
-                                                {config.CONFIG_checkout_count_person_name ? (
-                                                    <b>
-                                                        {
-                                                            config.CONFIG_checkout_count_person_name
-                                                        }
-                                                    </b>
-                                                ) : (
-                                                    <b>Количество персон</b>
-                                                )}
-                                                <Select
-                                                    id="count_peoples"
-                                                    value={countUsers}
-                                                    sx={{
-                                                        width: 1,
-                                                        mt: 0.5,
-                                                    }}
-                                                    size="small"
-                                                    onChange={
-                                                        handleChangeCountUsers
-                                                    }
-                                                >
-                                                    <MenuItem value={1}>
-                                                        1
-                                                    </MenuItem>
-                                                    <MenuItem value={2}>
-                                                        2
-                                                    </MenuItem>
-                                                    <MenuItem value={3}>
-                                                        3
-                                                    </MenuItem>
-                                                    <MenuItem value={4}>
-                                                        4
-                                                    </MenuItem>
-                                                    <MenuItem value={5}>
-                                                        5
-                                                    </MenuItem>
-                                                    <MenuItem value={6}>
-                                                        6
-                                                    </MenuItem>
-                                                    <MenuItem value={7}>
-                                                        7
-                                                    </MenuItem>
-                                                    <MenuItem value={8}>
-                                                        8
-                                                    </MenuItem>
-                                                    <MenuItem value={9}>
-                                                        9
-                                                    </MenuItem>
-                                                    <MenuItem value={10}>
-                                                        10
-                                                    </MenuItem>
-                                                </Select>
-                                            </div>
-                                        )}
-
-                                        {activeGateway === "cash" && (
-                                            <div className="checkout--gateways-input">
-                                                <b>Приготовить сдачу с</b>
-                                                <TextField
-                                                    size="small"
-                                                    id="money_back"
-                                                    value={moneyBack}
-                                                    type="number"
-                                                    onChange={
-                                                        handleChangeMoneyBack
-                                                    }
-                                                    sx={{
-                                                        width: 1,
-                                                        mt: 0.5,
-                                                    }}
-                                                />
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                            )}
-
-                            {config.CONFIG_checkout_dont_recall === "on" ? (
-                                <FormControlLabel
-                                    control={
-                                        <Switch
-                                            checked={dontRecall}
-                                            onChange={() =>
-                                                setDontRecall(!dontRecall)
-                                            }
-                                            name="gilad"
-                                        />
+                            {config.deliveryZones?.deliveryPriceType ===
+                                "areaPrice" && !yandexApiError ? (
+                                <DeliveryAddressModal
+                                    choosenAddress={choosenAddress}
+                                    onYandexApiError={onYandexApiError}
+                                    handleChooseZoneDeliveryAddress={
+                                        handleChooseZoneDeliveryAddress
                                     }
-                                    label="Не перезванивайте мне"
                                 />
                             ) : null}
 
+                            <div className="checkout--order-time">
+                                <h3>Когда приготовить заказ?</h3>
+
+                                <PreorderForm
+                                    preorderDate={preorderDate}
+                                    preorderTime={preorderTime}
+                                    handlePreorderDateChange={
+                                        handlePreorderDateChange
+                                    }
+                                    handlePreorderTimeChange={
+                                        handlePreorderTimeChange
+                                    }
+                                    asSoonAsPosible={asSoonAsPosible}
+                                    {...preorderFormProps}
+                                />
+                            </div>
+
+                            <div className="checkout--comment-order">
+                                <h3>Комментарий к заказу</h3>
+                                <TextField
+                                    id="commentOrder"
+                                    label="Введите пожелание к заказу"
+                                    multiline
+                                    maxRows={8}
+                                    value={commentOrder}
+                                    onInput={handleChangeCommentOrder}
+                                    sx={{ width: 1 }}
+                                />
+                            </div>
+                        </Grid>
+                        <Grid
+                            item
+                            sm={12}
+                            md={5}
+                            sx={{ width: 1 }}
+                            className={`checkout--total-wrapper ${
+                                sticked && "sticked"
+                            }`}
+                            ref={stickedTotalPanel}
+                        >
+                            <div className={"checkout--total-panel"}>
+                                <h3 className="checkout--total-panel--title">
+                                    Ваш заказ
+                                </h3>
+
+                                <div className="checkout--products">
+                                    {/* { Object.keys(cartProducts).map( (key, index) => 
+                                    <CheckoutProduct key={cartProducts[key].items[0].id} productCart={cartProducts[key].items[0]} productCount={cartProducts[key].items.length} productTotalPrice={cartProducts[key].totalPrice} />
+                                ) } */}
+
+                                    {Object.keys(cartProducts).map(
+                                        (key, index) => {
+                                            if (
+                                                items[key] &&
+                                                items[key].type !== undefined &&
+                                                items[key].type === "variations"
+                                            ) {
+                                                return cartProducts[
+                                                    key
+                                                ].items.map(
+                                                    (
+                                                        keyVariantProduct,
+                                                        indexVariantProduct
+                                                    ) => (
+                                                        <CheckoutProduct
+                                                            key={
+                                                                indexVariantProduct
+                                                            }
+                                                            productIndex={
+                                                                indexVariantProduct
+                                                            }
+                                                            productCart={
+                                                                cartProducts[
+                                                                    key
+                                                                ].items[
+                                                                    indexVariantProduct
+                                                                ]
+                                                            }
+                                                            productCount={1}
+                                                            productTotalPrice={
+                                                                cartProducts[
+                                                                    key
+                                                                ].totalPrice
+                                                            }
+                                                        />
+                                                    )
+                                                );
+                                            } else {
+                                                const itemsWithoutModificators =
+                                                    cartProducts[
+                                                        key
+                                                    ].items?.filter(
+                                                        (el) =>
+                                                            !el
+                                                                .choosenModificators
+                                                                ?.length
+                                                    );
+                                                const itemsWithoutModificatorsTotal =
+                                                    getItemTotalPrice(
+                                                        itemsWithoutModificators
+                                                    );
+                                                let itemWithoutModificatorRendered = false;
+                                                return cartProducts[
+                                                    key
+                                                ].items.map((el, inx) => {
+                                                    if (
+                                                        el.choosenModificators
+                                                            ?.length
+                                                    ) {
+                                                        return (
+                                                            <CheckoutProduct
+                                                                key={inx}
+                                                                productIndex={
+                                                                    inx
+                                                                }
+                                                                productCart={el}
+                                                                productCount={1}
+                                                                productTotalPrice={
+                                                                    el.options
+                                                                        ._promocode_price
+                                                                        ? Math.ceil(
+                                                                              el
+                                                                                  .options
+                                                                                  ._promocode_price
+                                                                          )
+                                                                        : el
+                                                                              .options
+                                                                              ._price
+                                                                }
+                                                            />
+                                                        );
+                                                    } else if (
+                                                        !itemWithoutModificatorRendered
+                                                    ) {
+                                                        itemWithoutModificatorRendered = true;
+                                                        return (
+                                                            <CheckoutProduct
+                                                                key={inx}
+                                                                productIndex={
+                                                                    inx
+                                                                }
+                                                                productCart={el}
+                                                                productCount={
+                                                                    itemsWithoutModificators.length
+                                                                }
+                                                                productTotalPrice={
+                                                                    itemsWithoutModificatorsTotal
+                                                                }
+                                                            />
+                                                        );
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    )}
+
+                                    {/* { Object.keys(promocodeProducts).map( (key, index) => items[key] !== undefined &&
+                                    <PromocodeCheckoutProduct productCart={promocodeProducts[key]} productCount="1" productTotalPrice={promocodeProducts[key].options._price-promocode.amount} />
+                                ) } */}
+
+                                    {userCartBonusProduct.id && (
+                                        <CheckoutProduct
+                                            productCart={userCartBonusProduct}
+                                            productCount={1}
+                                            productTotalPrice={0}
+                                        />
+                                    )}
+
+                                    <CheckoutFreeAddons />
+                                </div>
+
+                                <hr className="checkout--total-panel--separator" />
+
+                                {cart.discount ? (
+                                    <div>
+                                        <div className="checkout--subtotal-price">
+                                            <div className="price">
+                                                Сумма заказа:{" "}
+                                                <span className="money">
+                                                    {cart.subTotalPrice.toLocaleString(
+                                                        "ru-RU"
+                                                    )}{" "}
+                                                    &#8381;
+                                                </span>
+                                            </div>
+                                            <div className="promocode">
+                                                <span>
+                                                    Промокод{" "}
+                                                    <span className="main-color">
+                                                        {promocode.code}
+                                                    </span>
+                                                    :{" "}
+                                                </span>
+
+                                                <span className="money main-color">
+                                                    -
+                                                    {cart.discount.toLocaleString(
+                                                        "ru-RU"
+                                                    )}{" "}
+                                                    &#8381;
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <hr className="checkout--total-panel--separator" />
+                                    </div>
+                                ) : (
+                                    ""
+                                )}
+
+                                <div className="checkout--total-panel--result">
+                                    {typeDelivery === "delivery" &&
+                                    deliveryZone &&
+                                    !yandexApiError ? (
+                                        <div className="result-delivery">
+                                            <span className="price-title">
+                                                Доставка
+                                            </span>
+                                            <span>
+                                                {(deliveryZone.freeDeliveryOrder &&
+                                                    cartTotalPrice >
+                                                        deliveryZone.freeDeliveryOrder) ||
+                                                !deliveryZone.deliveryPrice
+                                                    ? "Бесплатно"
+                                                    : `${deliveryZone.deliveryPrice.toLocaleString(
+                                                          "ru-RU"
+                                                      )} ₽`}
+                                            </span>
+                                        </div>
+                                    ) : typeDelivery === "delivery" &&
+                                      config.deliveryZones.deliveryPriceType !==
+                                          "areaPrice" &&
+                                      config.CONFIG_order_delivery_price ? (
+                                        <div className="result-delivery">
+                                            <span className="price-title">
+                                                Доставка
+                                            </span>
+                                            <span>
+                                                {config.CONFIG_order_delivery_price.toLocaleString(
+                                                    "ru-RU"
+                                                )}{" "}
+                                                ₽
+                                            </span>
+                                        </div>
+                                    ) : null}
+                                    <div className="result-total">
+                                        <span className="price-title">
+                                            Итого
+                                        </span>
+                                        <span className="money">
+                                            {getResultTotal().toLocaleString(
+                                                "ru-RU"
+                                            )}{" "}
+                                            &#8381;
+                                        </span>
+                                    </div>
+                                </div>
+
+                                {config.CONFIG_bonuses_program_status ===
+                                    "on" && (
+                                    <div className="checkout--user-bonuses">
+                                        <div className="checkout--user-bonuses-info">
+                                            У вас{" "}
+                                            <span className="main-color">{`${
+                                                user.bonuses
+                                            } ${_declension(user.bonuses, [
+                                                "бонус",
+                                                "бонуса",
+                                                "бонусов",
+                                            ])}`}</span>
+                                        </div>
+
+                                        <Slider
+                                            onChange={handleChangeCheckoutBonus}
+                                            defaultValue={0}
+                                            aria-label="Default"
+                                            valueLabelDisplay="auto"
+                                            min={0}
+                                            max={maxBonuses}
+                                        />
+
+                                        <div className="checkout--bonuses-payming">
+                                            <span className="title">
+                                                Оплата бонусами
+                                            </span>
+                                            <span className="bonuses-price">
+                                                <span className="money">
+                                                    {usedBonuses.toLocaleString(
+                                                        "ru-RU"
+                                                    )}
+                                                </span>{" "}
+                                                &#8381;
+                                            </span>
+                                        </div>
+
+                                        <small>
+                                            Бонусами можно оплатить до{" "}
+                                            <span className="main-color">
+                                                {
+                                                    config.CONFIG_bonus_program_order_limit
+                                                }
+                                                %
+                                            </span>{" "}
+                                            от общей суммы заказа.
+                                        </small>
+                                    </div>
+                                )}
+
+                                <hr className="checkout--total-panel--separator" />
+
+                                {gateways && (
+                                    <div className="checkout--gateways">
+                                        <h4>Способ оплаты</h4>
+                                        <ToggleButtonGroup
+                                            value={activeGateway}
+                                            onChange={handleSetActiveGateway}
+                                            orientation="vertical"
+                                            exclusive
+                                            className="checkout--gateways-btn-group"
+                                        >
+                                            {gateways.map((key, index) => (
+                                                <ToggleButton
+                                                    key={index}
+                                                    value={key.id}
+                                                    label={key.title}
+                                                    className="checkout--gateways-btn"
+                                                >
+                                                    <div className="checkout--gateways-title-container">
+                                                        <Radio
+                                                            size="small"
+                                                            checked={
+                                                                activeGateway ===
+                                                                key.id
+                                                            }
+                                                        />
+                                                        <div>{key.title}</div>
+                                                    </div>
+                                                    {getGatewayIcon(key)}
+                                                </ToggleButton>
+                                            ))}
+                                        </ToggleButtonGroup>
+
+                                        <div className="checkout--gateways-inputs">
+                                            {config.CONFIG_checkout_hide_count_person ===
+                                            "yes" ? null : (
+                                                <div className="checkout--gateways-input">
+                                                    {config.CONFIG_checkout_count_person_name ? (
+                                                        <b>
+                                                            {
+                                                                config.CONFIG_checkout_count_person_name
+                                                            }
+                                                        </b>
+                                                    ) : (
+                                                        <b>Количество персон</b>
+                                                    )}
+                                                    <Select
+                                                        id="count_peoples"
+                                                        value={countUsers}
+                                                        sx={{
+                                                            width: 1,
+                                                            mt: 0.5,
+                                                        }}
+                                                        size="small"
+                                                        onChange={
+                                                            handleChangeCountUsers
+                                                        }
+                                                    >
+                                                        <MenuItem value={1}>
+                                                            1
+                                                        </MenuItem>
+                                                        <MenuItem value={2}>
+                                                            2
+                                                        </MenuItem>
+                                                        <MenuItem value={3}>
+                                                            3
+                                                        </MenuItem>
+                                                        <MenuItem value={4}>
+                                                            4
+                                                        </MenuItem>
+                                                        <MenuItem value={5}>
+                                                            5
+                                                        </MenuItem>
+                                                        <MenuItem value={6}>
+                                                            6
+                                                        </MenuItem>
+                                                        <MenuItem value={7}>
+                                                            7
+                                                        </MenuItem>
+                                                        <MenuItem value={8}>
+                                                            8
+                                                        </MenuItem>
+                                                        <MenuItem value={9}>
+                                                            9
+                                                        </MenuItem>
+                                                        <MenuItem value={10}>
+                                                            10
+                                                        </MenuItem>
+                                                    </Select>
+                                                </div>
+                                            )}
+
+                                            {activeGateway === "cash" && (
+                                                <div className="checkout--gateways-input">
+                                                    <b>Приготовить сдачу с</b>
+                                                    <TextField
+                                                        size="small"
+                                                        id="money_back"
+                                                        value={moneyBack}
+                                                        type="number"
+                                                        onChange={
+                                                            handleChangeMoneyBack
+                                                        }
+                                                        sx={{
+                                                            width: 1,
+                                                            mt: 0.5,
+                                                        }}
+                                                    />
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {config.CONFIG_checkout_dont_recall === "on" ? (
+                                    <FormControlLabel
+                                        control={
+                                            <Switch
+                                                checked={dontRecall}
+                                                onChange={() =>
+                                                    setDontRecall(!dontRecall)
+                                                }
+                                                name="gilad"
+                                            />
+                                        }
+                                        label="Не перезванивайте мне"
+                                    />
+                                ) : null}
+                            </div>
+                        </Grid>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Grid item sm={12} md={7}>
                             {error && (
                                 <Alert
                                     action={
@@ -1818,38 +1867,50 @@ export default function Checkout() {
                                 </Alert>
                             </Collapse>
 
-                            <LoadingButton
-                                loading={loading}
-                                sx={{ width: 1, mt: 1.5 }}
-                                variant="button"
-                                className="btn--action makeOrder"
-                                onClick={() => {
-                                    activeGateway !== "card" &&
-                                    activeGateway !== "cash" &&
-                                    config.CONFIG_order_text_before_payment
-                                        ? setOpenBeforePaymentModal(true)
-                                        : handleMakeOrder();
-                                }}
-                                disabled={
-                                    (typeDelivery === "self" &&
-                                        selfDeliveryOrderLess) ||
-                                    (typeDelivery === "delivery" &&
-                                        deliveryOrderLess) ||
-                                    (typeDelivery === "delivery" &&
-                                        config.deliveryZones
+                            <div className="checkout--button-container">
+                                <Button
+                                    className="btn--outline-dark"
+                                    variant="button"
+                                    onClick={handleBackToMenu}
+                                >
+                                    Изменить заказ
+                                    <NavigateBeforeIcon className="button-prev-arrow-icon" />
+                                </Button>
+
+                                <LoadingButton
+                                    loading={loading}
+                                    variant="button"
+                                    className="btn--action makeOrder"
+                                    onClick={() => {
+                                        activeGateway !== "card" &&
+                                        activeGateway !== "cash" &&
+                                        config.CONFIG_order_text_before_payment
+                                            ? setOpenBeforePaymentModal(true)
+                                            : handleMakeOrder();
+                                    }}
+                                    disabled={
+                                        (typeDelivery === "self" &&
+                                            selfDeliveryOrderLess) ||
+                                        (typeDelivery === "delivery" &&
+                                            deliveryOrderLess) ||
+                                        (typeDelivery === "delivery" &&
+                                            config.deliveryZones
+                                                .deliveryPriceType ===
+                                                "areaPrice" &&
+                                            yandexApiError) ||
+                                        (config.deliveryZones
                                             .deliveryPriceType ===
                                             "areaPrice" &&
-                                        yandexApiError) ||
-                                    (config.deliveryZones.deliveryPriceType ===
-                                        "areaPrice" &&
-                                        deliveryZone &&
-                                        deliveryZone.orderMinPrice >
-                                            cartTotalPrice)
-                                }
-                            >
-                                Подтвердить заказ
-                            </LoadingButton>
-                        </div>
+                                            deliveryZone &&
+                                            deliveryZone.orderMinPrice >
+                                                cartTotalPrice)
+                                    }
+                                >
+                                    Оформить заказ
+                                    <NavigateNextIcon className="button-arrow-icon" />
+                                </LoadingButton>
+                            </div>
+                        </Grid>
                     </Grid>
                 </Grid>
 

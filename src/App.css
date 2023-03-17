@@ -159,6 +159,19 @@ a.btn {
 .btn--tag.btn--tag-active {
     color: #fff !important;
 }
+
+.button-arrow-icon {
+    position: absolute;
+    right: 10px;
+    top: calc(50% - 12px);
+}
+
+.button-prev-arrow-icon {
+    position: absolute;
+    left: 10px;
+    top: calc(50% - 12px);
+}
+
 .product--category-tags-container {
     display: flex;
     flex-wrap: wrap;

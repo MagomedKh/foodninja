@@ -11,11 +11,6 @@
     box-shadow: 0px 0px 15px 0px var(--main-color);
     cursor: pointer;
 }
-.button-arrow-icon {
-    position: absolute;
-    right: 10px;
-    top: calc(50% - 12px);
-}
 
 .minicart--separator {
     display: inline-block;
