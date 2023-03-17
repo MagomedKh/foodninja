@@ -33,8 +33,12 @@ const UserOrder = ({
             };
         }
     );
-    const disabledCategories = useSelector(
+    const disabledBonusCategories = useSelector(
         (state) => state.config.data.CONFIG_bonuses_not_allowed_categories
+    );
+    const bonusesHardmod = useSelector(
+        (state) =>
+            state.config.data.CONFIG_bonuses_not_allowed_categories_hardmode
     );
 
     const handleToggleOrderInfo = () => {
@@ -43,7 +47,11 @@ const UserOrder = ({
 
     const handleRepeatOrder = useCallback(() => {
         dispatch(clearCart());
+
+        // Считаем для проверки лимитов у бонусных товаров
         let cartTotalAmount = 0;
+        let bonusesDisabledByHardmode = false;
+
         Object.values(order.products).forEach((item) => {
             if (
                 item.type === "variations" &&
@@ -67,12 +75,17 @@ const UserOrder = ({
                     })
                 );
 
-                if (
-                    !disabledCategories.length ||
-                    !product.categories?.some((category) =>
-                        disabledCategories.includes(category)
-                    )
-                ) {
+                const isInDiasbledBonusCategories =
+                    disabledBonusCategories.length &&
+                    product.categories?.some((category) =>
+                        disabledBonusCategories.includes(category)
+                    );
+
+                if (isInDiasbledBonusCategories && bonusesHardmod === "yes") {
+                    bonusesDisabledByHardmode = true;
+                }
+
+                if (!isInDiasbledBonusCategories) {
                     cartTotalAmount +=
                         products[item.parent].variants[item.id].price +
                         modificatorsAmount;
@@ -97,19 +110,28 @@ const UserOrder = ({
                             modificatorsAmount: modificatorsAmount,
                         })
                     );
+
+                    const isInDiasbledBonusCategories =
+                        disabledBonusCategories.length &&
+                        product.categories?.some((category) =>
+                            disabledBonusCategories.includes(category)
+                        );
+
                     if (
-                        !disabledCategories.length ||
-                        !product.categories?.some((category) =>
-                            disabledCategories.includes(category)
-                        )
+                        isInDiasbledBonusCategories &&
+                        bonusesHardmod === "yes"
                     ) {
+                        bonusesDisabledByHardmode = true;
+                    }
+
+                    if (!isInDiasbledBonusCategories) {
                         cartTotalAmount += products[item.id].options._price;
                     }
                 }
             }
         });
 
-        if (order.bonusProduct.id !== undefined) {
+        if (order.bonusProduct.id !== undefined && !bonusesDisabledByHardmode) {
             Object.values(bonuses_products).forEach((item) => {
                 if (
                     item.id === order.bonusProduct.id &&

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { getTotalPrice } from "../redux/reducers/cart";
 import { addBonusProductToCart } from "../redux/actions/cart";
@@ -8,19 +8,14 @@ const useBonusProducts = () => {
 
     const {
         bonuses_items,
-        userCartBonusProduct,
-        openBonusesProductsModal,
         promocode,
         cartProducts,
         productCategories,
         cartBonusProduct,
-    } = useSelector(({ products, cart, bonusesProductsModal }) => {
+    } = useSelector(({ products, cart }) => {
         return {
             bonuses_items: products.bonuses_items,
-            userCartBonusProduct: cart.bonusProduct,
             cartProducts: cart.items,
-            openBonusesProductsModal:
-                bonusesProductsModal.openBonusesProductsModal,
             promocode: cart.promocode,
             productCategories: products.categories,
             cartBonusProduct: cart.bonusProduct,
@@ -71,7 +66,7 @@ const useBonusProducts = () => {
         });
 
     const disabledCategoriesNames = disabledCategories
-        .map((id) => {
+        ?.map((id) => {
             const category = productCategories.find(
                 (category) => category.term_id === id
             );
@@ -126,6 +121,7 @@ const useBonusProducts = () => {
     return {
         cartTotalPrice,
         programStatus,
+        bonusesHardmod,
         bonusesDisabledByCategory,
         disabledCategories,
         disabledCategoriesNames,

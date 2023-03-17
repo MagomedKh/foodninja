@@ -37,6 +37,7 @@ export default function BonusesProductsModal() {
 
     const {
         cartTotalPrice,
+        bonusesHardmod,
         bonusesDisabledByCategory,
         disabledCategories,
         disabledCategoriesNames,
@@ -233,15 +234,14 @@ export default function BonusesProductsModal() {
                         <h2 className="modal-alert--title">Выберите подарок</h2>
 
                         <Container disableGutters={!_isMobile()}>
-                            {bonusesDisabledByCategory ? (
+                            {bonusesHardmod && disabledCategories?.length ? (
                                 <Alert severity="info" sx={{ my: 2 }}>
                                     Товары из категории:{" "}
                                     {disabledCategoriesNames.join(", ")} нельзя
                                     использовать вместе со шкалой подарков.
                                 </Alert>
                             ) : null}
-                            {disabledCategories?.length &&
-                            !bonusesDisabledByCategory ? (
+                            {!bonusesHardmod && disabledCategories?.length ? (
                                 <Alert severity="info" sx={{ my: 2 }}>
                                     Товары из категории:{" "}
                                     {disabledCategoriesNames.join(", ")} не
