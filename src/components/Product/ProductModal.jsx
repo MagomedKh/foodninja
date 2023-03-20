@@ -12,7 +12,10 @@ import {
 } from "../../redux/actions/productModal";
 import { clearModificators } from "../../redux/actions/modificators";
 import AddonProductModal from "../../components/Product/AddonProductModal";
+import { BootstrapTooltip } from "../index";
 import ModificatorCategory from "./ModificatorCategory.jsx";
+import { styled } from "@mui/material/styles";
+import { tooltipClasses } from "@mui/material/Tooltip";
 import {
     Alert,
     Button,
@@ -21,11 +24,13 @@ import {
     IconButton,
     Slide,
     ToggleButtonGroup,
+    Tooltip,
     ToggleButton,
     Zoom,
     Grid,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import "../../css/product-modal.css";
 import soon from "../../img/photo-soon.svg";
 
@@ -196,6 +201,67 @@ export default function ProductModal() {
         dialogProps.scroll = "body";
     }
 
+    const getTooltipContent = () => {
+        let content = "";
+        if (productModal.options.energy_value) {
+            content += productModal.options.energy_value;
+        }
+
+        if (productModal.options.protein) {
+            content += productModal.options.protein;
+        }
+        if (productModal.options.fat) {
+            content += productModal.options.fat;
+        }
+        if (productModal.options.carbohydrate) {
+            content += productModal.options.carbohydrate;
+        }
+
+        return content;
+    };
+
+    const renderTooltipContent = () => {
+        if (
+            !productModal.options.energy_value &&
+            !productModal.options.protein &&
+            !productModal.options.fat &&
+            !productModal.options.carbohydrate
+        ) {
+            return null;
+        }
+        return (
+            <div className="product-modal--tooltip">
+                <div className="product-modal--tooltip-title">
+                    Пищевая ценность на 100 г. :
+                </div>
+                {!!productModal.options.energy_value && (
+                    <div className="product-modal--tooltip-option">
+                        <div>Энерг. ценность</div>
+                        <div>{productModal.options.energy_value} ккал.</div>
+                    </div>
+                )}
+                {!!productModal.options.protein && (
+                    <div className="product-modal--tooltip-option">
+                        <div>Белки</div>
+                        <div>{productModal.options.protein} г.</div>
+                    </div>
+                )}
+                {!!productModal.options.fat && (
+                    <div className="product-modal--tooltip-option">
+                        <div>Жиры</div>
+                        <div>{productModal.options.fat} г.</div>
+                    </div>
+                )}
+                {!!productModal.options.carbohydrate && (
+                    <div className="product-modal--tooltip-option">
+                        <div>Углеводы</div>
+                        <div>{productModal.options.carbohydrate} г.</div>
+                    </div>
+                )}
+            </div>
+        );
+    };
+
     const productPriceRender = () => {
         if (activeVariant) {
             if (
@@ -296,9 +362,19 @@ export default function ProductModal() {
                         </div>
                         <div className="product-modal--info">
                             <div className="product-modal--scrolling">
-                                <h2 className="product-modal--title">
-                                    {productModal.title}
-                                </h2>
+                                <div className="product-modal--title-container">
+                                    <h2 className="product-modal--title">
+                                        {productModal.title}
+                                    </h2>
+                                    {renderTooltipContent() && (
+                                        <BootstrapTooltip
+                                            placement="bottom-end"
+                                            title={renderTooltipContent()}
+                                        >
+                                            <InfoOutlinedIcon className="product-modal--title-info" />
+                                        </BootstrapTooltip>
+                                    )}
+                                </div>
 
                                 {productModal.type === "variations" ? (
                                     <>

@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { styled } from "@mui/material/styles";
 import { addBonusProductToCart } from "../redux/actions/cart";
-import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import {
     Alert,
     FormControlLabel,
@@ -11,20 +9,10 @@ import {
     RadioGroup,
 } from "@mui/material";
 import CartBonusProduct from "../components/Product/CartBonusProduct";
+import { BootstrapTooltip } from "./index";
 import CloseIcon from "@mui/icons-material/Close";
 import { useEffect } from "react";
 import useBonusProducts from "../hooks/useBonusProducts";
-
-const BootstrapTooltip = styled(({ className, ...props }) => (
-    <Tooltip {...props} arrow classes={{ popper: className }} />
-))(({ theme }) => ({
-    [`& .${tooltipClasses.arrow}`]: {
-        color: theme.palette.common.black,
-    },
-    [`& .${tooltipClasses.tooltip}`]: {
-        backgroundColor: theme.palette.common.black,
-    },
-}));
 
 export default function CartBonusesProducts(minicart = false) {
     const dispatch = useDispatch();
