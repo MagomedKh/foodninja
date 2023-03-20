@@ -201,31 +201,16 @@ export default function ProductModal() {
         dialogProps.scroll = "body";
     }
 
-    const getTooltipContent = () => {
-        let content = "";
-        if (productModal.options.energy_value) {
-            content += productModal.options.energy_value;
-        }
-
-        if (productModal.options.protein) {
-            content += productModal.options.protein;
-        }
-        if (productModal.options.fat) {
-            content += productModal.options.fat;
-        }
-        if (productModal.options.carbohydrate) {
-            content += productModal.options.carbohydrate;
-        }
-
-        return content;
-    };
+    const productOptions = activeVariant
+        ? activeVariant.options
+        : productModal.options;
 
     const renderTooltipContent = () => {
         if (
-            !productModal.options.energy_value &&
-            !productModal.options.protein &&
-            !productModal.options.fat &&
-            !productModal.options.carbohydrate
+            !productOptions.energy_value &&
+            !productOptions.protein &&
+            !productOptions.fat &&
+            !productOptions.carbohydrate
         ) {
             return null;
         }
@@ -234,28 +219,28 @@ export default function ProductModal() {
                 <div className="product-modal--tooltip-title">
                     Пищевая ценность на 100 г. :
                 </div>
-                {!!productModal.options.energy_value && (
+                {!!productOptions.energy_value && (
                     <div className="product-modal--tooltip-option">
                         <div>Энерг. ценность</div>
-                        <div>{productModal.options.energy_value} ккал.</div>
+                        <div>{productOptions.energy_value} ккал.</div>
                     </div>
                 )}
-                {!!productModal.options.protein && (
+                {!!productOptions.protein && (
                     <div className="product-modal--tooltip-option">
                         <div>Белки</div>
-                        <div>{productModal.options.protein} г.</div>
+                        <div>{productOptions.protein} г.</div>
                     </div>
                 )}
-                {!!productModal.options.fat && (
+                {!!productOptions.fat && (
                     <div className="product-modal--tooltip-option">
                         <div>Жиры</div>
-                        <div>{productModal.options.fat} г.</div>
+                        <div>{productOptions.fat} г.</div>
                     </div>
                 )}
-                {!!productModal.options.carbohydrate && (
+                {!!productOptions.carbohydrate && (
                     <div className="product-modal--tooltip-option">
                         <div>Углеводы</div>
-                        <div>{productModal.options.carbohydrate} г.</div>
+                        <div>{productOptions.carbohydrate} г.</div>
                     </div>
                 )}
             </div>
