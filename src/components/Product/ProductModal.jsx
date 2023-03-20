@@ -29,6 +29,7 @@ import {
     Zoom,
     Grid,
 } from "@mui/material";
+import ClickAwayListener from "@mui/base/ClickAwayListener";
 import CloseIcon from "@mui/icons-material/Close";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import "../../css/product-modal.css";
@@ -64,6 +65,7 @@ export default function ProductModal() {
     const [choosenAttributes, setChoosenAttributes] = useState({});
     const [activeVariant, setActiveVariant] = useState(false);
     const [wrongVariant, setWrongVariant] = useState(false);
+    const [tooltipOpen, setTooltipOpen] = useState(false);
 
     useEffect(() => {
         let dataAttributes = {};
@@ -158,6 +160,7 @@ export default function ProductModal() {
         dispatch(clearModificators());
         setActiveVariant(false);
         setWrongVariant(false);
+        setTooltipOpen(false);
         dispatch(setOpenModal(false));
     };
     const handleAddProduct = () => {
@@ -352,12 +355,31 @@ export default function ProductModal() {
                                         {productModal.title}
                                     </h2>
                                     {renderTooltipContent() && (
-                                        <BootstrapTooltip
-                                            placement="bottom-end"
-                                            title={renderTooltipContent()}
+                                        <ClickAwayListener
+                                            onClickAway={() =>
+                                                setTooltipOpen(false)
+                                            }
                                         >
-                                            <InfoOutlinedIcon className="product-modal--title-info" />
-                                        </BootstrapTooltip>
+                                            <div>
+                                                <BootstrapTooltip
+                                                    placement="bottom-end"
+                                                    title={renderTooltipContent()}
+                                                    disableTouchListener
+                                                    disableHoverListener
+                                                    open={tooltipOpen}
+                                                >
+                                                    <InfoOutlinedIcon
+                                                        className="product-modal--title-info"
+                                                        onClick={() =>
+                                                            setTooltipOpen(
+                                                                (state) =>
+                                                                    !state
+                                                            )
+                                                        }
+                                                    />
+                                                </BootstrapTooltip>
+                                            </div>
+                                        </ClickAwayListener>
                                     )}
                                 </div>
 
