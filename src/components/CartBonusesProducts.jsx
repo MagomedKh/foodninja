@@ -124,7 +124,7 @@ export default function CartBonusesProducts(minicart = false) {
                                     <BootstrapTooltip
                                         placement="left"
                                         title={
-                                            cartTotalPrice <= product.limit
+                                            cartTotalPrice < product.limit
                                                 ? "От " +
                                                   product.limit +
                                                   " ₽ (не хватает " +
@@ -137,7 +137,7 @@ export default function CartBonusesProducts(minicart = false) {
                                         <div
                                             disabled={
                                                 !!(
-                                                    cartTotalPrice <=
+                                                    cartTotalPrice <
                                                         product.limit ||
                                                     (cart.promocode &&
                                                         Object.keys(
@@ -158,7 +158,7 @@ export default function CartBonusesProducts(minicart = false) {
                                             <FormControlLabel
                                                 disabled={
                                                     !!(
-                                                        cartTotalPrice <=
+                                                        cartTotalPrice <
                                                             product.limit ||
                                                         (cart.promocode &&
                                                             Object.keys(
