@@ -26,7 +26,7 @@ export const getItemTotalPrice = (products) =>
                 item.options._promocode_price ||
                 item.options._promocode_price === 0
             ) {
-                return total + item.options._promocode_price;
+                return total + parseInt(item.options._promocode_price);
             }
             return total + parseInt(item.options._price);
         }, 0)
@@ -262,21 +262,17 @@ const cart = (state = initialState, action) => {
                             action.payload.promocodeProducts.type ===
                             "variations"
                         ) {
-                            let find = false;
                             const itemsWithDiscount = { ...state.items };
-                            itemsWithDiscount[
+                            const variantInCartInx = itemsWithDiscount[
                                 action.payload.promocodeProducts.id
-                            ].items.forEach((element) => {
-                                if (
-                                    element.variant.variant_id ===
+                            ].items.findIndex(
+                                (item) =>
+                                    item.variant.variant_id ===
                                     action.payload.promocodeProducts.variant
                                         .variant_id
-                                ) {
-                                    find = true;
-                                }
-                            });
+                            );
 
-                            if (!find) {
+                            if (variantInCartInx < 0) {
                                 let buffItems;
                                 buffItems = [
                                     ...itemsWithDiscount[
@@ -292,16 +288,14 @@ const cart = (state = initialState, action) => {
                                     ...itemsWithDiscount,
                                     [action.payload.promocodeProducts.id]: {
                                         items: newItems,
-                                        totalPrice: getItemTotalPrice([
-                                            action.payload.promocodeProducts,
-                                        ]),
+                                        totalPrice: getItemTotalPrice(newItems),
                                     },
                                 };
-                                updatedItems[
-                                    action.payload.promocodeProducts.id
-                                ].items[0].options._promocode_price = parseInt(
-                                    action.payload.productPrice
-                                );
+                                // updatedItems[
+                                //     action.payload.promocodeProducts.id
+                                // ].items[0].options._promocode_price = parseInt(
+                                //     action.payload.productPrice
+                                // );
 
                                 const allProducts = [].concat.apply(
                                     [],
@@ -361,7 +355,9 @@ const cart = (state = initialState, action) => {
                                 };
                                 updatedItems[
                                     action.payload.promocodeProducts.id
-                                ].items[0].options._promocode_price = parseInt(
+                                ].items[
+                                    variantInCartInx
+                                ].options._promocode_price = parseInt(
                                     action.payload.productPrice
                                 );
 
@@ -369,14 +365,18 @@ const cart = (state = initialState, action) => {
                                 if (
                                     updatedItems[
                                         action.payload.promocodeProducts.id
-                                    ].items[0].modificatorsAmount
+                                    ].items[variantInCartInx].modificatorsAmount
                                 ) {
                                     updatedItems[
                                         action.payload.promocodeProducts.id
-                                    ].items[0].options._promocode_price +=
+                                    ].items[
+                                        variantInCartInx
+                                    ].options._promocode_price +=
                                         updatedItems[
                                             action.payload.promocodeProducts.id
-                                        ].items[0].modificatorsAmount;
+                                        ].items[
+                                            variantInCartInx
+                                        ].modificatorsAmount;
                                 }
 
                                 updatedItems[
@@ -483,6 +483,34 @@ const cart = (state = initialState, action) => {
         }
         case "REMOVE_PROMOCODE": {
             const productsWithoutDiscount = { ...state.items };
+            if (
+                state.promocode.type === "fixed_product" &&
+                productsWithoutDiscount[state.promocodeProducts.id]
+            ) {
+                if (state.promocodeProducts.variant) {
+                    const deletedVariantInx = productsWithoutDiscount[
+                        state.promocodeProducts.id
+                    ].items.findIndex((item) => {
+                        return (
+                            item.variant.variant_id ===
+                                state.promocodeProducts.variant.variant_id &&
+                            item.options._promocode_price >= 0
+                        );
+                    });
+                    if (deletedVariantInx >= 0) {
+                        productsWithoutDiscount[
+                            state.promocodeProducts.id
+                        ].items.splice(deletedVariantInx, 1);
+                    }
+                } else {
+                    productsWithoutDiscount[
+                        state.promocodeProducts.id
+                    ].items.shift();
+                }
+                productsWithoutDiscount[state.promocodeProducts.id].items
+                    .length === 0 &&
+                    delete productsWithoutDiscount[state.promocodeProducts.id];
+            }
             for (let el in productsWithoutDiscount) {
                 productsWithoutDiscount[el].items.forEach(
                     (elem, index, array) => {
@@ -621,7 +649,10 @@ const cart = (state = initialState, action) => {
             let newItems;
 
             if (newItem.modificatorsAmount) {
-                newItem.options._promocode_price += newItem.modificatorsAmount;
+                if (newItem.options._promocode_price) {
+                    newItem.options._promocode_price +=
+                        newItem.modificatorsAmount;
+                }
                 newItem.options._price += newItem.modificatorsAmount;
             }
             if (action.payload.variant) {
