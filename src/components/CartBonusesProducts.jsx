@@ -30,8 +30,10 @@ export default function CartBonusesProducts(minicart = false) {
     const {
         programStatus,
         cartTotalPrice,
-        bonusesDisabledByCategory,
         disabledCategoriesNames,
+        bonusesDisabled,
+        bonusesDisabledByCategory,
+        bonusesDisabledByPromocode,
     } = useBonusProducts();
 
     const [choosenProductId, setChoosenProductId] = useState(null);
@@ -66,7 +68,7 @@ export default function CartBonusesProducts(minicart = false) {
         }
     };
 
-    if (!programStatus) {
+    if (bonusesDisabled) {
         return null;
     }
 
@@ -78,8 +80,7 @@ export default function CartBonusesProducts(minicart = false) {
                         Выберите подарок
                     </h2>
 
-                    {cart.discount &&
-                    config.CONFIG_promocode_with_bonus_program !== "on" ? (
+                    {bonusesDisabledByPromocode ? (
                         <Alert
                             severity="info"
                             className="custom-alert"

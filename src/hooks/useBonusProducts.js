@@ -80,21 +80,15 @@ const useBonusProducts = () => {
 
     const cartTotalPrice = getTotalPrice(productsWithoutCategories);
 
-    const bonusesDisabled = useMemo(
-        () =>
-            CONFIG_free_products_program_status !== "on" ||
-            !bonuses_items ||
-            !bonuses_items.length ||
-            (CONFIG_promocode_with_bonus_program !== "on" &&
-                promocode &&
-                Object.keys(promocode).length > 0),
-        [
-            promocode,
-            bonuses_items,
-            CONFIG_free_products_program_status,
-            CONFIG_promocode_with_bonus_program,
-        ]
-    );
+    const bonusesDisabled =
+        CONFIG_free_products_program_status !== "on" ||
+        !bonuses_items ||
+        !bonuses_items.length;
+
+    const bonusesDisabledByPromocode =
+        CONFIG_promocode_with_bonus_program !== "on" &&
+        promocode &&
+        Object.keys(promocode).length > 0;
 
     useEffect(() => {
         if (cartBonusProduct.id && bonusesDisabledByCategory) {
@@ -122,10 +116,11 @@ const useBonusProducts = () => {
         cartTotalPrice,
         programStatus,
         bonusesHardmod,
-        bonusesDisabledByCategory,
         disabledCategories,
         disabledCategoriesNames,
         bonusesDisabled,
+        bonusesDisabledByCategory,
+        bonusesDisabledByPromocode,
     };
 };
 

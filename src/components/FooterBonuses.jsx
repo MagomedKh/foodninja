@@ -38,10 +38,11 @@ export default function BonusesProductsModal() {
     const {
         cartTotalPrice,
         bonusesHardmod,
-        bonusesDisabledByCategory,
         disabledCategories,
         disabledCategoriesNames,
         bonusesDisabled,
+        bonusesDisabledByCategory,
+        bonusesDisabledByPromocode,
     } = useBonusProducts();
 
     const [bonusesItemsLocal, setBonusesItemsLocal] = useState(null);
@@ -108,7 +109,11 @@ export default function BonusesProductsModal() {
     };
 
     const handleChooseBonusProduct = (item) => {
-        if (cartTotalPrice < item.limit || bonusesDisabledByCategory) {
+        if (
+            cartTotalPrice < item.limit ||
+            bonusesDisabledByCategory ||
+            bonusesDisabledByPromocode
+        ) {
             return;
         }
         dispatch(addBonusProductToCart(item));
@@ -234,15 +239,21 @@ export default function BonusesProductsModal() {
                         <h2 className="modal-alert--title">Выберите подарок</h2>
 
                         <Container disableGutters={!_isMobile()}>
+                            {bonusesDisabledByPromocode ? (
+                                <Alert severity="error" sx={{ my: 2 }}>
+                                    Бонусные товары нельзя выбрать при
+                                    использовании промокода.
+                                </Alert>
+                            ) : null}
                             {bonusesHardmod && disabledCategories?.length ? (
-                                <Alert severity="info" sx={{ my: 2 }}>
+                                <Alert severity="error" sx={{ my: 2 }}>
                                     Товары из категории:{" "}
                                     {disabledCategoriesNames.join(", ")} нельзя
                                     использовать вместе со шкалой подарков.
                                 </Alert>
                             ) : null}
                             {!bonusesHardmod && disabledCategories?.length ? (
-                                <Alert severity="info" sx={{ my: 2 }}>
+                                <Alert severity="error" sx={{ my: 2 }}>
                                     Товары из категории:{" "}
                                     {disabledCategoriesNames.join(", ")} не
                                     участвуют в шкале подарков.
@@ -375,6 +386,7 @@ export default function BonusesProductsModal() {
                                                                         )
                                                                     }
                                                                     disabled={
+                                                                        bonusesDisabledByPromocode ||
                                                                         bonusesDisabledByCategory
                                                                     }
                                                                 >
