@@ -40,3 +40,4 @@ export { default as ContactsYandexMap } from "./ContactsYandexMap.jsx";
 export { default as IntersectionObserverWrapper } from "./IntersectionObserverWrapper.jsx";
 export { default as OverflowMenu } from "./OverflowMenu.jsx";
 export { default as BootstrapTooltip } from "./BootstrapTooltip.jsx";
+export { default as UserAddressesList } from "./UserAddressesList.jsx";

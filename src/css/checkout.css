@@ -33,8 +33,16 @@
     margin-bottom: 8px;
 }
 
-.checkout--delivery .checkout--address-panel .custom-radio:not(:last-child) {
+.checkout--delivery .checkout--address-panel .custom-radio {
     margin-bottom: 8px;
+}
+
+.checkout--delivery .checkout--address-panel .show-more {
+    margin-bottom: 16px;
+    color: var(--main-color);
+    cursor: pointer;
+    width: fit-content;
+    border-bottom: 1px dashed var(--main-color);
 }
 
 .checkout--delivery .MuiRadio-root {

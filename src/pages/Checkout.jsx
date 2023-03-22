@@ -43,6 +43,7 @@ import {
     Footer,
     Header,
     DeliveryAddressModal,
+    UserAddressesList,
 } from "../components";
 import {
     _checkPromocode,
@@ -990,91 +991,14 @@ export default function Checkout() {
                                             </Alert>
                                         ) : (
                                             <>
-                                                <RadioGroup
-                                                    value={deliveryAddress}
-                                                    aria-labelledby="deliveryAddress-label"
-                                                    name="deliveryAddress"
-                                                    onChange={
+                                                <UserAddressesList
+                                                    deliveryAddress={
+                                                        deliveryAddress
+                                                    }
+                                                    handleChooseDeliveryAddress={
                                                         handleChooseDeliveryAddress
                                                     }
-                                                    sx={{
-                                                        "& .MuiFormControlLabel-root":
-                                                            {
-                                                                alignItems:
-                                                                    "start",
-                                                            },
-                                                    }}
-                                                >
-                                                    {user.addresses &&
-                                                        Object.values(
-                                                            user.addresses
-                                                        ).map(
-                                                            (
-                                                                address,
-                                                                index
-                                                            ) => {
-                                                                if (
-                                                                    config
-                                                                        .deliveryZones
-                                                                        .deliveryPriceType ===
-                                                                        "areaPrice" &&
-                                                                    !address.coordinates
-                                                                ) {
-                                                                    return;
-                                                                }
-                                                                let formateAddress;
-                                                                if (
-                                                                    !address.formate
-                                                                ) {
-                                                                    formateAddress =
-                                                                        address.street +
-                                                                        ", д. " +
-                                                                        address.home;
-                                                                    formateAddress +=
-                                                                        address.porch
-                                                                            ? ", под. " +
-                                                                              address.porch
-                                                                            : "";
-                                                                    formateAddress +=
-                                                                        address.floor
-                                                                            ? ", этаж " +
-                                                                              address.floor
-                                                                            : "";
-                                                                    formateAddress +=
-                                                                        address.apartment
-                                                                            ? ", кв. " +
-                                                                              address.apartment
-                                                                            : "";
-                                                                }
-                                                                return (
-                                                                    <FormControlLabel
-                                                                        key={
-                                                                            index
-                                                                        }
-                                                                        className="custom-radio"
-                                                                        value={
-                                                                            index
-                                                                        }
-                                                                        control={
-                                                                            <Radio size="small" />
-                                                                        }
-                                                                        label={
-                                                                            address.formate ||
-                                                                            formateAddress
-                                                                        }
-                                                                    />
-                                                                );
-                                                            }
-                                                        )}
-                                                    <FormControlLabel
-                                                        className="custom-radio new-address"
-                                                        value="new"
-                                                        control={
-                                                            <Radio size="small" />
-                                                        }
-                                                        label="Новый адрес"
-                                                    />
-                                                </RadioGroup>
+                                                />
 
                                                 {config.deliveryZones
                                                     .deliveryPriceType ===
@@ -1124,7 +1048,6 @@ export default function Checkout() {
                                                                 ),
                                                             }}
                                                             sx={{
-                                                                mt: 1,
                                                                 "& .MuiOutlinedInput-root":
                                                                     {
                                                                         cursor: "pointer",
