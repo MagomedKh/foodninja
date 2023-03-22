@@ -800,11 +800,23 @@ export default function Checkout() {
     const deliveryOrderLess =
         config.CONFIG_order_min_price &&
         typeDelivery === "delivery" &&
+        config.deliveryZones.deliveryPriceType === "fixedPrice" &&
         cartTotalPrice < config.CONFIG_order_min_price;
     const selfDeliveryOrderLess =
         config.CONFIG_selforder_min_price &&
         typeDelivery === "self" &&
         cartTotalPrice < config.CONFIG_selforder_min_price;
+
+    const promocodeSelfDeliveryOrderLess =
+        typeDelivery === "self" &&
+        Object.keys(promocode).length > 0 &&
+        promocode.coupon_selfdelivery_min_price &&
+        cartTotalPrice < parseInt(promocode.coupon_selfdelivery_min_price);
+    const promocodeDeliveryOrderLess =
+        typeDelivery === "delivery" &&
+        Object.keys(promocode).length > 0 &&
+        promocode.coupon_min_price &&
+        cartTotalPrice < parseInt(promocode.coupon_min_price);
 
     // Функция рендера графика работы филиала
     const currentDayOfWeek =
@@ -1744,18 +1756,48 @@ export default function Checkout() {
                                         </IconButton>
                                     }
                                     severity="error"
-                                    sx={{ mt: 2 }}
+                                    sx={{ mb: 1 }}
                                 >
                                     {error}
                                 </Alert>
                             )}
+                            <Collapse
+                                sx={{ mb: 1 }}
+                                in={promocodeSelfDeliveryOrderLess}
+                                unmountOnExit
+                            >
+                                <Alert severity="error">
+                                    Минимальная сумма заказа на самовывоз c
+                                    промокодом «{promocode.code}» —{" "}
+                                    <span style={{ whiteSpace: "nowrap" }}>
+                                        {
+                                            promocode.coupon_selfdelivery_min_price
+                                        }{" "}
+                                        ₽
+                                    </span>
+                                </Alert>
+                            </Collapse>
 
                             <Collapse
-                                sx={{ mt: 1 }}
+                                sx={{ mb: 1 }}
+                                in={promocodeDeliveryOrderLess}
+                                unmountOnExit
+                            >
+                                <Alert severity="error">
+                                    Минимальная сумма заказа на доставку c
+                                    промокодом «{promocode.code}» —{" "}
+                                    <span style={{ whiteSpace: "nowrap" }}>
+                                        {promocode.coupon_min_price} ₽
+                                    </span>
+                                </Alert>
+                            </Collapse>
+
+                            <Collapse
+                                sx={{ mb: 1 }}
                                 in={selfDeliveryOrderLess}
                                 unmountOnExit
                             >
-                                <Alert severity="error" sx={{ mt: 2 }}>
+                                <Alert severity="error">
                                     Минимальная сумма заказа на самовывоз{" "}
                                     <span style={{ whiteSpace: "nowrap" }}>
                                         {config.CONFIG_selforder_min_price} ₽
@@ -1764,7 +1806,7 @@ export default function Checkout() {
                             </Collapse>
 
                             <Collapse
-                                sx={{ mt: 1 }}
+                                sx={{ mb: 1 }}
                                 in={deliveryOrderLess}
                                 unmountOnExit
                             >
@@ -1777,7 +1819,7 @@ export default function Checkout() {
                             </Collapse>
 
                             <Collapse
-                                sx={{ mt: 1 }}
+                                sx={{ mb: 1 }}
                                 in={
                                     deliveryZone &&
                                     deliveryZone.orderMinPrice > cartTotalPrice
@@ -1812,10 +1854,10 @@ export default function Checkout() {
                                             : handleMakeOrder();
                                     }}
                                     disabled={
-                                        (typeDelivery === "self" &&
-                                            selfDeliveryOrderLess) ||
-                                        (typeDelivery === "delivery" &&
-                                            deliveryOrderLess) ||
+                                        promocodeSelfDeliveryOrderLess ||
+                                        promocodeDeliveryOrderLess ||
+                                        selfDeliveryOrderLess ||
+                                        deliveryOrderLess ||
                                         (typeDelivery === "delivery" &&
                                             config.deliveryZones
                                                 .deliveryPriceType ===

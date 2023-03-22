@@ -287,24 +287,24 @@ export const _checkPromocode = (
         }
 
         // Проверка минимальной суммы заказа
-        if (promocode.type === "fixed_product")
-            cartTotal =
-                cartTotal -
-                parseInt(promocode.promocodeProducts.options._price) +
-                parseInt(promocode.productPrice);
+        // if (promocode.type === "fixed_product")
+        //     cartTotal =
+        //         cartTotal -
+        //         parseInt(promocode.promocodeProducts.options._price) +
+        //         parseInt(promocode.productPrice);
 
-        if (
-            parseInt(promocode.minimumPrice) &&
-            parseInt(promocode.minimumPrice) > cartTotal
-        ) {
-            return {
-                status: "error",
-                message:
-                    "Промокод отменен, т.к. действует при заказе на сумму от " +
-                    promocode.minimumPrice +
-                    " ₽.",
-            };
-        }
+        // if (
+        //     parseInt(promocode.minimumPrice) &&
+        //     parseInt(promocode.minimumPrice) > cartTotal
+        // ) {
+        //     return {
+        //         status: "error",
+        //         message:
+        //             "Промокод отменен, т.к. действует при заказе на сумму от " +
+        //             promocode.minimumPrice +
+        //             " ₽.",
+        //     };
+        // }
     }
 
     return true;
