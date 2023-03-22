@@ -83,7 +83,7 @@ export default function CartBonusesProducts(minicart = false) {
                         <Alert
                             severity="info"
                             className="custom-alert"
-                            sx={{ mb: 4, mr: 2, ml: 2 }}
+                            sx={{ mb: 2, mr: 2, ml: 2 }}
                         >
                             Бонусные товары нельзя выбрать при использовании
                             промокода.
@@ -95,7 +95,7 @@ export default function CartBonusesProducts(minicart = false) {
                     {bonusesDisabledByCategory ? (
                         <Alert
                             severity="info"
-                            sx={{ mb: 4, mr: 2, ml: 2 }}
+                            sx={{ mb: 2, mr: 2, ml: 2 }}
                             className="custom-alert"
                         >
                             Товары из категории:{" "}
@@ -112,7 +112,7 @@ export default function CartBonusesProducts(minicart = false) {
                                 : ""
                         }
                     >
-                        <Grid container spacing={4}>
+                        <Grid container spacing={2}>
                             {Object.values(bonuses_items).map((product) => (
                                 <Grid
                                     key={product.id}
