@@ -71,7 +71,7 @@ const useBonusProducts = () => {
                 (category) => category.term_id === id
             );
             if (category) {
-                return `"${category.name}"`;
+                return `«${category.name}»`;
             } else {
                 return "";
             }
