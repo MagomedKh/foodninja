@@ -391,22 +391,17 @@ function Header() {
                                     <div>
                                         {config.towns &&
                                         config.towns.length &&
+                                        config.towns.length > 1 &&
                                         _getPlatform() !== "vk" ? (
                                             <div className="title">
                                                 Ваш город{" "}
                                                 <b
                                                     className="choosenTown"
-                                                    style={
-                                                        config.towns.length > 1
-                                                            ? {
-                                                                  cursor: "pointer",
-                                                              }
-                                                            : null
-                                                    }
+                                                    style={{
+                                                        cursor: "pointer",
+                                                    }}
                                                     onClick={
-                                                        config.towns.length > 1
-                                                            ? handleOpenTownModal
-                                                            : null
+                                                        handleOpenTownModal
                                                     }
                                                 >
                                                     {config ? (
