@@ -2,9 +2,6 @@
     font-size: 0;
 }
 
-.product--category-container {
-    padding: 0 16px;
-}
 .product {
     border-radius: 15px;
     width: 25%;
@@ -239,9 +236,6 @@
 }
 
 @media (max-width: 899px) {
-    .product--category-container {
-        padding: 0;
-    }
     .product {
         padding: 0;
         width: 100%;
