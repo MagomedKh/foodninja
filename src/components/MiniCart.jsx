@@ -19,7 +19,13 @@ import { Promocode } from "../components";
 import MiniCartReccomends from "./MiniCartRecommends";
 import CartBonusesProducts from "./CartBonusesProducts";
 import { updateAlerts } from "../redux/actions/systemAlerts";
-import { removePromocode, addBonusProductToCart } from "../redux/actions/cart";
+import {
+    removePromocode,
+    addBonusProductToCart,
+    setConditionalPromocode,
+    addPromocode,
+    clearConditionalPromocode,
+} from "../redux/actions/cart";
 import { openMiniCart, closeMiniCart } from "../redux/actions/miniCart";
 import "../css/minicart.css";
 import { getItemTotalPrice } from "../redux/reducers/cart";
@@ -37,6 +43,7 @@ function MiniCart() {
         cartProducts,
         cartSubTotalPrice,
         promocode,
+        conditionalPromocode,
         cartTotalPrice,
         cartCountItems,
         promocodeProducts,
@@ -52,6 +59,7 @@ function MiniCart() {
             bonuses_items: products.bonuses_items,
             cartProducts: cart.items,
             promocode: cart.promocode,
+            conditionalPromocode: cart.conditionalPromocode,
             cartTotalPrice: cart.totalPrice,
             cartSubTotalPrice: cart.subTotalPrice,
             cartCountItems: cart.countItems,
@@ -124,7 +132,8 @@ function MiniCart() {
 
     if (
         Object.keys(promocode).length !== 0 &&
-        promocode.constructor === Object
+        promocode.constructor === Object &&
+        !conditionalPromocode
     ) {
         if (
             config.selfDeliveryCoupon.code !== undefined &&
@@ -132,14 +141,15 @@ function MiniCart() {
         )
             dispatch(removePromocode());
         else {
-            const resultCheckPromocode = _checkPromocode(
+            const resultCheckPromocode = _checkPromocode({
                 promocode,
-                cartProducts,
-                cartSubTotalPrice,
-                config
-            );
+                items: cartProducts,
+                cartTotal: cartSubTotalPrice,
+                config,
+            });
             if (resultCheckPromocode.status === "error") {
                 dispatch(removePromocode());
+                dispatch(setConditionalPromocode(promocode));
                 dispatch(
                     updateAlerts({
                         open: true,
@@ -147,6 +157,19 @@ function MiniCart() {
                     })
                 );
             }
+        }
+    }
+
+    if (conditionalPromocode && !Object.keys(promocode).length) {
+        const resultCheckPromocode = _checkPromocode({
+            promocode: conditionalPromocode,
+            items: cartProducts,
+            cartTotal: cartSubTotalPrice,
+            config,
+        });
+        if (resultCheckPromocode.status !== "error") {
+            dispatch(addPromocode(conditionalPromocode));
+            dispatch(clearConditionalPromocode());
         }
     }
 
@@ -191,7 +214,7 @@ function MiniCart() {
                 open={miniCartOpen}
                 onClose={handleCloseMiniCart}
             >
-                {cartCountItems && cartProducts ? (
+                {cartCountItems && Object.keys(cartProducts).length ? (
                     <div className="minicart--inner">
                         <div className="minicart--product-list">
                             <h2

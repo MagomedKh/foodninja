@@ -1,6 +1,11 @@
 import * as React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { addPromocode, removePromocode } from "../redux/actions/cart";
+import {
+    addPromocode,
+    clearConditionalPromocode,
+    removePromocode,
+    setConditionalPromocode,
+} from "../redux/actions/cart";
 import axios from "axios";
 import LoadingButton from "@mui/lab/LoadingButton";
 import {
@@ -9,9 +14,12 @@ import {
     Collapse,
     IconButton,
     TextField,
+    InputAdornment,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { _getDomain } from "./helpers.js";
+import WarningIcon from "@mui/icons-material/Warning";
+import CheckIcon from "@mui/icons-material/Check";
+import { _checkPromocode, _getDomain } from "./helpers.js";
 import { updateAlerts } from "../redux/actions/systemAlerts";
 import "../css/promocode.css";
 
@@ -19,20 +27,28 @@ export default function Promocode() {
     const dispatch = useDispatch();
     const {
         user,
+        config,
         cartPromocode,
+        conditionalPromocode,
         cartProducts,
         userCartBonusProduct,
         canPromocodeWithBonus,
+        cartSubTotalPrice,
     } = useSelector(({ user, cart, config }) => {
         return {
             user: user.user,
+            config: config.data,
             canPromocodeWithBonus: config.CONFIG_promocode_with_bonus_program,
             cartPromocode: cart.promocode,
+            conditionalPromocode: cart.conditionalPromocode,
             cartProducts: cart.items,
             cartTotal: cart.totalPrice,
+            cartSubTotalPrice: cart.subTotalPrice,
             userCartBonusProduct: cart.bonusProduct,
         };
     });
+
+    const categories = useSelector((state) => state.products.categories);
 
     const [loading, setLoading] = React.useState(false);
     const [alertMessage, setAlertMessage] = React.useState("");
@@ -48,7 +64,7 @@ export default function Promocode() {
     const handleApplyPromocode = () => {
         setLoading(true);
         axios
-            .post("https://" + _getDomain() + "/?rest-api=usePromocode", {
+            .post("https://" + _getDomain() + "/?rest-api=getPromocode", {
                 promocode: promocode,
                 cartProducts: cartProducts,
                 token: user.token ? user.token : false,
@@ -64,12 +80,28 @@ export default function Promocode() {
                     setTypeAlert("success");
                     setAlertMessage("");
                     setShowAlertMessage(false);
-                    dispatch(addPromocode(resp.data.promocode));
+                    const resultCheckPromocode = _checkPromocode({
+                        promocode: resp.data.promocode,
+                        items: cartProducts,
+                        cartTotal: cartSubTotalPrice,
+                        config,
+                        isInitial: true,
+                    });
+                    if (resultCheckPromocode.status === "error") {
+                        dispatch(setConditionalPromocode(resp.data.promocode));
+                    } else {
+                        dispatch(addPromocode(resp.data.promocode));
+                        setTypeAlert("success");
+                        setAlertMessage("");
+                        setShowAlertMessage(false);
+                    }
                 }
             });
     };
+
     const handleDisablePromocode = () => {
         dispatch(removePromocode());
+        dispatch(clearConditionalPromocode());
         dispatch(
             updateAlerts({
                 open: true,
@@ -79,7 +111,20 @@ export default function Promocode() {
         setPromocode("");
     };
 
-    const alertProps = { severity: typeAlert };
+    const getPromocodeErrors = () => {
+        if (conditionalPromocode) {
+            const resultCheckPromocode = _checkPromocode({
+                promocode: conditionalPromocode,
+                items: cartProducts,
+                cartTotal: cartSubTotalPrice,
+                config,
+                categories,
+            });
+            return resultCheckPromocode.errors;
+        }
+    };
+
+    const promocodeErrors = getPromocodeErrors();
 
     return (
         <div className="promocode-wrapper">
@@ -94,17 +139,35 @@ export default function Promocode() {
                             handleApplyPromocode();
                         }
                     }}
-                    value={promocode || ""}
+                    value={
+                        promocode ||
+                        cartPromocode?.code ||
+                        conditionalPromocode?.code ||
+                        ""
+                    }
                     disabled={
                         (cartPromocode.code !== undefined &&
                             cartPromocode.code) ||
+                        conditionalPromocode?.code ||
                         (Object.keys(userCartBonusProduct).length &&
                             canPromocodeWithBonus !== "on")
                             ? true
                             : false
                     }
+                    InputProps={{
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                {conditionalPromocode?.code ? (
+                                    <WarningIcon color="error" />
+                                ) : cartPromocode.code ? (
+                                    <CheckIcon color="success" />
+                                ) : null}
+                            </InputAdornment>
+                        ),
+                    }}
                 />
-                {cartPromocode.code !== undefined && cartPromocode.code ? (
+                {(cartPromocode.code !== undefined && cartPromocode.code) ||
+                conditionalPromocode?.code ? (
                     <LoadingButton
                         loading={loading}
                         size="small"
@@ -132,6 +195,16 @@ export default function Promocode() {
                     </LoadingButton>
                 )}
             </div>
+
+            {!cartPromocode?.code && conditionalPromocode?.code ? (
+                <Alert severity="error" className="custom-alert" sx={{ mt: 2 }}>
+                    Промокод не применён:
+                    {promocodeErrors?.length
+                        ? promocodeErrors.map((error) => <div>{error}</div>)
+                        : null}
+                </Alert>
+            ) : null}
+
             {Object.keys(userCartBonusProduct).length &&
             canPromocodeWithBonus !== "on" ? (
                 <Alert severity="info" className="custom-alert" sx={{ mt: 2 }}>
@@ -152,7 +225,7 @@ export default function Promocode() {
             {alertMessage && (
                 <Collapse sx={{ mt: 1 }} in={!!showAlertMessage}>
                     <Alert
-                        {...alertProps}
+                        severity={typeAlert}
                         action={
                             <IconButton
                                 aria-label="close"

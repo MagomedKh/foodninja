@@ -11,7 +11,13 @@ import { TransitionGroup } from "react-transition-group";
 import { Promocode, Header, Footer } from "../components";
 import CartFreeAddons from "../components/Product/CartFreeAddons";
 import { _checkPromocode } from "../components/helpers";
-import { removePromocode, addBonusProductToCart } from "../redux/actions/cart";
+import {
+    removePromocode,
+    addBonusProductToCart,
+    setConditionalPromocode,
+    addPromocode,
+    clearConditionalPromocode,
+} from "../redux/actions/cart";
 import { setOpenModalAuth } from "../redux/actions/user";
 import { updateAlerts } from "../redux/actions/systemAlerts";
 import emptyCartImg from "../img/empty-cart.svg";
@@ -25,6 +31,7 @@ export default function Cart() {
         config,
         cart,
         promocode,
+        conditionalPromocode,
         promocodeProducts,
         cartProducts,
         cartSubTotalPrice,
@@ -37,6 +44,7 @@ export default function Cart() {
             config: config.data,
             cart: cart,
             promocode: cart.promocode,
+            conditionalPromocode: cart.conditionalPromocode,
             promocodeProducts: cart.promocodeProducts,
             cartProducts: cart.items,
             cartTotalPrice: cart.totalPrice,
@@ -65,7 +73,8 @@ export default function Cart() {
 
     if (
         Object.keys(promocode).length !== 0 &&
-        promocode.constructor === Object
+        promocode.constructor === Object &&
+        !conditionalPromocode
     ) {
         if (
             config.selfDeliveryCoupon.code !== undefined &&
@@ -73,14 +82,15 @@ export default function Cart() {
         )
             dispatch(removePromocode());
         else {
-            const resultCheckPromocode = _checkPromocode(
+            const resultCheckPromocode = _checkPromocode({
                 promocode,
-                cartProducts,
-                cartSubTotalPrice,
-                config
-            );
+                items: cartProducts,
+                cartTotal: cartSubTotalPrice,
+                config,
+            });
             if (resultCheckPromocode.status === "error") {
                 dispatch(removePromocode());
+                dispatch(setConditionalPromocode(promocode));
                 dispatch(
                     updateAlerts({
                         open: true,
@@ -88,6 +98,19 @@ export default function Cart() {
                     })
                 );
             }
+        }
+    }
+
+    if (conditionalPromocode && !Object.keys(promocode).length) {
+        const resultCheckPromocode = _checkPromocode({
+            promocode: conditionalPromocode,
+            items: cartProducts,
+            cartTotal: cartSubTotalPrice,
+            config,
+        });
+        if (resultCheckPromocode.status !== "error") {
+            dispatch(addPromocode(conditionalPromocode));
+            dispatch(clearConditionalPromocode());
         }
     }
 

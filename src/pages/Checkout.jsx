@@ -6,6 +6,8 @@ import {
     removePromocode,
     clearCart,
     addBonusProductToCart,
+    setConditionalPromocode,
+    clearConditionalPromocode,
 } from "../redux/actions/cart";
 import { updateAlerts } from "../redux/actions/systemAlerts";
 import {
@@ -112,6 +114,7 @@ export default function Checkout() {
         cartProducts,
         items,
         promocode,
+        conditionalPromocode,
         promocodeProducts,
         userCartBonusProduct,
         cartSubTotalPrice,
@@ -126,6 +129,7 @@ export default function Checkout() {
             cartProducts: cart.items,
             items: products.items,
             promocode: cart.promocode,
+            conditionalPromocode: cart.conditionalPromocode,
             promocodeProducts: cart.promocodeProducts,
             userCartBonusProduct: cart.bonusProduct,
             cartTotalPrice: cart.totalPrice,
@@ -676,23 +680,25 @@ export default function Checkout() {
     useEffect(() => {
         if (
             Object.keys(promocode).length !== 0 &&
-            promocode.constructor === Object
+            promocode.constructor === Object &&
+            !conditionalPromocode
         ) {
             if (
                 config.selfDeliveryCoupon.code !== undefined &&
                 promocode.code === config.selfDeliveryCoupon.code
-            ) {
+            )
                 dispatch(removePromocode());
-            } else {
-                const resultCheckPromocode = _checkPromocode(
+            else {
+                const resultCheckPromocode = _checkPromocode({
                     promocode,
-                    cartProducts,
-                    cartSubTotalPrice,
+                    items: cartProducts,
+                    cartTotal: cartSubTotalPrice,
                     config,
-                    typeDelivery
-                );
+                    typeDelivery,
+                });
                 if (resultCheckPromocode.status === "error") {
                     dispatch(removePromocode());
+                    dispatch(setConditionalPromocode(promocode));
                     dispatch(
                         updateAlerts({
                             open: true,
@@ -702,7 +708,21 @@ export default function Checkout() {
                 }
             }
         }
-    }, [config, promocode, typeDelivery]);
+
+        if (conditionalPromocode && !Object.keys(promocode).length) {
+            const resultCheckPromocode = _checkPromocode({
+                promocode: conditionalPromocode,
+                items: cartProducts,
+                cartTotal: cartSubTotalPrice,
+                config,
+                typeDelivery,
+            });
+            if (resultCheckPromocode.status !== "error") {
+                dispatch(addPromocode(conditionalPromocode));
+                dispatch(clearConditionalPromocode());
+            }
+        }
+    }, [config, promocode, typeDelivery, conditionalPromocode]);
 
     const userNameProps = {
         error: !userName && !validate ? true : false,

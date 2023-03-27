@@ -7,6 +7,7 @@ const initialState = {
     freeAddons: {},
     promocode: {},
     promocodeProducts: {},
+    conditionalPromocode: null,
     discount: 0,
     subTotalPrice: 0,
     countItems: 0,
@@ -630,9 +631,15 @@ const cart = (state = initialState, action) => {
                     Object.values(updatedItems)
                 );
 
-                const totalPrice = getDiscountTotalPrice(allPrices);
+                let totalPrice = getDiscountTotalPrice(allPrices);
                 const subTotalPrice = getTotalPrice(allProducts);
-                const discount = subTotalPrice - totalPrice;
+                let discount;
+                if (state.promocode.type === "fixed_cart") {
+                    discount = parseInt(state.promocode.amount);
+                    totalPrice -= discount;
+                } else {
+                    discount = subTotalPrice - totalPrice;
+                }
                 const totalRolls = getTotalRollsCount(allProducts, state);
 
                 return {
@@ -686,9 +693,15 @@ const cart = (state = initialState, action) => {
             );
             const allPrices = [].concat.apply([], Object.values(updatedItems));
 
-            const totalPrice = getDiscountTotalPrice(allPrices);
+            let totalPrice = getDiscountTotalPrice(allPrices);
             const subTotalPrice = getTotalPrice(allProducts);
-            const discount = subTotalPrice - totalPrice;
+            let discount;
+            if (state.promocode.type === "fixed_cart") {
+                discount = parseInt(state.promocode.amount);
+                totalPrice -= discount;
+            } else {
+                discount = subTotalPrice - totalPrice;
+            }
             const totalRolls = getTotalRollsCount(allProducts, state);
 
             // if( state.promocode && !_checkPromocode(state.promocode, updatedItems, getTotalPrice(allProducts) ) ) {
@@ -751,9 +764,16 @@ const cart = (state = initialState, action) => {
             );
             const allPrices = [].concat.apply([], Object.values(updatedItems));
 
-            const totalPrice = getDiscountTotalPrice(allPrices);
+            let totalPrice = getDiscountTotalPrice(allPrices);
             const subTotalPrice = getTotalPrice(allProducts);
-            const discount = subTotalPrice - totalPrice;
+            let discount;
+            if (state.promocode.type === "fixed_cart") {
+                discount = parseInt(state.promocode.amount);
+                totalPrice -= discount;
+            } else {
+                discount = subTotalPrice - totalPrice;
+            }
+
             const totalRolls = getTotalRollsCount(allProducts, state);
 
             const bonusProduct = state.bonusProduct
@@ -864,9 +884,15 @@ const cart = (state = initialState, action) => {
             );
             const allPrices = [].concat.apply([], Object.values(updatedItems));
 
-            const totalPrice = getDiscountTotalPrice(allPrices);
+            let totalPrice = getDiscountTotalPrice(allPrices);
             const subTotalPrice = getTotalPrice(allProducts);
-            const discount = subTotalPrice - totalPrice;
+            let discount;
+            if (state.promocode.type === "fixed_cart") {
+                discount = parseInt(state.promocode.amount);
+                totalPrice -= discount;
+            } else {
+                discount = subTotalPrice - totalPrice;
+            }
             const totalRolls = getTotalRollsCount(allProducts, state);
             const bonusProduct = state.bonusProduct
                 ? totalPrice >= state.bonusProduct.limit
@@ -887,6 +913,18 @@ const cart = (state = initialState, action) => {
 
         case "CLEAR_CART": {
             return initialState;
+        }
+        case "SET_CONDITIONAL_PROMOCODE": {
+            return {
+                ...state,
+                conditionalPromocode: action.payload,
+            };
+        }
+        case "CLEAR_CONDITIONAL_PROMOCODE": {
+            return {
+                ...state,
+                conditionalPromocode: null,
+            };
         }
         default:
             return state;

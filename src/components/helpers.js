@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { getHours, getTime, isAfter, isBefore, set } from "date-fns";
+import { getDay, getHours, getTime, isAfter, isBefore, set } from "date-fns";
 
 export const _declension = (value, words) => {
     value = Math.abs(value) % 100;
@@ -47,20 +47,24 @@ export const _clone = (object) => {
     return r;
 };
 
-export const _checkPromocode = (
+export const _checkPromocode = ({
     promocode,
     items,
     cartTotal,
     config,
-    typeDelivery
-) => {
-    if (promocode) {
+    typeDelivery,
+    isInitial,
+    categories,
+}) => {
+    if (Object.keys(promocode).length) {
+        let status;
+        let message;
+        let errors = [];
+
         //Проверка на отключенные промокоды
         if (config?.CONFIG_disable_promocodes === "on") {
-            return {
-                status: "error",
-                message: "Промокод отменен",
-            };
+            status = "error";
+            message = "Промокод отменен";
         }
 
         // Текущее время
@@ -70,11 +74,11 @@ export const _checkPromocode = (
         if (
             (promocode.startDate && promocode.startDate > currentTime) ||
             (promocode.endDate && currentTime > promocode.endDate)
-        )
-            return {
-                status: "error",
-                message: "Промокод отменен, т.к. время действия истекло.",
-            };
+        ) {
+            status = "error";
+            message = "Промокод отменен, т.к. время действия истекло.";
+            errors.push("Время действия промокода истекло");
+        }
 
         // Проверка дня рождения
 
@@ -96,10 +100,11 @@ export const _checkPromocode = (
                 currentTime > futureDate.getTime() ||
                 currentTime < backDate.getTime()
             ) {
-                return {
-                    status: "error",
-                    message: `Промокод отменен, т.к. действует только ${promocode.birthdayDayLimitBefore} день до и ${promocode.birthdayDayLimitAfter} день после дня рождения.`,
-                };
+                status = "error";
+                message = `Промокод отменен, т.к. действует только ${promocode.birthdayDayLimitBefore} день до и ${promocode.birthdayDayLimitAfter} день после дня рождения.`;
+                errors.push(
+                    `Промокод действует только ${promocode.birthdayDayLimitBefore} день до и ${promocode.birthdayDayLimitAfter} день после дня рождения.`
+                );
             }
         }
 
@@ -120,30 +125,45 @@ export const _checkPromocode = (
             if (
                 isBefore(new Date(), promocodeStartTime) ||
                 isAfter(new Date(), promocodeEndTime)
-            )
-                return {
-                    status: "error",
-                    message:
-                        "Промокод отменен, т.к. в текущее время не действует.",
-                };
+            ) {
+                status = "error";
+                message =
+                    "Промокод отменен, т.к. в текущее время не действует.";
+                errors.push(
+                    `Промокод действует с ${promocode.startTime} до ${promocode.endTime}`
+                );
+            }
         }
+        // Проверка дней недели
+
+        if (promocode.days && promocode.days.length === 7) {
+            const todayDayOfWeek =
+                getDay(new Date()) === 0 ? 6 : getDay(new Date()) - 1;
+            const isPromocodeAvailable = promocode.days[todayDayOfWeek] === 1;
+            if (!isPromocodeAvailable) {
+                status = "error";
+                message = "Промокод отменен, т.к. не действует сегодня";
+                errors.push("Промокод не действует сегодня");
+            }
+        }
+
         // Проверка типа доставки
         if (typeDelivery) {
             if (
                 promocode.typeDelivery === "delivery" &&
                 typeDelivery !== "delivery"
-            )
-                return {
-                    status: "error",
-                    message:
-                        "Промокод отменен, т.к. действует только на доставку.",
-                };
-            if (promocode.typeDelivery === "self" && typeDelivery !== "self")
-                return {
-                    status: "error",
-                    message:
-                        "Промокод отменен, т.к. действует только при самовывозе.",
-                };
+            ) {
+                status = "error";
+                message =
+                    "Промокод отменен, т.к. действует только на доставку.";
+                errors.push("Промокод действует только на доставку.");
+            }
+            if (promocode.typeDelivery === "self" && typeDelivery !== "self") {
+                status = "error";
+                message =
+                    "Промокод отменен, т.к. действует только при самовывозе.";
+                errors.push("Промокод действует только при самовывозе.");
+            }
         }
 
         // Проверка платформы
@@ -168,7 +188,8 @@ export const _checkPromocode = (
                 let hasExcludeCategory = false;
                 Object.values(items).forEach((product) => {
                     if (
-                        product["items"][0].id == promocode.promocodeProducts.id
+                        product["items"][0].id ==
+                        promocode.promocodeProducts?.id
                     ) {
                         return;
                     }
@@ -178,12 +199,31 @@ export const _checkPromocode = (
                     if (inCategories.length) hasExcludeCategory = true;
                 });
 
-                if (hasExcludeCategory)
-                    return {
-                        status: "error",
-                        message:
-                            "Промокод отменен, т.к. не действует с выбранными товарами.",
-                    };
+                if (hasExcludeCategory) {
+                    if (categories) {
+                        const categoryNames = promocode.categories
+                            ?.map((id) => {
+                                const category = categories?.find(
+                                    (category) => category.term_id === id
+                                );
+                                if (category) {
+                                    return `«${category.name}»`;
+                                }
+                            })
+                            .filter((el) => el);
+                        errors.push(
+                            `Промокод не действует с товарами из категорий: ${categoryNames?.join(
+                                ", "
+                            )}`
+                        );
+                    } else {
+                        errors.push(`Промокод действует с другими товарами.`);
+                    }
+
+                    status = "error";
+                    message =
+                        "Промокод отменен, т.к. не действует с выбранными товарами.";
+                }
             }
 
             // Только указанные категории
@@ -205,16 +245,34 @@ export const _checkPromocode = (
                     if (!inCategories.length) notInCategory = true;
                 });
 
-                if (notInCategory)
-                    return {
-                        status: "error",
-                        message:
-                            "Промокод отменен, т.к. действует с другими товарами.",
-                    };
+                if (notInCategory) {
+                    if (categories) {
+                        const categoryNames = promocode.categories
+                            ?.map((id) => {
+                                const category = categories?.find(
+                                    (category) => category.term_id === id
+                                );
+                                if (category) {
+                                    return `«${category.name}»`;
+                                }
+                            })
+                            .filter((el) => el);
+                        errors.push(
+                            `Промокод действует только с товарами из категорий: ${categoryNames?.join(
+                                ", "
+                            )}`
+                        );
+                    } else {
+                        errors.push(`Промокод действует с другими товарами.`);
+                    }
+                    status = "error";
+                    message =
+                        "Промокод отменен, т.к. действует с другими товарами.";
+                }
             }
         }
 
-        if (promocode.type === "fixed_product") {
+        if (promocode.type === "fixed_product" && !isInitial) {
             let hasProduct = false;
 
             Object.values(items).forEach((productsArray) => {
@@ -229,18 +287,16 @@ export const _checkPromocode = (
                                 product.options._promocode_price == 0)
                         )
                             hasProduct = true;
-                    } else if (
-                        promocode.promocodeProducts.id === product.id &&
-                        product.options._promocode_price >= 0
-                    )
+                    } else if (promocode.promocodeProducts.id === product.id) {
                         hasProduct = true;
+                    }
                 });
             });
-            if (!hasProduct)
-                return {
-                    status: "error",
-                    message: "Промокод отменен, т.к. нет нужного товара.",
-                };
+            if (!hasProduct) {
+                status = "error";
+                message = "Промокод отменен, т.к. нет нужного товара.";
+                errors.push("Товар по промокоду отсутствует в корзине");
+            }
         }
 
         // Проверка товаров по скидке
@@ -262,12 +318,12 @@ export const _checkPromocode = (
                     el.items[0].options._sale_price ||
                     el.items[0].variant?._sale_price
             );
-            if (hasSale || productWithSale)
-                return {
-                    status: "error",
-                    message:
-                        "Промокод отменен, т.к. не действует с товарами по скидке.",
-                };
+            if (hasSale || productWithSale) {
+                status = "error";
+                message =
+                    "Промокод отменен, т.к. не действует с товарами по скидке.";
+                errors.push("Промокод не действует с товарами по скидке.");
+            }
         } else if (
             promocode.excludeSaleProduct &&
             promocode.categories_hardmode !== "yes"
@@ -278,12 +334,12 @@ export const _checkPromocode = (
                     !el.items[0].variant?._sale_price
             );
 
-            if (!productWithoutSale)
-                return {
-                    status: "error",
-                    message:
-                        "Промокод отменен, т.к. не действует с товарами по скидке.",
-                };
+            if (!productWithoutSale) {
+                status = "error";
+                message =
+                    "Промокод отменен, т.к. не действует с товарами по скидке.";
+                errors.push("Промокод не действует с товарами по скидке.");
+            }
         }
 
         // Проверка минимальной суммы заказа
@@ -305,9 +361,14 @@ export const _checkPromocode = (
         //             " ₽.",
         //     };
         // }
+        return {
+            message,
+            status,
+            errors,
+        };
     }
 
-    return true;
+    return false;
 };
 
 export const _isCategoryDisabled = (category) => {

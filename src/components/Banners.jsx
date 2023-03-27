@@ -57,6 +57,10 @@ export default function Footer() {
         }
     }, []);
 
+    if (!banners) {
+        return null;
+    }
+
     let swiperProps = { pagination: true, slidesPerView: 1 };
     if (_isMobile()) {
         swiperProps.spaceBetween = 30;

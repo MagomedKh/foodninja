@@ -16,13 +16,11 @@ import useBonusProducts from "../hooks/useBonusProducts";
 
 export default function CartBonusesProducts(minicart = false) {
     const dispatch = useDispatch();
-    const { cart, config, bonuses_items, userCartBonusProduct } = useSelector(
-        ({ config, cart, products }) => {
+    const { bonuses_items, cartBonusProduct } = useSelector(
+        ({ cart, products }) => {
             return {
-                cart: cart,
-                config: config.data,
                 bonuses_items: products.bonuses_items,
-                userCartBonusProduct: cart.bonusProduct,
+                cartBonusProduct: cart.bonusProduct,
             };
         }
     );
@@ -39,28 +37,25 @@ export default function CartBonusesProducts(minicart = false) {
     const [choosenProductId, setChoosenProductId] = useState(null);
 
     useEffect(() => {
-        if (cart.bonusProduct) {
-            setChoosenProductId(cart.bonusProduct.id);
+        if (cartBonusProduct) {
+            setChoosenProductId(cartBonusProduct.id);
         } else {
             setChoosenProductId(null);
         }
-    }, [cart.bonusProduct]);
+    }, [cartBonusProduct]);
 
     const handleChooseBonusProduct = (product) => {
         if (
-            Object.keys(userCartBonusProduct).length &&
-            userCartBonusProduct.id === product.id
+            Object.keys(cartBonusProduct).length &&
+            cartBonusProduct.id === product.id
         ) {
             dispatch(addBonusProductToCart({}));
             setChoosenProductId(null);
         } else {
             if (
-                ((config.CONFIG_promocode_with_bonus_program !== "on" &&
-                    (!cart.promocode ||
-                        Object.keys(cart.promocode).length === 0)) ||
-                    config.CONFIG_promocode_with_bonus_program === "on") &&
-                cartTotalPrice >= product.limit &&
-                !bonusesDisabledByCategory
+                !bonusesDisabledByPromocode &&
+                !bonusesDisabledByCategory &&
+                cartTotalPrice >= product.limit
             ) {
                 dispatch(addBonusProductToCart(product));
                 setChoosenProductId(product.id);
@@ -108,8 +103,8 @@ export default function CartBonusesProducts(minicart = false) {
                     <RadioGroup
                         name="bonusesProducts"
                         value={
-                            Object.keys(userCartBonusProduct).length
-                                ? userCartBonusProduct.id
+                            Object.keys(cartBonusProduct).length
+                                ? cartBonusProduct.id
                                 : ""
                         }
                     >
@@ -140,12 +135,7 @@ export default function CartBonusesProducts(minicart = false) {
                                                 !!(
                                                     cartTotalPrice <
                                                         product.limit ||
-                                                    (cart.promocode &&
-                                                        Object.keys(
-                                                            cart.promocode
-                                                        ).length > 0 &&
-                                                        config.CONFIG_promocode_with_bonus_program !==
-                                                            "on") ||
+                                                    bonusesDisabledByPromocode ||
                                                     bonusesDisabledByCategory
                                                 )
                                             }
@@ -161,12 +151,7 @@ export default function CartBonusesProducts(minicart = false) {
                                                     !!(
                                                         cartTotalPrice <
                                                             product.limit ||
-                                                        (cart.promocode &&
-                                                            Object.keys(
-                                                                cart.promocode
-                                                            ).length > 0 &&
-                                                            config.CONFIG_promocode_with_bonus_program !==
-                                                                "on") ||
+                                                        bonusesDisabledByPromocode ||
                                                         bonusesDisabledByCategory
                                                     )
                                                 }

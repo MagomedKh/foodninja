@@ -9,6 +9,7 @@ const useBonusProducts = () => {
     const {
         bonuses_items,
         promocode,
+        conditionalPromocode,
         cartProducts,
         productCategories,
         cartBonusProduct,
@@ -17,6 +18,7 @@ const useBonusProducts = () => {
             bonuses_items: products.bonuses_items,
             cartProducts: cart.items,
             promocode: cart.promocode,
+            conditionalPromocode: cart.conditionalPromocode,
             productCategories: products.categories,
             cartBonusProduct: cart.bonusProduct,
         };
@@ -87,8 +89,7 @@ const useBonusProducts = () => {
 
     const bonusesDisabledByPromocode =
         CONFIG_promocode_with_bonus_program !== "on" &&
-        promocode &&
-        Object.keys(promocode).length > 0;
+        (Object.keys(promocode).length || conditionalPromocode);
 
     useEffect(() => {
         if (cartBonusProduct.id && bonusesDisabledByCategory) {
@@ -103,14 +104,10 @@ const useBonusProducts = () => {
     }, [cartTotalPrice]);
 
     useEffect(() => {
-        if (
-            promocode &&
-            Object.keys(promocode).length > 0 &&
-            CONFIG_promocode_with_bonus_program !== "on"
-        ) {
+        if (cartBonusProduct.id && bonusesDisabledByPromocode) {
             dispatch(addBonusProductToCart({}));
         }
-    }, [promocode]);
+    }, [promocode, bonusesDisabledByPromocode]);
 
     return {
         cartTotalPrice,
