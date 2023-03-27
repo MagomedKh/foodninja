@@ -1869,7 +1869,8 @@ export default function Checkout() {
                                     className="custom-alert"
                                     sx={{ mt: 2 }}
                                 >
-                                    Промокод не применён:
+                                    Промокод «{conditionalPromocode?.code}» не
+                                    применён:
                                     {promocodeErrors?.length
                                         ? promocodeErrors.map((error) => (
                                               <div>{error}</div>
