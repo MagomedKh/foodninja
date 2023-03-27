@@ -7,34 +7,20 @@ import React, {
 } from "react";
 import { Box, CircularProgress } from "@mui/material";
 
-const StoriesContent = React.forwardRef(
+const StoriesVideoContent = React.forwardRef(
     ({ story, pause, play, updateStoryDuration }, ref) => {
-        const [loading, setLoading] = useState(true);
-        const [contentLoaded, setContentLoaded] = useState(false);
-
+        const [loading, setLoading] = useState(false);
         useEffect(() => {
-            if (!contentLoaded) {
-                pause();
-                setLoading(true);
-            }
-        }, [contentLoaded]);
-
-        useEffect(() => {
-            setContentLoaded(false);
+            console.log(story, pause, play, updateStoryDuration);
+            setLoading(true);
         }, [story]);
-
+        useEffect(() => {
+            pause();
+        }, [story]);
         const onVideoCanPlay = () => {
             updateStoryDuration(ref.current.duration * 1000);
             setLoading(false);
             play();
-            setContentLoaded(true);
-        };
-
-        const onImageLoaded = () => {
-            updateStoryDuration(2000);
-            setLoading(false);
-            play();
-            setContentLoaded(true);
         };
         return (
             <div className="story-container">
@@ -67,21 +53,17 @@ const StoriesContent = React.forwardRef(
                         />
                     </Box>
                 ) : null}
-                {story.type === "video" ? (
-                    <video
-                        src={story.url}
-                        playsInline
-                        autoPlay
-                        ref={ref}
-                        className="stories-video"
-                        onCanPlay={onVideoCanPlay}
-                    />
-                ) : (
-                    <img src={story.url} />
-                )}
+                <video
+                    src={story.url}
+                    playsInline
+                    autoPlay
+                    ref={ref}
+                    className="stories-video"
+                    onCanPlay={onVideoCanPlay}
+                />
             </div>
         );
     }
 );
 
-export default StoriesContent;
+export default StoriesVideoContent;

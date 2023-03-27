@@ -111,6 +111,10 @@ export default function Footer() {
         }
     }
 
+    if (!banners) {
+        return null;
+    }
+
     return (
         <>
             {!_isMobile() && banners.banners && banners.banners.length ? (

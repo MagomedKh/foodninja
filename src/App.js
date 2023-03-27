@@ -19,6 +19,7 @@ import {
     setPages,
     setSales,
 } from "./redux/actions/pages";
+import { setStories } from "./redux/actions/stories";
 import {
     ProductModal,
     AuthModal,
@@ -140,6 +141,7 @@ function App() {
                 dispatch(setBonusesProducts(resp.data.bonuses_products));
                 dispatch(setGateways(resp.data.gateways));
                 dispatch(setBanners(resp.data.banners));
+                dispatch(setStories(resp.data.stories));
             });
     }, [dispatch]);
 

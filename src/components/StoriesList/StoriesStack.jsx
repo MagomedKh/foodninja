@@ -11,6 +11,8 @@ import SeeMoreContent from "./SeeMoreContent";
 import { _isMobile } from "../helpers";
 import StoriesProgressBar from "./StoriesProgressBar";
 import StoriesContent from "./StoriesContent";
+import StoriesVideoContent from "./StoriesVideoContent";
+import StoriesImageContent from "./StoriesImageContent";
 
 const StoriesStack = ({ stack, handleOpenPrevStack, handleOpenNextStack }) => {
     const stackContainerRef = useRef(null);
@@ -126,17 +128,17 @@ const StoriesStack = ({ stack, handleOpenPrevStack, handleOpenNextStack }) => {
         }
     };
 
-    const pause = () => {
+    const pause = useCallback(() => {
         setPaused(true);
-    };
+    }, []);
 
-    const play = () => {
+    const play = useCallback(() => {
         setPaused(false);
-    };
+    }, []);
 
-    const updateStoryDuration = (duration) => {
+    const updateStoryDuration = useCallback((duration) => {
         setDuration(duration);
-    };
+    }, []);
 
     return (
         <Box
@@ -173,13 +175,29 @@ const StoriesStack = ({ stack, handleOpenPrevStack, handleOpenNextStack }) => {
                     />
                 ))}
             </Box>
-            <StoriesContent
+            {stack.stories[currentIndex] === "video" ? (
+                <StoriesVideoContent
+                    story={stack.stories[currentIndex]}
+                    ref={videoRef}
+                    pause={pause}
+                    play={play}
+                    updateStoryDuration={updateStoryDuration}
+                />
+            ) : (
+                <StoriesImageContent
+                    story={stack.stories[currentIndex]}
+                    pause={pause}
+                    play={play}
+                    updateStoryDuration={updateStoryDuration}
+                />
+            )}
+            {/* <StoriesContent
                 story={stack.stories[currentIndex]}
                 ref={videoRef}
                 pause={pause}
                 play={play}
-                updateStoryDuration={updateStoryDuration}
-            />
+                updateStoryDuration={updateStoryDuration} 
+            />*/}
             <div className="navigation-panels-container">
                 <div
                     className="left-panel"
@@ -196,7 +214,7 @@ const StoriesStack = ({ stack, handleOpenPrevStack, handleOpenNextStack }) => {
                     onTouchEnd={playNextStory}
                 ></div>
             </div>
-            {stack.stories[currentIndex].seeMore ? (
+            {stack.stories[currentIndex].usePopup ? (
                 <SeeMoreCollapsed openSeeMore={openSeeMore} />
             ) : null}
             {seeMoreOpened && (
@@ -211,6 +229,8 @@ const StoriesStack = ({ stack, handleOpenPrevStack, handleOpenNextStack }) => {
                     <SeeMoreContent
                         closeSeeMore={closeSeeMore}
                         seeMoreOpened={seeMoreOpened}
+                        title={stack.stories[currentIndex].title}
+                        description={stack.stories[currentIndex].description}
                     />
                 </Box>
             )}

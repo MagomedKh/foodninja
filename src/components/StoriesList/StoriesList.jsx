@@ -19,88 +19,14 @@ import SeeMoreCollapsed from "./SeeMoreCollapsed";
 import SeeMoreContent from "./SeeMoreContent";
 import StoriesStack from "./StoriesStack";
 
-const stories = [
-    {
-        id: 1,
-        isViewed: false,
-        previewImage:
-            "https://dev.foodninja.pro/wp-content/uploads/2022/05/3vvbtqigsnlmk8ivukljer4rz14qank2ftsi5wlfaokz2rgdg-buemyelc7muzw_fcgkaldl793tbs9tcd65mhu_.jpg",
-        stories: [
-            {
-                url: video,
-                type: "video",
-                seeMore: "yeeeas",
-                seeMoreCollapsed: SeeMoreCollapsed,
-            },
-            {
-                url: "https://dev.foodninja.pro/wp-content/uploads/2022/05/3vvbtqigsnlmk8ivukljer4rz14qank2ftsi5wlfaokz2rgdg-buemyelc7muzw_fcgkaldl793tbs9tcd65mhu_.jpg",
-                type: "image",
-            },
-        ],
-    },
-    {
-        id: 2,
-        isViewed: false,
-        previewImage:
-            "https://sun9-28.userapi.com/impg/vWJUNJSnxIhBXkPJj1LzMF3AipuMELDqtFbCTQ/ikvHWPM01yo.jpg?size=1080x1080&quality=96&sign=70545fe6d3d216a1ca78de8daaf5cbae&type=album",
-        stories: [
-            {
-                url: "https://sun9-28.userapi.com/impg/vWJUNJSnxIhBXkPJj1LzMF3AipuMELDqtFbCTQ/ikvHWPM01yo.jpg?size=1080x1080&quality=96&sign=70545fe6d3d216a1ca78de8daaf5cbae&type=album",
-                type: "image",
-                seeMore: "yeeeas",
-            },
-            {
-                url: "https://sun9-55.userapi.com/impg/dUOiao52hxvPlsfski0dFvyTCIN7ueCsTmKIug/jKUzBbmJ1XM.jpg?size=1000x1000&quality=96&sign=8102abeaed49b38fe16878cb8fa77273&type=album",
-                type: "image",
-                seeMore: "yeeeas",
-            },
-            {
-                url: "https://sushi45.ru/wp-content/uploads/2020/05/dr-sajt-mobail-5.jpg",
-                type: "image",
-                seeMore: "yeeeas",
-            },
-        ],
-    },
-    {
-        id: 3,
-        isViewed: false,
-        previewImage:
-            "https://sushi45.ru/wp-content/uploads/2020/05/banner-sajt-set-za-otzyv-mobile.jpg",
-        stories: [
-            {
-                url: "https://sushi45.ru/wp-content/uploads/2020/05/banner-sajt-set-za-otzyv-mobile.jpg",
-                type: "image",
-            },
-            {
-                url: "https://dev.foodninja.pro/wp-content/uploads/2022/05/33-768x768.jpg",
-                type: "image",
-            },
-        ],
-    },
-    {
-        id: 4,
-        isViewed: false,
-        previewImage:
-            "https://sushi45.ru/wp-content/uploads/2020/05/mors-sajt-mobail.jpg",
-        stories: [
-            {
-                url: "https://sun9-14.userapi.com/impg/R1_a3wgMt3fRakmlTPx5oBfo-N-sVrSe2llSPA/zXUTCfZZOWc.jpg?size=1080x1080&quality=96&sign=de035520a9a7d79dba1d404f395a2ffb&type=album",
-                type: "image",
-            },
-            {
-                url: "https://dev.foodninja.pro/wp-content/uploads/2022/05/3vvbtqigsnlmk8ivukljer4rz14qank2ftsi5wlfaokz2rgdg-buemyelc7muzw_fcgkaldl793tbs9tcd65mhu_.jpg",
-                type: "image",
-            },
-        ],
-    },
-];
-
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
 const StoriesList = () => {
     const cookies = useMemo(() => new Cookies(), []);
+
+    const stories = useSelector((state) => state.stories.stories);
 
     const [localStories, setLocalStories] = useState(null);
     const [storiesDialogOpen, setStoriesDialogOpen] = useState(false);
@@ -113,27 +39,29 @@ const StoriesList = () => {
     }, []);
 
     useEffect(() => {
-        const withSeeMoreStacks = stories.map((stack) => {
-            return {
-                ...stack,
-                stories: stack.stories.map((story) => {
-                    if (story.seeMore) {
-                        return {
-                            ...story,
-                            seeMore: ({ close }) => (
-                                <SeeMoreContent close={close} />
-                            ),
-                        };
-                    } else {
-                        return story;
-                    }
-                }),
-            };
-        });
-        const sortedStacks = sortStacks(withSeeMoreStacks);
+        if (stories?.length) {
+            const withSeeMoreStacks = stories.map((stack) => {
+                return {
+                    ...stack,
+                    stories: stack.stories.map((story) => {
+                        if (story.seeMore) {
+                            return {
+                                ...story,
+                                seeMore: ({ close }) => (
+                                    <SeeMoreContent close={close} />
+                                ),
+                            };
+                        } else {
+                            return story;
+                        }
+                    }),
+                };
+            });
+            const sortedStacks = sortStacks(withSeeMoreStacks);
 
-        setLocalStories(sortedStacks);
-    }, []);
+            setLocalStories(sortedStacks);
+        }
+    }, [stories]);
 
     useEffect(() => {
         if (
