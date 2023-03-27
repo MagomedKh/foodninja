@@ -13,7 +13,6 @@
 
 .banners-swiper.fullwidth .swiper-slide {
     opacity: 0.4;
-    transition: opacity 0.5s;
 }
 
 .banners-swiper.fullwidth .swiper-slide.swiper-slide-active {
@@ -103,7 +102,6 @@
 
 .bannersMobile-swiper.fullwidth .swiper-slide {
     opacity: 0.4;
-    transition: opacity 0.5s;
 }
 
 .bannersMobile-swiper.fullwidth .swiper-slide.swiper-slide-active {
