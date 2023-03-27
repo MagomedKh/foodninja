@@ -71,6 +71,7 @@ import onlineCreditCard from "../img/online-credit-card.svg";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import "../css/checkout.css";
+import usePromocodeErrors from "../hooks/usePromocodeErrors";
 
 const formatingStrPhone = (inputNumbersValue) => {
     var formattedPhone = "";
@@ -140,6 +141,7 @@ export default function Checkout() {
         (state) => state.deliveryAddressModal,
         shallowEqual
     );
+
     const navigate = useNavigate();
     const stickedTotalPanel = useRef();
     const [loading, setLoading] = useState(false);
@@ -179,6 +181,8 @@ export default function Checkout() {
     const [openBeforePaymentModal, setOpenBeforePaymentModal] = useState(false);
     const [yandexApiError, setYandexApiError] = useState(false);
     const [choosenAddress, setChoosenAddress] = useState(null);
+
+    const promocodeErrors = usePromocodeErrors(typeDelivery);
 
     const handleAlertClose = () => {
         setOpenAlert(false);
@@ -1849,6 +1853,28 @@ export default function Checkout() {
                                 <Alert severity="error">
                                     Сумма заказа меньше минимальной для доставки
                                     по указанному адресу
+                                </Alert>
+                            </Collapse>
+
+                            <Collapse
+                                sx={{ mb: 1 }}
+                                in={
+                                    !promocode?.code &&
+                                    conditionalPromocode?.code
+                                }
+                                unmountOnExit
+                            >
+                                <Alert
+                                    severity="error"
+                                    className="custom-alert"
+                                    sx={{ mt: 2 }}
+                                >
+                                    Промокод не применён:
+                                    {promocodeErrors?.length
+                                        ? promocodeErrors.map((error) => (
+                                              <div>{error}</div>
+                                          ))
+                                        : null}
                                 </Alert>
                             </Collapse>
 

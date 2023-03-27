@@ -22,6 +22,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import { _checkPromocode, _getDomain } from "./helpers.js";
 import { updateAlerts } from "../redux/actions/systemAlerts";
 import "../css/promocode.css";
+import usePromocodeErrors from "../hooks/usePromocodeErrors";
 
 export default function Promocode() {
     const dispatch = useDispatch();
@@ -48,7 +49,7 @@ export default function Promocode() {
         };
     });
 
-    const categories = useSelector((state) => state.products.categories);
+    const promocodeErrors = usePromocodeErrors();
 
     const [loading, setLoading] = React.useState(false);
     const [alertMessage, setAlertMessage] = React.useState("");
@@ -110,21 +111,6 @@ export default function Promocode() {
         );
         setPromocode("");
     };
-
-    const getPromocodeErrors = () => {
-        if (conditionalPromocode) {
-            const resultCheckPromocode = _checkPromocode({
-                promocode: conditionalPromocode,
-                items: cartProducts,
-                cartTotal: cartSubTotalPrice,
-                config,
-                categories,
-            });
-            return resultCheckPromocode.errors;
-        }
-    };
-
-    const promocodeErrors = getPromocodeErrors();
 
     return (
         <div className="promocode-wrapper">
