@@ -130,7 +130,7 @@ export default function ChooseTown() {
                                           `https://${town.url}/?rest-api=vk_start`
                                       )
                                     : setRedirect(
-                                          `https://${town.url}/?saveTown=true`
+                                          `https://${town.url}/?saveTown=true&platform=getPlatform()`
                                       );
                                 handleAlertClose();
                             }}
