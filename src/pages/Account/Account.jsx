@@ -70,6 +70,7 @@ export default function Account() {
                             sx={{
                                 boxShadow: "0 0 20px rgb(0 0 0 / 10%)",
                                 borderRadius: "0 10px 10px 10px",
+                                bgcolor: "#fff",
                             }}
                         >
                             <UserSettings />
@@ -79,6 +80,7 @@ export default function Account() {
                             sx={{
                                 boxShadow: "0 0 20px rgb(0 0 0 / 10%)",
                                 borderRadius: "10px",
+                                bgcolor: "#fff",
                             }}
                         >
                             <Orders />

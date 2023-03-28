@@ -1,23 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { Alert, Button, Drawer, IconButton } from "@mui/material";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-import CloseIcon from "@mui/icons-material/Close";
-import emptyCartImg from "../img/empty-cart.svg";
-import MiniCartProduct from "../components/Product/MiniCartProduct";
-import MiniCartBonusProduct from "../components/Product/MiniCartBonusProduct";
 import { setOpenModalAuth } from "../redux/actions/user";
-import MiniCartFreeAddons from "./Product/MiniCartFreeAddons";
-import {
-    _checkPromocode,
-    _getPlatform,
-    _isMobile,
-} from "../components/helpers.js";
-import { Promocode } from "../components";
-import MiniCartReccomends from "./MiniCartRecommends";
-import CartBonusesProducts from "./CartBonusesProducts";
 import { updateAlerts } from "../redux/actions/systemAlerts";
 import {
     removePromocode,
@@ -27,10 +10,28 @@ import {
     clearConditionalPromocode,
 } from "../redux/actions/cart";
 import { openMiniCart, closeMiniCart } from "../redux/actions/miniCart";
-import "../css/minicart.css";
 import { getItemTotalPrice } from "../redux/reducers/cart";
+import { useNavigate } from "react-router-dom";
+import { Alert, Button, Drawer, IconButton } from "@mui/material";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import CloseIcon from "@mui/icons-material/Close";
+import MiniCartProduct from "../components/Product/MiniCartProduct";
+import MiniCartBonusProduct from "../components/Product/MiniCartBonusProduct";
+import MiniCartFreeAddons from "./Product/MiniCartFreeAddons";
+import { Promocode } from "../components";
+import MiniCartReccomends from "./MiniCartRecommends";
+import CartBonusesProducts from "./CartBonusesProducts";
+import {
+    _checkPromocode,
+    _getPlatform,
+    _isMobile,
+} from "../components/helpers.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
+import emptyCartImg from "../img/empty-cart.svg";
+import "../css/minicart.css";
+import clsx from "clsx";
 
 function MiniCart() {
     const navigate = useNavigate();
@@ -218,9 +219,10 @@ function MiniCart() {
                     <div className="minicart--inner">
                         <div className="minicart--product-list">
                             <h2
-                                className={`minicart--inner-title ${
-                                    _getPlatform() === "vk" ? "vk" : ""
-                                }`}
+                                className={clsx(
+                                    "minicart--inner-title",
+                                    _getPlatform() === "vk" && "vk"
+                                )}
                             >
                                 <div>Корзина</div>
                                 <IconButton

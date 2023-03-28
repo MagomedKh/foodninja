@@ -7,6 +7,7 @@ import Skeleton from "@mui/material/Skeleton";
 import { Link as AnimateLink } from "react-scroll";
 import { _isMobile } from "../components/helpers.js";
 import smoothscroll from "smoothscroll-polyfill";
+import clsx from "clsx";
 import "../css/top-categories-menu.css";
 
 export default function TopCategoriesMenu() {
@@ -15,12 +16,15 @@ export default function TopCategoriesMenu() {
     const categoriesMenuRef = useRef();
     const { pathname } = useLocation();
     const [sticked, setSticked] = useState(false);
-    const { categories, products } = useSelector(({ products }) => {
-        return {
-            categories: products.categories,
-            products: products.items,
-        };
-    });
+    const { categories, products, categoriesMenuType } = useSelector(
+        ({ products, config }) => {
+            return {
+                categories: products.categories,
+                products: products.items,
+                categoriesMenuType: config.data.CONFIG_type_categories,
+            };
+        }
+    );
 
     const [categoriesWithProducts, setCategoriesWithProducts] = useState(null);
 
@@ -75,22 +79,21 @@ export default function TopCategoriesMenu() {
     if (_isMobile()) {
         return (
             <div
-                className={`sticked-top-bar ${
-                    sticked ? "sticked" : "no-sticked"
-                }`}
+                className={clsx("sticked-top-bar", {
+                    sticked: sticked,
+                    white: categoriesMenuType === "one",
+                    filled: categoriesMenuType === "two",
+                })}
                 ref={stickedBarRef}
             >
                 <Container className="inner-wrapper">
                     {categoriesWithProducts ? (
-                        <ul
-                            className={"categories-menu"}
-                            ref={categoriesMenuRef}
-                        >
+                        <ul className="categories-menu" ref={categoriesMenuRef}>
                             {categoriesWithProducts.map((item) => {
                                 return (
                                     <li
                                         key={item.term_id}
-                                        className={"viewCategory"}
+                                        className="viewCategory"
                                         data-targetid={item.term_id}
                                     >
                                         {pathname === "/" ? (
@@ -113,12 +116,11 @@ export default function TopCategoriesMenu() {
                                                 style={{
                                                     textDecoration: "none",
                                                 }}
-                                                className={
+                                                className={clsx(
                                                     pathname ===
-                                                    `/category/${item.slug}`
-                                                        ? "active"
-                                                        : ""
-                                                }
+                                                        `/category/${item.slug}` &&
+                                                        "active"
+                                                )}
                                             >
                                                 {item.name}
                                             </Link>
@@ -138,7 +140,11 @@ export default function TopCategoriesMenu() {
 
     return (
         <div
-            className={`sticked-top-bar ${sticked ? "sticked" : "no-sticked"}`}
+            className={clsx("sticked-top-bar", {
+                sticked: sticked,
+                white: categoriesMenuType === "one",
+                filled: categoriesMenuType === "two",
+            })}
             ref={stickedBarRef}
         >
             <Container className="inner-wrapper">
@@ -148,7 +154,7 @@ export default function TopCategoriesMenu() {
                             return (
                                 <li
                                     key={item.term_id}
-                                    className={"viewCategory"}
+                                    className="viewCategory"
                                     data-targetid={item.term_id}
                                 >
                                     {pathname === "/" ? (
@@ -168,12 +174,11 @@ export default function TopCategoriesMenu() {
                                             style={{
                                                 textDecoration: "none",
                                             }}
-                                            className={
+                                            className={clsx(
                                                 pathname ===
-                                                `/category/${item.slug}`
-                                                    ? "active"
-                                                    : ""
-                                            }
+                                                    `/category/${item.slug}` &&
+                                                    "active"
+                                            )}
                                         >
                                             {item.name}
                                         </Link>

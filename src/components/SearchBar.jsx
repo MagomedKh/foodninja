@@ -138,8 +138,9 @@ const SearchBar = ({
                             }}
                             sx={{
                                 mb: 2,
-                                "& fieldset": {
-                                    borderRadius: "20px",
+                                "& .MuiInputBase-root": {
+                                    borderRadius: "20px !important",
+                                    bgcolor: "#fff",
                                 },
                             }}
                         />

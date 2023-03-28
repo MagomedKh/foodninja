@@ -1,5 +1,6 @@
 .standart-header {
     display: flex;
+    justify-content: space-between;
     width: 100%;
 }
 .header-work,
@@ -9,6 +10,17 @@
     margin-left: 1.5rem !important;
     margin-right: 1.5rem !important;
 }
+.header-wrapper.one-type .header-phone {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+.header-phone--content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
 .header-work .icn,
 .header-phone .icn {
     width: 28px;
@@ -28,6 +40,7 @@
     color: #000;
     text-decoration: none;
 }
+
 .header-phone .info:hover {
     text-decoration: underline;
 }
@@ -36,9 +49,21 @@
     .header-work {
         display: none;
     }
+    .header-wrapper.one-type .header-phone {
+        display: flex;
+    }
 }
+@media (max-width: 899px) {
+    .header-wrapper.one-type .header-phone {
+        display: none;
+    }
+}
+
 .header-logo-wrapper {
-    height: 50px;
+    height: 56px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 .header-logo {
     width: auto;
@@ -46,6 +71,15 @@
     max-width: none;
     margin-right: 1.5rem !important;
 }
+.header-wrapper.one-type .header-logo {
+    margin-right: 0 !important;
+}
+
+.header-logo-wrapper .header-logo-link {
+    display: inline-block;
+    height: 50px;
+}
+
 #root .header-bar {
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
@@ -54,12 +88,22 @@
     position: relative;
 }
 .header-login {
-    margin-left: 15px;
+    margin: auto auto auto 15px;
 }
 .header--right-col {
     display: flex;
     margin-left: auto;
 }
+.header-wrapper.one-type .header--right-col {
+    margin-left: 0;
+    min-width: 200px;
+    justify-content: end;
+    align-items: center;
+}
+.header-wrapper.one-type .header--right-col .header-login {
+    margin: 0;
+}
+
 .header-phone .title .MuiSkeleton-text {
     display: inline-block !important;
     min-width: 50px !important;
@@ -122,7 +166,6 @@
 }
 .step-label .MuiStepLabel-label {
     margin-top: 2px !important;
-    font-family: "Cera";
 }
 
 /* Мобильная шапка */
@@ -130,6 +173,11 @@
     background: black;
     color: white;
 }
+.mobile-menu.white .MuiDrawer-paper {
+    background: white;
+    color: black;
+}
+
 .mobile-menu-wrapper {
     width: 350px;
 }
@@ -140,6 +188,10 @@
     background: black;
     padding: 10px 20px;
 }
+.mobile-menu.white .mobile-menu-wrapper ul {
+    background: white;
+}
+
 .mobile-menu--user-account-button {
     padding: 20px 20px 10px 20px;
 }
@@ -153,6 +205,10 @@
     padding-left: 3px;
     text-decoration: none;
 }
+.mobile-menu.white .mobile-menu-wrapper li a {
+    color: black;
+}
+
 .mobile-menu-wrapper li a:hover {
     color: var(--main-color);
 }
@@ -173,22 +229,35 @@
     margin: 0 0 20px !important;
     padding: 10px 20px;
 }
+.mobile-menu.white .header-work,
+.mobile-menu.white .header-phone {
+    color: black;
+}
+
 .mobile-menu--contacts {
     display: flex;
     align-items: center;
     color: white;
     padding: 10px 20px;
 }
+
 .mobile-menu--contacts svg {
     width: 28px;
     fill: var(--main-color);
     margin-right: 1rem !important;
 }
+
 .mobile-menu--contacts a {
     text-decoration: none;
     font-size: 20px;
     color: white;
+    font-weight: bold;
 }
+.mobile-menu.white .mobile-menu--contacts a {
+    color: black;
+    font-weight: bold;
+}
+
 .modal-alert--wrapper.choose-town .modal-alert--inner button {
     width: 100%;
     padding: 0px !important;
@@ -197,6 +266,9 @@
     display: none;
 }
 @media (max-width: 899px) {
+    .header-wrapper.one-type .standart-header {
+        justify-content: end;
+    }
     .header-mobile-menu {
         position: absolute;
         left: 0;
@@ -213,20 +285,15 @@
         width: 100%;
         text-align: right;
     }
-
-    .header-logo-wrapper .header-logo-link {
-        display: inline-block;
-        height: 100%;
-    }
     .mobile-menu-wrapper .header-logo,
     .header-wrapper .header-logo {
         height: 100%;
         width: auto;
-        max-height: 40px;
+        max-height: 50px;
         margin-right: 0 !important;
     }
     .header-logo-wrapper {
-        height: 40px;
+        height: 56px;
     }
     .modal-alert--wrapper.choose-town .modal-alert--inner {
         min-width: 200px;

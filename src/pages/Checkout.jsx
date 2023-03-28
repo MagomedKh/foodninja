@@ -962,7 +962,12 @@ export default function Checkout() {
                                                 label="Ваше имя"
                                                 onInput={handleChangeName}
                                                 value={userName}
-                                                sx={{ width: 1 }}
+                                                sx={{
+                                                    width: 1,
+                                                    "& .MuiInputBase-root": {
+                                                        bgcolor: "#fff",
+                                                    },
+                                                }}
                                                 {...userNameProps}
                                             />
                                         </div>
@@ -977,7 +982,12 @@ export default function Checkout() {
                                                 onInput={handlePhoneInput}
                                                 onPaste={handlePhonePaste}
                                                 value={userPhone}
-                                                sx={{ width: 1 }}
+                                                sx={{
+                                                    width: 1,
+                                                    "& .MuiInputBase-root": {
+                                                        bgcolor: "#fff",
+                                                    },
+                                                }}
                                                 {...userPhoneProps}
                                             />
                                         </div>
@@ -1349,7 +1359,12 @@ export default function Checkout() {
                                     maxRows={8}
                                     value={commentOrder}
                                     onInput={handleChangeCommentOrder}
-                                    sx={{ width: 1 }}
+                                    sx={{
+                                        width: 1,
+                                        "& .MuiInputBase-root": {
+                                            bgcolor: "#fff",
+                                        },
+                                    }}
                                 />
                             </div>
                         </Grid>

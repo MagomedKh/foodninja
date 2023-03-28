@@ -1,5 +1,5 @@
-export { default as Header } from "./Header.jsx";
-export { default as Footer } from "./Footer.jsx";
+export { default as Header } from "./Header/Header.jsx";
+export { default as Footer } from "./Footer/Footer.jsx";
 export { default as Product } from "./Product/Product.jsx";
 export { default as MiniCart } from "./MiniCart.jsx";
 export { default as MobileMiniCart } from "./MobileMiniCart.jsx";
@@ -41,3 +41,4 @@ export { default as IntersectionObserverWrapper } from "./IntersectionObserverWr
 export { default as OverflowMenu } from "./OverflowMenu.jsx";
 export { default as BootstrapTooltip } from "./BootstrapTooltip.jsx";
 export { default as UserAddressesList } from "./UserAddressesList.jsx";
+export { default as StoriesList } from "./StoriesList/StoriesList.jsx";
