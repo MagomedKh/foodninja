@@ -88,6 +88,7 @@ const StoriesProgressBar = ({
                               },
                     "&.MuiLinearProgress-root": {
                         height: "3px",
+                        backgroundColor: "#fff",
                     },
                 }}
             />

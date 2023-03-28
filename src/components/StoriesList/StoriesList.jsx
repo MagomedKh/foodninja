@@ -1,23 +1,15 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { Swiper, SwiperSlide } from "swiper/react/swiper-react";
 import { FreeMode, Navigation } from "swiper";
 import Cookies from "universal-cookie";
-import { Container, Dialog, IconButton, Slide } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faAngleRight,
-    faAngleLeft,
-    faAngleUp,
-} from "@fortawesome/free-solid-svg-icons";
-import video from "../../img/video.mp4";
+import { Container, Slide } from "@mui/material";
 import StoriesSlide from "./StoriesSlide";
 import { _clone, _isMobile } from "../helpers";
 import "../../css/stories.css";
-import SeeMoreCollapsed from "./SeeMoreCollapsed";
 import SeeMoreContent from "./SeeMoreContent";
-import StoriesStack from "./StoriesStack";
+import StoriesModal from "./StoriesModal";
+import { addDays } from "date-fns";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -25,6 +17,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const StoriesList = () => {
     const cookies = useMemo(() => new Cookies(), []);
+
+    const viewedStories = cookies.get("viewedStories") || [];
 
     const stories = useSelector((state) => state.stories.stories);
 
@@ -57,7 +51,13 @@ const StoriesList = () => {
                     }),
                 };
             });
-            const sortedStacks = sortStacks(withSeeMoreStacks);
+            const stacksWithViewedProp = withSeeMoreStacks.map((stack) => {
+                return {
+                    ...stack,
+                    isViewed: viewedStories?.includes(stack.id),
+                };
+            });
+            const sortedStacks = sortStacks(stacksWithViewedProp);
 
             setLocalStories(sortedStacks);
         }
@@ -70,13 +70,26 @@ const StoriesList = () => {
             !localStories[openedStackIndex].isViewed
         ) {
             const temp = localStories.map((el) => _clone(el));
+
             temp[openedStackIndex].isViewed = true;
+
+            if (!viewedStories?.includes(temp[openedStackIndex].id)) {
+                const newViewedStories = [
+                    ...viewedStories,
+                    temp[openedStackIndex].id,
+                ];
+                cookies.set("viewedStories", newViewedStories, {
+                    path: "/",
+                    expires: addDays(new Date(), 30),
+                });
+            }
             setLocalStories(temp);
         }
     }, [openedStackIndex]);
 
     const handleClose = useCallback(() => {
         const sortedStacks = sortStacks(localStories);
+
         setLocalStories(sortedStacks);
         setStoriesDialogOpen(false);
         setOpenedStackIndex(false);
@@ -87,21 +100,9 @@ const StoriesList = () => {
         setOpenedStackIndex(stackId);
     }, []);
 
-    const handleOpenNextStack = useCallback(() => {
-        if (openedStackIndex + 1 > stories.length - 1) {
-            handleClose();
-        } else {
-            setOpenedStackIndex(openedStackIndex + 1);
-        }
-    }, [openedStackIndex]);
-
-    const handleOpenPrevStack = useCallback(() => {
-        if (openedStackIndex - 1 < 0) {
-            handleClose();
-        } else {
-            setOpenedStackIndex(openedStackIndex - 1);
-        }
-    }, [openedStackIndex]);
+    const handleStackChange = (index) => {
+        setOpenedStackIndex(index);
+    };
 
     let dialogProps = {
         open: storiesDialogOpen && openedStackIndex >= 0,
@@ -123,28 +124,6 @@ const StoriesList = () => {
                 <Swiper
                     slidesPerView="auto"
                     spaceBetween={_isMobile() ? 10 : 20}
-                    // breakpoints={{
-                    //     320: {
-                    //         slidesPerView: 1,
-                    //         spaceBetweenSlides: 5,
-                    //     },
-                    //     600: {
-                    //         slidesPerView: 2,
-                    //         spaceBetweenSlides: 5,
-                    //     },
-                    //     991: {
-                    //         slidesPerView: 3,
-                    //         spaceBetweenSlides: 5,
-                    //     },
-                    //     1240: {
-                    //         slidesPerView: 3,
-                    //         spaceBetweenSlides: 5,
-                    //     },
-                    //     1600: {
-                    //         slidesPerView: 4,
-                    //         spaceBetweenSlides: 5,
-                    //     },
-                    // }}
                     freeMode={true}
                     navigation={true}
                     modules={[FreeMode, Navigation]}
@@ -165,52 +144,13 @@ const StoriesList = () => {
                 </Swiper>
             </div>
             {storiesDialogOpen && openedStackIndex >= 0 ? (
-                <Dialog
-                    maxWidth="md"
-                    fullWidth
-                    {...dialogProps}
-                    BackdropProps={{
-                        style: { backgroundColor: "rgba(0,0,0,0.8)" },
-                    }}
-                    sx={{
-                        "& .MuiPaper-root": {
-                            width: "auto",
-                            borderRadius: _isMobile() ? "0px" : "20px",
-                        },
-                    }}
-                    className={"stories--dialog"}
-                >
-                    <IconButton
-                        edge="start"
-                        color="inherit"
-                        onClick={handleClose}
-                        aria-label="close"
-                        className="modal-close"
-                    >
-                        <CloseIcon />
-                    </IconButton>
-
-                    <FontAwesomeIcon
-                        icon={faAngleLeft}
-                        className="stories--dialog-left-arrow"
-                        onClick={handleOpenPrevStack}
-                    />
-                    {/* <StoriesContainer
-                        stack={localStories[openedStackIndex]}
-                        handleOpenPrevStack={handleOpenPrevStack}
-                        handleOpenNextStack={handleOpenNextStack}
-                    /> */}
-                    <StoriesStack
-                        stack={localStories[openedStackIndex]}
-                        handleOpenPrevStack={handleOpenPrevStack}
-                        handleOpenNextStack={handleOpenNextStack}
-                    />
-                    <FontAwesomeIcon
-                        icon={faAngleRight}
-                        className="stories--dialog-right-arrow"
-                        onClick={handleOpenNextStack}
-                    />
-                </Dialog>
+                <StoriesModal
+                    open={storiesDialogOpen && openedStackIndex >= 0}
+                    localStories={localStories}
+                    handleClose={handleClose}
+                    openedStackIndex={openedStackIndex}
+                    handleStackChange={handleStackChange}
+                />
             ) : null}
         </Container>
     );

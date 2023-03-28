@@ -5,7 +5,8 @@ import React, {
     useEffect,
     useRef,
 } from "react";
-import { Box } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import SeeMoreCollapsed from "./SeeMoreCollapsed";
 import SeeMoreContent from "./SeeMoreContent";
 import { _isMobile } from "../helpers";
@@ -14,25 +15,43 @@ import StoriesContent from "./StoriesContent";
 import StoriesVideoContent from "./StoriesVideoContent";
 import StoriesImageContent from "./StoriesImageContent";
 
-const StoriesStack = ({ stack, handleOpenPrevStack, handleOpenNextStack }) => {
+const StoriesStack = ({
+    stack,
+    handleOpenPrevStack,
+    handleOpenNextStack,
+    handleClose,
+    active,
+}) => {
+    console.log("render");
     const stackContainerRef = useRef(null);
     const videoRef = useRef(null);
     const longPressRef = useRef(false);
+    const targetPressRef = useRef(null);
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [paused, setPaused] = useState(false);
+
     const [seeMoreOpened, setSeeMoreOpened] = useState(false);
-    const [duration, setDuration] = useState(2000);
+    const [duration, setDuration] = useState(5000);
+
+    const [paused, setPaused] = useState(false);
+
+    const pause = useCallback(() => {
+        setPaused(true);
+    }, []);
+
+    const play = useCallback(() => {
+        setPaused(false);
+    }, []);
 
     let timerId;
 
     useEffect(() => {
-        setCurrentIndex(0);
-        if (seeMoreOpened) {
-            setSeeMoreOpened(false);
+        if (active && paused) {
+            play();
         }
-        if (paused) {
-            setPaused(false);
-        }
+        longPressRef.current = false;
+    }, [active]);
+
+    useEffect(() => {
         if (_isMobile()) {
             const appHeight = () => {
                 if (stackContainerRef.current) {
@@ -43,78 +62,129 @@ const StoriesStack = ({ stack, handleOpenPrevStack, handleOpenNextStack }) => {
             window.addEventListener("resize", appHeight);
             appHeight();
         }
-    }, [stack]);
-
-    // useEffect(()=> {
-    //     if (stack.stories[currentIndex].type === "video") {
-
-    //     }
-    // },[currentIndex, stack])
+    }, []);
 
     const onMouseDown = (event) => {
-        // if (_isMobile()) {
-        //     event.preventDefault();
-        // }
+        targetPressRef.current = event.target;
         event.stopPropagation();
         timerId = setTimeout(() => {
             longPressRef.current = true;
-            setPaused(true);
+            pause();
             if (videoRef.current) {
                 videoRef.current.pause();
             }
         }, 200);
     };
 
-    const playNextStory = useCallback(() => {
+    const autoPlayNextStory = (event) => {
         clearTimeout(timerId);
         if (longPressRef.current) {
             longPressRef.current = false;
-            setPaused(false);
+            targetPressRef.current = null;
+            play();
             if (videoRef.current) {
                 videoRef.current.play();
             }
             return;
         }
         if (paused) {
-            setPaused(false);
+            play();
         }
+
         if (currentIndex === stack.stories.length - 1) {
-            setCurrentIndex(0);
+            // setCurrentIndex(0);
             handleOpenNextStack();
         } else {
             setCurrentIndex((oldIndex) => {
                 return oldIndex + 1;
             });
         }
-    }, [paused, currentIndex, stack]);
+        targetPressRef.current = null;
+    };
 
-    const playPrevStory = useCallback(() => {
+    const playNextStory = (event) => {
         clearTimeout(timerId);
         if (longPressRef.current) {
             longPressRef.current = false;
-            setPaused(false);
+            targetPressRef.current = null;
+            play();
             if (videoRef.current) {
                 videoRef.current.play();
             }
             return;
         }
         if (paused) {
-            setPaused(false);
+            play();
         }
 
-        if (currentIndex === 0) {
-            setCurrentIndex(0);
-            handleOpenPrevStack();
+        if (_isMobile()) {
+            if (currentIndex === stack.stories.length - 1) {
+                // setCurrentIndex(0);
+                handleOpenNextStack();
+            } else {
+                setCurrentIndex((oldIndex) => {
+                    return oldIndex + 1;
+                });
+            }
+            targetPressRef.current = null;
         } else {
-            setCurrentIndex((oldIndex) => {
-                return oldIndex - 1;
-            });
+            if (event?.target === targetPressRef.current) {
+                if (currentIndex === stack.stories.length - 1) {
+                    // setCurrentIndex(0);
+                    handleOpenNextStack();
+                } else {
+                    setCurrentIndex((oldIndex) => {
+                        return oldIndex + 1;
+                    });
+                }
+                targetPressRef.current = null;
+            }
         }
-    }, [paused, currentIndex, stack]);
+    };
+
+    const playPrevStory = (event) => {
+        clearTimeout(timerId);
+        if (longPressRef.current) {
+            longPressRef.current = false;
+            targetPressRef.current = null;
+            play();
+            if (videoRef.current) {
+                videoRef.current.play();
+            }
+            return;
+        }
+        if (paused) {
+            play();
+        }
+
+        if (_isMobile()) {
+            if (currentIndex === 0) {
+                setCurrentIndex(0);
+                handleOpenPrevStack();
+            } else {
+                setCurrentIndex((oldIndex) => {
+                    return oldIndex - 1;
+                });
+            }
+            targetPressRef.current = null;
+        } else {
+            if (event?.target === targetPressRef.current) {
+                if (currentIndex === 0) {
+                    setCurrentIndex(0);
+                    handleOpenPrevStack();
+                } else {
+                    setCurrentIndex((oldIndex) => {
+                        return oldIndex - 1;
+                    });
+                }
+                targetPressRef.current = null;
+            }
+        }
+    };
 
     const openSeeMore = () => {
         setSeeMoreOpened(true);
-        setPaused(true);
+        pause();
         if (videoRef.current) {
             videoRef.current.pause();
         }
@@ -122,19 +192,13 @@ const StoriesStack = ({ stack, handleOpenPrevStack, handleOpenNextStack }) => {
 
     const closeSeeMore = () => {
         setSeeMoreOpened(false);
-        setPaused(false);
-        if (videoRef.current) {
-            videoRef.current.play();
+        if (active) {
+            play();
+            if (videoRef.current) {
+                videoRef.current.play();
+            }
         }
     };
-
-    const pause = useCallback(() => {
-        setPaused(true);
-    }, []);
-
-    const play = useCallback(() => {
-        setPaused(false);
-    }, []);
 
     const updateStoryDuration = useCallback((duration) => {
         setDuration(duration);
@@ -151,30 +215,47 @@ const StoriesStack = ({ stack, handleOpenPrevStack, handleOpenNextStack }) => {
                           maxWidth: "480px",
                           borderRadius: 0,
                       }
-                    : {}
+                    : {
+                          //   transform: active ? "" : "scale(0.85)",
+                          //   transition: "transform 0.3s",
+                      }
             }
             ref={stackContainerRef}
         >
-            <Box
-                className="progress-bar-container"
-                sx={{
-                    opacity: paused ? "0" : "1",
-                    transition: "opacity, 0.3s",
-                }}
-            >
-                {stack.stories.map((story, index) => (
-                    <StoriesProgressBar
-                        storyIndex={index}
-                        currentIndex={currentIndex}
-                        paused={paused}
-                        playNextStory={playNextStory}
-                        interval={duration}
-                        key={index}
-                        stack={stack}
-                        videoRef={videoRef}
-                    />
-                ))}
-            </Box>
+            {active && (
+                <Box
+                    className="progress-bar-container"
+                    sx={{
+                        opacity: paused ? "0" : "1",
+                        transition: "opacity, 0.3s",
+                    }}
+                >
+                    {stack.stories.map((story, index) => (
+                        <StoriesProgressBar
+                            storyIndex={index}
+                            currentIndex={currentIndex}
+                            paused={paused}
+                            playNextStory={autoPlayNextStory}
+                            interval={duration}
+                            key={index}
+                            stack={stack}
+                            videoRef={videoRef}
+                        />
+                    ))}
+                </Box>
+            )}
+            {active && (
+                <IconButton
+                    edge="start"
+                    color="white"
+                    onClick={handleClose}
+                    aria-label="close"
+                    className="stories--modal-close"
+                    sx={{ width: "1.5em", height: "1.5em" }}
+                >
+                    <CloseIcon />
+                </IconButton>
+            )}
             {stack.stories[currentIndex] === "video" ? (
                 <StoriesVideoContent
                     story={stack.stories[currentIndex]}
@@ -198,44 +279,46 @@ const StoriesStack = ({ stack, handleOpenPrevStack, handleOpenNextStack }) => {
                 play={play}
                 updateStoryDuration={updateStoryDuration} 
             />*/}
-            <div className="navigation-panels-container">
-                <div
-                    className="left-panel"
-                    onMouseDown={_isMobile() ? null : onMouseDown}
-                    onMouseUp={_isMobile() ? null : playPrevStory}
-                    onTouchStart={onMouseDown}
-                    onTouchEnd={playPrevStory}
-                ></div>
-                <div
-                    className="right-panel"
-                    onMouseDown={_isMobile() ? null : onMouseDown}
-                    onMouseUp={_isMobile() ? null : playNextStory}
-                    onTouchStart={onMouseDown}
-                    onTouchEnd={playNextStory}
-                ></div>
-            </div>
-            {stack.stories[currentIndex].usePopup ? (
+            {active && (
+                <div className="navigation-panels-container">
+                    <div
+                        className="left-panel"
+                        onMouseDown={_isMobile() ? null : onMouseDown}
+                        onMouseUp={_isMobile() ? null : playPrevStory}
+                        onTouchStart={_isMobile() ? onMouseDown : null}
+                        onTouchEnd={_isMobile() ? playPrevStory : null}
+                    ></div>
+                    <div
+                        className="right-panel"
+                        onMouseDown={_isMobile() ? null : onMouseDown}
+                        onMouseUp={_isMobile() ? null : playNextStory}
+                        onTouchStart={_isMobile() ? onMouseDown : null}
+                        onTouchEnd={_isMobile() ? playNextStory : null}
+                    ></div>
+                </div>
+            )}
+            {active && stack.stories[currentIndex].usePopup ? (
                 <SeeMoreCollapsed openSeeMore={openSeeMore} />
             ) : null}
-            {seeMoreOpened && (
-                <Box
-                    sx={{
-                        position: "absolute",
-                        height: "100%",
-                        width: "100%",
-                        zIndex: "9999",
-                    }}
-                >
-                    <SeeMoreContent
-                        closeSeeMore={closeSeeMore}
-                        seeMoreOpened={seeMoreOpened}
-                        title={stack.stories[currentIndex].title}
-                        description={stack.stories[currentIndex].description}
-                    />
-                </Box>
+            {stack.stories[currentIndex].usePopup && (
+                <SeeMoreContent
+                    closeSeeMore={closeSeeMore}
+                    seeMoreOpened={seeMoreOpened}
+                    title={stack.stories[currentIndex].title}
+                    description={stack.stories[currentIndex].description}
+                    active={active}
+                />
             )}
         </Box>
     );
 };
 
-export default StoriesStack;
+const isEqual = (prev, next) => {
+    // console.log(prev.handleClose === next.handleClose);
+    console.log(prev.handleClose === next.handleClose);
+    console.log(prev.handleOpenPrevStack === next.handleOpenPrevStack);
+    console.log(prev.handleOpenNextStack === next.handleOpenNextStack);
+    return false;
+};
+
+export default React.memo(StoriesStack);

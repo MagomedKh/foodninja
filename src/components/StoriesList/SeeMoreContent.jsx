@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { Slide } from "@mui/material";
+import { Slide, Box } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 
@@ -8,39 +8,42 @@ const SeeMoreContent = ({
     seeMoreOpened,
     description,
     title,
+    active,
 }) => {
-    const [open, setOpen] = useState(true);
-
     const video = document.querySelector(".stories-video");
 
+    // useEffect(() => {
+    //     setOpen(true);
+    // }, []);
+
     useEffect(() => {
-        setOpen(true);
-    }, []);
-
-    const handleClose = () => {
-        setOpen(false);
-        if (video) {
-            video.play();
+        if (!active && seeMoreOpened) {
+            closeSeeMore();
         }
-    };
-
-    const handleEnd = () => {
-        closeSeeMore();
-    };
+    }, [active]);
 
     return (
-        <Slide in={open} direction="up" onExited={handleEnd}>
-            <div className="see-more">
-                <div
-                    className="see-more--close-container"
-                    onClick={handleClose}
-                >
-                    <div>Скрыть</div>
-                    <FontAwesomeIcon icon={faAngleDown} />
+        <Slide in={seeMoreOpened} direction="up">
+            <Box
+                sx={{
+                    position: "absolute",
+                    height: "100%",
+                    width: "100%",
+                    zIndex: "9999",
+                }}
+            >
+                <div className="see-more">
+                    <div
+                        className="see-more--close-container"
+                        onClick={closeSeeMore}
+                    >
+                        <div>Скрыть</div>
+                        <FontAwesomeIcon icon={faAngleDown} />
+                    </div>
+                    <h2>{title}</h2>
+                    <div className="see-more--content-body">{description}</div>
                 </div>
-                <h2>{title}</h2>
-                <div className="see-more--content-body">{description}</div>
-            </div>
+            </Box>
         </Slide>
     );
 };

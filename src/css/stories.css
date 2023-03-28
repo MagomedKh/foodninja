@@ -68,8 +68,18 @@
     z-index: 1;
 }
 
-.stories--dialog .modal-close {
+.stories--modal-close {
+    position: absolute !important;
     z-index: 1000;
+    right: 8px;
+    top: 20px;
+    font-size: 1.5rem;
+    padding: 4px;
+}
+
+.stories--modal-close svg {
+    width: 1.5em;
+    height: 1.5em;
 }
 
 .stories--dialog-left-arrow,
@@ -237,4 +247,17 @@
     -ms-user-select: none; /* Internet Explorer/Edge */
     user-select: none;
     touch-action: none;
+}
+
+.stories-swiper {
+    margin: 0;
+    height: 100%;
+}
+
+.stories-swiper .swiper-slide {
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
