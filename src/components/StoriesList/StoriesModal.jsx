@@ -38,6 +38,11 @@ const StoriesModal = ({
                     // borderRadius: _isMobile() ? "0px" : "20px",
                 },
             }}
+            onClose={(event, reason) => {
+                if (reason === "escapeKeyDown") {
+                    handleClose();
+                }
+            }}
             className={"stories--dialog"}
         >
             <Swiper
