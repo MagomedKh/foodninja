@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { setOpenModalAuth } from "../../redux/actions/user";
-import { Container, Tab } from "@mui/material";
+import { Box, Container, Tab } from "@mui/material";
 import { Header, Footer } from "../../components";
 import { _getDomain, _isMobile } from "../../components/helpers.js";
 import "../../css/account.css";
@@ -29,9 +29,15 @@ export default function Account() {
     };
 
     return (
-        <>
+        <Box
+            sx={{
+                minHeight: "100vh",
+                display: "flex",
+                flexDirection: "column",
+            }}
+        >
             <Header />
-            <Container>
+            <Container sx={{ flexGrow: 1 }}>
                 <h1>Личный кабинет</h1>
 
                 {user.token ? (
@@ -102,6 +108,6 @@ export default function Account() {
                 )}
             </Container>
             <Footer />
-        </>
+        </Box>
     );
 }
