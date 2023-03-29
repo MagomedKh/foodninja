@@ -295,13 +295,12 @@ export default function AuthModal() {
                     </div>
                 )}
                 <h2 className="auth-modal--title">Авторизация</h2>
-                {config.CONFIG_auth_recaptcha === "on" &&
-                config.CONFIG_auth_recaptcha_site_token ? (
+                {config.CONFIG_auth_type === "noauth" ? null : (
                     <GoogleReCaptcha
                         onVerify={onVerify}
                         refreshReCaptcha={refreshReCaptcha}
                     />
-                ) : null}
+                )}
                 <IconButton
                     edge="start"
                     color="inherit"
