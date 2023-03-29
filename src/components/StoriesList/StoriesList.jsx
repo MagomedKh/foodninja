@@ -2,14 +2,16 @@ import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { Swiper, SwiperSlide } from "swiper/react/swiper-react";
 import { FreeMode, Navigation } from "swiper";
-import Cookies from "universal-cookie";
 import { Container, Slide } from "@mui/material";
 import StoriesSlide from "./StoriesSlide";
-import { _clone, _isMobile } from "../helpers";
-import "../../css/stories.css";
 import SeeMoreContent from "./SeeMoreContent";
 import StoriesModal from "./StoriesModal";
+import Cookies from "universal-cookie";
+import { _clone, _isMobile } from "../helpers";
 import { addDays } from "date-fns";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleRight, faAngleLeft } from "@fortawesome/free-solid-svg-icons";
+import "../../css/stories.css";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -125,7 +127,10 @@ const StoriesList = () => {
                     slidesPerView="auto"
                     spaceBetween={_isMobile() ? 10 : 20}
                     freeMode={true}
-                    navigation={true}
+                    navigation={{
+                        prevEl: ".stories-list--left-arrow",
+                        nextEl: ".stories-list--right-arrow",
+                    }}
                     modules={[FreeMode, Navigation]}
                     className="stories-list--container reccomend-products-swiper"
                 >
@@ -142,6 +147,14 @@ const StoriesList = () => {
                         </SwiperSlide>
                     ))}
                 </Swiper>
+                <FontAwesomeIcon
+                    icon={faAngleLeft}
+                    className="stories-list--left-arrow"
+                />
+                <FontAwesomeIcon
+                    icon={faAngleRight}
+                    className="stories-list--right-arrow"
+                />
             </div>
             {storiesDialogOpen && openedStackIndex >= 0 ? (
                 <StoriesModal
