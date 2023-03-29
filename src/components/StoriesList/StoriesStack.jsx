@@ -22,7 +22,6 @@ const StoriesStack = ({
     handleClose,
     active,
 }) => {
-    console.log("render");
     const stackContainerRef = useRef(null);
     const videoRef = useRef(null);
     const longPressRef = useRef(false);
@@ -317,14 +316,6 @@ const StoriesStack = ({
             )}
         </Box>
     );
-};
-
-const isEqual = (prev, next) => {
-    // console.log(prev.handleClose === next.handleClose);
-    console.log(prev.handleClose === next.handleClose);
-    console.log(prev.handleOpenPrevStack === next.handleOpenPrevStack);
-    console.log(prev.handleOpenNextStack === next.handleOpenNextStack);
-    return false;
 };
 
 export default React.memo(StoriesStack);
