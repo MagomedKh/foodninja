@@ -302,7 +302,7 @@ const StoriesStack = ({
                 </div>
             )}
             {(active && stack.stories[currentIndex].usePopup) ||
-            stack.stories[currentIndex].link ? (
+            (active && stack.stories[currentIndex].link) ? (
                 <SeeMoreCollapsed openSeeMore={openSeeMore} />
             ) : null}
             {stack.stories[currentIndex].usePopup && (
