@@ -19,7 +19,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import WarningIcon from "@mui/icons-material/Warning";
 import CheckIcon from "@mui/icons-material/Check";
-import { _checkPromocode, _getDomain } from "./helpers.js";
+import { _checkPromocode, _getDomain, _getPlatform } from "./helpers.js";
 import { updateAlerts } from "../redux/actions/systemAlerts";
 import "../css/promocode.css";
 import usePromocodeErrors from "../hooks/usePromocodeErrors";
@@ -65,12 +65,19 @@ export default function Promocode() {
     const handleApplyPromocode = () => {
         setLoading(true);
         axios
-            .post("https://" + _getDomain() + "/?rest-api=getPromocode", {
-                promocode: promocode,
-                cartProducts: cartProducts,
-                token: user.token ? user.token : false,
-                phone: user.phone ? user.phone : false,
-            })
+            .post(
+                "https://" +
+                    _getDomain() +
+                    "/?rest-api=getPromocode" +
+                    "&platform=" +
+                    _getPlatform(),
+                {
+                    promocode: promocode,
+                    cartProducts: cartProducts,
+                    token: user.token ? user.token : false,
+                    phone: user.phone ? user.phone : false,
+                }
+            )
             .then((resp) => {
                 setLoading(false);
                 if (resp.data.status === "error") {

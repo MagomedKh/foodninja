@@ -3,7 +3,7 @@ import { Grid, Pagination, Skeleton } from "@mui/material";
 import { useSelector } from "react-redux";
 import { UserOrder } from "../../components";
 import axios from "axios";
-import { _clone, _getDomain } from "../../components/helpers.js";
+import { _clone, _getDomain, _getPlatform } from "../../components/helpers.js";
 
 export default function Orders() {
     const { user, mainLoading, products, bonuses_products } = useSelector(
@@ -27,7 +27,11 @@ export default function Orders() {
         if (mainLoading && pageStatus !== "loaded") {
             axios
                 .post(
-                    "https://" + _getDomain() + "/?rest-api=getUserOrders",
+                    "https://" +
+                        _getDomain() +
+                        "/?rest-api=getUserOrders" +
+                        "&platform=" +
+                        _getPlatform(),
                     {
                         phone: user.phone,
                         token: user.token,
@@ -53,11 +57,18 @@ export default function Orders() {
         setPageStatus("loading");
         setActivePage(p);
         axios
-            .post("https://" + _getDomain() + "/?rest-api=getUserOrders", {
-                phone: user.phone,
-                token: user.token,
-                page: p,
-            })
+            .post(
+                "https://" +
+                    _getDomain() +
+                    "/?rest-api=getUserOrders" +
+                    "&platform=" +
+                    _getPlatform(),
+                {
+                    phone: user.phone,
+                    token: user.token,
+                    page: p,
+                }
+            )
             .then((resp) => {
                 if (resp.data.status === "success") {
                     setUserOrders(resp.data.orders);

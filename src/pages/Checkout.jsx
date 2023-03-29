@@ -52,6 +52,7 @@ import {
     _declension,
     _isMobile,
     _getDomain,
+    _getPlatform,
 } from "../components/helpers.js";
 import CheckoutFreeAddons from "../components/Product/CheckoutFreeAddons";
 import PreorderForm from "../components/Product/PreorderForm";
@@ -455,33 +456,40 @@ export default function Checkout() {
         if (currentValidation) {
             setLoading(true);
             axios
-                .post("https://" + _getDomain() + "/?rest-api=makeOrder", {
-                    name: userName,
-                    phone: getNumbersValue(userPhone),
-                    token: user.token,
-                    typeDelivery: typeDelivery,
-                    deliveryAddress: deliveryAddress,
-                    selfDeliveryAddress: selfDeliveryAddress,
-                    newUserAddressStreet: newUserAddressStreet,
-                    newUserAddressHome: newUserAddressHome,
-                    newUserAddressPorch: newUserAddressPorch,
-                    newUserAddressFloor: newUserAddressFloor,
-                    newUserAddressApartment: newUserAddressApartment,
-                    newUserAddressCoordinates: newUserAddressCoordinates,
-                    deliveryZoneIndex: deliveryZone && deliveryZone.index,
-                    orderDeliveryPrice: getOrderDeliveryPrice(),
-                    orderTime: format(preorderDate, "dd.MM.yyyy HH:mm"),
-                    commentOrder: commentOrder,
-                    activeGateway: activeGateway,
-                    countUsers: countUsers,
-                    promocode: promocode.code,
-                    promocodeProducts: promocodeProducts,
-                    moneyBack: moneyBack,
-                    products: cartProducts,
-                    bonusProduct: userCartBonusProduct,
-                    bonuses: usedBonuses,
-                    dontRecall: dontRecall,
-                })
+                .post(
+                    "https://" +
+                        _getDomain() +
+                        "/?rest-api=makeOrder" +
+                        "&platform=" +
+                        _getPlatform(),
+                    {
+                        name: userName,
+                        phone: getNumbersValue(userPhone),
+                        token: user.token,
+                        typeDelivery: typeDelivery,
+                        deliveryAddress: deliveryAddress,
+                        selfDeliveryAddress: selfDeliveryAddress,
+                        newUserAddressStreet: newUserAddressStreet,
+                        newUserAddressHome: newUserAddressHome,
+                        newUserAddressPorch: newUserAddressPorch,
+                        newUserAddressFloor: newUserAddressFloor,
+                        newUserAddressApartment: newUserAddressApartment,
+                        newUserAddressCoordinates: newUserAddressCoordinates,
+                        deliveryZoneIndex: deliveryZone && deliveryZone.index,
+                        orderDeliveryPrice: getOrderDeliveryPrice(),
+                        orderTime: format(preorderDate, "dd.MM.yyyy HH:mm"),
+                        commentOrder: commentOrder,
+                        activeGateway: activeGateway,
+                        countUsers: countUsers,
+                        promocode: promocode.code,
+                        promocodeProducts: promocodeProducts,
+                        moneyBack: moneyBack,
+                        products: cartProducts,
+                        bonusProduct: userCartBonusProduct,
+                        bonuses: usedBonuses,
+                        dontRecall: dontRecall,
+                    }
+                )
                 .then((resp) => {
                     setLoading(false);
                     if (resp.data.status === "success") {

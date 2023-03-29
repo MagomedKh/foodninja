@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { _isMobile, _getDomain } from "./helpers.js";
+import { _isMobile, _getDomain, _getPlatform } from "./helpers.js";
 import { useNavigate, useLocation } from "react-router-dom";
 import { setOpenModalAuth, login } from "../redux/actions/user";
 import { closeMobileMenu } from "../redux/actions/header";
@@ -92,7 +92,9 @@ export default function AuthModal() {
                         "/?rest-api=verifyCodeRobocall&phone=" +
                         phone +
                         "&recaptchaResponse=" +
-                        token,
+                        token +
+                        "&platform=" +
+                        _getPlatform(),
                     { mode: "no-cors" }
                 )
                 .then((resp) => {
@@ -120,7 +122,9 @@ export default function AuthModal() {
                         "/?rest-api=verifyCodeRobocallAgain&phone=" +
                         phone +
                         "&recaptchaResponse=" +
-                        token,
+                        token +
+                        "&platform=" +
+                        _getPlatform(),
                     { mode: "no-cors" }
                 )
                 .then((resp) => {
@@ -145,7 +149,9 @@ export default function AuthModal() {
                         "/?rest-api=verifyCodeSms&phone=" +
                         phone +
                         "&recaptchaResponse=" +
-                        token,
+                        token +
+                        "&platform=" +
+                        _getPlatform(),
                     { mode: "no-cors" }
                 )
                 .then((resp) => {
@@ -190,7 +196,9 @@ export default function AuthModal() {
                         "/?rest-api=loginByPhoneCode&phone=" +
                         phone +
                         "&code=" +
-                        code,
+                        code +
+                        "&platform=" +
+                        _getPlatform(),
                     { mode: "no-cors" }
                 )
                 .then((resp) => {
