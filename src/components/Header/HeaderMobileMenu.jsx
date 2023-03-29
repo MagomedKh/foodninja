@@ -259,7 +259,9 @@ const HeaderMobileMenu = ({
                             config.CONFIG_format_start_work &&
                             config.CONFIG_format_end_work ? (
                                 <>
-                                    <div className="title">Мы работаем</div>
+                                    <div className="title">
+                                        Сегодня мы работаем
+                                    </div>
                                     <div className="info">
                                         {`с ${config.CONFIG_format_start_work} до ${config.CONFIG_format_end_work}`}
                                     </div>
