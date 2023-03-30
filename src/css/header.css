@@ -267,7 +267,7 @@
 }
 @media (max-width: 899px) {
     .header-wrapper.one-type .standart-header {
-        justify-content: end;
+        justify-content: flex-end;
     }
     .header-mobile-menu {
         position: absolute;
