@@ -121,7 +121,7 @@
 }
 .minicart--inner-title.vk {
     flex-direction: row-reverse;
-    justify-content: start;
+    justify-content: flex-end;
     line-height: 0.8;
 }
 .minicart--inner-title.vk > *:first-child {
