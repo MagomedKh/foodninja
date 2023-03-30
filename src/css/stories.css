@@ -82,6 +82,7 @@
 .stories-slide--container img {
     height: 100%;
     width: auto;
+    max-width: none;
 }
 
 .stories--dialog {
