@@ -1,6 +1,15 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { getDay, getHours, getTime, isAfter, isBefore, set } from "date-fns";
+import {
+    getDay,
+    getHours,
+    getTime,
+    isAfter,
+    isBefore,
+    isWithinInterval,
+    set,
+    startOfDay,
+} from "date-fns";
 
 export const _declension = (value, words) => {
     value = Math.abs(value) % 100;
@@ -111,6 +120,10 @@ export const _checkPromocode = ({
 
         // Проверка времени
         if (promocode.startTime && promocode.endTime) {
+            const isTimeAfterMidnight =
+                parseInt(promocode.startTime.slice(0, 2)) >
+                parseInt(promocode.endTime.slice(0, 2));
+
             const promocodeStartTime = set(new Date(), {
                 hours: parseInt(promocode.startTime.slice(0, 2)),
                 minutes: parseInt(promocode.startTime.slice(3)),
@@ -118,15 +131,56 @@ export const _checkPromocode = ({
                 milliseconds: 0,
             });
             const promocodeEndTime = set(new Date(), {
+                hours: isTimeAfterMidnight
+                    ? 23
+                    : parseInt(promocode.endTime.slice(0, 2)),
+                minutes: isTimeAfterMidnight
+                    ? 59
+                    : parseInt(promocode.endTime.slice(3)),
+                seconds: 0,
+                milliseconds: 0,
+            });
+
+            const promocodeAfterMidnightEndTime = set(new Date(), {
                 hours: parseInt(promocode.endTime.slice(0, 2)),
                 minutes: parseInt(promocode.endTime.slice(3)),
                 seconds: 0,
                 milliseconds: 0,
             });
-            if (
-                isBefore(new Date(), promocodeStartTime) ||
-                isAfter(new Date(), promocodeEndTime)
-            ) {
+
+            const isWithinPromocodeTime = () => {
+                try {
+                    return isWithinInterval(new Date(), {
+                        start: promocodeStartTime,
+                        end: promocodeEndTime,
+                    });
+                } catch (error) {
+                    console.log(
+                        `${error.message}, Something wrong in promocode time interval`
+                    );
+                    return false;
+                }
+            };
+
+            const isWithinAfterMidnightTime = () => {
+                try {
+                    return isWithinInterval(new Date(), {
+                        start: startOfDay(new Date()),
+                        end: promocodeAfterMidnightEndTime,
+                    });
+                } catch (error) {
+                    console.log(
+                        `${error.message}, Something wrong in promocode after midnight interval`
+                    );
+                    return false;
+                }
+            };
+
+            const timeStatus =
+                isWithinPromocodeTime() ||
+                (isTimeAfterMidnight && isWithinAfterMidnightTime());
+
+            if (!timeStatus) {
                 status = "error";
                 message =
                     "Промокод отменен, т.к. в текущее время не действует.";
