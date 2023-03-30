@@ -269,6 +269,9 @@
     .header-wrapper.one-type .standart-header {
         justify-content: flex-end;
     }
+    .header-wrapper.one-type .standart-header.vk {
+        justify-content: center;
+    }
     .header-mobile-menu {
         position: absolute;
         left: 0;
@@ -294,6 +297,9 @@
     }
     .header-logo-wrapper {
         height: 56px;
+    }
+    .header-logo-wrapper.vk {
+        align-items: center;
     }
     .modal-alert--wrapper.choose-town .modal-alert--inner {
         min-width: 200px;

@@ -77,7 +77,12 @@ function Header() {
                         !stepperPage.includes(pathname) ? (
                             <div></div>
                         ) : (
-                            <div className="header-logo-wrapper">
+                            <div
+                                className={clsx(
+                                    "header-logo-wrapper",
+                                    _getPlatform() === "vk" && "vk"
+                                )}
+                            >
                                 <Link to="/" className="header-logo-link">
                                     <img
                                         src={config.CONFIG_company_logo_main}
@@ -97,7 +102,12 @@ function Header() {
                         )}
 
                         {!stepperPage.includes(pathname) ? (
-                            <div className="standart-header">
+                            <div
+                                className={clsx(
+                                    "standart-header",
+                                    _getPlatform() === "vk" && "vk"
+                                )}
+                            >
                                 <div className="header-phone">
                                     <HeaderPhoneIcon className="icn" />
                                     <div className="header-phone--content">
