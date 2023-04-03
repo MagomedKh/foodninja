@@ -216,7 +216,6 @@ const StoriesStack = ({
                     ? {
                           height: "100vh",
                           width: "100vw",
-                          maxWidth: "480px",
                           borderRadius: 0,
                       }
                     : {
