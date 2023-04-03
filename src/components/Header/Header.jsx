@@ -211,9 +211,10 @@ function Header() {
                                     </div>
                                 ) : null}
 
-                                {!_isMobile() &&
-                                    config.CONFIG_auth_type !== "noauth" && (
-                                        <div className="header--right-col">
+                                {!_isMobile() && (
+                                    <div className="header--right-col">
+                                        {config.CONFIG_auth_type !==
+                                        "noauth" ? (
                                             <div className="header-login">
                                                 {!user.token ? (
                                                     <Button
@@ -237,8 +238,35 @@ function Header() {
                                                     </Button>
                                                 )}
                                             </div>
-                                        </div>
-                                    )}
+                                        ) : (
+                                            headerType === "one" && (
+                                                <div className="header-work">
+                                                    <HeaderClockIcon className="icn" />
+                                                    <div className="info-wrapper">
+                                                        {config &&
+                                                        config.CONFIG_format_start_work &&
+                                                        config.CONFIG_format_end_work ? (
+                                                            <>
+                                                                <div className="title">
+                                                                    Сегодня мы
+                                                                    работаем
+                                                                </div>
+                                                                <div className="info">
+                                                                    {`с ${config.CONFIG_format_start_work} до ${config.CONFIG_format_end_work}`}
+                                                                </div>
+                                                            </>
+                                                        ) : (
+                                                            <div className="info">
+                                                                Сегодня мы не
+                                                                работаем
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            )
+                                        )}
+                                    </div>
+                                )}
                             </div>
                         ) : (
                             !_isMobile() && (
