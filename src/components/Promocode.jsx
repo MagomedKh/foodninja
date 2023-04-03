@@ -147,17 +147,21 @@ export default function Promocode() {
                             ? true
                             : false
                     }
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                {conditionalPromocode?.code ? (
-                                    <WarningIcon color="error" />
-                                ) : cartPromocode.code ? (
-                                    <CheckIcon color="success" />
-                                ) : null}
-                            </InputAdornment>
-                        ),
-                    }}
+                    InputProps={
+                        conditionalPromocode?.code || cartPromocode.code
+                            ? {
+                                  startAdornment: (
+                                      <InputAdornment position="start">
+                                          {conditionalPromocode?.code ? (
+                                              <WarningIcon color="error" />
+                                          ) : cartPromocode.code ? (
+                                              <CheckIcon color="success" />
+                                          ) : null}
+                                      </InputAdornment>
+                                  ),
+                              }
+                            : {}
+                    }
                 />
                 {(cartPromocode.code !== undefined && cartPromocode.code) ||
                 conditionalPromocode?.code ? (
