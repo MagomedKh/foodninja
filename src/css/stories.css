@@ -8,7 +8,7 @@
 
 @media (max-width: 899px) {
     .stories-list--container {
-        height: 200px;
+        height: 119px;
         margin-bottom: 10px;
     }
 }
@@ -63,6 +63,16 @@
     border: 3px #f3f3f7 solid;
 }
 
+@media (max-width: 1250px) {
+    .stories-slide--read-wrapper {
+        padding: 2px;
+        border: 2px var(--main-color) solid;
+    }
+    .stories-slide--read-wrapper.viewed {
+        border: 2px #f3f3f7 solid;
+    }
+}
+
 .stories-slide--container {
     display: flex;
     justify-content: center;
@@ -75,7 +85,7 @@
 
 @media (max-width: 899px) {
     .stories-slide--container {
-        width: 152px;
+        width: 89px;
     }
 }
 

@@ -125,7 +125,7 @@ const StoriesList = () => {
             <div className="stories-list--container">
                 <Swiper
                     slidesPerView="auto"
-                    spaceBetween={12}
+                    spaceBetween={_isMobile() ? 8 : 12}
                     freeMode={true}
                     navigation={{
                         prevEl: ".stories-list--left-arrow",
