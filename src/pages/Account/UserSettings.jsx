@@ -257,7 +257,7 @@ const UserSettings = () => {
 
     return (
         <div>
-            <Grid container>
+            <Grid container columnSpacing={5}>
                 <Grid item sm={12} md={5}>
                     <TextField
                         id="userName"
