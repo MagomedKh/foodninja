@@ -76,6 +76,7 @@ const UserOrder = ({
                 );
 
                 const isInDiasbledBonusCategories =
+                    disabledBonusCategories &&
                     disabledBonusCategories.length &&
                     product.categories?.some((category) =>
                         disabledBonusCategories.includes(category)
@@ -112,6 +113,7 @@ const UserOrder = ({
                     );
 
                     const isInDiasbledBonusCategories =
+                        disabledBonusCategories &&
                         disabledBonusCategories.length &&
                         product.categories?.some((category) =>
                             disabledBonusCategories.includes(category)
