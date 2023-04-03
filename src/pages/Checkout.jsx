@@ -166,6 +166,7 @@ export default function Checkout() {
     const [preorderDate, setPreorderDate] = useState(null);
     const [preorderTime, setPreorderTime] = useState("");
     const [asSoonAsPosible, setAsSoonAsPosible] = useState(false);
+    const [newUserAddressArea, setNewUserAddressArea] = useState("");
     const [newUserAddressStreet, setNewUserAddressStreet] = useState("");
     const [newUserAddressHome, setNewUserAddressHome] = useState("");
     const [newUserAddressPorch, setNewUserAddressPorch] = useState("");
@@ -313,6 +314,7 @@ export default function Checkout() {
 
     const handleChooseZoneDeliveryAddress = (address) => {
         setChoosenAddress(address);
+        setNewUserAddressArea(address.area);
         setNewUserAddressStreet(address.street);
         setNewUserAddressHome(address.home);
         setNewUserAddressApartment(address.apartment);
@@ -469,6 +471,7 @@ export default function Checkout() {
                         typeDelivery: typeDelivery,
                         deliveryAddress: deliveryAddress,
                         selfDeliveryAddress: selfDeliveryAddress,
+                        newUserAddressArea: newUserAddressArea,
                         newUserAddressStreet: newUserAddressStreet,
                         newUserAddressHome: newUserAddressHome,
                         newUserAddressPorch: newUserAddressPorch,
