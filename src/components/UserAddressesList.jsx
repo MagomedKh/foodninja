@@ -32,7 +32,8 @@ const UserAddressesList = ({
 
     const [collapsed, setCollapsed] = useState(true);
 
-    const reversedAddresses = Object.values(user.addresses).reverse();
+    const reversedAddresses =
+        (user?.addresses && Object.values(user.addresses).reverse()) || [];
 
     const addressesWithCoords = reversedAddresses.filter((address) => {
         if (
