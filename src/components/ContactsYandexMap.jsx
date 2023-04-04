@@ -16,23 +16,23 @@ const ContactsYandexMap = () => {
             if (zone.disableZone) {
                 return;
             }
-            let hintContent = "";
+            let balloonContent = "";
             if (zone.orderMinPrice) {
-                hintContent += `Минимальная сумма заказа от ${zone.orderMinPrice} ₽<br>`;
+                balloonContent += `Минимальная сумма заказа от ${zone.orderMinPrice} ₽<br>`;
             }
             if (zone.deliveryPrice) {
-                hintContent += `Стоимость доставки ${zone.deliveryPrice} ₽<br>`;
+                balloonContent += `Стоимость доставки ${zone.deliveryPrice} ₽<br>`;
             }
             if (zone.freeDeliveryOrder) {
-                hintContent += `Бесплатная доставка от ${zone.freeDeliveryOrder} ₽<br>`;
+                balloonContent += `Бесплатная доставка от ${zone.freeDeliveryOrder} ₽<br>`;
             }
             if (zone.deliveryTime) {
-                hintContent += `Время доставки  от ${zone.deliveryTime} мин.`;
+                balloonContent += `Время доставки  от ${zone.deliveryTime} мин.`;
             }
             const myPolygon = new ymaps.Polygon(
                 [...zone.coordinates],
                 {
-                    hintContent: hintContent,
+                    balloonContent: balloonContent,
                 },
                 {
                     // Цвет заливки.
@@ -116,12 +116,7 @@ const ContactsYandexMap = () => {
             onLoad={(ymaps) => {
                 onMapLoad(ymaps);
             }}
-            modules={[
-                "Placemark",
-                "Polygon",
-                "geoObject.addon.hint",
-                "geoObject.addon.balloon",
-            ]}
+            modules={["Placemark", "Polygon", "geoObject.addon.balloon"]}
             instanceRef={mapRef}
             options={{
                 suppressMapOpenBlock: true,

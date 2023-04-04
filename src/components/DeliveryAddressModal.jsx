@@ -200,6 +200,8 @@ const DeliveryAddressModal = ({
                     strokeColor: zone.strokeColor || "#aa0000",
                     // Ширина обводки.
                     strokeWidth: 2,
+                    // Поднимаем хинт над указателем на мобилах
+                    hintOffset: _isMobile() ? [0, -100] : [0, 0],
                 }
             );
             myPolygon.events.add("click", function (e) {
