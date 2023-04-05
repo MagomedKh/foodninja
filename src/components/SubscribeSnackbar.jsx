@@ -27,6 +27,8 @@ const SubscribeSnackbar = () => {
         cookies.set("agreedToSubscribe", "no", {
             path: "/",
             expires: addDays(new Date(), 7),
+            sameSite: "none",
+            secure: true,
         });
         setSubscribeOpen(false);
     };
@@ -35,6 +37,8 @@ const SubscribeSnackbar = () => {
         cookies.set("agreedToSubscribe", "yes", {
             path: "/",
             expires: addDays(new Date(), 30),
+            sameSite: "none",
+            secure: true,
         });
         setSubscribeOpen(false);
     };
