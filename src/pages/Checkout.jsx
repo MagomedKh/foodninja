@@ -954,7 +954,7 @@ export default function Checkout() {
             <Header />
             <Container className="checkout checkout-wrapper">
                 <h1>Оформление заказа</h1>
-                <Grid container>
+                <Grid container columnSpacing={5}>
                     <Grid
                         item
                         xs={12}
@@ -1789,8 +1789,8 @@ export default function Checkout() {
                             </div>
                         </Grid>
                     </Grid>
-                    <Grid item xs={12}>
-                        <Grid item sm={12} md={7}>
+                    <Grid item xs={12} md={7}>
+                        <Grid item sm={12}>
                             {error && (
                                 <Alert
                                     action={
