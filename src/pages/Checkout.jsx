@@ -842,11 +842,26 @@ export default function Checkout() {
         typeDelivery === "self" &&
         cartTotalPrice < config.CONFIG_selforder_min_price;
 
+    const getPromocodeSelfDeliveryMinPrice = () => {
+        if (Object.keys(promocode).length > 0) {
+            if (
+                promocode.coupon_selfdelivery_min_price === "0" ||
+                promocode.coupon_selfdelivery_min_price > 0
+            ) {
+                return promocode.coupon_selfdelivery_min_price;
+            } else {
+                return promocode.coupon_min_price;
+            }
+        }
+    };
+
+    const promocodeSelfDeliveryMinPrice = getPromocodeSelfDeliveryMinPrice();
+
     const promocodeSelfDeliveryOrderLess =
         typeDelivery === "self" &&
         Object.keys(promocode).length > 0 &&
-        promocode.coupon_selfdelivery_min_price &&
-        cartTotalPrice < parseInt(promocode.coupon_selfdelivery_min_price);
+        cartTotalPrice < parseInt(promocodeSelfDeliveryMinPrice);
+
     const promocodeDeliveryOrderLess =
         typeDelivery === "delivery" &&
         Object.keys(promocode).length > 0 &&
@@ -1820,10 +1835,7 @@ export default function Checkout() {
                                     Минимальная сумма заказа на самовывоз c
                                     промокодом «{promocode.code}» —{" "}
                                     <span style={{ whiteSpace: "nowrap" }}>
-                                        {
-                                            promocode.coupon_selfdelivery_min_price
-                                        }{" "}
-                                        ₽
+                                        {promocodeSelfDeliveryMinPrice} ₽
                                     </span>
                                 </Alert>
                             </Collapse>
