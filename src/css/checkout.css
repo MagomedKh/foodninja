@@ -64,6 +64,17 @@
     justify-content: space-between;
 }
 
+.checkout--subtotal-price .promocode .promocode-name {
+    display: flex;
+    align-items: center;
+    white-space: pre-wrap;
+}
+
+.checkout--subtotal-price .promocode .promocode-name svg {
+    margin-left: 4px;
+    cursor: pointer;
+}
+
 .time-order-modal-wrapper {
     max-width: 700px;
     padding: 50px;
