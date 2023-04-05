@@ -182,7 +182,10 @@ const StoriesStack = ({
     };
 
     const openSeeMore = () => {
-        if (stack.stories[currentIndex].link) {
+        if (
+            stack.stories[currentIndex].link &&
+            stack.stories[currentIndex].usePopup !== "active"
+        ) {
             pause();
             window.open(stack.stories[currentIndex].link, "_blank");
         } else {
@@ -310,6 +313,7 @@ const StoriesStack = ({
                     seeMoreOpened={seeMoreOpened}
                     title={stack.stories[currentIndex].title}
                     description={stack.stories[currentIndex].description}
+                    link={stack.stories[currentIndex].link}
                     active={active}
                 />
             )}

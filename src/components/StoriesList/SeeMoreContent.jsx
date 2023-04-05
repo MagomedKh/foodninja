@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { Slide, Box } from "@mui/material";
+import { Slide, Box, Button } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 
@@ -8,6 +8,7 @@ const SeeMoreContent = ({
     seeMoreOpened,
     description,
     title,
+    link,
     active,
 }) => {
     const video = document.querySelector(".stories-video");
@@ -40,8 +41,25 @@ const SeeMoreContent = ({
                         <div>Скрыть</div>
                         <FontAwesomeIcon icon={faAngleDown} />
                     </div>
-                    <h2>{title}</h2>
-                    <div className="see-more--content-body">{description}</div>
+                    <div className="see-more--inner-wrapper">
+                        <h2>{title}</h2>
+                        <div className="see-more--content-body">
+                            {description}
+                        </div>
+                    </div>
+                    {link ? (
+                        <div className="see-more--inner-link-container">
+                            <Button
+                                className="see-more-collapsed--button"
+                                variant="contained"
+                                onClick={() => {
+                                    window.open(link, "_blank");
+                                }}
+                            >
+                                Подробнее
+                            </Button>
+                        </div>
+                    ) : null}
                 </div>
             </Box>
         </Slide>
