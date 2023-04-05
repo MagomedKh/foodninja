@@ -83,6 +83,8 @@ const StoriesList = () => {
                 cookies.set("viewedStories", newViewedStories, {
                     path: "/",
                     expires: addDays(new Date(), 30),
+                    sameSite: "none",
+                    secure: true,
                 });
             }
             setLocalStories(temp);
