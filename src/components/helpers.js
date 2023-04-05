@@ -327,9 +327,8 @@ export const _checkPromocode = ({
             }
         }
 
+        let hasProduct = false;
         if (promocode.type === "fixed_product" && !isInitial) {
-            let hasProduct = false;
-
             Object.values(items).forEach((productsArray) => {
                 productsArray["items"].forEach((product) => {
                     if (promocode.promocodeProducts.type === "variations") {
@@ -398,24 +397,43 @@ export const _checkPromocode = ({
         }
 
         // Проверка минимальной суммы заказа
-        // if (promocode.type === "fixed_product")
-        //     cartTotal =
-        //         cartTotal -
-        //         parseInt(promocode.promocodeProducts.options._price) +
-        //         parseInt(promocode.productPrice);
 
-        // if (
-        //     parseInt(promocode.minimumPrice) &&
-        //     parseInt(promocode.minimumPrice) > cartTotal
-        // ) {
-        //     return {
-        //         status: "error",
-        //         message:
-        //             "Промокод отменен, т.к. действует при заказе на сумму от " +
-        //             promocode.minimumPrice +
-        //             " ₽.",
-        //     };
-        // }
+        const promocodeDeliveryMinPrice = parseInt(promocode.coupon_min_price);
+        const promocodeSelfDeliveryMinPrice =
+            promocode.coupon_selfdelivery_min_price === ""
+                ? promocodeDeliveryMinPrice
+                : parseInt(promocode.coupon_selfdelivery_min_price);
+
+        if (promocode.type === "fixed_product" && hasProduct)
+            cartTotal =
+                cartTotal -
+                parseInt(promocode.promocodeProducts.options._price) +
+                parseInt(promocode.productPrice);
+
+        if (
+            promocodeDeliveryMinPrice > cartTotal &&
+            promocodeSelfDeliveryMinPrice > cartTotal
+        ) {
+            status = "error";
+
+            if (promocodeDeliveryMinPrice === promocodeSelfDeliveryMinPrice) {
+                message =
+                    "Промокод отменен, т.к. действует при заказе на сумму от " +
+                    promocodeDeliveryMinPrice +
+                    " ₽.";
+                errors.push(
+                    "Минимальная сумма заказа c промокодом " +
+                        promocodeDeliveryMinPrice +
+                        " ₽."
+                );
+            } else {
+                message = `Промокод отменен, т.к. действует при заказе на сумму от 
+                    ${promocodeDeliveryMinPrice} ₽. на доставку и от ${promocodeSelfDeliveryMinPrice} ₽. на самовывоз`;
+                errors.push(
+                    `Минимальная сумма заказа с промокодом: ${promocodeDeliveryMinPrice} ₽. на доставку и ${promocodeSelfDeliveryMinPrice} ₽. на самовывоз`
+                );
+            }
+        }
         return {
             message,
             status,
