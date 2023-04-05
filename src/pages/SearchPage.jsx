@@ -8,6 +8,7 @@ import {
     SearchBar,
     TopCategoriesMenu,
     MobileMiniCart,
+    ProductModal,
 } from "../components";
 import { _isMobile } from "../components/helpers";
 
@@ -55,6 +56,7 @@ const SearchPage = () => {
                 {_isMobile() ? <MobileMiniCart /> : ""}
                 <FooterBonuses />
             </div>
+            <ProductModal />
             <Footer />
         </Box>
     );
