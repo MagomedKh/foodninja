@@ -420,17 +420,17 @@ export const _checkPromocode = ({
                 message =
                     "Промокод отменен, т.к. действует при заказе на сумму от " +
                     promocodeDeliveryMinPrice +
-                    " ₽.";
+                    " ₽";
                 errors.push(
                     "Минимальная сумма заказа c промокодом " +
                         promocodeDeliveryMinPrice +
-                        " ₽."
+                        " ₽"
                 );
             } else {
                 message = `Промокод отменен, т.к. действует при заказе на сумму от 
-                    ${promocodeDeliveryMinPrice} ₽. на доставку и от ${promocodeSelfDeliveryMinPrice} ₽. на самовывоз`;
+                    ${promocodeDeliveryMinPrice} ₽. на доставку и от ${promocodeSelfDeliveryMinPrice} ₽ на самовывоз`;
                 errors.push(
-                    `Минимальная сумма заказа с промокодом: ${promocodeDeliveryMinPrice} ₽. на доставку и ${promocodeSelfDeliveryMinPrice} ₽. на самовывоз`
+                    `Минимальная сумма заказа с промокодом: ${promocodeDeliveryMinPrice} ₽ на доставку и ${promocodeSelfDeliveryMinPrice} ₽ на самовывоз`
                 );
             }
         }
