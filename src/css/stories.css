@@ -69,7 +69,7 @@
         border: 2px var(--main-color) solid;
     }
     .stories-slide--read-wrapper.viewed {
-        border: 2px #f3f3f7 solid;
+        border: 2px transparent solid;
     }
 }
 
