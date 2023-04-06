@@ -32,20 +32,10 @@ const UserAddressesList = ({
 
     const [collapsed, setCollapsed] = useState(true);
 
-    const reversedAddresses =
-        (user?.addresses && Object.values(user.addresses).reverse()) || [];
+    const userAddresses =
+        (user?.addresses && Object.values(user.addresses)) || [];
 
-    const addressesWithCoords = reversedAddresses.filter((address) => {
-        if (
-            config.deliveryZones.deliveryPriceType === "areaPrice" &&
-            !address.coordinates
-        ) {
-            return false;
-        }
-        return true;
-    });
-
-    const addressesWithFormat = addressesWithCoords.map((address, index) => {
+    const addressesWithFormat = userAddresses.map((address, index) => {
         let formateAddress;
         if (!address.formate) {
             formateAddress = address.street + ", д. " + address.home;
@@ -54,6 +44,12 @@ const UserAddressesList = ({
             formateAddress += address.apartment
                 ? ", кв. " + address.apartment
                 : "";
+        }
+        if (
+            config.deliveryZones.deliveryPriceType === "areaPrice" &&
+            !address.coordinates
+        ) {
+            return false;
         }
         return (
             <FormControlLabel
@@ -66,9 +62,9 @@ const UserAddressesList = ({
         );
     });
 
-    const firstAddresses = addressesWithFormat.slice(0, 5);
+    const collapsedAddresses = addressesWithFormat.slice(0, -5);
 
-    const collapsedAddresses = addressesWithFormat.slice(5);
+    const lastAddresses = addressesWithFormat.slice(-5);
 
     return (
         <RadioGroup
@@ -82,8 +78,6 @@ const UserAddressesList = ({
                 },
             }}
         >
-            {firstAddresses}
-
             {collapsedAddresses.length ? (
                 <Collapse
                     in={!collapsed}
@@ -97,6 +91,7 @@ const UserAddressesList = ({
                     {collapsedAddresses}
                 </Collapse>
             ) : null}
+
             {collapsedAddresses.length ? (
                 <span
                     onClick={() => setCollapsed((state) => !state)}
@@ -105,6 +100,9 @@ const UserAddressesList = ({
                     {collapsed ? "Показать все адреса" : "Свернуть"}
                 </span>
             ) : null}
+
+            {lastAddresses}
+
             <FormControlLabel
                 className="custom-radio new-address"
                 value="new"
