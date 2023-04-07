@@ -201,7 +201,7 @@ const DeliveryAddressModal = ({
                     // Ширина обводки.
                     strokeWidth: 2,
                     // Поднимаем хинт над указателем на мобилах
-                    hintOffset: _isMobile() ? [0, -100] : [0, 0],
+                    hintOffset: _isMobile() ? [0, -100] : [10, 20],
                 }
             );
             myPolygon.events.add("click", function (e) {
