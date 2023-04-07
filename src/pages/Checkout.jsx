@@ -932,13 +932,13 @@ export default function Checkout() {
 
     const getGatewayIcon = useCallback(
         (gateway) => {
-            if (gateway.id === "cash") {
-                return <img src={wallet} alt={gateway.title} />;
-            }
-            if (gateway.id === "card") {
-                return <img src={creditCard} alt={gateway.title} />;
-            }
-            if (gateway.id === "tinkoff") {
+            if (gateway.id) {
+                if (gateway.id === "cash") {
+                    return <img src={wallet} alt={gateway.title} />;
+                }
+                if (gateway.id === "card") {
+                    return <img src={creditCard} alt={gateway.title} />;
+                }
                 return <img src={onlineCreditCard} alt={gateway.title} />;
             }
             return <div></div>;
