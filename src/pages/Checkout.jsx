@@ -205,19 +205,23 @@ export default function Checkout() {
                     config.deliveryZones.deliveryPriceType === "areaPrice" &&
                     !yandexApiError
                 ) {
-                    const addressWithCoordinates = user.addresses.findIndex(
-                        (el) => el.coordinates
-                    );
-                    if (addressWithCoordinates >= 0) {
-                        setDeliveryAddress(addressWithCoordinates);
-                        setChoosenAddress(
-                            user.addresses[addressWithCoordinates]
-                        );
+                    const findLastIndex = () => {
+                        for (let i = user.addresses.length - 1; i >= 0; i--) {
+                            if (user.addresses[i].coordinates) {
+                                return i;
+                            }
+                        }
+                        return -1;
+                    };
+                    const addressLastIndex = findLastIndex();
+                    if (addressLastIndex >= 0) {
+                        setDeliveryAddress(addressLastIndex);
+                        setChoosenAddress(user.addresses[addressLastIndex]);
                     } else {
                         setDeliveryAddress("new");
                     }
                 } else {
-                    setDeliveryAddress(0);
+                    setDeliveryAddress(user.addresses.length - 1);
                 }
             } else {
                 setDeliveryAddress("new");

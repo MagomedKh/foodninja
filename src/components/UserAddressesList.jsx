@@ -49,7 +49,7 @@ const UserAddressesList = ({
             config.deliveryZones.deliveryPriceType === "areaPrice" &&
             !address.coordinates
         ) {
-            return false;
+            return null;
         }
         return (
             <FormControlLabel
@@ -62,9 +62,11 @@ const UserAddressesList = ({
         );
     });
 
-    const collapsedAddresses = addressesWithFormat.slice(0, -5);
+    const reversedAddresses = addressesWithFormat.reverse();
 
-    const lastAddresses = addressesWithFormat.slice(-5);
+    const firstAddresses = reversedAddresses.slice(0, 5);
+
+    const collapsedAddresses = reversedAddresses.slice(5);
 
     return (
         <RadioGroup
@@ -78,6 +80,17 @@ const UserAddressesList = ({
                 },
             }}
         >
+            {firstAddresses}
+
+            {collapsedAddresses.length ? (
+                <span
+                    onClick={() => setCollapsed((state) => !state)}
+                    className="show-more"
+                >
+                    {collapsed ? "Показать все адреса" : "Свернуть"}
+                </span>
+            ) : null}
+
             {collapsedAddresses.length ? (
                 <Collapse
                     in={!collapsed}
@@ -91,17 +104,6 @@ const UserAddressesList = ({
                     {collapsedAddresses}
                 </Collapse>
             ) : null}
-
-            {collapsedAddresses.length ? (
-                <span
-                    onClick={() => setCollapsed((state) => !state)}
-                    className="show-more"
-                >
-                    {collapsed ? "Показать все адреса" : "Свернуть"}
-                </span>
-            ) : null}
-
-            {lastAddresses}
 
             <FormControlLabel
                 className="custom-radio new-address"
