@@ -484,34 +484,6 @@ const cart = (state = initialState, action) => {
         }
         case "REMOVE_PROMOCODE": {
             const productsWithoutDiscount = { ...state.items };
-            if (
-                state.promocode.type === "fixed_product" &&
-                productsWithoutDiscount[state.promocodeProducts.id]
-            ) {
-                if (state.promocodeProducts.variant) {
-                    const deletedVariantInx = productsWithoutDiscount[
-                        state.promocodeProducts.id
-                    ].items.findIndex((item) => {
-                        return (
-                            item.variant.variant_id ===
-                                state.promocodeProducts.variant.variant_id &&
-                            item.options._promocode_price >= 0
-                        );
-                    });
-                    if (deletedVariantInx >= 0) {
-                        productsWithoutDiscount[
-                            state.promocodeProducts.id
-                        ].items.splice(deletedVariantInx, 1);
-                    }
-                } else {
-                    productsWithoutDiscount[
-                        state.promocodeProducts.id
-                    ].items.shift();
-                }
-                productsWithoutDiscount[state.promocodeProducts.id].items
-                    .length === 0 &&
-                    delete productsWithoutDiscount[state.promocodeProducts.id];
-            }
             for (let el in productsWithoutDiscount) {
                 productsWithoutDiscount[el].items.forEach(
                     (elem, index, array) => {
