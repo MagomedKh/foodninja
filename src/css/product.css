@@ -363,6 +363,7 @@
         position: absolute;
         top: 0;
         left: auto;
+        width: auto;
     }
 
     .product-grid-item.one-layout .product .product--image .placeholder img {
