@@ -50,28 +50,40 @@ export default function Sales() {
                                             handleSetActiveSale(sale)
                                         }
                                     >
-                                        <CardActionArea>
+                                        <CardActionArea
+                                            sx={{
+                                                height: "100%",
+                                                display: "flex",
+                                                flexDirection: "column",
+                                                justifyContent: "start",
+                                            }}
+                                        >
                                             <CardMedia
                                                 component="img"
                                                 image={sale.saleImg}
                                                 alt={sale.saleTitle}
                                             />
-                                            <CardContent>
-                                                <Typography
-                                                    gutterBottom
-                                                    variant="h5"
-                                                    component="div"
-                                                >
-                                                    {sale.saleTitle}
-                                                </Typography>
-                                                <Typography variant="body2">
-                                                    <div
-                                                        className="sale--short-content"
-                                                        dangerouslySetInnerHTML={{
-                                                            __html: sale.saleContent,
-                                                        }}
-                                                    ></div>
-                                                </Typography>
+                                            <CardContent sx={{ flexGrow: 1 }}>
+                                                <div className="sale--content-inner-wrapper">
+                                                    <Typography
+                                                        gutterBottom
+                                                        variant="h5"
+                                                        component="div"
+                                                    >
+                                                        {sale.saleTitle}
+                                                    </Typography>
+                                                    <Typography variant="body2">
+                                                        <div
+                                                            className="sale--short-content"
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: sale.saleContent,
+                                                            }}
+                                                        ></div>
+                                                    </Typography>
+                                                    <div className="sale--fade">
+                                                        <span>Подробнее</span>
+                                                    </div>
+                                                </div>
                                             </CardContent>
                                         </CardActionArea>
                                     </Card>
