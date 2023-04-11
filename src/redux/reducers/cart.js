@@ -36,7 +36,9 @@ export const getItemTotalPrice = (products) =>
 const getProductsRollsCount = (products) =>
     products.reduce(
         (total, item) =>
-            !isNaN(parseInt(item.options.count_rolls))
+            !isNaN(parseInt(item.options.count_rolls)) &&
+            !item.options._promocode_price &&
+            item.options._promocode_price != 0
                 ? total + parseInt(item.options.count_rolls)
                 : total,
         0
@@ -247,6 +249,8 @@ const cart = (state = initialState, action) => {
                         const subTotalPrice = getTotalPrice(allProducts);
                         const totalPrice = getDiscountTotalPrice(allPrices);
 
+                        const totalRolls = getTotalRollsCount(allProducts);
+
                         return {
                             ...state,
                             bonusProduct: {},
@@ -256,6 +260,7 @@ const cart = (state = initialState, action) => {
                             promocodeProducts: action.payload.promocodeProducts,
                             subTotalPrice: subTotalPrice,
                             totalPrice: totalPrice,
+                            totalRolls: totalRolls,
                         };
                     } else {
                         // Вариативные товары
@@ -313,6 +318,9 @@ const cart = (state = initialState, action) => {
                                 const totalPrice =
                                     getDiscountTotalPrice(allPrices);
 
+                                const totalRolls =
+                                    getTotalRollsCount(allProducts);
+
                                 return {
                                     ...state,
                                     bonusProduct: {},
@@ -323,6 +331,7 @@ const cart = (state = initialState, action) => {
                                         action.payload.promocodeProducts,
                                     totalPrice: totalPrice,
                                     subTotalPrice: subTotalPrice,
+                                    totalRolls: totalRolls,
                                 };
                             } else {
                                 // const updatedItems = {
@@ -402,6 +411,9 @@ const cart = (state = initialState, action) => {
                                     getTotalPrice(allProducts);
                                 const totalPrice =
                                     getDiscountTotalPrice(allPrices);
+
+                                const totalRolls =
+                                    getTotalRollsCount(allProducts);
                                 return {
                                     ...state,
                                     bonusProduct: {},
@@ -412,6 +424,7 @@ const cart = (state = initialState, action) => {
                                         action.payload.promocodeProducts,
                                     totalPrice: totalPrice,
                                     subTotalPrice: subTotalPrice,
+                                    totalRolls: totalRolls,
                                 };
                             }
                         } else {
@@ -467,6 +480,7 @@ const cart = (state = initialState, action) => {
                             );
                             const subTotalPrice = getTotalPrice(allProducts);
                             const totalPrice = getDiscountTotalPrice(allPrices);
+                            const totalRolls = getTotalRollsCount(allProducts);
                             return {
                                 ...state,
                                 items: updatedItems,
@@ -476,6 +490,7 @@ const cart = (state = initialState, action) => {
                                     action.payload.promocodeProducts,
                                 totalPrice: totalPrice,
                                 subTotalPrice: subTotalPrice,
+                                totalRolls: totalRolls,
                             };
                         }
                     }
