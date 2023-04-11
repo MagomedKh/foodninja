@@ -24,7 +24,7 @@ import { updateAlerts } from "../redux/actions/systemAlerts";
 import "../css/promocode.css";
 import usePromocodeErrors from "../hooks/usePromocodeErrors";
 
-export default function Promocode() {
+export default function Promocode({ onCheckout = false }) {
     const dispatch = useDispatch();
     const {
         user,
@@ -193,7 +193,9 @@ export default function Promocode() {
                 )}
             </div>
 
-            {!cartPromocode?.code && conditionalPromocode?.code ? (
+            {!onCheckout &&
+            !cartPromocode?.code &&
+            conditionalPromocode?.code ? (
                 <Alert severity="error" className="custom-alert" sx={{ mt: 2 }}>
                     Промокод «{conditionalPromocode?.code}» не применён:
                     {promocodeErrors?.length
@@ -220,7 +222,10 @@ export default function Promocode() {
                     </Collapse>
                 )}
             {alertMessage && (
-                <Collapse sx={{ mt: 1 }} in={!!showAlertMessage}>
+                <Collapse
+                    sx={{ mt: !!showAlertMessage ? 1 : 0 }}
+                    in={!!showAlertMessage}
+                >
                     <Alert
                         severity={typeAlert}
                         action={
@@ -235,7 +240,7 @@ export default function Promocode() {
                                 <CloseIcon fontSize="inherit" />
                             </IconButton>
                         }
-                        sx={{ mb: 2 }}
+                        sx={{ mb: onCheckout ? 0 : 2 }}
                     >
                         {alertMessage}
                     </Alert>

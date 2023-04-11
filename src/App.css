@@ -494,34 +494,6 @@ a.btn {
     padding-top: 15px;
 }
 
-.minicart--promocode .promocode--input-wrapper {
-    margin-left: -13px;
-}
-.minicart--promocode fieldset,
-.minicart--promocode input {
-    border: 0;
-    background: none !important;
-}
-.minicart--promocode .promocode-button {
-    color: var(--main-color) !important;
-    position: absolute;
-    right: 15px;
-    top: 22px;
-    width: auto !important;
-    background: none !important;
-    padding: 0 !important;
-    min-width: auto;
-    line-height: 1;
-    letter-spacing: -1px;
-}
-.minicart--promocode .promocode-button:hover {
-    background: none !important;
-    color: #000 !important;
-}
-.minicart--promocode * {
-    letter-spacing: -1px;
-}
-
 .footer-space {
     height: 50px;
 }

@@ -4,7 +4,6 @@ import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import {
     addPromocode,
     removePromocode,
-    clearCart,
     addBonusProductToCart,
     setConditionalPromocode,
     clearConditionalPromocode,
@@ -38,7 +37,6 @@ import {
     ToggleButton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import LoadingButton from "@mui/lab/LoadingButton";
 import {
     BeforePaymentModal,
@@ -47,7 +45,7 @@ import {
     Header,
     DeliveryAddressModal,
     UserAddressesList,
-    BootstrapTooltip,
+    Promocode,
 } from "../components";
 import {
     _checkPromocode,
@@ -1541,6 +1539,12 @@ export default function Checkout() {
                                     <CheckoutFreeAddons />
                                 </div>
 
+                                {config.CONFIG_disable_promocodes !== "on" && (
+                                    <div className="checkout--promocode">
+                                        <Promocode onCheckout={true} />
+                                    </div>
+                                )}
+
                                 <hr className="checkout--total-panel--separator" />
 
                                 {cart.discount ? (
@@ -1561,34 +1565,6 @@ export default function Checkout() {
                                                     <span className="main-color">
                                                         {promocode.code}
                                                     </span>
-                                                    <BootstrapTooltip
-                                                        placement="right"
-                                                        title="Отменить"
-                                                        enterDelay={0}
-                                                        sx={{
-                                                            "& .MuiTooltip-tooltip":
-                                                                {
-                                                                    ml: "6px !important",
-                                                                },
-                                                        }}
-                                                    >
-                                                        <DeleteOutlineOutlinedIcon
-                                                            onClick={() => {
-                                                                dispatch(
-                                                                    removePromocode()
-                                                                );
-                                                                dispatch(
-                                                                    updateAlerts(
-                                                                        {
-                                                                            open: true,
-                                                                            message:
-                                                                                "Промокод отменен.",
-                                                                        }
-                                                                    )
-                                                                );
-                                                            }}
-                                                        />
-                                                    </BootstrapTooltip>
                                                 </div>
 
                                                 <span className="money main-color">
