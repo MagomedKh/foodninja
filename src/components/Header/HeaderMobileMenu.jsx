@@ -7,7 +7,9 @@ import { Button, Divider, Drawer, IconButton, Skeleton } from "@mui/material";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
-import { _getPlatform } from "../helpers";
+import AppStoreIcon from "../../img/app-store-bage-white.svg";
+import GooglePlayIcon from "../../img/google-play-bage-white.svg";
+import { _getMobileType, _getPlatform } from "../helpers";
 import HeaderTopMenu from "./HeaderTopMenu";
 import clsx from "clsx";
 
@@ -32,6 +34,8 @@ const HeaderMobileMenu = ({
             };
         }
     );
+
+    const mobileType = _getMobileType();
 
     const toggleMobileMenu = () => {
         if (!mobileMenuOpen) {
@@ -273,6 +277,28 @@ const HeaderMobileMenu = ({
                             )}
                         </div>
                     </div>
+                    {mobileType === "ios" && config.CONFIG_APPSTORE ? (
+                        <div className="mobile-menu--mobile-app">
+                            <a
+                                href={config.CONFIG_APPSTORE}
+                                target="_blank"
+                                rel="noreferrer"
+                            >
+                                <img src={AppStoreIcon} alt="iOS APP" />
+                            </a>
+                        </div>
+                    ) : null}
+                    {mobileType === "android" && config.CONFIG_GPLAY ? (
+                        <div className="mobile-menu--mobile-app">
+                            <a
+                                href={config.CONFIG_GPLAY}
+                                target="_blank"
+                                rel="noreferrer"
+                            >
+                                <img src={GooglePlayIcon} alt="Android APP" />
+                            </a>
+                        </div>
+                    ) : null}
                 </div>
             </Drawer>
         </div>
