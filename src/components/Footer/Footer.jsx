@@ -29,7 +29,8 @@ export default function Footer() {
                             {footerType === "one" ? (
                                 <Divider
                                     sx={{
-                                        my: "6px",
+                                        mt: "6px",
+                                        mb: "48px",
                                         borderColor:
                                             footerType === "one"
                                                 ? "rgba(0, 0, 0, 0.12)"
@@ -37,7 +38,6 @@ export default function Footer() {
                                     }}
                                 />
                             ) : null}
-                            <h1>{config.siteTitle}</h1>
                             <div
                                 dangerouslySetInnerHTML={{
                                     __html: config.CONFIG_footer_text,
