@@ -364,14 +364,34 @@ export const _checkPromocode = ({
                     product["items"][0].options._sale_price &&
                     parseInt(product["items"][0].options._regular_price) >
                         parseInt(product["items"][0].options._sale_price)
-                )
-                    hasSale = true;
+                ) {
+                    // Если промокод добавляет товар по скидке, исключаем его из проверки
+                    if (
+                        product["items"][0].id ==
+                            promocode.promocodeProducts?.id &&
+                        product["items"].length === 1
+                    ) {
+                    } else {
+                        hasSale = true;
+                    }
+                }
             });
-            const productWithSale = Object.values(items).find(
-                (el) =>
+            const productWithSale = Object.values(items).find((el) => {
+                if (
                     el.items[0].options._sale_price ||
                     el.items[0].variant?._sale_price
-            );
+                ) {
+                    // Если промокод добавляет товар по скидке, исключаем его из проверки
+                    if (
+                        el.items[0].id == promocode.promocodeProducts?.id &&
+                        el.items.length === 1
+                    ) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
+            });
             if (hasSale || productWithSale) {
                 status = "error";
                 message =
