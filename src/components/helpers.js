@@ -349,7 +349,9 @@ export const _checkPromocode = ({
             if (!hasProduct) {
                 status = "error";
                 message = "Промокод отменен, т.к. нет нужного товара.";
-                errors.push("Товар по промокоду отсутствует в корзине");
+                errors.push(
+                    `Товар по промокоду: «${promocode.promocodeProducts?.title}», отсутствует в корзине`
+                );
             }
         }
 
