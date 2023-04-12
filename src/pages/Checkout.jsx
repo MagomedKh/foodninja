@@ -115,6 +115,7 @@ export default function Checkout() {
         cart,
         cartProducts,
         items,
+        categories,
         promocode,
         conditionalPromocode,
         promocodeProducts,
@@ -130,6 +131,7 @@ export default function Checkout() {
             cart: cart,
             cartProducts: cart.items,
             items: products.items,
+            categories: products.categories,
             promocode: cart.promocode,
             conditionalPromocode: cart.conditionalPromocode,
             promocodeProducts: cart.promocodeProducts,
@@ -226,6 +228,21 @@ export default function Checkout() {
             }
         }
     }, [typeDelivery]);
+
+    // Блокируем предзаказ на все даты если в корзине есть товар с ограничением по вермени/дням недели
+    const limitedCategories = categories.filter(
+        (category) => category.useTimeLimit
+    );
+    const limitedCategoriesInCart = limitedCategories.filter((category) =>
+        Object.values(cartProducts).find((product) =>
+            product.items[0].categories.includes(category.term_id)
+        )
+    );
+    const limitedCategoriesNames =
+        limitedCategoriesInCart.length &&
+        limitedCategoriesInCart
+            .map((category) => `«${category.name}»`)
+            .join(", ");
 
     const handlePreorderDateChange = (date) => {
         if (date === "Как можно скорее") {
@@ -1366,6 +1383,17 @@ export default function Checkout() {
                             <div className="checkout--order-time">
                                 <h3>Когда приготовить заказ?</h3>
 
+                                {limitedCategoriesInCart.length ? (
+                                    <Alert
+                                        severity="info"
+                                        sx={{ mt: 2, mb: 2 }}
+                                    >
+                                        Заказ по категориям{" "}
+                                        {limitedCategoriesNames} возможен только
+                                        на текущее время
+                                    </Alert>
+                                ) : null}
+
                                 <PreorderForm
                                     preorderDate={preorderDate}
                                     preorderTime={preorderTime}
@@ -1376,6 +1404,9 @@ export default function Checkout() {
                                         handlePreorderTimeChange
                                     }
                                     asSoonAsPosible={asSoonAsPosible}
+                                    disablePreorderDates={
+                                        !!limitedCategoriesInCart.length
+                                    }
                                     {...preorderFormProps}
                                 />
                             </div>

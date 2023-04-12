@@ -40,6 +40,7 @@ const PreorderForm = forwardRef(
             handlePreorderDateChange,
             handlePreorderTimeChange,
             asSoonAsPosible,
+            disablePreorderDates,
             error,
             helperText,
         },
@@ -413,7 +414,8 @@ const PreorderForm = forwardRef(
                                     disabled={
                                         disabledByPromocode ||
                                         disabledBySchedule ||
-                                        disabledByMaintenance
+                                        disabledByMaintenance ||
+                                        disablePreorderDates
                                     }
                                 >
                                     <span>
