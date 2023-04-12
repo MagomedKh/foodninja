@@ -75,6 +75,18 @@ const CategoryPage = () => {
         setActiveCategoryTags(tmpArray);
     };
 
+    const getDisabledCategoryAlert = () => {
+        const result = _isCategoryDisabled(currentCategory);
+        if (result.disabled) {
+            return (
+                <Alert severity="error" sx={{ mb: 1 }}>
+                    {result.message}
+                </Alert>
+            );
+        }
+        return null;
+    };
+
     return (
         <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
             <Header />
@@ -89,13 +101,7 @@ const CategoryPage = () => {
                         handleFilter={handleFilter}
                     />
                 )}
-                {_isCategoryDisabled(currentCategory) ? (
-                    <Alert severity="error" sx={{ mb: 1 }}>
-                        Товары из данной категории доступны с{" "}
-                        {currentCategory.timeLimitStart} до{" "}
-                        {currentCategory.timeLimitEnd}
-                    </Alert>
-                ) : null}
+                {getDisabledCategoryAlert()}
                 {Object.values(currentCategory.tags).length ? (
                     <Box
                         className="product--category-tags-container"
@@ -170,9 +176,11 @@ const CategoryPage = () => {
                                         <Product
                                             key={product.id}
                                             product={product}
-                                            disabled={_isCategoryDisabled(
-                                                currentCategory
-                                            )}
+                                            disabled={
+                                                _isCategoryDisabled(
+                                                    currentCategory
+                                                ).disabled
+                                            }
                                         />
                                     )
                                 ) : (

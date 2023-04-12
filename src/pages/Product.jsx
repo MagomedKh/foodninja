@@ -105,16 +105,24 @@ export default function Product() {
     // Создаем массив недоступных на данное время категорий
     useEffect(() => {
         if (categories) {
-            const disabledCategoriesArr = categories.filter((category) =>
-                _isCategoryDisabled(category)
-            );
+            const disabledCategoriesResults = categories
+                .map((category) => {
+                    const result = _isCategoryDisabled(category);
+                    if (result.disabled) {
+                        return { category: category, message: result.message };
+                    } else {
+                        return null;
+                    }
+                })
+                .filter((el) => el);
             // Если одна из категорий товара недоступна по времени, блокируем товар
-            if (disabledCategoriesArr.length) {
-                const disabledCategory = disabledCategoriesArr.find(
-                    (category) => product.categories.includes(category.term_id)
+            if (disabledCategoriesResults.length) {
+                const disabledCategoryResult = disabledCategoriesResults.find(
+                    (result) =>
+                        product.categories.includes(result.category.term_id)
                 );
-                if (disabledCategory) {
-                    setDisabledProductCategory(disabledCategory);
+                if (disabledCategoryResult) {
+                    setDisabledProductCategory(disabledCategoryResult);
                 }
             } else {
                 setDisabledProductCategory(null);
@@ -417,7 +425,7 @@ export default function Product() {
                                         severity="error"
                                         className="alert--wrong-variant"
                                     >
-                                        {`Товар доступен с ${disabledProductCategory.timeLimitStart} до ${disabledProductCategory.timeLimitEnd}`}
+                                        {disabledProductCategory.message}
                                     </Alert>
                                 </Collapse>
                             ) : (

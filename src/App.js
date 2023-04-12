@@ -152,8 +152,8 @@ function App() {
     // Создаем массив айдишников недоступных на данное время категорий
     useEffect(() => {
         if (categories && status && products) {
-            const disabledCategoriesArr = categories.filter((category) =>
-                _isCategoryDisabled(category)
+            const disabledCategoriesArr = categories.filter(
+                (category) => _isCategoryDisabled(category).disabled
             );
             const disabledCategoriesInx = disabledCategoriesArr.map(
                 (category) => category.term_id

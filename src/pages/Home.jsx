@@ -75,6 +75,18 @@ export default function Home() {
             });
     }, [products, config.CONFIG_searching_disable]);
 
+    const getDisabledCategoryAlert = (category) => {
+        const result = _isCategoryDisabled(category);
+        if (result.disabled) {
+            return (
+                <Alert severity="error" sx={{ mb: 1 }}>
+                    {result.message}
+                </Alert>
+            );
+        }
+        return null;
+    };
+
     return (
         <>
             <Header />
@@ -113,13 +125,7 @@ export default function Home() {
                                         {item.name}
                                     </h2>
 
-                                    {_isCategoryDisabled(item) ? (
-                                        <Alert severity="error" sx={{ mb: 1 }}>
-                                            Товары из данной категории доступны
-                                            с {item.timeLimitStart} до{" "}
-                                            {item.timeLimitEnd}
-                                        </Alert>
-                                    ) : null}
+                                    {getDisabledCategoryAlert(item)}
 
                                     {Object.values(item.tags).length ? (
                                         <Box
@@ -212,6 +218,12 @@ export default function Home() {
                                                                     product={
                                                                         product
                                                                     }
+                                                                    disabled={
+                                                                        _isCategoryDisabled(
+                                                                            item
+                                                                        )
+                                                                            .disabled
+                                                                    }
                                                                 />
                                                             ) : (
                                                                 ""
@@ -223,9 +235,11 @@ export default function Home() {
                                                                     product
                                                                 }
                                                                 category={item}
-                                                                disabled={_isCategoryDisabled(
-                                                                    item
-                                                                )}
+                                                                disabled={
+                                                                    _isCategoryDisabled(
+                                                                        item
+                                                                    ).disabled
+                                                                }
                                                             />
                                                         )
                                                     ) : (

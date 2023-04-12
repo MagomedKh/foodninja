@@ -467,31 +467,94 @@ export const _checkPromocode = ({
 };
 
 export const _isCategoryDisabled = (category) => {
-    if (
-        !category.useTimeLimit ||
-        !category.timeLimitStart ||
-        !category.timeLimitEnd
-    ) {
-        return false;
+    let disabled = false;
+    let message = "";
+    let disabledByTime = false;
+    let disabledByDays = false;
+
+    if (!category.useTimeLimit) {
+        return { disabled, message };
     }
-    const currentTime = getTime(new Date());
 
-    const timeLimitStart = set(new Date(), {
-        hours: category.timeLimitStart.slice(0, 2),
-        minutes: category.timeLimitStart.slice(3, 5),
-        seconds: 0,
-    });
+    // Проверяем на доступность по времени
+    if (category.timeLimitStart && category.timeLimitEnd) {
+        const timeLimitStart = set(new Date(), {
+            hours: category.timeLimitStart.slice(0, 2),
+            minutes: category.timeLimitStart.slice(3, 5),
+            seconds: 0,
+        });
 
-    const timeLimitEnd = set(new Date(), {
-        hours: category.timeLimitEnd.slice(0, 2),
-        minutes: category.timeLimitEnd.slice(3, 5),
-        seconds: 0,
-    });
+        const timeLimitEnd = set(new Date(), {
+            hours: category.timeLimitEnd.slice(0, 2),
+            minutes: category.timeLimitEnd.slice(3, 5),
+            seconds: 0,
+        });
 
-    if (currentTime < timeLimitStart || currentTime > timeLimitEnd) {
-        return true;
+        try {
+            if (
+                !isWithinInterval(new Date(), {
+                    start: timeLimitStart,
+                    end: timeLimitEnd,
+                })
+            ) {
+                disabledByTime = true;
+            }
+        } catch (error) {
+            console.log(
+                `${error.message}, Something wrong in category time interval`
+            );
+        }
     }
-    return false;
+    // Проверяем на доступность по дням недели
+    if (category.days && category.days.length) {
+        const currentDayOfWeek =
+            getDay(new Date()) === 0 ? 6 : getDay(new Date()) - 1;
+        if (category.days[currentDayOfWeek] == 0) {
+            disabledByDays = true;
+        }
+    }
+    if (disabledByDays) {
+        const localDaysOfWeek = ["ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС"];
+        const availableDays = category.days
+            .map((day, index) => {
+                if (day === 1) {
+                    return localDaysOfWeek[index];
+                } else {
+                    return null;
+                }
+            })
+            .filter((el) => el)
+            .join(", ");
+        message = `Товары из данной категории можно заказать в ${availableDays}`;
+        disabled = true;
+
+        if (category.timeLimitStart && category.timeLimitEnd) {
+            message += ` c ${category.timeLimitStart} до ${category.timeLimitEnd}`;
+            return { disabled, message };
+        }
+    }
+    if (disabledByTime) {
+        disabled = true;
+        message = `Товары из данной категории можно заказать c ${category.timeLimitStart} до ${category.timeLimitEnd}`;
+        if (category.days && category.days.length) {
+            const localDaysOfWeek = ["ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС"];
+            const availableDays = category.days
+                .map((day, index) => {
+                    if (day === 1) {
+                        return localDaysOfWeek[index];
+                    } else {
+                        return null;
+                    }
+                })
+                .filter((el) => el);
+            const availableDaysString = availableDays.join(", ");
+            if (availableDays.length < 7) {
+                message = `Товары из данной категории можно заказать в ${availableDaysString} c ${category.timeLimitStart} до ${category.timeLimitEnd}`;
+            }
+        }
+        return { disabled, message };
+    }
+    return { disabled, message };
 };
 
 export const ScrollToTop = () => {

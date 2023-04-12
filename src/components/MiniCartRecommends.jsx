@@ -41,8 +41,8 @@ export default function MiniCartReccomends() {
 
     // Создаем массив недоступных на данное время категорий
 
-    const disabledCategoriesArr = categories.filter((category) =>
-        _isCategoryDisabled(category)
+    const disabledCategoriesArr = categories.filter(
+        (category) => _isCategoryDisabled(category).disabled
     );
 
     return (
