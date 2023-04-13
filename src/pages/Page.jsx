@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import Container from "@mui/material/Container";
 import { Link, useLocation } from "react-router-dom";
-import { Skeleton } from "@mui/material";
+import { Box, Skeleton } from "@mui/material";
 import axios from "axios";
 import { _getDomain } from "../components/helpers.js";
 import { Header, Footer } from "../components";
@@ -42,9 +42,9 @@ export default function Page() {
     }, [mainLoading, currentUrl]);
 
     return (
-        <>
+        <Box sx={{ display: "flex", flexDirection: "column", height: "100vh" }}>
             <Header />
-            <Container>
+            <Container sx={{ flexGrow: 1 }}>
                 {pageStatus === "loading" ? (
                     <div className="pageInner">
                         <h1>
@@ -183,6 +183,6 @@ export default function Page() {
                 )}
             </Container>
             <Footer />
-        </>
+        </Box>
     );
 }
