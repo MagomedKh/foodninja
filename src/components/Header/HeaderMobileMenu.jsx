@@ -277,7 +277,9 @@ const HeaderMobileMenu = ({
                             )}
                         </div>
                     </div>
-                    {mobileType === "ios" && config.CONFIG_APPSTORE ? (
+                    {_getPlatform() === "site" &&
+                    mobileType === "ios" &&
+                    config.CONFIG_APPSTORE ? (
                         <div className="mobile-menu--mobile-app">
                             <a
                                 href={config.CONFIG_APPSTORE}
@@ -288,7 +290,9 @@ const HeaderMobileMenu = ({
                             </a>
                         </div>
                     ) : null}
-                    {mobileType === "android" && config.CONFIG_GPLAY ? (
+                    {_getPlatform() === "site" &&
+                    mobileType === "android" &&
+                    config.CONFIG_GPLAY ? (
                         <div className="mobile-menu--mobile-app">
                             <a
                                 href={config.CONFIG_GPLAY}
