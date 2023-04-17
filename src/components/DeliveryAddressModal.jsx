@@ -384,7 +384,9 @@ const DeliveryAddressModal = ({
         if (field) {
             if (field.name === "apartment" && field.name in temp) {
                 temp.apartment =
-                    !detachedHouse && !field.value
+                    !detachedHouse &&
+                    !field.value &&
+                    config.CONFIG_checkout_hide_apartment !== "yes"
                         ? "Укажите номер квартиры"
                         : "";
             }
@@ -396,7 +398,11 @@ const DeliveryAddressModal = ({
             }
         } else {
             temp.apartment =
-                !detachedHouse && !apartment ? "Укажите номер квартиры" : "";
+                !detachedHouse &&
+                !apartment &&
+                config.CONFIG_checkout_hide_apartment !== "yes"
+                    ? "Укажите номер квартиры"
+                    : "";
             temp.coordinates = !coordinates ? "Укажите точку на карте" : "";
             temp.home = !home ? "Укажите номер дома" : "";
         }
@@ -482,64 +488,71 @@ const DeliveryAddressModal = ({
                 />
                 <Collapse in={!detachedHouse}>
                     <Grid container spacing={2} sx={{ mb: 2 }}>
-                        <Grid item mobilexs={12} mobilesm={12} mobilemd={4}>
-                            <TextField
-                                size="small"
-                                label="Подъезд"
-                                value={porch}
-                                onChange={(e) => {
-                                    setPorch(e.target.value);
-                                }}
-                                sx={{
-                                    "& fieldset": {
-                                        borderRadius: "20px",
-                                    },
-                                    width: "100%",
-                                }}
-                                className="delivery-address-modal--sub-address"
-                            />
-                        </Grid>
-                        <Grid item mobilexs={12} mobilesm={12} mobilemd={4}>
-                            <TextField
-                                size="small"
-                                label="Этаж"
-                                value={floor}
-                                onChange={(e) => {
-                                    setFloor(e.target.value);
-                                }}
-                                sx={{
-                                    "& fieldset": {
-                                        borderRadius: "20px",
-                                    },
-                                    width: "100%",
-                                }}
-                                className="delivery-address-modal--sub-address"
-                            />
-                        </Grid>
-                        <Grid item mobilexs={12} mobilesm={12} mobilemd={4}>
-                            <TextField
-                                size="small"
-                                label="Квартира"
-                                value={apartment}
-                                onChange={(e) => {
-                                    validateFields({
-                                        value: e.target.value,
-                                        name: "apartment",
-                                    });
-                                    setApartment(e.target.value);
-                                }}
-                                error={!!errors?.apartment}
-                                helperText={errors?.apartment}
-                                sx={{
-                                    minWidth: "100px",
-                                    "& fieldset": {
-                                        borderRadius: "20px",
-                                    },
-                                    width: "100%",
-                                }}
-                                className="delivery-address-modal--sub-address"
-                            />
-                        </Grid>
+                        {config.CONFIG_checkout_hide_porch === "yes" ? null : (
+                            <Grid item mobilexs={12} mobilesm={12} mobilemd={4}>
+                                <TextField
+                                    size="small"
+                                    label="Подъезд"
+                                    value={porch}
+                                    onChange={(e) => {
+                                        setPorch(e.target.value);
+                                    }}
+                                    sx={{
+                                        "& fieldset": {
+                                            borderRadius: "20px",
+                                        },
+                                        width: "100%",
+                                    }}
+                                    className="delivery-address-modal--sub-address"
+                                />
+                            </Grid>
+                        )}
+                        {config.CONFIG_checkout_hide_floor === "yes" ? null : (
+                            <Grid item mobilexs={12} mobilesm={12} mobilemd={4}>
+                                <TextField
+                                    size="small"
+                                    label="Этаж"
+                                    value={floor}
+                                    onChange={(e) => {
+                                        setFloor(e.target.value);
+                                    }}
+                                    sx={{
+                                        "& fieldset": {
+                                            borderRadius: "20px",
+                                        },
+                                        width: "100%",
+                                    }}
+                                    className="delivery-address-modal--sub-address"
+                                />
+                            </Grid>
+                        )}
+                        {config.CONFIG_checkout_hide_apartment ===
+                        "yes" ? null : (
+                            <Grid item mobilexs={12} mobilesm={12} mobilemd={4}>
+                                <TextField
+                                    size="small"
+                                    label="Квартира"
+                                    value={apartment}
+                                    onChange={(e) => {
+                                        validateFields({
+                                            value: e.target.value,
+                                            name: "apartment",
+                                        });
+                                        setApartment(e.target.value);
+                                    }}
+                                    error={!!errors?.apartment}
+                                    helperText={errors?.apartment}
+                                    sx={{
+                                        minWidth: "100px",
+                                        "& fieldset": {
+                                            borderRadius: "20px",
+                                        },
+                                        width: "100%",
+                                    }}
+                                    className="delivery-address-modal--sub-address"
+                                />
+                            </Grid>
+                        )}
                     </Grid>
                 </Collapse>
                 <Map
