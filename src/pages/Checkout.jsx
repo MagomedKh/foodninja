@@ -46,6 +46,7 @@ import {
     DeliveryAddressModal,
     UserAddressesList,
     Promocode,
+    PromocodeErrorsAlert,
 } from "../components";
 import {
     _checkPromocode,
@@ -72,7 +73,6 @@ import onlineCreditCard from "../img/online-credit-card.svg";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import "../css/checkout.css";
-import usePromocodeErrors from "../hooks/usePromocodeErrors";
 
 const formatingStrPhone = (inputNumbersValue) => {
     var formattedPhone = "";
@@ -185,8 +185,6 @@ export default function Checkout() {
     const [openBeforePaymentModal, setOpenBeforePaymentModal] = useState(false);
     const [yandexApiError, setYandexApiError] = useState(false);
     const [choosenAddress, setChoosenAddress] = useState(null);
-
-    const promocodeErrors = usePromocodeErrors(typeDelivery);
 
     const handleAlertClose = () => {
         setOpenAlert(false);
@@ -738,7 +736,7 @@ export default function Checkout() {
                     dispatch(
                         updateAlerts({
                             open: true,
-                            message: resultCheckPromocode.message,
+                            message: resultCheckPromocode.alert,
                         })
                     );
                 }
@@ -1390,7 +1388,7 @@ export default function Checkout() {
                                     >
                                         Заказ по категориям{" "}
                                         {limitedCategoriesNames} возможен только
-                                        на текущее время
+                                        на текущее время.
                                     </Alert>
                                 ) : null}
 
@@ -1572,7 +1570,10 @@ export default function Checkout() {
 
                                 {config.CONFIG_disable_promocodes !== "on" && (
                                     <div className="checkout--promocode">
-                                        <Promocode onCheckout={true} />
+                                        <Promocode
+                                            ignoreMinPrice={true}
+                                            typeDelivery={typeDelivery}
+                                        />
                                     </div>
                                 )}
 
@@ -1942,19 +1943,7 @@ export default function Checkout() {
                                 }
                                 unmountOnExit
                             >
-                                <Alert
-                                    severity="error"
-                                    className="custom-alert"
-                                    sx={{ mt: 2 }}
-                                >
-                                    Промокод «{conditionalPromocode?.code}» не
-                                    применён:
-                                    {promocodeErrors?.length
-                                        ? promocodeErrors.map((error) => (
-                                              <div>{error}</div>
-                                          ))
-                                        : null}
-                                </Alert>
+                                <PromocodeErrorsAlert onlyMinPrice={true} />
                             </Collapse>
 
                             <div className="checkout--button-container">

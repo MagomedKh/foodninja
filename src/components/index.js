@@ -42,3 +42,4 @@ export { default as OverflowMenu } from "./OverflowMenu.jsx";
 export { default as BootstrapTooltip } from "./BootstrapTooltip.jsx";
 export { default as UserAddressesList } from "./UserAddressesList.jsx";
 export { default as StoriesList } from "./StoriesList/StoriesList.jsx";
+export { default as PromocodeErrorsAlert } from "./PromocodeErrorsAlert.jsx";

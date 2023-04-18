@@ -94,7 +94,7 @@ export default function Cart() {
                 dispatch(
                     updateAlerts({
                         open: true,
-                        message: resultCheckPromocode.message,
+                        message: resultCheckPromocode.alert,
                     })
                 );
             }

@@ -154,7 +154,7 @@ function MiniCart() {
                 dispatch(
                     updateAlerts({
                         open: true,
-                        message: resultCheckPromocode.message,
+                        message: resultCheckPromocode.alert,
                     })
                 );
             }

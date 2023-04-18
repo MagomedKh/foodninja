@@ -22,9 +22,9 @@ import CheckIcon from "@mui/icons-material/Check";
 import { _checkPromocode, _getDomain, _getPlatform } from "./helpers.js";
 import { updateAlerts } from "../redux/actions/systemAlerts";
 import "../css/promocode.css";
-import usePromocodeErrors from "../hooks/usePromocodeErrors";
+import PromocodeErrorsAlert from "./PromocodeErrorsAlert";
 
-export default function Promocode({ onCheckout = false }) {
+export default function Promocode({ ignoreMinPrice = false, typeDelivery }) {
     const dispatch = useDispatch();
     const {
         user,
@@ -48,8 +48,6 @@ export default function Promocode({ onCheckout = false }) {
             userCartBonusProduct: cart.bonusProduct,
         };
     });
-
-    const promocodeErrors = usePromocodeErrors();
 
     const [loading, setLoading] = React.useState(false);
     const [alertMessage, setAlertMessage] = React.useState("");
@@ -193,16 +191,10 @@ export default function Promocode({ onCheckout = false }) {
                 )}
             </div>
 
-            {!onCheckout &&
-            !cartPromocode?.code &&
-            conditionalPromocode?.code ? (
-                <Alert severity="error" className="custom-alert" sx={{ mt: 2 }}>
-                    Промокод «{conditionalPromocode?.code}» не применён:
-                    {promocodeErrors?.length
-                        ? promocodeErrors.map((error) => <div>{error}</div>)
-                        : null}
-                </Alert>
-            ) : null}
+            <PromocodeErrorsAlert
+                ignoreMinPrice={ignoreMinPrice}
+                typeDelivery={typeDelivery}
+            />
 
             {Object.keys(userCartBonusProduct).length &&
             canPromocodeWithBonus !== "on" ? (
@@ -240,7 +232,7 @@ export default function Promocode({ onCheckout = false }) {
                                 <CloseIcon fontSize="inherit" />
                             </IconButton>
                         }
-                        sx={{ mb: onCheckout ? 0 : 2 }}
+                        sx={{ mb: ignoreMinPrice ? 0 : 2 }}
                     >
                         {alertMessage}
                     </Alert>
