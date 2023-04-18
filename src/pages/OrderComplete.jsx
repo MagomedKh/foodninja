@@ -1,8 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { Container } from "@mui/material";
-import { Skeleton } from "@mui/material";
+import { Box, Container, Skeleton } from "@mui/material";
 import axios from "axios";
 import { _getDomain } from "../components/helpers.js";
 import { clearCart } from "../redux/actions/cart";
@@ -44,9 +43,15 @@ export default function Contacts() {
     }, [mainLoading]);
 
     return (
-        <>
+        <Box
+            sx={{
+                display: "flex",
+                flexDirection: "column",
+                minHeight: "100vh",
+            }}
+        >
             <Header />
-            <Container className="order-complete-page">
+            <Container className="order-complete-page" sx={{ flexGrow: 1 }}>
                 {pageStatus === "loading" ? (
                     <div className="pageInner">
                         <h1>
@@ -207,6 +212,6 @@ export default function Contacts() {
                 )}
             </Container>
             <Footer />
-        </>
+        </Box>
     );
 }
