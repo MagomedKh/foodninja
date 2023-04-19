@@ -1608,8 +1608,6 @@ export default function Checkout() {
                                                 </span>
                                             </div>
                                         </div>
-
-                                        <hr className="checkout--total-panel--separator" />
                                     </div>
                                 ) : (
                                     ""
