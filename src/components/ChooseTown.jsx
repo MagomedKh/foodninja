@@ -7,9 +7,7 @@ import { _isMobile, _getDomain, _getPlatform } from "./helpers";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
 import { Slide, TextField } from "@mui/material";
-import Cookies from "universal-cookie";
 import Fuse from "fuse.js";
-import { addMinutes } from "date-fns";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -28,9 +26,6 @@ export default function ChooseTown() {
     const [filteredTowns, setFilteredTowns] = useState(null);
     const [redirect, setRedirect] = useState(false);
 
-    const cookies = useMemo(() => new Cookies(), []);
-    const currentTown = cookies.get("currentSite");
-    const chooseTownShown = cookies.get("chooseTownShown");
     const fuse = new Fuse(config.data.towns, {
         keys: ["name"],
         minMatchCharLength: 1,
@@ -38,30 +33,12 @@ export default function ChooseTown() {
     });
 
     useEffect(() => {
-        if (
-            config.data.CONFIG_main_site_choose_town === "on" ||
-            (!chooseTownShown &&
-                config.data.towns &&
-                config.data.towns.length > 1 &&
-                ((config.status &&
-                    _getDomain() === config.data.baseDomain &&
-                    config.data.CONFIG_always_choose_town === "on" &&
-                    window.location.href !==
-                        `https://${config.data.baseDomain}/?saveTown=true`) ||
-                    (config.status &&
-                        _getDomain() === config.data.baseDomain &&
-                        config.data.CONFIG_always_choose_town !== "on" &&
-                        !currentTown)))
-        ) {
+        if (config.data.CONFIG_main_site_choose_town === "on") {
             dispatch(setTownModal(true));
-            cookies.set("chooseTownShown", "true", {
-                path: "/",
-                expires: addMinutes(new Date(), 30),
-            });
         } else {
             dispatch(setTownModal(false));
         }
-    }, [config.status]);
+    }, [config.data.CONFIG_main_site_choose_town]);
 
     useEffect(() => {
         if (redirect && !config.openTownModal) {
