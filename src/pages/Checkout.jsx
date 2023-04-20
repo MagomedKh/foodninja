@@ -1073,13 +1073,49 @@ export default function Checkout() {
                                         {yandexApiError ? (
                                             <Alert
                                                 severity="error"
-                                                sx={{ mt: 2, mb: 2 }}
+                                                sx={{
+                                                    mt: 2,
+                                                    mb: 2,
+                                                    "& .MuiAlert-action": {
+                                                        flexDirection: "column",
+                                                        justifyContent:
+                                                            "center",
+                                                    },
+                                                }}
+                                                action={
+                                                    _isMobile() ? null : (
+                                                        <Button
+                                                            variant="button"
+                                                            className=" btn--action"
+                                                            onClick={() =>
+                                                                window.location.reload()
+                                                            }
+                                                        >
+                                                            Обновить
+                                                        </Button>
+                                                    )
+                                                }
                                             >
                                                 <div>
                                                     Потеряно соединение с Яндекс
-                                                    картой. Пожалуйста,
-                                                    перезагрузите страницу
+                                                    картами, нажмите кнопку
+                                                    «Обновить».
                                                 </div>
+                                                {_isMobile() ? (
+                                                    <Button
+                                                        variant="button"
+                                                        className=" btn--action"
+                                                        onClick={() =>
+                                                            window.location.reload()
+                                                        }
+                                                        sx={{
+                                                            width: "100%",
+                                                            mt: "8px",
+                                                        }}
+                                                    >
+                                                        Обновить
+                                                    </Button>
+                                                ) : null}
                                             </Alert>
                                         ) : (
                                             <>
