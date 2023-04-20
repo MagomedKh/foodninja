@@ -508,6 +508,10 @@ export const _isCategoryDisabled = (category) => {
 
     // Проверяем на доступность по времени
     if (category.timeLimitStart && category.timeLimitEnd) {
+        const isTimeAfterMidnight =
+            parseInt(category.timeLimitStart.slice(0, 2)) >
+            parseInt(category.timeLimitEnd.slice(0, 2));
+
         const timeLimitStart = set(new Date(), {
             hours: category.timeLimitStart.slice(0, 2),
             minutes: category.timeLimitStart.slice(3, 5),
@@ -515,24 +519,62 @@ export const _isCategoryDisabled = (category) => {
         });
 
         const timeLimitEnd = set(new Date(), {
+            hours: isTimeAfterMidnight ? 23 : category.timeLimitEnd.slice(0, 2),
+            minutes: isTimeAfterMidnight
+                ? 59
+                : category.timeLimitEnd.slice(3, 5),
+            seconds: 0,
+        });
+
+        const timeLimitEndAfterMidnight = set(new Date(), {
             hours: category.timeLimitEnd.slice(0, 2),
             minutes: category.timeLimitEnd.slice(3, 5),
             seconds: 0,
         });
 
-        try {
-            if (
-                !isWithinInterval(new Date(), {
-                    start: timeLimitStart,
-                    end: timeLimitEnd,
-                })
-            ) {
-                disabledByTime = true;
+        const isWithinLimitInterval = () => {
+            try {
+                if (
+                    isWithinInterval(new Date(), {
+                        start: timeLimitStart,
+                        end: timeLimitEnd,
+                    })
+                ) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch (error) {
+                console.log(
+                    `${error.message}, Something wrong in category time interval`
+                );
+                return true;
             }
-        } catch (error) {
-            console.log(
-                `${error.message}, Something wrong in category time interval`
-            );
+        };
+
+        const isWithinAfterMidnightInterval = () => {
+            try {
+                if (
+                    isTimeAfterMidnight &&
+                    isWithinInterval(new Date(), {
+                        start: startOfDay(new Date()),
+                        end: timeLimitEndAfterMidnight,
+                    })
+                ) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch (error) {
+                console.log(
+                    `${error.message}, Something wrong in category time interval`
+                );
+                return false;
+            }
+        };
+
+        if (!isWithinLimitInterval() && !isWithinAfterMidnightInterval()) {
+            disabledByTime = true;
         }
     }
     // Проверяем на доступность по дням недели
