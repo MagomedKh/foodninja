@@ -325,7 +325,7 @@ function App() {
             {config !== undefined && Object.keys(config).length ? (
                 <div>
                     <GoogleReCaptchaProvider
-                        reCaptchaKey={config.CONFIG_auth_recaptcha_site_token}
+                        reCaptchaKey={window.recaptchaToken}
                     >
                         <Box
                             sx={
