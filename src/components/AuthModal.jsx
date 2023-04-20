@@ -40,7 +40,7 @@ export default function AuthModal() {
     const authType = "verify-code";
     const inputCode = React.useRef([]);
     const [loading, setLoading] = React.useState();
-    const [error, setError] = React.useState();
+    const [error, setError] = React.useState(null);
     const [authPhone, setAuthPhone] = React.useState();
     const [authPhoneCode, setAuthPhoneCode] = React.useState(false);
     const [verifyPhone, setVerifyPhone] = React.useState(false);
@@ -100,9 +100,13 @@ export default function AuthModal() {
                 .then((resp) => {
                     if (resp.data.status === "success") {
                         setAuthPhoneCode(true);
-                        setError("");
+                        setError(null);
                         startRecallTimer();
-                    } else setError(resp.data.text);
+                    } else
+                        setError({
+                            status: resp.data.status,
+                            message: resp.data.text,
+                        });
                     setLoading(false);
                 });
             setRefreshReCaptcha((r) => !r);
@@ -114,7 +118,7 @@ export default function AuthModal() {
         if (verifyPhone) {
             const phone = getNumbersValue(authPhone);
             setLoading(true);
-            setError("");
+            setError(null);
             axios
                 .get(
                     "https://" +
@@ -130,7 +134,11 @@ export default function AuthModal() {
                 .then((resp) => {
                     setLoading(false);
                     startRecallTimer();
-                    resp.data.status === "error" && setError(resp.data.text);
+                    resp.data.status === "error" &&
+                        setError({
+                            status: resp.data.status,
+                            message: resp.data.text,
+                        });
                 });
             setRefreshReCaptcha((r) => !r);
         } else {
@@ -141,7 +149,7 @@ export default function AuthModal() {
         if (verifyPhone) {
             const phone = getNumbersValue(authPhone);
             setLoading(true);
-            setError("");
+            setError(null);
             axios
                 .get(
                     "https://" +
@@ -157,7 +165,11 @@ export default function AuthModal() {
                 .then((resp) => {
                     setLoading(false);
                     startRecallTimer();
-                    resp.data.status === "error" && setError(resp.data.text);
+                    resp.data.status === "error" &&
+                        setError({
+                            status: resp.data.status,
+                            message: resp.data.text,
+                        });
                 });
             setRefreshReCaptcha((r) => !r);
         } else {
@@ -205,14 +217,18 @@ export default function AuthModal() {
                     console.log(resp.data);
                     if (resp.data.status === "success") {
                         dispatch(login(resp.data.user));
-                        setError(false);
+                        setError(null);
                         if (pathname === "/cart" || miniCartOpen) {
                             navigate("/checkout", { replace: true });
                         }
                         dispatch(closeMiniCart());
                         dispatch(setOpenModalAuth(false));
                         dispatch(closeMobileMenu());
-                    } else setError(resp.data.text);
+                    } else
+                        setError({
+                            status: resp.data.status,
+                            message: resp.data.text,
+                        });
                     setLoading(false);
                 });
         }
@@ -321,7 +337,21 @@ export default function AuthModal() {
 
                 {error && (
                     <Alert severity="error" sx={{ mb: 2 }}>
-                        {error}
+                        <div>{error.message}</div>
+                        {error?.status === "error_captcha" ? (
+                            <Button
+                                variant="button"
+                                className=" btn--action"
+                                onClick={() => window.location.reload()}
+                                sx={{
+                                    width: "100%",
+                                    maxHeight: "34px",
+                                    mt: "8px",
+                                }}
+                            >
+                                Обновить
+                            </Button>
+                        ) : null}
                     </Alert>
                 )}
 
@@ -345,7 +375,10 @@ export default function AuthModal() {
                                     variant="button"
                                     onClick={handleAuth}
                                     className="btn--action auth-btn"
-                                    disabled={!verifyPhone}
+                                    disabled={
+                                        !verifyPhone ||
+                                        error?.status === "error_captcha"
+                                    }
                                 >
                                     Войти
                                 </Button>
