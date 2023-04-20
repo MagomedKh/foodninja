@@ -13,6 +13,7 @@ import {
     faVk,
     faOdnoklassnikiSquare,
 } from "@fortawesome/free-brands-svg-icons";
+import { YMaps } from "react-yandex-maps";
 import { Header, Footer, LeafletMap, ContactsYandexMap } from "../components";
 import "../css/contacts.css";
 import { _getPlatform } from "../components/helpers";
@@ -294,7 +295,15 @@ export default function Contacts() {
                     </Grid>
                     <Grid item sm={12} md={8} sx={{ width: 1 }}>
                         {config.CONFIG_contact_map_type === "deliveryZones" ? (
-                            <ContactsYandexMap />
+                            <YMaps
+                                query={{
+                                    apikey: config.deliveryZones
+                                        ? config.deliveryZones.apiKey
+                                        : "",
+                                }}
+                            >
+                                <ContactsYandexMap />
+                            </YMaps>
                         ) : config.CONFIG_contact_map_type === "iframe" &&
                           config.CONFIG_contact_map_script ? (
                             <div

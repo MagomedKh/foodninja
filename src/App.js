@@ -59,7 +59,6 @@ import {
 import { ru } from "date-fns/locale";
 import { setDefaultOptions } from "date-fns";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
-import { YMaps } from "react-yandex-maps";
 import { Box, Container } from "@mui/material";
 import {
     CeraFont,
@@ -328,88 +327,76 @@ function App() {
                     <GoogleReCaptchaProvider
                         reCaptchaKey={config.CONFIG_auth_recaptcha_site_token}
                     >
-                        <YMaps
-                            query={{
-                                apikey: config.deliveryZones
-                                    ? config.deliveryZones.apiKey
-                                    : "",
-                            }}
+                        <Box
+                            sx={
+                                siteBackgroundColor &&
+                                siteBackgroundColor !== "default"
+                                    ? { bgcolor: siteBackgroundColor }
+                                    : {}
+                            }
                         >
-                            <Box
-                                sx={
-                                    siteBackgroundColor &&
-                                    siteBackgroundColor !== "default"
-                                        ? { bgcolor: siteBackgroundColor }
-                                        : {}
-                                }
-                            >
-                                <Routes>
-                                    <Route exact path="/" element={<Home />} />
-                                    <Route
-                                        path="/product/*"
-                                        element={<Product />}
-                                    />
-                                    <Route
-                                        exact
-                                        path="/cart"
-                                        element={<Cart />}
-                                    />
-                                    <Route
-                                        exact
-                                        path="/checkout"
-                                        element={<Checkout />}
-                                    />
-                                    <Route
-                                        exact
-                                        path="/sales"
-                                        element={<Sales />}
-                                    />
-                                    <Route
-                                        exact
-                                        path="/contacts"
-                                        element={<Contacts />}
-                                    />
-                                    <Route
-                                        exact
-                                        path="/account"
-                                        element={<Account />}
-                                    />
+                            <Routes>
+                                <Route exact path="/" element={<Home />} />
+                                <Route
+                                    path="/product/*"
+                                    element={<Product />}
+                                />
+                                <Route exact path="/cart" element={<Cart />} />
+                                <Route
+                                    exact
+                                    path="/checkout"
+                                    element={<Checkout />}
+                                />
+                                <Route
+                                    exact
+                                    path="/sales"
+                                    element={<Sales />}
+                                />
+                                <Route
+                                    exact
+                                    path="/contacts"
+                                    element={<Contacts />}
+                                />
+                                <Route
+                                    exact
+                                    path="/account"
+                                    element={<Account />}
+                                />
+                                <Route
+                                    exact
+                                    path="/order-complete"
+                                    element={<OrderComplete />}
+                                />
+                                {config.CONFIG_searching_disable ? null : (
                                     <Route
                                         exact
-                                        path="/order-complete"
-                                        element={<OrderComplete />}
+                                        path="/search"
+                                        element={<SearchPage />}
                                     />
-                                    {config.CONFIG_searching_disable ? null : (
-                                        <Route
-                                            exact
-                                            path="/search"
-                                            element={<SearchPage />}
-                                        />
-                                    )}
-                                    <Route
-                                        exact
-                                        path="/category/*"
-                                        element={<CategoryPage />}
-                                    />
-                                    <Route path="*" element={<Page />} />
-                                </Routes>
-                                <AuthModal />
-                                <SystemAlerts />
-                                {_getPlatform() === "site" && _isMobile() ? (
-                                    <InstallApp />
-                                ) : (
-                                    ""
                                 )}
-                                {config.towns !== undefined &&
-                                config.towns.length &&
-                                _getPlatform() !== "vk" ? (
-                                    <ChooseTown />
-                                ) : (
-                                    ""
-                                )}
-                                <WeClosed />
-                            </Box>
-                        </YMaps>
+                                <Route
+                                    exact
+                                    path="/category/*"
+                                    element={<CategoryPage />}
+                                />
+                                <Route path="*" element={<Page />} />
+                            </Routes>
+                            <AuthModal />
+                            <SystemAlerts />
+                            {_getPlatform() === "site" && _isMobile() ? (
+                                <InstallApp />
+                            ) : (
+                                ""
+                            )}
+                            {config.towns !== undefined &&
+                            config.towns.length &&
+                            _getPlatform() !== "vk" ? (
+                                <ChooseTown />
+                            ) : (
+                                ""
+                            )}
+                            <WeClosed />
+                        </Box>
                     </GoogleReCaptchaProvider>
                 </div>
             ) : (

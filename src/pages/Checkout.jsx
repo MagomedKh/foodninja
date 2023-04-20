@@ -15,6 +15,7 @@ import {
 } from "../redux/actions/deliveryAddressModal";
 import { getItemTotalPrice } from "../redux/reducers/cart";
 import { Link, useNavigate } from "react-router-dom";
+import { YMaps } from "react-yandex-maps";
 import {
     Alert,
     Button,
@@ -1366,17 +1367,24 @@ export default function Checkout() {
                                     )
                                 )}
                             </div>
-
-                            {config.deliveryZones?.deliveryPriceType ===
-                                "areaPrice" && !yandexApiError ? (
-                                <DeliveryAddressModal
-                                    choosenAddress={choosenAddress}
-                                    onYandexApiError={onYandexApiError}
-                                    handleChooseZoneDeliveryAddress={
-                                        handleChooseZoneDeliveryAddress
-                                    }
-                                />
-                            ) : null}
+                            <YMaps
+                                query={{
+                                    apikey: config.deliveryZones
+                                        ? config.deliveryZones.apiKey
+                                        : "",
+                                }}
+                            >
+                                {config.deliveryZones?.deliveryPriceType ===
+                                    "areaPrice" && !yandexApiError ? (
+                                    <DeliveryAddressModal
+                                        choosenAddress={choosenAddress}
+                                        onYandexApiError={onYandexApiError}
+                                        handleChooseZoneDeliveryAddress={
+                                            handleChooseZoneDeliveryAddress
+                                        }
+                                    />
+                                ) : null}
+                            </YMaps>
 
                             <div className="checkout--order-time">
                                 <h3>Когда приготовить заказ?</h3>
