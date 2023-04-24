@@ -91,21 +91,14 @@ export default function Product({ product, disabled }) {
                     className="product--image viewProduct"
                     onClick={openModalBtnClick}
                 >
-                    {_getPlatform() === "vk" ? (
-                        <img alt={product.title} src={product.img} />
-                    ) : (
-                        <LazyLoad
-                            height={210}
-                            placeholder={<PlaceholderImageProduct />}
-                            once
-                            offset={500}
-                        >
-                            <ProductImage
-                                product={product}
-                                disabled={disabled}
-                            />
-                        </LazyLoad>
-                    )}
+                    <LazyLoad
+                        height={210}
+                        placeholder={<PlaceholderImageProduct />}
+                        once
+                        offset={500}
+                    >
+                        <ProductImage product={product} disabled={disabled} />
+                    </LazyLoad>
                 </div>
 
                 <div className="product--inner-wrapper">
