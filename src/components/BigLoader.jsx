@@ -1,29 +1,42 @@
 import * as React from "react";
 import CircularProgress from "@mui/material/CircularProgress";
-import { ReactComponent as TypingLoader } from "../img/Typing.svg";
-import { ReactComponent as BricksLoader } from "../img/Bricks.svg";
-import { ReactComponent as EaterLoader } from "../img/Eater.svg";
-import { ReactComponent as RippleLoader } from "../img/Ripple.svg";
-import { ReactComponent as ProgressLoader } from "../img/Progress.svg";
+import Typing from "../img/Typing";
+import Bricks from "../img/Bricks";
+import Eater from "../img/Eater";
+import Ripple from "../img/Ripple";
+import Progress from "../img/Progress";
 import "../css/loader.css";
 
 export default function BigLoader({ initStatus = false }) {
-    const color = window.mainColor;
+    const mainColor = window.mainColor;
+    const secondColor = window.secondColor;
 
     return (
         <div>
             <div className="mainloader">
                 <div className="loader-inner">
                     {window.typeLoader === "bricks" ? (
-                        <BricksLoader />
+                        <Bricks
+                            mainColor={mainColor}
+                            secondColor={secondColor}
+                        />
                     ) : window.typeLoader === "eater" ? (
-                        <EaterLoader />
+                        <Eater
+                            mainColor={mainColor}
+                            secondColor={secondColor}
+                        />
                     ) : window.typeLoader === "ripple" ? (
-                        <RippleLoader />
+                        <Ripple
+                            mainColor={mainColor}
+                            secondColor={secondColor}
+                        />
                     ) : window.typeLoader === "progress" ? (
-                        <ProgressLoader />
+                        <Progress
+                            mainColor={mainColor}
+                            secondColor={secondColor}
+                        />
                     ) : (
-                        <TypingLoader />
+                        <Typing mainColor={mainColor} />
                     )}
                 </div>
             </div>
