@@ -118,14 +118,21 @@ export default function Product({ product, disabled }) {
                     <div
                         className="product--description viewProduct"
                         onClick={openModalBtnClick}
-                        dangerouslySetInnerHTML={{ __html: product.content }}
-                    ></div>
-                    <div className="short-fade">
+                    >
+                        <div
+                            dangerouslySetInnerHTML={{
+                                __html: product.content,
+                            }}
+                        ></div>
+                        <div className="short-fade"></div>
+                    </div>
+                    <div className="action viewProduct">
                         <span
                             onClick={openModalBtnClick}
-                            className="action viewProduct"
                             data-product-id={product.id}
-                        ></span>
+                        >
+                            Подробнее
+                        </span>
                     </div>
                     <div className="product--buying">
                         <div className="product--price-wrapper">
