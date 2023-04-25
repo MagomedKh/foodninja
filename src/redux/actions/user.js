@@ -21,3 +21,8 @@ export const addNewAddress = (address) => ({
     type: "ADD_NEW_ADDRESS",
     payload: address,
 });
+
+export const saveAddresses = (addresses) => ({
+    type: "SAVE_ADDRESSES",
+    payload: addresses,
+});

@@ -39,6 +39,23 @@
     margin-bottom: 8px;
 }
 
+.checkout--delivery .checkout--address-panel .custom-radio .user-address-label {
+    display: flex;
+    flex-direction: column;
+    font-size: 16px;
+    margin-left: -5px;
+    line-height: 1.5;
+}
+
+.checkout--delivery
+    .checkout--address-panel
+    .custom-radio
+    .user-address-label
+    .with-label {
+    color: #ccc;
+    font-size: 13px;
+}
+
 .checkout--delivery .checkout--address-panel .show-more {
     margin-bottom: 16px;
     color: var(--main-color);

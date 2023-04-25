@@ -21,6 +21,7 @@ import {
     ToggleButtonGroup,
     ToggleButton,
 } from "@mui/material";
+import clsx from "clsx";
 
 const UserAddressesList = ({
     deliveryAddress,
@@ -57,7 +58,15 @@ const UserAddressesList = ({
                 className="custom-radio"
                 value={index}
                 control={<Radio size="small" />}
-                label={address.formate || formateAddress}
+                disableTypography
+                label={
+                    <div className="user-address-label">
+                        {address.label && <span>{address.label}</span>}
+                        <span className={clsx(address.label && "with-label")}>
+                            {address.formate || formateAddress}
+                        </span>
+                    </div>
+                }
             />
         );
     });

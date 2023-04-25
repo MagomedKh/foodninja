@@ -1,0 +1,119 @@
+.addresses-list--item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    border: 1px solid #f1f1f1;
+    border-radius: 20px;
+    background-color: white;
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+.addresses-list--item::after {
+    pointer-events: none;
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    opacity: 0;
+    transition: opacity 0.2s;
+    box-shadow: 0 0 20px rgb(0 0 0 / 10%);
+}
+
+.addresses-list--item.dragging::after {
+    box-shadow: 0 0 20px rgb(0 0 0 / 10%);
+    opacity: 1;
+}
+
+.addresses-list--item-inner-wrapper {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    margin-right: 12px;
+}
+
+.addresses-list--item svg {
+    transition: color 0.2s;
+    color: #ccc;
+}
+
+.addresses-list--drag-svg-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+}
+
+.addresses-list--name-container {
+    display: flex;
+    flex-direction: column;
+}
+.addresses-list--address-name.with-label {
+    color: #ccc;
+    font-size: 13px;
+}
+
+.addresses-list--buttons-container {
+    display: flex;
+}
+
+.addresses-list--buttons-container svg:not(:last-child) {
+    margin: 0 10px 0 0;
+}
+
+@media (max-width: 360px) {
+    .addresses-list--buttons-container {
+        flex-direction: column;
+    }
+    .addresses-list--buttons-container svg:not(:last-child) {
+        margin: 0 0 12px 0;
+    }
+}
+
+.addresses-list--delete-svg,
+.addresses-list--edit-svg,
+.addresses-list--save-svg {
+    cursor: pointer;
+}
+
+.addresses-list--item.dragging .addresses-list--drag-svg {
+    color: var(--main-color);
+}
+
+.addresses-list--drag-svg-container:hover .addresses-list--drag-svg {
+    color: var(--main-color);
+}
+
+.addresses-list--delete-svg:hover,
+.addresses-list--edit-svg:hover,
+.addresses-list--save-svg:hover {
+    color: var(--main-color);
+}
+
+.addresses-list--save-button-container {
+    padding-top: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: start;
+}
+
+.addresses-list--save-button-container button {
+    width: 50%;
+}
+
+@media (max-width: 520px) {
+    .addresses-list--save-button-container button {
+        width: 100%;
+    }
+}
+
+.addresses-list--item.addresses-list--placeholder {
+    justify-content: center;
+    color: #ccc;
+}

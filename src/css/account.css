@@ -175,3 +175,32 @@
         margin-top: 10px;
     }
 }
+
+.account--tab-list {
+    overflow: visible !important;
+}
+
+.account--tab-list .MuiTabs-scroller {
+    overflow: visible !important;
+}
+
+.account--tab-list .MuiTabs-indicator {
+    display: none;
+}
+
+.account--tab-list .Mui-selected {
+    border-radius: 8px 8px 0 0;
+    background-color: #fff;
+    box-shadow: 0 0 20px rgb(0 0 0 / 10%);
+    clip-path: inset(-50px -56px 0px -73px);
+}
+
+@media (max-width: 370px) {
+    .account--tab-list .Mui-selected {
+        box-shadow: none;
+    }
+    .account--tab-list .MuiTabs-scroller {
+        overflow: auto !important;
+        margin-right: 10px;
+    }
+}

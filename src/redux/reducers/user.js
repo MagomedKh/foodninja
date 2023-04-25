@@ -38,6 +38,14 @@ const user = (state = initialState, action) => {
                 ...state,
                 user: newUser,
             };
+        case "SAVE_ADDRESSES": {
+            const newUser = _clone(state.user);
+            newUser.addresses = action.payload;
+            return {
+                ...state,
+                user: newUser,
+            };
+        }
         default:
             return state;
     }

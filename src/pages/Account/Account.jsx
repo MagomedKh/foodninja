@@ -8,6 +8,7 @@ import "../../css/account.css";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import Orders from "./Orders";
 import UserSettings from "./UserSettings";
+import MyAddresses from "./MyAddresses";
 
 export default function Account() {
     const dispatch = useDispatch();
@@ -44,24 +45,7 @@ export default function Account() {
                     <TabContext value={activeTab}>
                         <TabList
                             onChange={handleChange}
-                            sx={{
-                                overflow: "visible",
-                                "& .MuiTab-root": {
-                                    overflow: "visible !important",
-                                },
-                                "& .MuiTabs-scroller": {
-                                    overflow: "visible !important",
-                                },
-                                "& .MuiTabs-indicator": {
-                                    display: "none",
-                                },
-                                "& .Mui-selected": {
-                                    borderRadius: "8px 8px 0 0",
-                                    backgroundColor: "#fff",
-                                    boxShadow: "0 0 20px rgb(0 0 0 / 10%)",
-                                    clipPath: "inset(-50px -56px 0px -73px)",
-                                },
-                            }}
+                            className="account--tab-list"
                         >
                             <Tab
                                 disableRipple
@@ -69,6 +53,11 @@ export default function Account() {
                                 value="settings"
                             />
                             <Tab disableRipple label="Заказы" value="orders" />
+                            <Tab
+                                disableRipple
+                                label="Мои адреса"
+                                value="addresses"
+                            />
                         </TabList>
 
                         <TabPanel
@@ -90,6 +79,16 @@ export default function Account() {
                             }}
                         >
                             <Orders />
+                        </TabPanel>
+                        <TabPanel
+                            value="addresses"
+                            sx={{
+                                boxShadow: "0 0 20px rgb(0 0 0 / 10%)",
+                                borderRadius: "10px",
+                                bgcolor: "#fff",
+                            }}
+                        >
+                            <MyAddresses />
                         </TabPanel>
                     </TabContext>
                 ) : (
