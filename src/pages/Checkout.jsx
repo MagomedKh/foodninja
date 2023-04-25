@@ -13,6 +13,7 @@ import {
     setDeliveryZone,
     setOpenDeliveryModal,
 } from "../redux/actions/deliveryAddressModal";
+import { saveAddresses } from "../redux/actions/user";
 import { getItemTotalPrice } from "../redux/reducers/cart";
 import { Link, useNavigate } from "react-router-dom";
 import { YMaps } from "react-yandex-maps";
@@ -515,6 +516,7 @@ export default function Checkout() {
                 .then((resp) => {
                     setLoading(false);
                     if (resp.data.status === "success") {
+                        dispatch(saveAddresses(resp.data.user.addresses));
                         window.scrollTo(0, 0);
                         navigate("/order-complete", { replace: true });
                     } else if (resp.data.status === "need_payment") {
