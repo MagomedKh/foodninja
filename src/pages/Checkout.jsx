@@ -233,9 +233,12 @@ export default function Checkout() {
         (category) => category.useTimeLimit
     );
     const limitedCategoriesInCart = limitedCategories.filter((category) =>
-        Object.values(cartProducts).find((product) =>
-            product.items[0].categories.includes(category.term_id)
-        )
+        Object.values(cartProducts).find((product) => {
+            if (promocode?.promocodeProducts?.id === product.items[0].id) {
+                return false;
+            }
+            return product.items[0].categories.includes(category.term_id);
+        })
     );
     const limitedCategoriesNames =
         limitedCategoriesInCart.length &&
