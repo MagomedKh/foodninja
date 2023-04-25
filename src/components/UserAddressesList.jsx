@@ -71,11 +71,9 @@ const UserAddressesList = ({
         );
     });
 
-    const reversedAddresses = addressesWithFormat.reverse();
+    const firstAddresses = addressesWithFormat.slice(0, 5);
 
-    const firstAddresses = reversedAddresses.slice(0, 5);
-
-    const collapsedAddresses = reversedAddresses.slice(5);
+    const collapsedAddresses = addressesWithFormat.slice(5);
 
     return (
         <RadioGroup
