@@ -22,15 +22,23 @@ import clsx from "clsx";
 export default function Product({ product, disabled }) {
     const dispatch = useDispatch();
 
-    const { cartProducts, categoryNew, categoryHit, productLayout } =
-        useSelector(({ cart, config }) => {
-            return {
-                cartProducts: cart.items,
-                categoryNew: config.data.CONFIG_new_category,
-                categoryHit: config.data.CONFIG_hit_category,
-                productLayout: config.data.CONFIG_type_products,
-            };
-        });
+    const {
+        cartProducts,
+        categoryNew,
+        categoryHit,
+        productLayout,
+        fullWidthImage,
+        imageBgColor,
+    } = useSelector(({ cart, config }) => {
+        return {
+            cartProducts: cart.items,
+            categoryNew: config.data.CONFIG_new_category,
+            categoryHit: config.data.CONFIG_hit_category,
+            productLayout: config.data.CONFIG_type_products,
+            fullWidthImage: config.data.CONFIG_product_image_fullwidth,
+            imageBgColor: config.data.CONFIG_product_background_color,
+        };
+    });
 
     const openModalBtnClick = () => {
         window.location.hash = "product-modal";
@@ -88,7 +96,15 @@ export default function Product({ product, disabled }) {
           ) } */}
                 </div>
                 <div
-                    className="product--image viewProduct"
+                    className={clsx(
+                        "product--image",
+                        "viewProduct",
+                        fullWidthImage === "yes" && "fullwidth"
+                    )}
+                    style={{
+                        backgroundColor: imageBgColor,
+                        filter: disabled ? "grayscale(1)" : "",
+                    }}
                     onClick={openModalBtnClick}
                 >
                     <LazyLoad

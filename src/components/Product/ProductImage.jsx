@@ -24,9 +24,6 @@ const ProductImage = ({ product, disabled }) => {
                 <img
                     alt={product.title}
                     src={product.img ? product.img : soon}
-                    style={{
-                        filter: disabled ? "grayscale(1)" : "",
-                    }}
                 />
             )}
         </>
