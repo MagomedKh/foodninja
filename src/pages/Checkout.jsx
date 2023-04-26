@@ -13,6 +13,7 @@ import {
     setDeliveryZone,
     setOpenDeliveryModal,
 } from "../redux/actions/deliveryAddressModal";
+import { saveAddresses } from "../redux/actions/user";
 import { getItemTotalPrice } from "../redux/reducers/cart";
 import { Link, useNavigate } from "react-router-dom";
 import { YMaps } from "react-yandex-maps";
@@ -204,23 +205,19 @@ export default function Checkout() {
                     config.deliveryZones.deliveryPriceType === "areaPrice" &&
                     !yandexApiError
                 ) {
-                    const findLastIndex = () => {
-                        for (let i = user.addresses.length - 1; i >= 0; i--) {
-                            if (user.addresses[i].coordinates) {
-                                return i;
-                            }
-                        }
-                        return -1;
-                    };
-                    const addressLastIndex = findLastIndex();
-                    if (addressLastIndex >= 0) {
-                        setDeliveryAddress(addressLastIndex);
-                        setChoosenAddress(user.addresses[addressLastIndex]);
+                    const addressWithCoordinates = user.addresses.findIndex(
+                        (el) => el.coordinates
+                    );
+                    if (addressWithCoordinates >= 0) {
+                        setDeliveryAddress(addressWithCoordinates);
+                        setChoosenAddress(
+                            user.addresses[addressWithCoordinates]
+                        );
                     } else {
                         setDeliveryAddress("new");
                     }
                 } else {
-                    setDeliveryAddress(user.addresses.length - 1);
+                    setDeliveryAddress(0);
                 }
             } else {
                 setDeliveryAddress("new");
@@ -519,6 +516,7 @@ export default function Checkout() {
                 .then((resp) => {
                     setLoading(false);
                     if (resp.data.status === "success") {
+                        dispatch(saveAddresses(resp.data.user.addresses));
                         window.scrollTo(0, 0);
                         navigate("/order-complete", { replace: true });
                     } else if (resp.data.status === "need_payment") {
