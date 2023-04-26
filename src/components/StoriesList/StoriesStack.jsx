@@ -262,12 +262,13 @@ const StoriesStack = ({
                     <CloseIcon />
                 </IconButton>
             )}
-            {stack.stories[currentIndex] === "video" ? (
+            {stack.stories[currentIndex].type === "video" ? (
                 <StoriesVideoContent
+                    active={active}
                     story={stack.stories[currentIndex]}
-                    ref={videoRef}
                     pause={pause}
                     play={play}
+                    paused={paused}
                     updateStoryDuration={updateStoryDuration}
                 />
             ) : (
