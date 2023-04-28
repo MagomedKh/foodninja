@@ -109,7 +109,7 @@
     margin-bottom: 0.75rem;
     font-size: 20px;
     font-weight: bolder;
-    min-height: 50px;
+    min-height: 54px;
     text-overflow: ellipsis;
 }
 .product--description {
@@ -413,7 +413,7 @@
     }
     .product-grid-item.one-layout .product--title {
         margin-top: 10px;
-        min-height: 50px;
+        min-height: 54px;
     }
     .product--inner-wrapper {
         width: 100%;
