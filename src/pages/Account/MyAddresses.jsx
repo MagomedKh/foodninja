@@ -12,11 +12,13 @@ import "../../css/my-addresses.css";
 
 const MyAddresses = () => {
     const dispatch = useDispatch();
-    const listContainerRef = useRef(null);
+    const listContainerRef = useRef();
 
     const userPhone = useSelector((state) => state.user.user.phone);
     const userToken = useSelector((state) => state.user.user.token);
-    const userAddresses = useSelector((state) => state.user.user.addresses);
+    const userAddresses = useSelector(
+        (state) => state.user.user.addresses || []
+    );
 
     const [addresses, setAddresses] = useState(
         userAddresses.map((el, index) => {
@@ -108,11 +110,16 @@ const MyAddresses = () => {
                             </Droppable>
                         </DragDropContext>
                     ) : (
-                        <Slide in={true} container={listContainerRef.current}>
-                            <div className="addresses-list--item addresses-list--placeholder">
-                                У вас пока нет сохранённых адресов
-                            </div>
-                        </Slide>
+                        listContainerRef?.current && (
+                            <Slide
+                                in={true}
+                                container={listContainerRef.current}
+                            >
+                                <div className="addresses-list--item addresses-list--placeholder">
+                                    У вас пока нет сохранённых адресов
+                                </div>
+                            </Slide>
+                        )
                     )}
                     <div className="addresses-list--save-button-container">
                         <LoadingButton
