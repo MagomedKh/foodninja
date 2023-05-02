@@ -347,35 +347,6 @@ export const _checkPromocode = ({
             }
         }
 
-        let hasProduct = false;
-        if (promocode.type === "fixed_product" && !isInitial) {
-            Object.values(items).forEach((productsArray) => {
-                productsArray["items"].forEach((product) => {
-                    if (promocode.promocodeProducts.type === "variations") {
-                        if (
-                            product.type === "variations" &&
-                            product.variant.variant_id ==
-                                promocode.promocodeProducts.variant
-                                    .variant_id &&
-                            (product.options._promocode_price ||
-                                product.options._promocode_price == 0)
-                        )
-                            hasProduct = true;
-                    } else if (promocode.promocodeProducts.id === product.id) {
-                        hasProduct = true;
-                    }
-                });
-            });
-            if (!hasProduct) {
-                status = "error";
-                alert = "Промокод отменен, т.к. нет нужного товара.";
-                errors.push({
-                    code: "notInCart",
-                    message: `Товар по промокоду: «${promocode.promocodeProducts?.title}», отсутствует в корзине`,
-                });
-            }
-        }
-
         // Проверка товаров по скидке
         if (
             promocode.excludeSaleProduct &&
@@ -445,15 +416,36 @@ export const _checkPromocode = ({
             }
         }
 
-        // Проверка минимальной суммы заказа
+        // Определяем есть ли в корзине товар по промокоду
+        let promocodeProductInCart = false;
+        if (promocode.type === "fixed_product" && !isInitial) {
+            Object.values(items).forEach((productsArray) => {
+                productsArray["items"].forEach((product) => {
+                    if (promocode.promocodeProducts.type === "variations") {
+                        if (
+                            product.type === "variations" &&
+                            product.variant.variant_id ==
+                                promocode.promocodeProducts.variant
+                                    .variant_id &&
+                            (product.options._promocode_price ||
+                                product.options._promocode_price == 0)
+                        )
+                            promocodeProductInCart = true;
+                    } else if (promocode.promocodeProducts.id === product.id) {
+                        promocodeProductInCart = true;
+                    }
+                });
+            });
+        }
 
+        // Проверка минимальной суммы заказа
         const promocodeDeliveryMinPrice = parseInt(promocode.coupon_min_price);
         const promocodeSelfDeliveryMinPrice =
             promocode.coupon_selfdelivery_min_price === ""
                 ? promocodeDeliveryMinPrice
                 : parseInt(promocode.coupon_selfdelivery_min_price);
 
-        if (promocode.type === "fixed_product" && hasProduct)
+        if (promocode.type === "fixed_product" && promocodeProductInCart)
             cartTotal =
                 cartTotal -
                 parseInt(promocode.promocodeProducts.options._price) +
@@ -486,6 +478,21 @@ export const _checkPromocode = ({
                 });
             }
         }
+
+        // Проверяем на наличие товара по промокоду в корзине
+        if (
+            promocode.type === "fixed_product" &&
+            !isInitial &&
+            !promocodeProductInCart
+        ) {
+            status = "error";
+            alert = "Промокод отменен, т.к. нет нужного товара.";
+            errors.push({
+                code: "notInCart",
+                message: `Товар по промокоду: «${promocode.promocodeProducts?.title}», отсутствует в корзине. Добавьте его из меню или заново примените промокод.`,
+            });
+        }
+
         return {
             alert,
             status,

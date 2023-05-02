@@ -275,6 +275,19 @@
     display: flex;
 }
 
+@media (min-width: 899px) {
+    .product-grid-item:has(.product--image.fullwidth) .product--labels-wrapper {
+        top: 30px;
+        left: 30px;
+    }
+
+    .product-grid-item.one-layout:has(.product--image.fullwidth)
+        .product--labels-wrapper {
+        top: 20px;
+        left: 20px;
+    }
+}
+
 .product--label.peoples svg {
     width: 14px;
     height: 14px;
