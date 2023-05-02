@@ -51,8 +51,8 @@ const PromocodeErrorsAlert = ({
     return (
         <Alert severity="error" sx={{ mt: 2 }}>
             Промокод «{conditionalPromocode?.code}» не применён:
-            {errorMessages.map((error) => (
-                <div>{error}</div>
+            {errorMessages.map((error, index) => (
+                <div key={index}>{error}</div>
             ))}
         </Alert>
     );

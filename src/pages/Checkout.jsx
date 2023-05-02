@@ -1982,7 +1982,7 @@ export default function Checkout() {
                                 sx={{ mb: 1 }}
                                 in={
                                     !promocode?.code &&
-                                    conditionalPromocode?.code
+                                    !!conditionalPromocode?.code
                                 }
                                 unmountOnExit
                             >
