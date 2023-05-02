@@ -119,6 +119,7 @@ const DeliveryAddressModal = ({
                 mapRef.current.geoObjects.each((zone) => {
                     if (
                         zone.geometry.getType() === "Polygon" &&
+                        zone.geometry.getBounds() &&
                         zone.geometry.contains(choosenAddress.coordinates)
                     ) {
                         choosenZone = {
@@ -325,6 +326,7 @@ const DeliveryAddressModal = ({
             mapRef.current.geoObjects.each((zone) => {
                 if (
                     zone.geometry.getType() === "Polygon" &&
+                    zone.geometry.getBounds() &&
                     zone.geometry.contains(coordinates)
                 ) {
                     choosenZone = {
