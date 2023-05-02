@@ -631,13 +631,6 @@ const DeliveryAddressModal = ({
                 </div>
                 <div className="delivery-address-modal--buttons-container">
                     <Button
-                        className="btn--outline-dark"
-                        variant="button"
-                        onClick={handleClose}
-                    >
-                        Закрыть
-                    </Button>
-                    <Button
                         className="btn--action"
                         variant="button"
                         onClick={addAddressHandler}

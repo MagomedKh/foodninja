@@ -10,7 +10,7 @@
 
 .delivery-address-modal--body {
     overflow: auto;
-    padding: 5px 20px;
+    padding: 5px 20px 16px 20px;
     margin-top: 20px;
     flex-grow: 1;
 }
@@ -46,13 +46,12 @@
     bottom: 0;
     left: 0;
     display: flex;
-    padding: 20px;
+    justify-content: center;
+    padding: 16px 20px;
     background-color: #fff;
     border-radius: 0 0 20px 20px;
-}
-
-.delivery-address-modal--buttons-container button:first-child {
-    margin-right: 16px;
+    box-shadow: 0px 0px 8px rgb(6 5 50 / 12%);
+    clip-path: inset(-8px 0px px -8px 0px);
 }
 
 .delivery-address-modal--buttons-container button {
@@ -60,13 +59,6 @@
 }
 
 @media (max-width: 520px) {
-    .delivery-address-modal--buttons-container {
-        flex-direction: column;
-    }
-    .delivery-address-modal--buttons-container button:first-child {
-        margin-right: 0;
-        margin-bottom: 16px;
-    }
     .delivery-address-modal--buttons-container button {
         width: 100%;
     }
@@ -81,9 +73,6 @@
         position: relative;
         overflow: visible;
         height: 100%;
-    }
-    .delivery-address-modal--map-container {
-        border-radius: 0;
     }
 }
 
