@@ -17,8 +17,8 @@ import {
     FormControlLabel,
 } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import { _isMobile } from "./helpers";
+import CloseIcon from "@mui/icons-material/Close";
+import { _isMobile, _getPlatform } from "./helpers";
 import {
     Map,
     withYMaps,
@@ -423,173 +423,210 @@ const DeliveryAddressModal = ({
             {...dialogProps}
             className={"delivery-address-modal--dialog"}
             fullWidth
+            onClose={(event, reason) => {
+                if (reason === "escapeKeyDown") {
+                    handleClose();
+                }
+            }}
         >
             <div className="delivery-address-modal--wrapper">
-                <div className="delivery-address-modal--title-container">
-                    <h3>Доставка</h3>
-                    <div className="delivery-address-modal--town">
-                        <LocationOnIcon sx={{ color: "var(--main-color)" }} />
-                        {config.CONFIG_town}
+                <div className="delivery-address-modal--body">
+                    <IconButton
+                        edge="start"
+                        color="inherit"
+                        onClick={handleClose}
+                        aria-label="close"
+                        className={`modal-close ${
+                            _getPlatform() === "vk" ? "vk" : ""
+                        }`}
+                        sx={{ zIndex: 1 }}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+                    <div className="delivery-address-modal--title-container">
+                        <h3>Доставка</h3>
                     </div>
-                </div>
-                <TextField
-                    size="small"
-                    label="Введите улицу и дом"
-                    value={searchInputValue}
-                    multiline={_isMobile()}
-                    onChange={(e) => {
-                        inputChangeHandler(e.target.value);
-                    }}
-                    onKeyPress={(e) => {
-                        if (e.key === "Enter") {
-                            confirmSerachHandler(searchInputValue);
+                    <TextField
+                        size="small"
+                        label="Введите улицу и дом"
+                        value={searchInputValue}
+                        multiline={_isMobile()}
+                        onChange={(e) => {
+                            inputChangeHandler(e.target.value);
+                        }}
+                        onKeyPress={(e) => {
+                            if (e.key === "Enter") {
+                                confirmSerachHandler(searchInputValue);
+                            }
+                        }}
+                        error={!!errors?.coordinates || !!errors?.home}
+                        helperText={errors?.coordinates || errors?.home}
+                        InputProps={{
+                            endAdornment: searchInputValue ? (
+                                <IconButton
+                                    aria-label="delete"
+                                    onClick={clearInputHandler}
+                                >
+                                    <ClearIcon />
+                                </IconButton>
+                            ) : null,
+                        }}
+                        sx={{
+                            width: "100%",
+                            mb: 2,
+                            "& fieldset": {
+                                borderRadius: "20px",
+                            },
+                            flexGrow: 1,
+                        }}
+                        id="suggest1"
+                    />
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                checked={detachedHouse}
+                                onChange={(event) => {
+                                    validateFields({
+                                        value: apartment,
+                                        name: "apartment",
+                                    });
+                                    handleDetachedChange(event.target.checked);
+                                }}
+                            />
                         }
-                    }}
-                    error={!!errors?.coordinates || !!errors?.home}
-                    helperText={errors?.coordinates || errors?.home}
-                    InputProps={{
-                        endAdornment: searchInputValue ? (
-                            <IconButton
-                                aria-label="delete"
-                                onClick={clearInputHandler}
-                            >
-                                <ClearIcon />
-                            </IconButton>
-                        ) : null,
-                    }}
-                    sx={{
-                        width: "100%",
-                        mb: 2,
-                        "& fieldset": {
-                            borderRadius: "20px",
-                        },
-                        flexGrow: 1,
-                    }}
-                    id="suggest1"
-                />
-                <FormControlLabel
-                    control={
-                        <Switch
-                            checked={detachedHouse}
-                            onChange={(event) => {
-                                validateFields({
-                                    value: apartment,
-                                    name: "apartment",
-                                });
-                                handleDetachedChange(event.target.checked);
-                            }}
-                        />
-                    }
-                    label="Частный дом"
-                    sx={{
-                        mb: 2,
-                        ml: 0,
-                    }}
-                />
-                <Collapse in={!detachedHouse}>
-                    <Grid container spacing={2} sx={{ mb: 2 }}>
-                        {config.CONFIG_checkout_hide_porch === "yes" ? null : (
-                            <Grid item mobilexs={12} mobilesm={12} mobilemd={4}>
-                                <TextField
-                                    size="small"
-                                    label="Подъезд"
-                                    value={porch}
-                                    onChange={(e) => {
-                                        setPorch(e.target.value);
-                                    }}
-                                    sx={{
-                                        "& fieldset": {
-                                            borderRadius: "20px",
-                                        },
-                                        width: "100%",
-                                    }}
-                                    className="delivery-address-modal--sub-address"
-                                />
-                            </Grid>
+                        label="Частный дом"
+                        sx={{
+                            mb: 2,
+                            ml: 0,
+                        }}
+                    />
+                    <Collapse in={!detachedHouse}>
+                        <Grid container spacing={2} sx={{ mb: 2 }}>
+                            {config.CONFIG_checkout_hide_porch ===
+                            "yes" ? null : (
+                                <Grid
+                                    item
+                                    mobilexs={12}
+                                    mobilesm={12}
+                                    mobilemd={4}
+                                >
+                                    <TextField
+                                        size="small"
+                                        label="Подъезд"
+                                        value={porch}
+                                        onChange={(e) => {
+                                            setPorch(e.target.value);
+                                        }}
+                                        sx={{
+                                            "& fieldset": {
+                                                borderRadius: "20px",
+                                            },
+                                            width: "100%",
+                                        }}
+                                        className="delivery-address-modal--sub-address"
+                                    />
+                                </Grid>
+                            )}
+                            {config.CONFIG_checkout_hide_floor ===
+                            "yes" ? null : (
+                                <Grid
+                                    item
+                                    mobilexs={12}
+                                    mobilesm={12}
+                                    mobilemd={4}
+                                >
+                                    <TextField
+                                        size="small"
+                                        label="Этаж"
+                                        value={floor}
+                                        onChange={(e) => {
+                                            setFloor(e.target.value);
+                                        }}
+                                        sx={{
+                                            "& fieldset": {
+                                                borderRadius: "20px",
+                                            },
+                                            width: "100%",
+                                        }}
+                                        className="delivery-address-modal--sub-address"
+                                    />
+                                </Grid>
+                            )}
+                            {config.CONFIG_checkout_hide_apartment ===
+                            "yes" ? null : (
+                                <Grid
+                                    item
+                                    mobilexs={12}
+                                    mobilesm={12}
+                                    mobilemd={4}
+                                >
+                                    <TextField
+                                        size="small"
+                                        label="Квартира"
+                                        value={apartment}
+                                        onChange={(e) => {
+                                            validateFields({
+                                                value: e.target.value,
+                                                name: "apartment",
+                                            });
+                                            setApartment(e.target.value);
+                                        }}
+                                        error={!!errors?.apartment}
+                                        helperText={errors?.apartment}
+                                        sx={{
+                                            minWidth: "100px",
+                                            "& fieldset": {
+                                                borderRadius: "20px",
+                                            },
+                                            width: "100%",
+                                        }}
+                                        className="delivery-address-modal--sub-address"
+                                    />
+                                </Grid>
+                            )}
+                        </Grid>
+                    </Collapse>
+                    <Map
+                        defaultState={{
+                            center: config.deliveryZones.mapCenter || [
+                                    config.CONFIG_latitude,
+                                    config.CONFIG_longitude,
+                                ] || [55.76, 37.64],
+                            zoom: config.deliveryZones.mapZoom || 13,
+                        }}
+                        className={"delivery-address-modal--map-container"}
+                        onLoad={(ymaps) => {
+                            setMap(ymaps);
+                            loadSuggest(ymaps);
+                        }}
+                        modules={[
+                            "SuggestView",
+                            "Polygon",
+                            "geoObject.addon.hint",
+                        ]}
+                        instanceRef={mapRef}
+                        options={{
+                            suppressMapOpenBlock: true,
+                            yandexMapDisablePoiInteractivity: true,
+                        }}
+                    >
+                        <Placemark instanceRef={placemarkRef} />
+                        <ZoomControl />
+                        <GeolocationControl />
+                        <FullscreenControl />
+                    </Map>
+                    {errors &&
+                        !Object.values(errors).every((el) => el == "") && (
+                            <Alert severity="error" sx={{ mt: 2 }}>
+                                Заполните все необходимые поля
+                            </Alert>
                         )}
-                        {config.CONFIG_checkout_hide_floor === "yes" ? null : (
-                            <Grid item mobilexs={12} mobilesm={12} mobilemd={4}>
-                                <TextField
-                                    size="small"
-                                    label="Этаж"
-                                    value={floor}
-                                    onChange={(e) => {
-                                        setFloor(e.target.value);
-                                    }}
-                                    sx={{
-                                        "& fieldset": {
-                                            borderRadius: "20px",
-                                        },
-                                        width: "100%",
-                                    }}
-                                    className="delivery-address-modal--sub-address"
-                                />
-                            </Grid>
-                        )}
-                        {config.CONFIG_checkout_hide_apartment ===
-                        "yes" ? null : (
-                            <Grid item mobilexs={12} mobilesm={12} mobilemd={4}>
-                                <TextField
-                                    size="small"
-                                    label="Квартира"
-                                    value={apartment}
-                                    onChange={(e) => {
-                                        validateFields({
-                                            value: e.target.value,
-                                            name: "apartment",
-                                        });
-                                        setApartment(e.target.value);
-                                    }}
-                                    error={!!errors?.apartment}
-                                    helperText={errors?.apartment}
-                                    sx={{
-                                        minWidth: "100px",
-                                        "& fieldset": {
-                                            borderRadius: "20px",
-                                        },
-                                        width: "100%",
-                                    }}
-                                    className="delivery-address-modal--sub-address"
-                                />
-                            </Grid>
-                        )}
-                    </Grid>
-                </Collapse>
-                <Map
-                    defaultState={{
-                        center: config.deliveryZones.mapCenter || [
-                                config.CONFIG_latitude,
-                                config.CONFIG_longitude,
-                            ] || [55.76, 37.64],
-                        zoom: config.deliveryZones.mapZoom || 13,
-                    }}
-                    className={"delivery-address-modal--map-container"}
-                    onLoad={(ymaps) => {
-                        setMap(ymaps);
-                        loadSuggest(ymaps);
-                    }}
-                    modules={["SuggestView", "Polygon", "geoObject.addon.hint"]}
-                    instanceRef={mapRef}
-                    options={{
-                        suppressMapOpenBlock: true,
-                        yandexMapDisablePoiInteractivity: true,
-                    }}
-                >
-                    <Placemark instanceRef={placemarkRef} />
-                    <ZoomControl />
-                    <GeolocationControl />
-                    <FullscreenControl />
-                </Map>
-                {errors && !Object.values(errors).every((el) => el == "") && (
-                    <Alert severity="error" sx={{ mt: 2 }}>
-                        Заполните все необходимые поля
-                    </Alert>
-                )}
-                {!isAddressInZone && (
-                    <Alert severity="error" sx={{ mt: 2 }}>
-                        Выбранный адрес не попадает ни в одну зону доставки
-                    </Alert>
-                )}
+                    {!isAddressInZone && (
+                        <Alert severity="error" sx={{ mt: 2 }}>
+                            Выбранный адрес не попадает ни в одну зону доставки
+                        </Alert>
+                    )}
+                </div>
                 <div className="delivery-address-modal--buttons-container">
                     <Button
                         className="btn--outline-dark"

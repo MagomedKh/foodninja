@@ -3,22 +3,29 @@
 }
 
 .delivery-address-modal--wrapper {
-    padding: 0 50px;
-    margin: 50px 0;
-    overflow-y: auto;
-    overflow-x: hidden;
-    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
-.delivery-address-modal--wrapper::-webkit-scrollbar {
+
+.delivery-address-modal--body {
+    overflow: auto;
+    padding: 5px 20px;
+    margin-top: 20px;
+    flex-grow: 1;
+}
+
+.delivery-address-modal--body::-webkit-scrollbar {
     width: 6px;
 }
-.delivery-address-modal--wrapper::-webkit-scrollbar-track {
+.delivery-address-modal--body::-webkit-scrollbar-track {
     background: #f2f5f7;
 }
-.delivery-address-modal--wrapper::-webkit-scrollbar-thumb {
+.delivery-address-modal--body::-webkit-scrollbar-thumb {
     background: rgba(0, 0, 0, 0.2);
     border-radius: 4px;
 }
+
 .delivery-address-modal--wrapper h3 {
     margin: 0 5px 0 0;
 }
@@ -27,22 +34,21 @@
     justify-content: space-between;
     margin-bottom: 16px;
 }
-.delivery-address-modal--town {
-    display: flex;
-    justify-content: end;
-    align-items: center;
-}
 
 .delivery-address-modal--map-container {
     border-radius: 20px;
     overflow: hidden;
-    height: 400px;
-    width: 100%;
+    min-height: 400px;
 }
 
 .delivery-address-modal--buttons-container {
+    position: sticky;
+    bottom: 0;
+    left: 0;
     display: flex;
-    margin-top: 16px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 0 0 20px 20px;
 }
 
 .delivery-address-modal--buttons-container button:first-child {
@@ -70,13 +76,26 @@
     .delivery-address-modal--dialog .MuiDialog-container .MuiDialog-paper {
         min-height: 100%;
         border-radius: 0;
-        height: auto;
     }
     .delivery-address-modal--wrapper {
-        padding: 0 16px;
-        margin: 32px 0;
+        position: relative;
+        overflow: visible;
+        height: 100%;
     }
     .delivery-address-modal--map-container {
         border-radius: 0;
+    }
+}
+
+@media (max-width: 991px) {
+    .delivery-address-modal--body {
+        position: relative;
+    }
+    .delivery-address-modal--wrapper .modal-close {
+        top: 0;
+        right: 15px;
+        bottom: auto;
+        left: auto;
+        z-index: 10;
     }
 }
