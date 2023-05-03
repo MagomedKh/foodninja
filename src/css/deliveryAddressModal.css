@@ -65,10 +65,13 @@
     width: 50%;
 }
 
-@media (max-width: 520px) {
-    .delivery-address-modal--buttons-container button {
-        width: 100%;
-    }
+.delivery-address-modal--buttons-container button:first-child {
+    margin-right: 16px;
+}
+
+.delivery-address-modal--buttons-container button:only-child {
+    margin-right: 0;
+    width: 100%;
 }
 
 @media (max-width: 899px) {
