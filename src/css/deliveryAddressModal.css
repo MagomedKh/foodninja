@@ -28,11 +28,18 @@
 
 .delivery-address-modal--wrapper h3 {
     margin: 0 5px 0 0;
+    color: #000;
 }
 .delivery-address-modal--title-container {
     display: flex;
     justify-content: space-between;
     margin-bottom: 16px;
+}
+
+@media (max-width: 899px) {
+    .delivery-address-modal--title-container.vk {
+        margin-left: 35px;
+    }
 }
 
 .delivery-address-modal--map-container {
@@ -73,6 +80,9 @@
         position: relative;
         overflow: visible;
         height: 100%;
+    }
+    .delivery-address-modal--wrapper .modal-close.vk {
+        right: auto;
     }
 }
 

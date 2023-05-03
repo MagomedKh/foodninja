@@ -28,6 +28,7 @@ import {
     FullscreenControl,
 } from "react-yandex-maps";
 import "../css/deliveryAddressModal.css";
+import clsx from "clsx";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -438,14 +439,20 @@ const DeliveryAddressModal = ({
                         color="inherit"
                         onClick={handleClose}
                         aria-label="close"
-                        className={`modal-close ${
-                            _getPlatform() === "vk" ? "vk" : ""
-                        }`}
+                        className={clsx(
+                            "modal-close",
+                            _getPlatform() === "vk" && "vk"
+                        )}
                         sx={{ zIndex: 1 }}
                     >
                         <CloseIcon />
                     </IconButton>
-                    <div className="delivery-address-modal--title-container">
+                    <div
+                        className={clsx(
+                            "delivery-address-modal--title-container",
+                            _getPlatform() === "vk" && "vk"
+                        )}
+                    >
                         <h3>Доставка</h3>
                     </div>
                     <TextField
