@@ -434,19 +434,6 @@ const DeliveryAddressModal = ({
         >
             <div className="delivery-address-modal--wrapper">
                 <div className="delivery-address-modal--body">
-                    <IconButton
-                        edge="start"
-                        color="inherit"
-                        onClick={handleClose}
-                        aria-label="close"
-                        className={clsx(
-                            "modal-close",
-                            _getPlatform() === "vk" && "vk"
-                        )}
-                        sx={{ zIndex: 1 }}
-                    >
-                        <CloseIcon />
-                    </IconButton>
                     <div
                         className={clsx(
                             "delivery-address-modal--title-container",
@@ -454,6 +441,16 @@ const DeliveryAddressModal = ({
                         )}
                     >
                         <h3>Доставка</h3>
+                        <IconButton
+                            edge="start"
+                            color="inherit"
+                            onClick={handleClose}
+                            aria-label="close"
+                            className="modal-close"
+                            sx={{ zIndex: 1 }}
+                        >
+                            <CloseIcon />
+                        </IconButton>
                     </div>
                     <TextField
                         size="small"
