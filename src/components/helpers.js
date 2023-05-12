@@ -651,3 +651,216 @@ export const ScrollToTop = () => {
 
     return null;
 };
+
+export const _checkAutoDiscount = (
+    discount,
+    cartProducts,
+    cartTotal,
+    promocode,
+    bonusProduct,
+    typeDelivery
+) => {
+    const cartProductsArray = Object.values(cartProducts);
+
+    // Проверяем включена ли автоскидка
+    if (discount.status !== "on") {
+        return false;
+    }
+
+    // Проверка на возможность использовать с промокодом
+    if (promocode.code && discount.allowPromocode !== "on") {
+        return false;
+    }
+
+    // Проверка возможность использовать с бонусными товарами
+    if (bonusProduct.id && discount.allowBonusProduct !== "on") {
+        return false;
+    }
+
+    // Проверка даты
+    const currentTime = parseInt(new Date().getTime() / 1000);
+    if (
+        (discount.start && discount.start > currentTime) ||
+        (discount.stop && currentTime > discount.stop)
+    ) {
+        return false;
+    }
+
+    // Проверка категорий
+    if (discount.categories?.length && discount.categoriesHardmode === "yes") {
+        // Проверяем есть ли в корзине запрещенная категория
+        if (discount.excludeCategories) {
+            let hasExcludeCategory = false;
+            cartProductsArray.forEach((product) => {
+                if (product.items[0].id == promocode.promocodeProducts?.id) {
+                    return;
+                }
+                if (
+                    product.items[0].categories?.some((id) =>
+                        discount.categories.includes(id)
+                    )
+                ) {
+                    hasExcludeCategory = true;
+                }
+            });
+
+            if (hasExcludeCategory) {
+                return false;
+            }
+        } else {
+            // Проверяем есть ли в корзине что-то кроме разрешенных категорий
+            let notInCategory = false;
+            cartProductsArray.forEach((product) => {
+                if (product.items[0].id == promocode.promocodeProducts?.id) {
+                    return;
+                }
+                if (
+                    !product.items[0].categories?.some((id) =>
+                        discount.categories.includes(id)
+                    )
+                ) {
+                    notInCategory = true;
+                }
+            });
+
+            if (notInCategory) {
+                return false;
+            }
+        }
+    }
+
+    // Проверка на товары по скидке
+    if (discount.excludeSaleProduct && discount.categoriesHardmode === "yes") {
+        let hasSaleProduct = false;
+        cartProductsArray.forEach((product) => {
+            // Если промокод добавляет товар по скидке, исключаем его из проверки
+            if (
+                product.items[0].id == promocode.promocodeProducts?.id &&
+                product.items.length === 1
+            ) {
+                return;
+            }
+            if (
+                product.items[0].options._sale_price ||
+                product.items[0].variant?._sale_price
+            ) {
+                hasSaleProduct = true;
+            }
+        });
+    }
+
+    // Проверка времени
+    if (discount.start_time && discount.stop_time) {
+        const isTimeAfterMidnight =
+            parseInt(discount.start_time.slice(0, 2)) >
+            parseInt(discount.stop_time.slice(0, 2));
+
+        const discountStartTime = set(new Date(), {
+            hours: parseInt(discount.start_time.slice(0, 2)),
+            minutes: parseInt(discount.start_time.slice(3)),
+            seconds: 0,
+            milliseconds: 0,
+        });
+        const discountEndTime = set(new Date(), {
+            hours: isTimeAfterMidnight
+                ? 23
+                : parseInt(discount.stop_time.slice(0, 2)),
+            minutes: isTimeAfterMidnight
+                ? 59
+                : parseInt(discount.stop_time.slice(3)),
+            seconds: 0,
+            milliseconds: 0,
+        });
+
+        const discountAfterMidnightEndTime = set(new Date(), {
+            hours: parseInt(discount.stop_time.slice(0, 2)),
+            minutes: parseInt(discount.stop_time.slice(3)),
+            seconds: 0,
+            milliseconds: 0,
+        });
+
+        const isWithinDiscountTime = () => {
+            try {
+                return isWithinInterval(new Date(), {
+                    start: discountStartTime,
+                    end: discountEndTime,
+                });
+            } catch (error) {
+                console.log(
+                    `${error.message}, Something wrong in discount time interval`
+                );
+                return false;
+            }
+        };
+
+        const isWithinAfterMidnightTime = () => {
+            try {
+                return isWithinInterval(new Date(), {
+                    start: startOfDay(new Date()),
+                    end: discountAfterMidnightEndTime,
+                });
+            } catch (error) {
+                console.log(
+                    `${error.message}, Something wrong in discount after midnight interval`
+                );
+                return false;
+            }
+        };
+
+        const timeStatus =
+            isWithinDiscountTime() ||
+            (isTimeAfterMidnight && isWithinAfterMidnightTime());
+
+        if (!timeStatus) {
+            return false;
+        }
+    }
+
+    // Проверка дней недели
+    if (discount.days && discount.days.length === 7) {
+        const todayDayOfWeek =
+            getDay(new Date()) === 0 ? 6 : getDay(new Date()) - 1;
+        const isDiscountAvailable = discount.days[todayDayOfWeek] === "1";
+        if (!isDiscountAvailable) {
+            return false;
+        }
+    }
+
+    // Проверка типа доставки
+    if (typeDelivery) {
+        if (
+            discount.typeDelivery === "delivery" &&
+            typeDelivery !== "delivery"
+        ) {
+            return false;
+        }
+        if (discount.typeDelivery === "self" && typeDelivery !== "self") {
+            return false;
+        }
+    }
+
+    // Проверка минимальной суммы заказа
+    const discountDeliveryMinPrice = parseInt(discount.deliveryMinOrderTotal);
+    const discountSelfDeliveryMinPrice =
+        discount.selfDeliveryMinOrderTotal === ""
+            ? discountDeliveryMinPrice
+            : parseInt(discount.selfDeliveryMinOrderTotal);
+
+    if (promocode.type === "fixed_product") {
+        cartTotal =
+            cartTotal -
+            parseInt(promocode.promocodeProducts.options._price) +
+            parseInt(promocode.productPrice);
+    }
+
+    if (typeDelivery === "delivery" && discountDeliveryMinPrice > cartTotal) {
+        return false;
+    } else if (
+        typeDelivery === "self" &&
+        discountSelfDeliveryMinPrice > cartTotal
+    ) {
+        return false;
+    }
+
+    return true;
+};

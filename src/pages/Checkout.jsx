@@ -75,6 +75,7 @@ import onlineCreditCard from "../img/online-credit-card.svg";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import "../css/checkout.css";
+import useAutoDiscount from "../hooks/useAutoDiscount";
 
 const formatingStrPhone = (inputNumbersValue) => {
     var formattedPhone = "";
@@ -187,6 +188,8 @@ export default function Checkout() {
     const [openBeforePaymentModal, setOpenBeforePaymentModal] = useState(false);
     const [yandexApiError, setYandexApiError] = useState(false);
     const [choosenAddress, setChoosenAddress] = useState(null);
+
+    const { autoDiscountAmount, autoDiscount } = useAutoDiscount(typeDelivery);
 
     const handleAlertClose = () => {
         setOpenAlert(false);
@@ -511,6 +514,8 @@ export default function Checkout() {
                         bonusProduct: userCartBonusProduct,
                         bonuses: usedBonuses,
                         dontRecall: dontRecall,
+                        autoDiscountId: autoDiscount?.id,
+                        autoDiscountAmount: autoDiscountAmount,
                     }
                 )
                 .then((resp) => {
@@ -964,6 +969,9 @@ export default function Checkout() {
         let result = cartTotalPrice;
         if (usedBonuses) {
             result -= usedBonuses;
+        }
+        if (autoDiscount && autoDiscountAmount) {
+            result -= autoDiscountAmount;
         }
         if (typeDelivery === "delivery") {
             if (
@@ -1624,39 +1632,52 @@ export default function Checkout() {
 
                                 <hr className="checkout--total-panel--separator" />
 
-                                {cart.discount ? (
-                                    <div>
-                                        <div className="checkout--subtotal-price">
-                                            <div className="price">
-                                                Сумма заказа
-                                                <span className="money">
-                                                    {cart.subTotalPrice.toLocaleString(
-                                                        "ru-RU"
-                                                    )}{" "}
-                                                    &#8381;
-                                                </span>
-                                            </div>
-                                            <div className="promocode">
-                                                <div className="promocode-name">
-                                                    Промокод{" "}
-                                                    <span className="main-color">
-                                                        {promocode.code}
-                                                    </span>
-                                                </div>
-
-                                                <span className="money main-color">
-                                                    -
-                                                    {cart.discount.toLocaleString(
-                                                        "ru-RU"
-                                                    )}{" "}
-                                                    &#8381;
-                                                </span>
-                                            </div>
-                                        </div>
+                                {cart.discount || autoDiscountAmount ? (
+                                    <div className="checkout--subtotal-price">
+                                        Сумма заказа
+                                        <span className="money">
+                                            {cart.subTotalPrice.toLocaleString(
+                                                "ru-RU"
+                                            )}{" "}
+                                            &#8381;
+                                        </span>
                                     </div>
-                                ) : (
-                                    ""
-                                )}
+                                ) : null}
+
+                                {promocode.code && cart.discount ? (
+                                    <div className="checkout--promocode-total">
+                                        <div className="checkout--promocode-name">
+                                            Промокод{" "}
+                                            <span className="main-color">
+                                                {promocode.code}
+                                            </span>
+                                        </div>
+
+                                        <span className="money main-color">
+                                            -
+                                            {cart.discount.toLocaleString(
+                                                "ru-RU"
+                                            )}{" "}
+                                            &#8381;
+                                        </span>
+                                    </div>
+                                ) : null}
+
+                                {autoDiscount && autoDiscountAmount ? (
+                                    <div className="checkout--auto-discount-container">
+                                        <div className="checkout--auto-discount-name">
+                                            {autoDiscount.name}
+                                        </div>
+
+                                        <span className="checkout--auto-discount-amount main-color">
+                                            -
+                                            {autoDiscountAmount.toLocaleString(
+                                                "ru-RU"
+                                            )}{" "}
+                                            &#8381;
+                                        </span>
+                                    </div>
+                                ) : null}
 
                                 <div className="checkout--total-panel--result">
                                     {typeDelivery === "delivery" &&

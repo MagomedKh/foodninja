@@ -71,17 +71,20 @@
 .checkout--form-new-address {
     margin-top: 1.5rem;
 }
-.checkout--subtotal-price {
+.checkout--subtotal-price,
+.checkout--promocode-total,
+.checkout--auto-discount-container {
     font-size: 18px;
     font-weight: bold;
 }
-.checkout--subtotal-price .price,
-.checkout--subtotal-price .promocode {
+.checkout--subtotal-price,
+.checkout--promocode-total,
+.checkout--auto-discount-container {
     display: flex;
     justify-content: space-between;
 }
 
-.checkout--subtotal-price .promocode .promocode-name {
+.checkout--subtotal-price .checkout--promocode-total .checkout--promocode-name {
     display: flex;
     align-items: center;
     white-space: pre-wrap;
