@@ -71,6 +71,21 @@ export default function Product({ product, disabled }) {
         >
             <div className="product product-item">
                 <div className="product--labels-wrapper">
+                    {parseInt(product.options._regular_price) >
+                    parseInt(product.options._price) ? (
+                        <div className="product--label discount">
+                            -
+                            {Math.round(
+                                (1 -
+                                    parseInt(product.options._price) /
+                                        parseInt(
+                                            product.options._regular_price
+                                        )) *
+                                    100
+                            )}
+                            %
+                        </div>
+                    ) : null}
                     {product.options?._count_peoples ? (
                         <div className="product--label peoples">
                             <GroupIcon />

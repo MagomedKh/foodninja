@@ -273,6 +273,7 @@
     font-size: 13px;
     z-index: 1;
     display: flex;
+    flex-wrap: wrap;
 }
 
 @media (min-width: 899px) {
@@ -306,7 +307,8 @@
 .product--label.hit {
     background: #fbcd00;
 }
-.product--label.new {
+.product--label.new,
+.product--label.discount {
     background: #ea1b14;
     color: white;
 }
@@ -415,6 +417,7 @@
     .product-grid-item.one-layout .product--labels-wrapper {
         top: 20px;
         left: 20px;
+        width: auto;
     }
     .product--label {
         display: inline-block;
