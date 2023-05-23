@@ -651,3 +651,69 @@ export const ScrollToTop = () => {
 
     return null;
 };
+
+// Функция для проверки функционала сайта по времени
+// Принимает две строки формата "HH:MM"
+export const _checkWorkingInterval = (startTime, endTime) => {
+    if (!startTime || !endTime) {
+        return true;
+    }
+
+    const isTimeAfterMidnight =
+        parseInt(startTime.slice(0, 2)) > parseInt(endTime.slice(0, 2));
+
+    const timeLimitStart = set(new Date(), {
+        hours: startTime.slice(0, 2),
+        minutes: startTime.slice(3, 5),
+        seconds: 0,
+    });
+
+    const timeLimitEnd = set(new Date(), {
+        hours: isTimeAfterMidnight ? 23 : endTime.slice(0, 2),
+        minutes: isTimeAfterMidnight ? 59 : endTime.slice(3, 5),
+        seconds: 0,
+    });
+
+    const timeLimitEndAfterMidnight = set(new Date(), {
+        hours: endTime.slice(0, 2),
+        minutes: endTime.slice(3, 5),
+        seconds: 0,
+    });
+
+    let isWithinTimeInterval = false;
+
+    let isWithinAfterMidnightInterval = false;
+
+    try {
+        if (
+            isWithinInterval(new Date(), {
+                start: timeLimitStart,
+                end: timeLimitEnd,
+            })
+        ) {
+            isWithinTimeInterval = true;
+        }
+    } catch (error) {
+        isWithinTimeInterval = true;
+        console.log(`${error.message}, Something wrong in time interval`);
+    }
+
+    try {
+        if (
+            isTimeAfterMidnight &&
+            isWithinInterval(new Date(), {
+                start: startOfDay(new Date()),
+                end: timeLimitEndAfterMidnight,
+            })
+        ) {
+            isWithinAfterMidnightInterval = true;
+        }
+    } catch (error) {
+        console.log(`${error.message}, Something wrong in time interval`);
+    }
+    if (isWithinTimeInterval || isWithinAfterMidnightInterval) {
+        return true;
+    } else {
+        return false;
+    }
+};
