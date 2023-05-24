@@ -14,7 +14,13 @@ import {
     faOdnoklassnikiSquare,
 } from "@fortawesome/free-brands-svg-icons";
 import { YMaps } from "react-yandex-maps";
-import { Header, Footer, LeafletMap, ContactsYandexMap } from "../components";
+import {
+    Header,
+    Footer,
+    LeafletMap,
+    ContactsYandexMap,
+    ContactsZonesInfo,
+} from "../components";
 import "../css/contacts.css";
 import { _getPlatform } from "../components/helpers";
 import { getDay } from "date-fns";
@@ -317,6 +323,7 @@ export default function Contacts() {
                                 <LeafletMap />
                             </div>
                         )}
+                        <ContactsZonesInfo />
                         {config.CONFIG_contact_delivery_info && (
                             <div
                                 className="contacts--delivery-info"
