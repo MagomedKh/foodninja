@@ -594,6 +594,7 @@ export default function ProductModal() {
                                             wrongVariant ||
                                             !modificatorsCondition
                                         }
+                                        data-product_id={productModal.id}
                                     >
                                         Хочу
                                     </Button>
@@ -606,6 +607,7 @@ export default function ProductModal() {
                                             productModal.disabled ||
                                             !modificatorsCondition
                                         }
+                                        data-product_id={productModal.id}
                                     >
                                         Хочу
                                     </Button>

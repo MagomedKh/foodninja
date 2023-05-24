@@ -44,6 +44,7 @@ export default function ReccomendProduct({ product }) {
                         <Button
                             className="btn--outline btn-buy"
                             onClick={handleAddProduct}
+                            data-product_id={product.id}
                         >
                             Хочу
                         </Button>

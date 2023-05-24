@@ -116,6 +116,7 @@ export default function Product({ product, disabled }) {
                         "viewProduct",
                         fullWidthImage === "yes" && "fullwidth"
                     )}
+                    data-product-id={product.id}
                     style={{
                         backgroundColor: imageBgColor,
                         filter: disabled ? "grayscale(1)" : "",
@@ -136,12 +137,14 @@ export default function Product({ product, disabled }) {
                     <h4
                         className="product--title viewProduct"
                         onClick={openModalBtnClick}
+                        data-product-id={product.id}
                     >
                         {product.title}
                     </h4>
                     <div
                         className="product--description viewProduct"
                         onClick={openModalBtnClick}
+                        data-product-id={product.id}
                     >
                         <div
                             dangerouslySetInnerHTML={{
@@ -150,13 +153,11 @@ export default function Product({ product, disabled }) {
                         ></div>
                         <div className="short-fade"></div>
                     </div>
-                    <div className="action viewProduct">
-                        <span
-                            onClick={openModalBtnClick}
-                            data-product-id={product.id}
-                        >
-                            Подробнее
-                        </span>
+                    <div
+                        className="action viewProduct"
+                        data-product-id={product.id}
+                    >
+                        <span onClick={openModalBtnClick}>Подробнее</span>
                     </div>
                     <div className="product--buying">
                         <div className="product--price-wrapper">
@@ -206,6 +207,7 @@ export default function Product({ product, disabled }) {
                                 className="btn--action btn-buy"
                                 onClick={openModalBtnClick}
                                 disabled={disabled}
+                                data-product-id={product.id}
                             >
                                 {_isMobile() ? "Хочу" : "Выбрать"}
                             </Button>
@@ -215,6 +217,7 @@ export default function Product({ product, disabled }) {
                                 className="btn--action btn-buy"
                                 onClick={handleAddProduct}
                                 disabled={disabled}
+                                data-product-id={product.id}
                             >
                                 Хочу
                             </Button>
@@ -237,9 +240,10 @@ export default function Product({ product, disabled }) {
                                     data-product_id={product.id}
                                 />
                                 <Button
-                                    className="btn--default product-add"
+                                    className="btn--default product-add btn-buy"
                                     onClick={handleAddProduct}
                                     disabled={disabled}
+                                    data-product_id={product.id}
                                 >
                                     +
                                 </Button>
