@@ -479,6 +479,40 @@ export const _checkPromocode = ({
             }
         }
 
+        // Проверка максимальной суммы заказа
+        const promocodeDeliveryMaxPrice = parseInt(promocode.coupon_max_price);
+        const promocodeSelfDeliveryMaxPrice = parseInt(
+            promocode.coupon_selfdelivery_max_price
+        );
+
+        if (
+            cartTotal > promocodeDeliveryMaxPrice &&
+            cartTotal > promocodeSelfDeliveryMaxPrice
+        ) {
+            status = "error";
+
+            if (promocodeDeliveryMaxPrice === promocodeSelfDeliveryMaxPrice) {
+                alert =
+                    "Промокод отменен, т.к. действует при заказе на сумму до " +
+                    promocodeDeliveryMaxPrice +
+                    " ₽";
+                errors.push({
+                    code: "minPrice",
+                    message:
+                        "Максимальная сумма заказа c промокодом " +
+                        promocodeDeliveryMaxPrice +
+                        " ₽",
+                });
+            } else {
+                alert = `Промокод отменен, т.к. действует при заказе на сумму до 
+                    ${promocodeDeliveryMaxPrice} ₽. на доставку и до ${promocodeSelfDeliveryMaxPrice} ₽ на самовывоз`;
+                errors.push({
+                    code: "minPrice",
+                    message: `Максимальная сумма заказа с промокодом: ${promocodeDeliveryMaxPrice} ₽ на доставку и ${promocodeSelfDeliveryMaxPrice} ₽ на самовывоз`,
+                });
+            }
+        }
+
         // Проверяем на наличие товара по промокоду в корзине
         if (
             promocode.type === "fixed_product" &&
