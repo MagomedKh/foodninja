@@ -479,6 +479,40 @@ export const _checkPromocode = ({
             }
         }
 
+        // Проверка максимальной суммы заказа
+        const promocodeDeliveryMaxPrice = parseInt(promocode.coupon_max_price);
+        const promocodeSelfDeliveryMaxPrice = parseInt(
+            promocode.coupon_selfdelivery_max_price
+        );
+
+        if (
+            cartTotal > promocodeDeliveryMaxPrice &&
+            cartTotal > promocodeSelfDeliveryMaxPrice
+        ) {
+            status = "error";
+
+            if (promocodeDeliveryMaxPrice === promocodeSelfDeliveryMaxPrice) {
+                alert =
+                    "Промокод отменен, т.к. действует при заказе на сумму до " +
+                    promocodeDeliveryMaxPrice +
+                    " ₽";
+                errors.push({
+                    code: "minPrice",
+                    message:
+                        "Максимальная сумма заказа c промокодом " +
+                        promocodeDeliveryMaxPrice +
+                        " ₽",
+                });
+            } else {
+                alert = `Промокод отменен, т.к. действует при заказе на сумму до 
+                    ${promocodeDeliveryMaxPrice} ₽. на доставку и до ${promocodeSelfDeliveryMaxPrice} ₽ на самовывоз`;
+                errors.push({
+                    code: "minPrice",
+                    message: `Максимальная сумма заказа с промокодом: ${promocodeDeliveryMaxPrice} ₽ на доставку и ${promocodeSelfDeliveryMaxPrice} ₽ на самовывоз`,
+                });
+            }
+        }
+
         // Проверяем на наличие товара по промокоду в корзине
         if (
             promocode.type === "fixed_product" &&
@@ -650,4 +684,70 @@ export const ScrollToTop = () => {
     }, [pathname]);
 
     return null;
+};
+
+// Функция для проверки функционала сайта по времени
+// Принимает две строки формата "HH:MM"
+export const _checkWorkingInterval = (startTime, endTime) => {
+    if (!startTime || !endTime) {
+        return true;
+    }
+
+    const isTimeAfterMidnight =
+        parseInt(startTime.slice(0, 2)) > parseInt(endTime.slice(0, 2));
+
+    const timeLimitStart = set(new Date(), {
+        hours: startTime.slice(0, 2),
+        minutes: startTime.slice(3, 5),
+        seconds: 0,
+    });
+
+    const timeLimitEnd = set(new Date(), {
+        hours: isTimeAfterMidnight ? 23 : endTime.slice(0, 2),
+        minutes: isTimeAfterMidnight ? 59 : endTime.slice(3, 5),
+        seconds: 0,
+    });
+
+    const timeLimitEndAfterMidnight = set(new Date(), {
+        hours: endTime.slice(0, 2),
+        minutes: endTime.slice(3, 5),
+        seconds: 0,
+    });
+
+    let isWithinTimeInterval = false;
+
+    let isWithinAfterMidnightInterval = false;
+
+    try {
+        if (
+            isWithinInterval(new Date(), {
+                start: timeLimitStart,
+                end: timeLimitEnd,
+            })
+        ) {
+            isWithinTimeInterval = true;
+        }
+    } catch (error) {
+        isWithinTimeInterval = true;
+        console.log(`${error.message}, Something wrong in time interval`);
+    }
+
+    try {
+        if (
+            isTimeAfterMidnight &&
+            isWithinInterval(new Date(), {
+                start: startOfDay(new Date()),
+                end: timeLimitEndAfterMidnight,
+            })
+        ) {
+            isWithinAfterMidnightInterval = true;
+        }
+    } catch (error) {
+        console.log(`${error.message}, Something wrong in time interval`);
+    }
+    if (isWithinTimeInterval || isWithinAfterMidnightInterval) {
+        return true;
+    } else {
+        return false;
+    }
 };

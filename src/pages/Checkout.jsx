@@ -889,6 +889,17 @@ export default function Checkout() {
         promocode.coupon_min_price &&
         cartTotalPrice < parseInt(promocode.coupon_min_price);
 
+    const promocodeSelfDeliveryOrderMore =
+        typeDelivery === "self" &&
+        Object.keys(promocode).length > 0 &&
+        cartTotalPrice > parseInt(promocode.coupon_selfdelivery_max_price);
+
+    const promocodeDeliveryOrderMore =
+        typeDelivery === "delivery" &&
+        Object.keys(promocode).length > 0 &&
+        promocode.coupon_min_price &&
+        cartTotalPrice > parseInt(promocode.coupon_max_price);
+
     // Функция рендера графика работы филиала
     const currentDayOfWeek =
         getDay(new Date()) === 0 ? 6 : getDay(new Date()) - 1;
@@ -1940,6 +1951,37 @@ export default function Checkout() {
 
                             <Collapse
                                 sx={{ mb: 1 }}
+                                in={promocodeSelfDeliveryOrderMore}
+                                unmountOnExit
+                            >
+                                <Alert severity="error">
+                                    Максимальная сумма заказа на самовывоз c
+                                    промокодом «{promocode.code}» —{" "}
+                                    <span style={{ whiteSpace: "nowrap" }}>
+                                        {
+                                            promocode.coupon_selfdelivery_max_price
+                                        }{" "}
+                                        ₽
+                                    </span>
+                                </Alert>
+                            </Collapse>
+
+                            <Collapse
+                                sx={{ mb: 1 }}
+                                in={promocodeDeliveryOrderMore}
+                                unmountOnExit
+                            >
+                                <Alert severity="error">
+                                    Максимальная сумма заказа на доставку c
+                                    промокодом «{promocode.code}» —{" "}
+                                    <span style={{ whiteSpace: "nowrap" }}>
+                                        {promocode.coupon_max_price} ₽
+                                    </span>
+                                </Alert>
+                            </Collapse>
+
+                            <Collapse
+                                sx={{ mb: 1 }}
                                 in={selfDeliveryOrderLess}
                                 unmountOnExit
                             >
@@ -2013,6 +2055,8 @@ export default function Checkout() {
                                     disabled={
                                         promocodeSelfDeliveryOrderLess ||
                                         promocodeDeliveryOrderLess ||
+                                        promocodeSelfDeliveryOrderMore ||
+                                        promocodeDeliveryOrderMore ||
                                         selfDeliveryOrderLess ||
                                         deliveryOrderLess ||
                                         (typeDelivery === "delivery" &&

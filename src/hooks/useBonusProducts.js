@@ -2,6 +2,8 @@ import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { getTotalPrice } from "../redux/reducers/cart";
 import { addBonusProductToCart } from "../redux/actions/cart";
+import { getDay } from "date-fns";
+import { _checkWorkingInterval } from "../components/helpers";
 
 const useBonusProducts = () => {
     const dispatch = useDispatch();
@@ -28,6 +30,10 @@ const useBonusProducts = () => {
         CONFIG_promocode_with_bonus_program,
         CONFIG_bonuses_not_allowed_categories: disabledCategories,
         CONFIG_bonuses_not_allowed_categories_hardmode: bonusesHardmod,
+        CONFIG_bonuses_use_limit_time,
+        CONFIG_bonuses_start_active,
+        CONFIG_bonuses_end_active,
+        CONFIG_bonuses_days,
     } = useSelector((state) => {
         return state.config.data;
     }, shallowEqual);
@@ -82,10 +88,35 @@ const useBonusProducts = () => {
 
     const cartTotalPrice = getTotalPrice(productsWithoutCategories);
 
+    //Проверяем работают ли бонусные товары в текущий день недели
+    let bonusesDisabledByDays = false;
+
+    if (
+        CONFIG_bonuses_use_limit_time &&
+        CONFIG_bonuses_days &&
+        CONFIG_bonuses_days.length
+    ) {
+        const currentDayOfWeek =
+            getDay(new Date()) === 0 ? 6 : getDay(new Date()) - 1;
+        if (CONFIG_bonuses_days[currentDayOfWeek] == 0) {
+            bonusesDisabledByDays = true;
+        }
+    }
+
+    //Проверяем работают ли бонусные товары в текущее время
+    let bonusesDisabledByTime =
+        CONFIG_bonuses_use_limit_time &&
+        !_checkWorkingInterval(
+            CONFIG_bonuses_start_active,
+            CONFIG_bonuses_end_active
+        );
+
     const bonusesDisabled =
         CONFIG_free_products_program_status !== "on" ||
         !bonuses_items ||
-        !bonuses_items.length;
+        !bonuses_items.length ||
+        bonusesDisabledByDays ||
+        bonusesDisabledByTime;
 
     const bonusesDisabledByPromocode =
         CONFIG_promocode_with_bonus_program !== "on" &&

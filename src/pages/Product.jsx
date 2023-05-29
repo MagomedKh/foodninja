@@ -404,6 +404,7 @@ export default function Product() {
                                         className="btn--action btn-buy"
                                         onClick={handleAddVariantProduct}
                                         disabled={disabledProductCategory}
+                                        data-product-id={product.id}
                                     >
                                         Хочу
                                     </Button>
@@ -413,6 +414,7 @@ export default function Product() {
                                         className="btn--action btn-buy"
                                         onClick={handleAddProduct}
                                         disabled={disabledProductCategory}
+                                        data-product-id={product.id}
                                     >
                                         Хочу
                                     </Button>

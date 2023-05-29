@@ -18,7 +18,7 @@ export default function MiniCartBonusProduct({
     };
 
     return (
-        <div className="minicart--product" data-product_id={productCart.id}>
+        <div className="minicart--product" data-product-id={productCart.id}>
             <div className="minicart--product-info">
                 <div className="minicart--product-image">
                     <img
@@ -51,7 +51,7 @@ export default function MiniCartBonusProduct({
                     <div
                         className="minicart--product-remove"
                         onClick={() => handleChooseBonusProduct({})}
-                        data-product_id={productCart.id}
+                        data-product-id={productCart.id}
                     >
                         <CloseIcon />
                     </div>
@@ -78,7 +78,7 @@ export default function MiniCartBonusProduct({
                         type="text"
                         readOnly
                         value={productCount}
-                        data-product_id={productCart.id}
+                        data-product-id={productCart.id}
                     />
                     <Button className="btn--default product-add" disabled>
                         +

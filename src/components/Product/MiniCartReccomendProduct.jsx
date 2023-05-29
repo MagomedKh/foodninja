@@ -9,6 +9,7 @@ import {
     setModalProduct,
     setOpenModal,
 } from "../../redux/actions/productModal";
+import clsx from "clsx";
 
 export default function MiniCartReccomendProduct({ product }) {
     const dispatch = useDispatch();
@@ -29,8 +30,11 @@ export default function MiniCartReccomendProduct({ product }) {
 
     return (
         <div
-            className="product recommend-product"
-            data-product_id={product.id}
+            className={clsx(
+                product.type === "simple" && "btn-buy",
+                "product recommend-product"
+            )}
+            data-product-id={product.id}
             onClick={
                 product.type === "variations"
                     ? openModalBtnClick

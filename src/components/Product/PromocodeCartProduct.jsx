@@ -26,7 +26,7 @@ export default function PromocodeCartProduct({
     return (
         <div
             className="cart--product promocode-product"
-            data-product_id={productCart.id}
+            data-product-id={productCart.id}
         >
             <div className="cart--product-image">
                 <img
@@ -90,7 +90,7 @@ export default function PromocodeCartProduct({
                 <div
                     className="cart--product-remove"
                     onClick={handleRemovePromocodeProduct}
-                    data-product_id={productCart.id}
+                    data-product-id={productCart.id}
                 >
                     <DeleteIcon />
                 </div>

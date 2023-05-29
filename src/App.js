@@ -29,6 +29,7 @@ import {
     SystemAlerts,
     ChooseTown,
     WeClosed,
+    SaleModal,
 } from "./components";
 import {
     Cart,
@@ -56,6 +57,7 @@ import {
     _isCategoryDisabled,
     _isMobile,
 } from "./components/helpers";
+import useActiveSale from "./hooks/useActiveSale";
 import { ru } from "date-fns/locale";
 import { setDefaultOptions } from "date-fns";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
@@ -68,6 +70,7 @@ import {
     PTSansFont,
     RubikFont,
 } from "./fonts/index";
+import { updateAlerts } from "./redux/actions/systemAlerts";
 
 const MainTheme = createGlobalStyle`
 	:root {
@@ -125,6 +128,15 @@ function App() {
         shallowEqual
     );
 
+    const sales = useSelector(({ pages }) => pages.sales);
+
+    const {
+        activeSale,
+        saleOpenModal,
+        handleCloseSaleModal,
+        handleSetActiveSale,
+    } = useActiveSale();
+
     useEffect(() => {
         dispatch(setMainLoading(false));
         axios
@@ -163,6 +175,7 @@ function App() {
                 Object.values(cartItems).map((obj) => obj.items)
             );
             // Удаляем товары с недоступными категориями, товары с измененной ценой и удалённые товары
+            let isCartChanged = false;
             allCartProducts.forEach((product) => {
                 if (product.type === "simple") {
                     let productPrice = parseInt(product.options._price);
@@ -177,6 +190,7 @@ function App() {
                         productPrice !=
                             parseInt(products[product.id].options._price)
                     ) {
+                        isCartChanged = true;
                         dispatch(
                             removeProductFromCart({
                                 ...product,
@@ -198,6 +212,7 @@ function App() {
                                 product.variant.variant_id
                             ].price
                     ) {
+                        isCartChanged = true;
                         dispatch(
                             removeProductFromCart({
                                 ...product,
@@ -207,6 +222,15 @@ function App() {
                     }
                 }
             });
+            if (isCartChanged) {
+                dispatch(
+                    updateAlerts({
+                        open: true,
+                        message:
+                            "Часть товаров удалены из корзины, т.к. время действия акции закончилось.",
+                    })
+                );
+            }
         }
     }, [categories, products, status]);
 
@@ -230,6 +254,17 @@ function App() {
                 });
         else dispatch(setMainLoading(true));
     }, [dispatch]);
+
+    useEffect(() => {
+        const urlParams = new URL(window.location.href).searchParams;
+        const paramsSaleID = urlParams.get("sale_id");
+        if (paramsSaleID) {
+            const sale = sales.find((sale) => sale.saleID == paramsSaleID);
+            if (sale) {
+                handleSetActiveSale(sale);
+            }
+        }
+    }, []);
 
     const mainColor = config
         ? config.CONFIG_main_color !== undefined
@@ -382,6 +417,11 @@ function App() {
                                 <Route path="*" element={<Page />} />
                             </Routes>
                             <AuthModal />
+                            <SaleModal
+                                saleOpenModal={saleOpenModal}
+                                activeSale={activeSale}
+                                handleCloseSaleModal={handleCloseSaleModal}
+                            />
                             <SystemAlerts />
                             {_getPlatform() === "site" && _isMobile() ? (
                                 <InstallApp />
