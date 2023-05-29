@@ -36,40 +36,54 @@ const UserAddressesList = ({
     const userAddresses =
         (user?.addresses && Object.values(user.addresses)) || [];
 
-    const addressesWithFormat = userAddresses.map((address, index) => {
-        let formateAddress;
-        if (!address.formate) {
-            formateAddress = address.street + ", д. " + address.home;
-            formateAddress += address.porch ? ", под. " + address.porch : "";
-            formateAddress += address.floor ? ", этаж " + address.floor : "";
-            formateAddress += address.apartment
-                ? ", кв. " + address.apartment
-                : "";
-        }
+    const addressesWithCoordinates = userAddresses.filter((address) => {
         if (
             config.deliveryZones.deliveryPriceType === "areaPrice" &&
             !address.coordinates
         ) {
-            return null;
+            return false;
         }
-        return (
-            <FormControlLabel
-                key={index}
-                className="custom-radio"
-                value={index}
-                control={<Radio size="small" />}
-                disableTypography
-                label={
-                    <div className="user-address-label">
-                        {address.label && <span>{address.label}</span>}
-                        <span className={clsx(address.label && "with-label")}>
-                            {address.formate || formateAddress}
-                        </span>
-                    </div>
-                }
-            />
-        );
+        return true;
     });
+
+    console.log(userAddresses);
+
+    const addressesWithFormat = addressesWithCoordinates.map(
+        (address, index) => {
+            let formateAddress;
+            if (!address.formate) {
+                formateAddress = address.street + ", д. " + address.home;
+                formateAddress += address.porch
+                    ? ", под. " + address.porch
+                    : "";
+                formateAddress += address.floor
+                    ? ", этаж " + address.floor
+                    : "";
+                formateAddress += address.apartment
+                    ? ", кв. " + address.apartment
+                    : "";
+            }
+            return (
+                <FormControlLabel
+                    key={index}
+                    className="custom-radio"
+                    value={index}
+                    control={<Radio size="small" />}
+                    disableTypography
+                    label={
+                        <div className="user-address-label">
+                            {address.label && <span>{address.label}</span>}
+                            <span
+                                className={clsx(address.label && "with-label")}
+                            >
+                                {address.formate || formateAddress}
+                            </span>
+                        </div>
+                    }
+                />
+            );
+        }
+    );
 
     const firstAddresses = addressesWithFormat.slice(0, 5);
 
