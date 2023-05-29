@@ -1,15 +1,16 @@
 import React, { useState, useCallback } from "react";
-import "../css/banners.css";
 import { useSelector } from "react-redux";
 import { Container } from "@mui/material";
-import { _isMobile } from "./helpers.js";
 import { Swiper, SwiperSlide } from "swiper/react/swiper-react";
 import { Autoplay, Navigation, Pagination, EffectCoverflow } from "swiper";
-import "swiper/swiper.min.css";
-import "swiper/modules/navigation/navigation.min.css";
-import "swiper/modules/pagination/pagination.min.css";
+import useActiveSale from "../hooks/useActiveSale";
 import { SaleModal } from "./";
+import { _isMobile } from "./helpers.js";
 import clsx from "clsx";
+import "swiper/swiper.min.css";
+import "swiper/modules/pagination/pagination.min.css";
+import "swiper/modules/navigation/navigation.min.css";
+import "../css/banners.css";
 
 export default function Footer() {
     const { sales } = useSelector(({ pages }) => {
@@ -28,18 +29,14 @@ export default function Footer() {
         }
     );
 
-    const [activeSale, setActiveSale] = useState(false);
-    const [saleOpenModal, setSaleOpenModal] = useState(false);
     const [swiper, setSwiper] = useState();
 
-    const handleCloseSaleModal = useCallback(() => {
-        setSaleOpenModal(false);
-    }, []);
-
-    const handleSetActiveSale = useCallback((sale) => {
-        setSaleOpenModal(true);
-        setActiveSale(sale);
-    }, []);
+    const {
+        activeSale,
+        saleOpenModal,
+        handleCloseSaleModal,
+        handleSetActiveSale,
+    } = useActiveSale();
 
     const handleBannerClick = useCallback((link) => {
         const pathnameArray = link.split("/").filter((element) => element);

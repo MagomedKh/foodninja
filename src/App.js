@@ -29,6 +29,7 @@ import {
     SystemAlerts,
     ChooseTown,
     WeClosed,
+    SaleModal,
 } from "./components";
 import {
     Cart,
@@ -56,6 +57,7 @@ import {
     _isCategoryDisabled,
     _isMobile,
 } from "./components/helpers";
+import useActiveSale from "./hooks/useActiveSale";
 import { ru } from "date-fns/locale";
 import { setDefaultOptions } from "date-fns";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
@@ -124,6 +126,15 @@ function App() {
         (state) => state.cart,
         shallowEqual
     );
+
+    const sales = useSelector(({ pages }) => pages.sales);
+
+    const {
+        activeSale,
+        saleOpenModal,
+        handleCloseSaleModal,
+        handleSetActiveSale,
+    } = useActiveSale();
 
     useEffect(() => {
         dispatch(setMainLoading(false));
@@ -230,6 +241,17 @@ function App() {
                 });
         else dispatch(setMainLoading(true));
     }, [dispatch]);
+
+    useEffect(() => {
+        const urlParams = new URL(window.location.href).searchParams;
+        const paramsSaleID = urlParams.get("sale_id");
+        if (paramsSaleID) {
+            const sale = sales.find((sale) => sale.saleID == paramsSaleID);
+            if (sale) {
+                handleSetActiveSale(sale);
+            }
+        }
+    }, []);
 
     const mainColor = config
         ? config.CONFIG_main_color !== undefined
@@ -382,6 +404,11 @@ function App() {
                                 <Route path="*" element={<Page />} />
                             </Routes>
                             <AuthModal />
+                            <SaleModal
+                                saleOpenModal={saleOpenModal}
+                                activeSale={activeSale}
+                                handleCloseSaleModal={handleCloseSaleModal}
+                            />
                             <SystemAlerts />
                             {_getPlatform() === "site" && _isMobile() ? (
                                 <InstallApp />

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { _isMobile } from "../components/helpers.js";
 import {
@@ -12,6 +12,7 @@ import {
     Grid,
 } from "@mui/material";
 import { Header, Footer, SaleModal } from "../components";
+import useActiveSale from "../hooks/useActiveSale.js";
 import "../css/sale.css";
 
 export default function Sales() {
@@ -21,18 +22,12 @@ export default function Sales() {
         };
     });
 
-    const [activeSale, setActiveSale] = useState(false);
-    const [saleOpenModal, setSaleOpenModal] = useState(false);
-
-    const handleCloseSaleModal = useCallback(() => {
-        setSaleOpenModal(false);
-    }, []);
-
-    const handleSetActiveSale = useCallback((sale) => {
-        window.location.hash = "sale-modal";
-        setSaleOpenModal(true);
-        setActiveSale(sale);
-    }, []);
+    const {
+        activeSale,
+        saleOpenModal,
+        handleCloseSaleModal,
+        handleSetActiveSale,
+    } = useActiveSale();
 
     return (
         <>
@@ -43,7 +38,7 @@ export default function Sales() {
                     <div className="sales-wrapper">
                         <Grid container spacing={4}>
                             {sales.map((sale, index) => (
-                                <Grid item sm={12} md={4}>
+                                <Grid item sm={12} md={4} key={sale.saleID}>
                                     <Card
                                         className="sale"
                                         onClick={() =>

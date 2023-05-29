@@ -15,18 +15,21 @@ const SaleModal = ({ saleOpenModal, activeSale, handleCloseSaleModal }) => {
         dialogSaleProps.fullScreen = true;
     }
 
-    const hashEventListener = (event) => {
-        if (!window.location.hash && event.oldURL.includes("#sale-modal")) {
+    const urlChangeEventListener = () => {
+        let url = new URL(window.location.href);
+        if (!url.searchParams.has("sale_id")) {
             handleCloseSaleModal();
         }
     };
 
     useEffect(() => {
-        window.addEventListener("hashchange", hashEventListener);
+        if (saleOpenModal) {
+            window.addEventListener("popstate", urlChangeEventListener);
+        }
         return () => {
-            window.removeEventListener("hashchange", hashEventListener);
+            window.removeEventListener("popstate", urlChangeEventListener);
         };
-    }, []);
+    }, [saleOpenModal]);
 
     if (!activeSale) {
         return null;
@@ -40,6 +43,11 @@ const SaleModal = ({ saleOpenModal, activeSale, handleCloseSaleModal }) => {
                 "& .MuiPaper-root": {
                     borderRadius: _isMobile() ? "0px" : "15px",
                 },
+            }}
+            onClose={(event, reason) => {
+                if (reason === "escapeKeyDown") {
+                    handleCloseSaleModal();
+                }
             }}
         >
             <IconButton
