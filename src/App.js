@@ -70,6 +70,7 @@ import {
     PTSansFont,
     RubikFont,
 } from "./fonts/index";
+import { updateAlerts } from "./redux/actions/systemAlerts";
 
 const MainTheme = createGlobalStyle`
 	:root {
@@ -174,6 +175,7 @@ function App() {
                 Object.values(cartItems).map((obj) => obj.items)
             );
             // Удаляем товары с недоступными категориями, товары с измененной ценой и удалённые товары
+            let isCartChanged = false;
             allCartProducts.forEach((product) => {
                 if (product.type === "simple") {
                     let productPrice = parseInt(product.options._price);
@@ -188,6 +190,7 @@ function App() {
                         productPrice !=
                             parseInt(products[product.id].options._price)
                     ) {
+                        isCartChanged = true;
                         dispatch(
                             removeProductFromCart({
                                 ...product,
@@ -209,6 +212,7 @@ function App() {
                                 product.variant.variant_id
                             ].price
                     ) {
+                        isCartChanged = true;
                         dispatch(
                             removeProductFromCart({
                                 ...product,
@@ -218,6 +222,15 @@ function App() {
                     }
                 }
             });
+            if (isCartChanged) {
+                dispatch(
+                    updateAlerts({
+                        open: true,
+                        message:
+                            "Часть товаров удалены из корзины, т.к. время действия акции закончилось.",
+                    })
+                );
+            }
         }
     }, [categories, products, status]);
 
