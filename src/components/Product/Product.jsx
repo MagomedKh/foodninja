@@ -204,7 +204,7 @@ export default function Product({ product, disabled }) {
                         hasRequiredModificator ? (
                             <Button
                                 variant="button"
-                                className="btn--action btn-buy"
+                                className="btn--action viewProduct"
                                 onClick={openModalBtnClick}
                                 disabled={disabled}
                                 data-product-id={product.id}
