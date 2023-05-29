@@ -432,7 +432,7 @@ export default function MiniCartProduct({
                                 data-product-id={productCart.id}
                             />
                             <Button
-                                className="btn--default product-add"
+                                className="btn--default product-add btn-buy"
                                 onClick={handleAddProduct}
                             >
                                 +
