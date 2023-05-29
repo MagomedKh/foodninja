@@ -24,7 +24,7 @@ export default function PromocodeMiniCartProduct({
     }
 
     return (
-        <div className="minicart--product" data-product_id={productCart.id}>
+        <div className="minicart--product" data-product-id={productCart.id}>
             <div className="minicart--product-info">
                 <div className="minicart--product-image">
                     <img
@@ -74,7 +74,7 @@ export default function PromocodeMiniCartProduct({
                     <div
                         className="minicart--product-remove"
                         onClick={handleRemovePromocodeProduct}
-                        data-product_id={productCart.id}
+                        data-product-id={productCart.id}
                     >
                         <CloseIcon />
                     </div>

@@ -200,7 +200,7 @@ export default function CartProduct({
     const minicartProductResult = renderMinicartProductResult();
 
     return (
-        <div className="cart--product" data-product_id={productCart.id}>
+        <div className="cart--product" data-product-id={productCart.id}>
             <div className="cart--product-image">
                 <img
                     src={productCart.img ? productCart.img : soon}
@@ -292,7 +292,7 @@ export default function CartProduct({
                                     type="text"
                                     readOnly
                                     value={productCount}
-                                    data-product_id={productCart.id}
+                                    data-product-id={productCart.id}
                                 />
                                 <Button
                                     className="btn--default product-add"
@@ -416,7 +416,7 @@ export default function CartProduct({
                 <div
                     className="cart--product-remove"
                     onClick={handleRemoveProduct}
-                    data-product_id={productCart.id}
+                    data-product-id={productCart.id}
                 >
                     <CloseIcon />
                 </div>

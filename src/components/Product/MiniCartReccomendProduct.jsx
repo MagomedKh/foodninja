@@ -30,7 +30,7 @@ export default function MiniCartReccomendProduct({ product }) {
     return (
         <div
             className="product recommend-product"
-            data-product_id={product.id}
+            data-product-id={product.id}
             onClick={
                 product.type === "variations"
                     ? openModalBtnClick

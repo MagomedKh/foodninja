@@ -192,7 +192,7 @@ export default function MiniCartProduct({
     const minicartProductResult = renderMinicartProductResult();
 
     return (
-        <div className="minicart--product" data-product_id={productCart.id}>
+        <div className="minicart--product" data-product-id={productCart.id}>
             <div className="minicart--product-info">
                 <div className="minicart--product-image">
                     <img
@@ -267,7 +267,7 @@ export default function MiniCartProduct({
                     <div
                         className="minicart--product-remove"
                         onClick={handleRemoveProduct}
-                        data-product_id={productCart.id}
+                        data-product-id={productCart.id}
                     >
                         <CloseIcon />
                     </div>
@@ -333,7 +333,7 @@ export default function MiniCartProduct({
                                         type="text"
                                         readOnly
                                         value={productCount}
-                                        data-product_id={productCart.id}
+                                        data-product-id={productCart.id}
                                     />
                                     <Button
                                         className="btn--default product-add"
@@ -400,7 +400,7 @@ export default function MiniCartProduct({
                                     type="text"
                                     readOnly
                                     value={productCount}
-                                    data-product_id={productCart.id}
+                                    data-product-id={productCart.id}
                                 />
                                 <Button
                                     className="btn--default product-add"
@@ -429,7 +429,7 @@ export default function MiniCartProduct({
                                 type="text"
                                 readOnly
                                 value={productCount}
-                                data-product_id={productCart.id}
+                                data-product-id={productCart.id}
                             />
                             <Button
                                 className="btn--default product-add"

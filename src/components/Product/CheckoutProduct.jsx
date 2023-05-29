@@ -165,7 +165,7 @@ export default function CheckoutProduct({
     };
 
     return (
-        <div className="checkout--product" data-product_id={productCart.id}>
+        <div className="checkout--product" data-product-id={productCart.id}>
             <div className="checkout--product-name">
                 {productCart.title} x {productCount} шт.
                 <br />

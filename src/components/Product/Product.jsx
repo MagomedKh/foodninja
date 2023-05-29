@@ -237,13 +237,13 @@ export default function Product({ product, disabled }) {
                                     value={
                                         cartProducts[product.id].items.length
                                     }
-                                    data-product_id={product.id}
+                                    data-product-id={product.id}
                                 />
                                 <Button
                                     className="btn--default product-add btn-buy"
                                     onClick={handleAddProduct}
                                     disabled={disabled}
-                                    data-product_id={product.id}
+                                    data-product-id={product.id}
                                 >
                                     +
                                 </Button>

@@ -24,7 +24,7 @@ export default function ReccomendProduct({ product }) {
     };
 
     return (
-        <div className="product recommend-product" data-product_id={product.id}>
+        <div className="product recommend-product" data-product-id={product.id}>
             <div className="product-image">
                 <img
                     src={product.img ? product.img : soon}
@@ -44,7 +44,7 @@ export default function ReccomendProduct({ product }) {
                         <Button
                             className="btn--outline btn-buy"
                             onClick={handleAddProduct}
-                            data-product_id={product.id}
+                            data-product-id={product.id}
                         >
                             Хочу
                         </Button>
@@ -61,7 +61,7 @@ export default function ReccomendProduct({ product }) {
                                 type="text"
                                 readOnly
                                 value={cartProducts[product.id].items.length}
-                                data-product_id={product.id}
+                                data-product-id={product.id}
                             />
                             <Button
                                 className="btn--default product-add"
