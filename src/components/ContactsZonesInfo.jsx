@@ -55,7 +55,7 @@ const ContactsZonesInfo = () => {
                                                 flexItem
                                                 sx={{
                                                     borderWidth: "1px",
-                                                    m: "5px 16px 4px 5px",
+                                                    m: "16px 10px 4px 10px",
                                                 }}
                                             />
                                             <div className="zone-body--col">
