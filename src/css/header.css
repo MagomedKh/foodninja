@@ -85,7 +85,7 @@
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
     background: white;
-    box-shadow: 0 0 20px rgb(0 0 0 / 20%);
+    box-shadow: none;
     position: relative;
 }
 .header-login {
@@ -144,7 +144,6 @@
     font-size: 16px;
     text-decoration: none;
     padding-bottom: 2px;
-    border-bottom: 1px dashed;
 }
 .top-menu .MuiSkeleton-text {
     margin: 20px 0 15px 0;
@@ -206,8 +205,17 @@
     padding-left: 3px;
     text-decoration: none;
 }
+
+.mobile-menu-wrapper li a.active {
+    color: var(--main-color);
+}
+
 .mobile-menu.white .mobile-menu-wrapper li a {
     color: black;
+}
+
+.mobile-menu.white .mobile-menu-wrapper li a.active {
+    color: var(--main-color);
 }
 
 .mobile-menu-wrapper li a:hover {

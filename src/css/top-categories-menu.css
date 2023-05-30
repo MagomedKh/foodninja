@@ -20,7 +20,8 @@
 }
 
 .sticked-top-bar.sticked {
-    background-color: rgba(255, 255, 255, 1);
+    background-color: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(20px);
     box-shadow: 0 0 10px rgb(0 0 0 / 10%);
     position: sticky;
     top: -1px;
@@ -123,6 +124,11 @@
         background: white;
         padding: 0;
         margin-bottom: 16px;
+    }
+
+    .sticked-top-bar.sticked {
+        background-color: rgba(255, 255, 255, 1);
+        backdrop-filter: none;
     }
     .sticked-top-bar ul.categories-menu {
         overflow: visible;

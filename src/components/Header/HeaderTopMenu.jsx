@@ -1,24 +1,25 @@
-import React, { useState } from "react";
+import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { closeMobileMenu } from "../../redux/actions/header";
+import clsx from "clsx";
 
 const HeaderTopMenu = ({ pages }) => {
     const dispatch = useDispatch();
-
-    const [activeTopMenu, setActiveTopMenu] = useState(5792);
+    const { pathname } = useLocation();
 
     const { mobileMenuOpen } = useSelector((state) => state.header);
 
-    const handleClickTopMenu = (item) => {
+    const handleClickTopMenu = () => {
         if (mobileMenuOpen) {
             dispatch(closeMobileMenu());
         }
-        setActiveTopMenu(item.id);
     };
 
+    const currentPage = pages.find((el) => el.url === pathname);
+
     return (
-        <ul>
+        <ul className={"test"}>
             {pages.map((item, index) => (
                 <li key={item.id}>
                     {item.target === "_blank" ? (
@@ -32,10 +33,10 @@ const HeaderTopMenu = ({ pages }) => {
                         </a>
                     ) : (
                         <Link
-                            onClick={() => handleClickTopMenu(item)}
-                            className={
-                                item.id === activeTopMenu ? "active" : ""
-                            }
+                            onClick={() => handleClickTopMenu()}
+                            className={clsx(
+                                item.id === currentPage?.id && "active"
+                            )}
                             to={item.url}
                         >
                             {item.title}
