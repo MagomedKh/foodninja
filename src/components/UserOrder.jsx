@@ -340,6 +340,12 @@ const UserOrder = ({
             ) : (
                 ""
             )}
+            {order.autoDiscount && order.autoDiscountAmount ? (
+                <div className="account--user-order--auto-discount">
+                    <b>{order.autoDiscount}</b>
+                    <b className="main-color">- {order.autoDiscountAmount} ₽</b>
+                </div>
+            ) : null}
             <div className="account--user-order--total">
                 {order.deliveryPrice ? (
                     <div className="account--user-order--total-delivery">
