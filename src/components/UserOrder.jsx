@@ -321,7 +321,10 @@ const UserOrder = ({
             order.subtotal - parseInt(order.total) > 0 ? (
                 <>
                     <div className="account--user-order--subtotal">
-                        <b>Сумма заказа:</b> <b>{order.subtotal} ₽</b>
+                        <b>Сумма заказа:</b>{" "}
+                        <b style={{ whiteSpace: "nowrap" }}>
+                            {order.subtotal} ₽
+                        </b>
                     </div>
 
                     <div className="account--user-order--promocode">
@@ -332,7 +335,10 @@ const UserOrder = ({
                             </span>
                             :
                         </b>
-                        <div className="account--user-order--promocode-discount main-color">
+                        <div
+                            className="account--user-order--promocode-discount main-color"
+                            style={{ whiteSpace: "nowrap" }}
+                        >
                             - {order.subtotal - parseInt(order.total)} ₽
                         </div>
                     </div>
@@ -343,19 +349,26 @@ const UserOrder = ({
             {order.autoDiscount && order.autoDiscountAmount ? (
                 <div className="account--user-order--auto-discount">
                     <b>{order.autoDiscount}</b>
-                    <b className="main-color">- {order.autoDiscountAmount} ₽</b>
+                    <b className="main-color" style={{ whiteSpace: "nowrap" }}>
+                        - {order.autoDiscountAmount} ₽
+                    </b>
                 </div>
             ) : null}
             <div className="account--user-order--total">
                 {order.deliveryPrice ? (
                     <div className="account--user-order--total-delivery">
                         <span>Доставка</span>
-                        <span>{order.deliveryPrice} ₽</span>
+                        <span style={{ whiteSpace: "nowrap" }}>
+                            {order.deliveryPrice} ₽
+                        </span>
                     </div>
                 ) : null}
                 <div className="account--user-order--total-amount">
                     <span>Итого:</span>{" "}
-                    <span className="main-color">
+                    <span
+                        className="main-color"
+                        style={{ whiteSpace: "nowrap" }}
+                    >
                         {parseInt(order.total).toLocaleString()} ₽
                     </span>
                 </div>
