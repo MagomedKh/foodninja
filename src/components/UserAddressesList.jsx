@@ -46,8 +46,6 @@ const UserAddressesList = ({
         return true;
     });
 
-    console.log(userAddresses);
-
     const addressesWithFormat = addressesWithCoordinates.map(
         (address, index) => {
             let formateAddress;
