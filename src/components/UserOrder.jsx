@@ -11,7 +11,7 @@ import {
 import { _clone, _getDomain } from "./helpers";
 import { LoadingButton } from "@mui/lab";
 import BootstrapTooltip from "./BootstrapTooltip";
-import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 const UserOrder = ({
     order,
@@ -351,12 +351,12 @@ const UserOrder = ({
             {order.autoDiscount && order.autoDiscountAmount ? (
                 <div className="account--user-order--auto-discount">
                     <div className="auto-discount-name">
-                        <span>Автоскидка</span>
+                        <span>Скидка</span>
                         <BootstrapTooltip
                             placement="top"
                             title={order.autoDiscount}
                         >
-                            <HelpOutlineIcon />
+                            <InfoOutlinedIcon />
                         </BootstrapTooltip>
                     </div>
                     <b className="main-color" style={{ whiteSpace: "nowrap" }}>

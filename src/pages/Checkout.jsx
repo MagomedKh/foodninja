@@ -39,7 +39,7 @@ import {
     ToggleButton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import LoadingButton from "@mui/lab/LoadingButton";
 import {
     BeforePaymentModal,
@@ -1684,7 +1684,7 @@ export default function Checkout() {
                                                 placement="top"
                                                 title={autoDiscount.name}
                                             >
-                                                <HelpOutlineIcon />
+                                                <InfoOutlinedIcon />
                                             </BootstrapTooltip>
                                         </div>
 

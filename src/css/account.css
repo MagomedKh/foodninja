@@ -101,11 +101,13 @@
 
 .account--user-order--auto-discount .auto-discount-name span {
     margin-right: 4px;
+    font-weight: 700;
 }
 
 .account--user-order--auto-discount .auto-discount-name svg {
-    width: 0.75em;
-    height: 0.75em;
+    width: 0.65em;
+    height: 0.65em;
+    cursor: pointer;
 }
 
 .account--user-order--auto-discount .auto-discount-name svg:hover {
