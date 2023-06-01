@@ -17,6 +17,7 @@ import miniCart from "./reducers/miniCart";
 import modificators from "./reducers/modificators";
 import deliveryAddressModal from "./reducers/deliveryAddressModal";
 import stories from "./reducers/stories";
+import autoDiscounts from "./reducers/autoDiscounts";
 
 const rootReducer = combineReducers({
     products: productsReducer,
@@ -37,6 +38,7 @@ const rootReducer = combineReducers({
     modificators: modificators,
     deliveryAddressModal: deliveryAddressModal,
     stories: stories,
+    autoDiscounts: autoDiscounts,
 });
 
 const saveState = (state) => {

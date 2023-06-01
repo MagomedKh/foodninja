@@ -55,7 +55,7 @@
     padding: 10px 0;
     border-top: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
-    margin-top: 15px;
+    margin: 15px 0 15px 0;
 }
 .account--user-order--product {
     display: flex;
@@ -86,12 +86,32 @@
     color: var(--main-color);
 }
 .account--user-order--promocode {
-    margin-bottom: -15px;
     display: flex;
     justify-content: space-between;
 }
+.account--user-order--auto-discount {
+    display: flex;
+    justify-content: space-between;
+}
+
+.account--user-order--auto-discount .auto-discount-name {
+    display: flex;
+    align-items: center;
+}
+
+.account--user-order--auto-discount .auto-discount-name span {
+    margin-right: 4px;
+}
+
+.account--user-order--auto-discount .auto-discount-name svg {
+    width: 0.75em;
+    height: 0.75em;
+}
+
+.account--user-order--auto-discount .auto-discount-name svg:hover {
+    color: var(--main-color);
+}
 .account--user-order--subtotal {
-    margin-top: 15px;
     display: flex;
     justify-content: space-between;
 }
@@ -108,9 +128,6 @@
     font-size: 12px;
     cursor: pointer;
     margin-top: 5px;
-}
-.account--user-order--total {
-    margin-top: 15px;
 }
 
 .account--user-order--total-delivery,
