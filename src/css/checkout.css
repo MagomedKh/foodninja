@@ -84,6 +84,24 @@
     justify-content: space-between;
 }
 
+.checkout--auto-discount-name {
+    display: flex;
+    align-items: center;
+}
+
+.checkout--auto-discount-name span {
+    margin-right: 4px;
+}
+
+.checkout--auto-discount-name svg {
+    width: 0.9em;
+    height: 0.9em;
+}
+
+.checkout--auto-discount-name svg:hover {
+    color: var(--main-color);
+}
+
 .checkout--subtotal-price .checkout--promocode-total .checkout--promocode-name {
     display: flex;
     align-items: center;

@@ -39,6 +39,7 @@ import {
     ToggleButton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import LoadingButton from "@mui/lab/LoadingButton";
 import {
     BeforePaymentModal,
@@ -49,6 +50,7 @@ import {
     UserAddressesList,
     Promocode,
     PromocodeErrorsAlert,
+    BootstrapTooltip,
 } from "../components";
 import {
     _checkPromocode,
@@ -1666,7 +1668,13 @@ export default function Checkout() {
                                 {autoDiscount && autoDiscountAmount ? (
                                     <div className="checkout--auto-discount-container">
                                         <div className="checkout--auto-discount-name">
-                                            {autoDiscount.name}
+                                            <span>Скидка</span>
+                                            <BootstrapTooltip
+                                                placement="top"
+                                                title={autoDiscount.name}
+                                            >
+                                                <HelpOutlineIcon />
+                                            </BootstrapTooltip>
                                         </div>
 
                                         <span className="checkout--auto-discount-amount main-color">

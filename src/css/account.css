@@ -93,6 +93,24 @@
     display: flex;
     justify-content: space-between;
 }
+
+.account--user-order--auto-discount .auto-discount-name {
+    display: flex;
+    align-items: center;
+}
+
+.account--user-order--auto-discount .auto-discount-name span {
+    margin-right: 4px;
+}
+
+.account--user-order--auto-discount .auto-discount-name svg {
+    width: 0.75em;
+    height: 0.75em;
+}
+
+.account--user-order--auto-discount .auto-discount-name svg:hover {
+    color: var(--main-color);
+}
 .account--user-order--subtotal {
     display: flex;
     justify-content: space-between;

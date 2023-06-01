@@ -10,6 +10,8 @@ import {
 } from "../redux/actions/cart";
 import { _clone, _getDomain } from "./helpers";
 import { LoadingButton } from "@mui/lab";
+import BootstrapTooltip from "./BootstrapTooltip";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 
 const UserOrder = ({
     order,
@@ -348,7 +350,15 @@ const UserOrder = ({
             )}
             {order.autoDiscount && order.autoDiscountAmount ? (
                 <div className="account--user-order--auto-discount">
-                    <b>{order.autoDiscount}</b>
+                    <div className="auto-discount-name">
+                        <span>Автоскидка</span>
+                        <BootstrapTooltip
+                            placement="top"
+                            title={order.autoDiscount}
+                        >
+                            <HelpOutlineIcon />
+                        </BootstrapTooltip>
+                    </div>
                     <b className="main-color" style={{ whiteSpace: "nowrap" }}>
                         - {order.autoDiscountAmount} ₽
                     </b>
