@@ -465,7 +465,7 @@ export const _checkPromocode = ({
                 errors.push({
                     code: "minPrice",
                     message:
-                        "Минимальная сумма заказа c промокодом " +
+                        "Минимальная сумма заказа c промокодом: " +
                         promocodeDeliveryMinPrice +
                         " ₽",
                 });
