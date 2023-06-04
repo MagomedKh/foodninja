@@ -77,7 +77,7 @@ const useAutoDiscount = (typeDelivery) => {
 
                     let productPrice;
                     if (product.type === "variations") {
-                        productPrice = product.variant.options._price;
+                        productPrice = product.variant.price;
                     } else {
                         productPrice = product.options._price;
                     }
