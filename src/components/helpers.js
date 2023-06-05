@@ -445,15 +445,15 @@ export const _checkPromocode = ({
                 ? promocodeDeliveryMinPrice
                 : parseInt(promocode.coupon_selfdelivery_min_price);
 
-        if (promocode.type === "fixed_product" && promocodeProductInCart)
-            cartTotal =
-                cartTotal -
-                parseInt(promocode.promocodeProducts.options._price) +
-                parseInt(promocode.productPrice);
+        const cartWithoutPromocodeProduct =
+            promocode.type === "fixed_product" && promocodeProductInCart
+                ? cartTotal -
+                  parseInt(promocode.promocodeProducts.options._price)
+                : cartTotal;
 
         if (
-            promocodeDeliveryMinPrice > cartTotal &&
-            promocodeSelfDeliveryMinPrice > cartTotal
+            promocodeDeliveryMinPrice > cartWithoutPromocodeProduct &&
+            promocodeSelfDeliveryMinPrice > cartWithoutPromocodeProduct
         ) {
             status = "error";
 
@@ -462,19 +462,73 @@ export const _checkPromocode = ({
                     "Промокод отменен, т.к. действует при заказе на сумму от " +
                     promocodeDeliveryMinPrice +
                     " ₽";
-                errors.push({
-                    code: "minPrice",
-                    message:
-                        "Минимальная сумма заказа c промокодом: " +
-                        promocodeDeliveryMinPrice +
-                        " ₽",
-                });
+                if (promocode.type === "fixed_product") {
+                    errors.push({
+                        code: "minPrice",
+                        message:
+                            "Минимальная сумма заказа без учёта товара по промокоду: " +
+                            promocodeDeliveryMinPrice +
+                            " ₽",
+                    });
+                } else {
+                    errors.push({
+                        code: "minPrice",
+                        message:
+                            "Минимальная сумма заказа c промокодом: " +
+                            promocodeDeliveryMinPrice +
+                            " ₽",
+                    });
+                }
             } else {
                 alert = `Промокод отменен, т.к. действует при заказе на сумму от 
                     ${promocodeDeliveryMinPrice} ₽. на доставку и от ${promocodeSelfDeliveryMinPrice} ₽ на самовывоз`;
+
+                if (promocode.type === "fixed_product") {
+                    errors.push({
+                        code: "minPrice",
+                        message: `Минимальная сумма заказа без учёта товара по промокоду: ${promocodeDeliveryMinPrice} ₽ на доставку и ${promocodeSelfDeliveryMinPrice} ₽ на самовывоз`,
+                    });
+                } else {
+                    errors.push({
+                        code: "minPrice",
+                        message: `Минимальная сумма заказа по промокоду: ${promocodeDeliveryMinPrice} ₽ на доставку и ${promocodeSelfDeliveryMinPrice} ₽ на самовывоз`,
+                    });
+                }
+            }
+        } else if (
+            typeDelivery === "delivery" &&
+            promocodeDeliveryMinPrice > cartWithoutPromocodeProduct
+        ) {
+            status = "error";
+            alert = `Промокод отменен, т.к. действует при заказе на доставку на сумму от 
+                    ${promocodeDeliveryMinPrice} ₽.`;
+            if (promocode.type === "fixed_product") {
                 errors.push({
                     code: "minPrice",
-                    message: `Минимальная сумма заказа с промокодом: ${promocodeDeliveryMinPrice} ₽ на доставку и ${promocodeSelfDeliveryMinPrice} ₽ на самовывоз`,
+                    message: `Минимальная сумма заказа  на доставку без учёта товара по промокоду: ${promocodeDeliveryMinPrice} ₽`,
+                });
+            } else {
+                errors.push({
+                    code: "minPrice",
+                    message: `Минимальная сумма заказа на доставку по промокоду: ${promocodeDeliveryMinPrice} ₽`,
+                });
+            }
+        } else if (
+            typeDelivery === "self" &&
+            promocodeSelfDeliveryMinPrice > cartWithoutPromocodeProduct
+        ) {
+            status = "error";
+            alert = `Промокод отменен, т.к. действует при заказе на самовывоз на сумму от 
+                    ${promocodeSelfDeliveryMinPrice} ₽.`;
+            if (promocode.type === "fixed_product") {
+                errors.push({
+                    code: "minPrice",
+                    message: `Минимальная сумма заказа  на самовывоз без учёта товара по промокоду: ${promocodeSelfDeliveryMinPrice} ₽`,
+                });
+            } else {
+                errors.push({
+                    code: "minPrice",
+                    message: `Минимальная сумма заказа на самовывоз по промокоду: ${promocodeSelfDeliveryMinPrice} ₽`,
                 });
             }
         }
@@ -486,8 +540,8 @@ export const _checkPromocode = ({
         );
 
         if (
-            cartTotal > promocodeDeliveryMaxPrice &&
-            cartTotal > promocodeSelfDeliveryMaxPrice
+            cartWithoutPromocodeProduct > promocodeDeliveryMaxPrice &&
+            cartWithoutPromocodeProduct > promocodeSelfDeliveryMaxPrice
         ) {
             status = "error";
 
@@ -496,19 +550,72 @@ export const _checkPromocode = ({
                     "Промокод отменен, т.к. действует при заказе на сумму до " +
                     promocodeDeliveryMaxPrice +
                     " ₽";
-                errors.push({
-                    code: "minPrice",
-                    message:
-                        "Максимальная сумма заказа c промокодом " +
-                        promocodeDeliveryMaxPrice +
-                        " ₽",
-                });
+                if (promocode.type === "fixed_product") {
+                    errors.push({
+                        code: "minPrice",
+                        message:
+                            "Максимальная сумма заказа без учёта товара по промокоду " +
+                            promocodeDeliveryMaxPrice +
+                            " ₽",
+                    });
+                } else {
+                    errors.push({
+                        code: "minPrice",
+                        message:
+                            "Максимальная сумма заказа c промокодом " +
+                            promocodeDeliveryMaxPrice +
+                            " ₽",
+                    });
+                }
             } else {
                 alert = `Промокод отменен, т.к. действует при заказе на сумму до 
                     ${promocodeDeliveryMaxPrice} ₽. на доставку и до ${promocodeSelfDeliveryMaxPrice} ₽ на самовывоз`;
+                if (promocode.type === "fixed_product") {
+                    errors.push({
+                        code: "minPrice",
+                        message: `Максимальная сумма заказа без учёта товара по промокоду: ${promocodeDeliveryMaxPrice} ₽ на доставку и ${promocodeSelfDeliveryMaxPrice} ₽ на самовывоз`,
+                    });
+                } else {
+                    errors.push({
+                        code: "minPrice",
+                        message: `Максимальная сумма заказа с промокодом: ${promocodeDeliveryMaxPrice} ₽ на доставку и ${promocodeSelfDeliveryMaxPrice} ₽ на самовывоз`,
+                    });
+                }
+            }
+        } else if (
+            typeDelivery === "delivery" &&
+            cartWithoutPromocodeProduct > promocodeDeliveryMaxPrice
+        ) {
+            status = "error";
+            alert = `Промокод отменен, т.к. действует при заказе на доставку на сумму до 
+                    ${promocodeDeliveryMaxPrice} ₽.`;
+            if (promocode.type === "fixed_product") {
                 errors.push({
                     code: "minPrice",
-                    message: `Максимальная сумма заказа с промокодом: ${promocodeDeliveryMaxPrice} ₽ на доставку и ${promocodeSelfDeliveryMaxPrice} ₽ на самовывоз`,
+                    message: `Максимальная сумма заказа на доставку без учёта товара по промокоду: ${promocodeDeliveryMaxPrice} ₽`,
+                });
+            } else {
+                errors.push({
+                    code: "minPrice",
+                    message: `Максимальная сумма заказа на доставку по промокоду: ${promocodeDeliveryMaxPrice} ₽`,
+                });
+            }
+        } else if (
+            typeDelivery === "self" &&
+            cartWithoutPromocodeProduct > promocodeSelfDeliveryMaxPrice
+        ) {
+            status = "error";
+            alert = `Промокод отменен, т.к. действует при заказе на самовывоз на сумму до 
+                    ${promocodeSelfDeliveryMaxPrice} ₽.`;
+            if (promocode.type === "fixed_product") {
+                errors.push({
+                    code: "minPrice",
+                    message: `Максимальная сумма заказа на самовывоз без учёта товара по промокоду: ${promocodeSelfDeliveryMaxPrice} ₽`,
+                });
+            } else {
+                errors.push({
+                    code: "minPrice",
+                    message: `Максимальная сумма заказа на самовывоз по промокоду: ${promocodeSelfDeliveryMaxPrice} ₽`,
                 });
             }
         }

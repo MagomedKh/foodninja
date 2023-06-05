@@ -870,43 +870,6 @@ export default function Checkout() {
         typeDelivery === "self" &&
         cartTotalPrice < config.CONFIG_selforder_min_price;
 
-    const getPromocodeSelfDeliveryMinPrice = () => {
-        if (Object.keys(promocode).length > 0) {
-            if (
-                promocode.coupon_selfdelivery_min_price === "0" ||
-                promocode.coupon_selfdelivery_min_price > 0
-            ) {
-                return promocode.coupon_selfdelivery_min_price;
-            } else {
-                return promocode.coupon_min_price;
-            }
-        }
-    };
-
-    const promocodeSelfDeliveryMinPrice = getPromocodeSelfDeliveryMinPrice();
-
-    const promocodeSelfDeliveryOrderLess =
-        typeDelivery === "self" &&
-        Object.keys(promocode).length > 0 &&
-        cartTotalPrice < parseInt(promocodeSelfDeliveryMinPrice);
-
-    const promocodeDeliveryOrderLess =
-        typeDelivery === "delivery" &&
-        Object.keys(promocode).length > 0 &&
-        promocode.coupon_min_price &&
-        cartTotalPrice < parseInt(promocode.coupon_min_price);
-
-    const promocodeSelfDeliveryOrderMore =
-        typeDelivery === "self" &&
-        Object.keys(promocode).length > 0 &&
-        cartTotalPrice > parseInt(promocode.coupon_selfdelivery_max_price);
-
-    const promocodeDeliveryOrderMore =
-        typeDelivery === "delivery" &&
-        Object.keys(promocode).length > 0 &&
-        promocode.coupon_min_price &&
-        cartTotalPrice > parseInt(promocode.coupon_max_price);
-
     // Функция рендера графика работы филиала
     const currentDayOfWeek =
         getDay(new Date()) === 0 ? 6 : getDay(new Date()) - 1;
@@ -1950,64 +1913,6 @@ export default function Checkout() {
                                     {error}
                                 </Alert>
                             )}
-                            <Collapse
-                                sx={{ mb: 1 }}
-                                in={promocodeSelfDeliveryOrderLess}
-                                unmountOnExit
-                            >
-                                <Alert severity="error">
-                                    Минимальная сумма заказа на самовывоз c
-                                    промокодом «{promocode.code}» —{" "}
-                                    <span style={{ whiteSpace: "nowrap" }}>
-                                        {promocodeSelfDeliveryMinPrice} ₽
-                                    </span>
-                                </Alert>
-                            </Collapse>
-
-                            <Collapse
-                                sx={{ mb: 1 }}
-                                in={promocodeDeliveryOrderLess}
-                                unmountOnExit
-                            >
-                                <Alert severity="error">
-                                    Минимальная сумма заказа на доставку c
-                                    промокодом «{promocode.code}» —{" "}
-                                    <span style={{ whiteSpace: "nowrap" }}>
-                                        {promocode.coupon_min_price} ₽
-                                    </span>
-                                </Alert>
-                            </Collapse>
-
-                            <Collapse
-                                sx={{ mb: 1 }}
-                                in={promocodeSelfDeliveryOrderMore}
-                                unmountOnExit
-                            >
-                                <Alert severity="error">
-                                    Максимальная сумма заказа на самовывоз c
-                                    промокодом «{promocode.code}» —{" "}
-                                    <span style={{ whiteSpace: "nowrap" }}>
-                                        {
-                                            promocode.coupon_selfdelivery_max_price
-                                        }{" "}
-                                        ₽
-                                    </span>
-                                </Alert>
-                            </Collapse>
-
-                            <Collapse
-                                sx={{ mb: 1 }}
-                                in={promocodeDeliveryOrderMore}
-                                unmountOnExit
-                            >
-                                <Alert severity="error">
-                                    Максимальная сумма заказа на доставку c
-                                    промокодом «{promocode.code}» —{" "}
-                                    <span style={{ whiteSpace: "nowrap" }}>
-                                        {promocode.coupon_max_price} ₽
-                                    </span>
-                                </Alert>
-                            </Collapse>
 
                             <Collapse
                                 sx={{ mb: 1 }}
@@ -2057,7 +1962,10 @@ export default function Checkout() {
                                 }
                                 unmountOnExit
                             >
-                                <PromocodeErrorsAlert onlyMinPrice={true} />
+                                <PromocodeErrorsAlert
+                                    onlyMinPrice={true}
+                                    typeDelivery={typeDelivery}
+                                />
                             </Collapse>
 
                             <div className="checkout--button-container">
@@ -2082,10 +1990,7 @@ export default function Checkout() {
                                             : handleMakeOrder();
                                     }}
                                     disabled={
-                                        promocodeSelfDeliveryOrderLess ||
-                                        promocodeDeliveryOrderLess ||
-                                        promocodeSelfDeliveryOrderMore ||
-                                        promocodeDeliveryOrderMore ||
+                                        conditionalPromocode ||
                                         selfDeliveryOrderLess ||
                                         deliveryOrderLess ||
                                         (typeDelivery === "delivery" &&
