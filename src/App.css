@@ -221,6 +221,17 @@ a.btn {
     border-radius: 4px;
 }
 
+.MuiAutocomplete-popper ::-webkit-scrollbar {
+    width: 6px;
+}
+.MuiAutocomplete-popper ::-webkit-scrollbar-track {
+    background: #f2f5f7;
+}
+.MuiAutocomplete-popper ::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+
 .modal-alert--wrapper {
     padding: 50px;
     min-height: 500px;

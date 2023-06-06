@@ -2,10 +2,24 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import Fuse from "fuse.js";
-import { TextField, Autocomplete, Button } from "@mui/material";
+import { TextField, Autocomplete, Button, Popper } from "@mui/material";
 import { Product } from "../components";
 import { setStoredInputValue } from "../redux/actions/search";
 import { _isCategoryDisabled } from "./helpers";
+
+const CustomPopper = (props) => {
+    return (
+        <Popper
+            sx={{
+                "& .MuiPaper-root": {
+                    borderRadius: "20px",
+                    mt: "3px",
+                },
+            }}
+            {...props}
+        />
+    );
+};
 
 const SearchBar = ({
     dontShowList,
@@ -145,6 +159,7 @@ const SearchBar = ({
                             }}
                         />
                     )}
+                    PopperComponent={CustomPopper}
                     sx={{ flexGrow: 1 }}
                 />
                 {dontShowButton ? null : (
