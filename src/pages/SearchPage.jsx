@@ -29,6 +29,7 @@ const SearchPage = () => {
         .apply([], Object.values(products))
         .filter((product) => {
             if (
+                product.categories.length === 1 &&
                 product.categories.includes(
                     parseInt(config.CONFIG_bonuses_category)
                 )
