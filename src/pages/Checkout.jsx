@@ -1973,6 +1973,7 @@ export default function Checkout() {
                                     className="btn--outline-dark"
                                     variant="button"
                                     onClick={handleBackToMenu}
+                                    sx={{ bgcolor: "#fff !important" }}
                                 >
                                     Изменить заказ
                                     <NavigateBeforeIcon className="button-prev-arrow-icon" />
