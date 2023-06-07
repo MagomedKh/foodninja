@@ -21,7 +21,6 @@ import {
     Alert,
     Button,
     Container,
-    Collapse,
     Dialog,
     Divider,
     FormControlLabel,
@@ -40,7 +39,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import LoadingButton from "@mui/lab/LoadingButton";
+
 import {
     BeforePaymentModal,
     CheckoutProduct,
@@ -49,8 +48,8 @@ import {
     DeliveryAddressModal,
     UserAddressesList,
     Promocode,
-    PromocodeErrorsAlert,
     BootstrapTooltip,
+    CheckoutConfirmButtons,
 } from "../components";
 import {
     _checkPromocode,
@@ -74,8 +73,6 @@ import {
 import wallet from "../img/wallet.svg";
 import creditCard from "../img/credit-card.svg";
 import onlineCreditCard from "../img/online-credit-card.svg";
-import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import "../css/checkout.css";
 import useAutoDiscount from "../hooks/useAutoDiscount";
 
@@ -860,16 +857,6 @@ export default function Checkout() {
             if (maxBonuses < 0) maxBonuses = 0;
         }
 
-    const deliveryOrderLess =
-        config.CONFIG_order_min_price &&
-        typeDelivery === "delivery" &&
-        config.deliveryZones.deliveryPriceType === "fixedPrice" &&
-        cartTotalPrice < config.CONFIG_order_min_price;
-    const selfDeliveryOrderLess =
-        config.CONFIG_selforder_min_price &&
-        typeDelivery === "self" &&
-        cartTotalPrice < config.CONFIG_selforder_min_price;
-
     // Функция рендера графика работы филиала
     const currentDayOfWeek =
         getDay(new Date()) === 0 ? 6 : getDay(new Date()) - 1;
@@ -975,14 +962,8 @@ export default function Checkout() {
             <Container className="checkout checkout-wrapper">
                 <h1>Оформление заказа</h1>
                 <Grid container columnSpacing={5}>
-                    <Grid
-                        item
-                        xs={12}
-                        container
-                        spacing={5}
-                        sx={{ mb: "2rem" }}
-                    >
-                        <Grid item sm={12} md={7}>
+                    <Grid item xs={12} container spacing={5}>
+                        <Grid item xs={12} md={7}>
                             <div className="checkout--user">
                                 <Grid container spacing={4}>
                                     <Grid item sm={12} md={6} sx={{ width: 1 }}>
@@ -1455,6 +1436,24 @@ export default function Checkout() {
                                     }}
                                 />
                             </div>
+                            {_isMobile() ? null : (
+                                <CheckoutConfirmButtons
+                                    error={error}
+                                    loading={loading}
+                                    activeGateway={activeGateway}
+                                    typeDelivery={typeDelivery}
+                                    deliveryZone={deliveryZone}
+                                    yandexApiError={yandexApiError}
+                                    handleSetError={(error) => {
+                                        setError(error);
+                                    }}
+                                    handleBackToMenu={handleBackToMenu}
+                                    handleMakeOrder={handleMakeOrder}
+                                    handleOpenBeforePaymentModal={(value) => {
+                                        setOpenBeforePaymentModal(value);
+                                    }}
+                                />
+                            )}
                         </Grid>
                         <Grid
                             item
@@ -1891,128 +1890,26 @@ export default function Checkout() {
                             </div>
                         </Grid>
                     </Grid>
-                    <Grid item xs={12} md={7}>
-                        <Grid item sm={12}>
-                            {error && (
-                                <Alert
-                                    action={
-                                        <IconButton
-                                            aria-label="close"
-                                            color="inherit"
-                                            size="small"
-                                            onClick={() => {
-                                                setError("");
-                                            }}
-                                        >
-                                            <CloseIcon fontSize="inherit" />
-                                        </IconButton>
-                                    }
-                                    severity="error"
-                                    sx={{ mb: 1 }}
-                                >
-                                    {error}
-                                </Alert>
-                            )}
-
-                            <Collapse
-                                sx={{ mb: 1 }}
-                                in={selfDeliveryOrderLess}
-                                unmountOnExit
-                            >
-                                <Alert severity="error">
-                                    Минимальная сумма заказа на самовывоз{" "}
-                                    <span style={{ whiteSpace: "nowrap" }}>
-                                        {config.CONFIG_selforder_min_price} ₽
-                                    </span>
-                                </Alert>
-                            </Collapse>
-
-                            <Collapse
-                                sx={{ mb: 1 }}
-                                in={deliveryOrderLess}
-                                unmountOnExit
-                            >
-                                <Alert severity="error">
-                                    Минимальная сумма заказа на доставку{" "}
-                                    <span style={{ whiteSpace: "nowrap" }}>
-                                        {config.CONFIG_order_min_price} ₽
-                                    </span>
-                                </Alert>
-                            </Collapse>
-
-                            <Collapse
-                                sx={{ mb: 1 }}
-                                in={
-                                    deliveryZone &&
-                                    deliveryZone.orderMinPrice > cartTotalPrice
-                                }
-                                unmountOnExit
-                            >
-                                <Alert severity="error">
-                                    Сумма заказа меньше минимальной для доставки
-                                    по указанному адресу
-                                </Alert>
-                            </Collapse>
-
-                            <Collapse
-                                sx={{ mb: 1 }}
-                                in={
-                                    !promocode?.code &&
-                                    !!conditionalPromocode?.code
-                                }
-                                unmountOnExit
-                            >
-                                <PromocodeErrorsAlert
-                                    onlyMinPrice={true}
-                                    typeDelivery={typeDelivery}
-                                />
-                            </Collapse>
-
-                            <div className="checkout--button-container">
-                                <Button
-                                    className="btn--outline-dark"
-                                    variant="button"
-                                    onClick={handleBackToMenu}
-                                    sx={{ bgcolor: "#fff !important" }}
-                                >
-                                    Изменить заказ
-                                    <NavigateBeforeIcon className="button-prev-arrow-icon" />
-                                </Button>
-
-                                <LoadingButton
-                                    loading={loading}
-                                    variant="button"
-                                    className="btn--action makeOrder"
-                                    onClick={() => {
-                                        activeGateway !== "card" &&
-                                        activeGateway !== "cash" &&
-                                        config.CONFIG_order_text_before_payment
-                                            ? setOpenBeforePaymentModal(true)
-                                            : handleMakeOrder();
-                                    }}
-                                    disabled={
-                                        conditionalPromocode ||
-                                        selfDeliveryOrderLess ||
-                                        deliveryOrderLess ||
-                                        (typeDelivery === "delivery" &&
-                                            config.deliveryZones
-                                                .deliveryPriceType ===
-                                                "areaPrice" &&
-                                            yandexApiError) ||
-                                        (config.deliveryZones
-                                            .deliveryPriceType ===
-                                            "areaPrice" &&
-                                            deliveryZone &&
-                                            deliveryZone.orderMinPrice >
-                                                cartTotalPrice)
-                                    }
-                                >
-                                    Оформить заказ
-                                    <NavigateNextIcon className="button-arrow-icon" />
-                                </LoadingButton>
-                            </div>
+                    {_isMobile() ? (
+                        <Grid item xs={12} md={7}>
+                            <CheckoutConfirmButtons
+                                error={error}
+                                loading={loading}
+                                activeGateway={activeGateway}
+                                typeDelivery={typeDelivery}
+                                deliveryZone={deliveryZone}
+                                yandexApiError={yandexApiError}
+                                handleSetError={(error) => {
+                                    setError(error);
+                                }}
+                                handleBackToMenu={handleBackToMenu}
+                                handleMakeOrder={handleMakeOrder}
+                                handleOpenBeforePaymentModal={(value) => {
+                                    setOpenBeforePaymentModal(value);
+                                }}
+                            />
                         </Grid>
-                    </Grid>
+                    ) : null}
                 </Grid>
 
                 <div className=""></div>

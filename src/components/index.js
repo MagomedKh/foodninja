@@ -45,3 +45,4 @@ export { default as StoriesList } from "./StoriesList/StoriesList.jsx";
 export { default as PromocodeErrorsAlert } from "./PromocodeErrorsAlert.jsx";
 export { default as AccountUserAddress } from "./AccountUserAddress.jsx";
 export { default as ContactsZonesInfo } from "./ContactsZonesInfo.jsx";
+export { default as CheckoutConfirmButtons } from "./CheckoutConfirmButtons.jsx";

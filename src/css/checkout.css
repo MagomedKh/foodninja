@@ -318,6 +318,10 @@
     margin-right: 4px;
 }
 
+.checkout--errors-container {
+    margin-top: 40px;
+}
+
 .checkout--button-container {
     display: flex;
     align-items: center;
