@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Alert, Button, Box, Container, Skeleton } from "@mui/material";
 import {
     Header,
@@ -15,7 +15,7 @@ import {
 import { _isMobile, _clone, _isCategoryDisabled } from "../components/helpers";
 
 const CategoryPage = () => {
-    const { pathname } = useLocation();
+    const params = useParams();
 
     const { config, productLayout } = useSelector(({ config }) => {
         return {
@@ -40,8 +40,7 @@ const CategoryPage = () => {
     const [activeCategoryTags, setActiveCategoryTags] = useState({});
 
     const currentCategory = categories.find((el) => {
-        const pathnameArray = pathname.split("/").filter((element) => element);
-        return el.slug === pathnameArray[pathnameArray.length - 1];
+        return el.slug === params.categoryName;
     });
 
     useEffect(() => {
