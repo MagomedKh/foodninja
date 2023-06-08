@@ -21,6 +21,8 @@ import {
 } from "./redux/actions/pages";
 import { setStories } from "./redux/actions/stories";
 import { setAutoDiscounts } from "./redux/actions/autoDiscounts";
+import { updateAlerts } from "./redux/actions/systemAlerts";
+import { setModalProduct, setOpenModal } from "./redux/actions/productModal";
 import {
     ProductModal,
     AuthModal,
@@ -47,9 +49,6 @@ import {
     SearchPage,
 } from "./pages";
 import axios from "axios";
-import "./fonts/cera/CeraRoundProMedium.woff2";
-import "./fonts/cera/CeraRoundProBold.woff2";
-import "./App.css";
 import { createGlobalStyle, css } from "styled-components";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import {
@@ -71,7 +70,9 @@ import {
     PTSansFont,
     RubikFont,
 } from "./fonts/index";
-import { updateAlerts } from "./redux/actions/systemAlerts";
+import "./fonts/cera/CeraRoundProMedium.woff2";
+import "./fonts/cera/CeraRoundProBold.woff2";
+import "./App.css";
 
 const MainTheme = createGlobalStyle`
 	:root {
@@ -264,9 +265,11 @@ function App() {
             const sale = sales.find((sale) => sale.saleID == paramsSaleID);
             if (sale) {
                 handleSetActiveSale(sale);
+            } else if (!sale && saleOpenModal) {
+                handleCloseSaleModal();
             }
         }
-    }, []);
+    }, [sales, saleOpenModal]);
 
     const mainColor = config
         ? config.CONFIG_main_color !== undefined
@@ -413,7 +416,7 @@ function App() {
                                 )}
                                 <Route
                                     exact
-                                    path="/category/*"
+                                    path="/category/:categoryName"
                                     element={<CategoryPage />}
                                 />
                                 <Route path="*" element={<Page />} />

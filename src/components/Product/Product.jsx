@@ -41,11 +41,14 @@ export default function Product({ product, disabled }) {
     });
 
     const openModalBtnClick = () => {
-        window.location.hash = "product-modal";
+        let url = new URL(window.location.href);
+        if (!url.searchParams.has("product_id")) {
+            url.searchParams.append("product_id", product.id);
+            window.history.pushState({}, "", url.href);
+        }
         dispatch(
             setModalProduct({
                 ...product,
-                disabled: disabled,
             })
         );
         dispatch(setOpenModal(true));

@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { _clone, _getPlatform, _isMobile } from "../../components/helpers.js";
+import {
+    _clone,
+    _getPlatform,
+    _isCategoryDisabled,
+    _isMobile,
+} from "../../components/helpers.js";
 import {
     addProductToCart,
     decreaseProductInCart,
@@ -51,6 +56,10 @@ export default function ProductModal() {
                 cartProducts: cart.items,
             };
         });
+
+    const categories = useSelector((state) => state.products.categories);
+    const products = useSelector((state) => state.products.items);
+
     const {
         choosenModificators,
         emptyModificatorCategories,
@@ -66,6 +75,16 @@ export default function ProductModal() {
     const [activeVariant, setActiveVariant] = useState(false);
     const [wrongVariant, setWrongVariant] = useState(false);
     const [tooltipOpen, setTooltipOpen] = useState(false);
+
+    const disabled = !!productModal.categories?.find((productCategoryId) => {
+        const category = categories.find(
+            (category) => category.term_id === productCategoryId
+        );
+        if (category) {
+            return _isCategoryDisabled(category).disabled;
+        }
+        return false;
+    });
 
     useEffect(() => {
         let dataAttributes = {};
@@ -105,6 +124,35 @@ export default function ProductModal() {
         return;
     }, [productModal.attributes]);
 
+    const urlChangeEventListener = () => {
+        let url = new URL(window.location.href);
+        if (!url.searchParams.has("product_id")) {
+            handleClose();
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener("popstate", urlChangeEventListener);
+        return () => {
+            window.removeEventListener("popstate", urlChangeEventListener);
+        };
+    }, []);
+
+    useEffect(() => {
+        const urlParams = new URL(window.location.href).searchParams;
+        const paramsProductID = urlParams.get("product_id");
+        if (paramsProductID) {
+            console.log(paramsProductID);
+            const product = products[paramsProductID];
+            if (product && !openProductModal) {
+                dispatch(setModalProduct({ ...product }));
+                dispatch(setOpenModal(true));
+            } else if (!product && openProductModal) {
+                handleClose();
+            }
+        }
+    }, [products, openProductModal]);
+
     const handleChooseAttribute = (attribute, value) => {
         let dataAttributes = choosenAttributes;
         dataAttributes[attribute] = value;
@@ -131,25 +179,10 @@ export default function ProductModal() {
         else setWrongVariant(true);
     };
 
-    const hashEventListener = (event) => {
-        if (
-            (!window.location.hash ||
-                !event.newURL.includes("#product-modal")) &&
-            event.oldURL.includes("#product-modal")
-        ) {
-            handleClose();
-        }
-    };
-
-    useEffect(() => {
-        window.addEventListener("hashchange", hashEventListener);
-        return () => {
-            window.removeEventListener("hashchange", hashEventListener);
-        };
-    }, []);
-
     const handleClose = () => {
-        if (window.location.hash === "#product-modal") {
+        let url = new URL(window.location.href);
+        if (url.searchParams.has("product_id")) {
+            url.searchParams.delete("product_id");
             window.history.replaceState(
                 "",
                 document.title,
@@ -341,9 +374,7 @@ export default function ProductModal() {
                                     }
                                     alt={productModal.title}
                                     style={{
-                                        filter: productModal.disabled
-                                            ? "grayscale(1)"
-                                            : "",
+                                        filter: disabled ? "grayscale(1)" : "",
                                     }}
                                 />
                             </Zoom>
@@ -480,7 +511,7 @@ export default function ProductModal() {
                                     ""
                                 )}
 
-                                {productModal.disabled ? (
+                                {disabled ? (
                                     <Collapse sx={{ mt: 1 }} in={true}>
                                         <Alert
                                             severity="error"
@@ -590,7 +621,7 @@ export default function ProductModal() {
                                         className="btn--action btn-buy"
                                         onClick={handleAddVariantProduct}
                                         disabled={
-                                            productModal.disabled ||
+                                            disabled ||
                                             wrongVariant ||
                                             !modificatorsCondition
                                         }
@@ -604,8 +635,7 @@ export default function ProductModal() {
                                         className="btn--action btn-buy"
                                         onClick={handleAddProduct}
                                         disabled={
-                                            productModal.disabled ||
-                                            !modificatorsCondition
+                                            disabled || !modificatorsCondition
                                         }
                                         data-product-id={productModal.id}
                                     >
