@@ -24,8 +24,8 @@
     left: 0;
     bottom: -1px;
     display: flex;
-    justify-content: end;
-    align-items: end;
+    justify-content: flex-end;
+    align-items: flex-end;
     flex-direction: column;
 
     background: -moz-linear-gradient(
