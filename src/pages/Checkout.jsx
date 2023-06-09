@@ -50,6 +50,7 @@ import {
     Promocode,
     BootstrapTooltip,
     CheckoutConfirmButtons,
+    BonusesSlider,
 } from "../components";
 import {
     _checkPromocode,
@@ -75,6 +76,7 @@ import creditCard from "../img/credit-card.svg";
 import onlineCreditCard from "../img/online-credit-card.svg";
 import "../css/checkout.css";
 import useAutoDiscount from "../hooks/useAutoDiscount";
+import useBonuses from "../hooks/useBonuses";
 
 const formatingStrPhone = (inputNumbersValue) => {
     var formattedPhone = "";
@@ -190,6 +192,18 @@ export default function Checkout() {
 
     const { autoDiscountAmount, autoDiscount } = useAutoDiscount(typeDelivery);
 
+    const { userBonuses, useBonusesLimit, maxBonuses, orderBonusesLimit } =
+        useBonuses({
+            typeDelivery,
+            deliveryZone,
+        });
+
+    useEffect(() => {
+        if (usedBonuses > maxBonuses) {
+            handleChangeCheckoutBonus(maxBonuses);
+        }
+    }, [maxBonuses]);
+
     const handleAlertClose = () => {
         setOpenAlert(false);
     };
@@ -199,6 +213,12 @@ export default function Checkout() {
             dispatch(addBonusProductToCart({}));
         }
     }, [config.CONFIG_free_products_program_status]);
+
+    useEffect(() => {
+        if (config.deliveryZones.deliveryPriceType !== "areaPrice") {
+            dispatch(setDeliveryZone(null));
+        }
+    }, [config.deliveryZones.deliveryPriceType]);
 
     useEffect(() => {
         if (typeDelivery === "delivery") {
@@ -225,7 +245,7 @@ export default function Checkout() {
                 setDeliveryAddress("new");
             }
         }
-    }, [typeDelivery]);
+    }, [typeDelivery, config.deliveryZones.deliveryPriceType]);
 
     // Блокируем предзаказ на все даты если в корзине есть товар с ограничением по вермени/дням недели
     const limitedCategories = categories.filter(
@@ -708,7 +728,7 @@ export default function Checkout() {
         setTypeDelivery("self");
     };
 
-    const handleChangeCheckoutBonus = (e, value) => {
+    const handleChangeCheckoutBonus = (value) => {
         setUsedBonuses(value);
     };
 
@@ -837,25 +857,6 @@ export default function Checkout() {
             }
         });
     }
-
-    let maxBonuses =
-        user.bonuses >=
-        parseInt(
-            (cartTotalPrice / 100) * config.CONFIG_bonus_program_order_limit
-        )
-            ? parseInt(
-                  (cartTotalPrice / 100) *
-                      config.CONFIG_bonus_program_order_limit
-              )
-            : user.bonuses;
-    if (
-        config.CONFIG_order_min_price !== undefined &&
-        config.CONFIG_order_min_price > 0
-    )
-        if (cartTotalPrice - maxBonuses < config.CONFIG_order_min_price) {
-            maxBonuses = cartTotalPrice - config.CONFIG_order_min_price;
-            if (maxBonuses < 0) maxBonuses = 0;
-        }
 
     // Функция рендера графика работы филиала
     const currentDayOfWeek =
@@ -1713,22 +1714,21 @@ export default function Checkout() {
                                     <div className="checkout--user-bonuses">
                                         <div className="checkout--user-bonuses-info">
                                             У вас{" "}
-                                            <span className="main-color">{`${
-                                                user.bonuses
-                                            } ${_declension(user.bonuses, [
-                                                "бонус",
-                                                "бонуса",
-                                                "бонусов",
-                                            ])}`}</span>
+                                            <span className="main-color">{`${userBonuses} ${_declension(
+                                                userBonuses,
+                                                ["бонус", "бонуса", "бонусов"]
+                                            )}`}</span>
                                         </div>
 
-                                        <Slider
-                                            onChange={handleChangeCheckoutBonus}
-                                            defaultValue={0}
-                                            aria-label="Default"
-                                            valueLabelDisplay="auto"
-                                            min={0}
-                                            max={maxBonuses}
+                                        <BonusesSlider
+                                            maxValue={maxBonuses}
+                                            orderBonusesLimit={
+                                                orderBonusesLimit
+                                            }
+                                            usedBonuses={usedBonuses}
+                                            handleChangeUsedBonuses={
+                                                handleChangeCheckoutBonus
+                                            }
                                         />
 
                                         <div className="checkout--bonuses-payming">
@@ -1748,10 +1748,7 @@ export default function Checkout() {
                                         <small>
                                             Бонусами можно оплатить до{" "}
                                             <span className="main-color">
-                                                {
-                                                    config.CONFIG_bonus_program_order_limit
-                                                }
-                                                %
+                                                {useBonusesLimit}%
                                             </span>{" "}
                                             от общей суммы заказа.
                                         </small>
