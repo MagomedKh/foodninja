@@ -3,7 +3,8 @@ import { useSelector } from "react-redux";
 import { Dialog, IconButton, Slide } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import useWorkingStatus from "../hooks/useWorkingStatus";
-import { _isMobile } from "./helpers";
+import { _getPlatform, _isMobile } from "./helpers";
+import clsx from "clsx";
 import catSleep from "../img/cat-sleep.svg";
 import "../css/we-closed.css";
 
@@ -75,7 +76,10 @@ export default function WeClosed() {
                         color="inherit"
                         onClick={handleModalClose}
                         aria-label="close"
-                        className="modal-close"
+                        className={clsx(
+                            "modal-close",
+                            _getPlatform() === "vk" && "vk"
+                        )}
                     >
                         <CloseIcon />
                     </IconButton>
