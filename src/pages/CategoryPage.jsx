@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Alert, Button, Box, Container, Skeleton } from "@mui/material";
 import {
     Header,
@@ -16,6 +16,7 @@ import { _isMobile, _clone, _isCategoryDisabled } from "../components/helpers";
 
 const CategoryPage = () => {
     const params = useParams();
+    const navigate = useNavigate();
 
     const { config, productLayout } = useSelector(({ config }) => {
         return {
@@ -53,6 +54,11 @@ const CategoryPage = () => {
             setAllProducts(temp);
         }
     }, [currentCategory]);
+
+    if (!currentCategory) {
+        navigate("/");
+        return null;
+    }
 
     const handleFilter = (filteredProducts) => {
         if (filteredProducts) {
