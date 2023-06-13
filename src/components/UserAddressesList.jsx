@@ -36,18 +36,14 @@ const UserAddressesList = ({
     const userAddresses =
         (user?.addresses && Object.values(user.addresses)) || [];
 
-    const addressesWithCoordinates = userAddresses.filter((address) => {
-        if (
-            config.deliveryZones.deliveryPriceType === "areaPrice" &&
-            !address.coordinates
-        ) {
-            return false;
-        }
-        return true;
-    });
-
-    const addressesWithFormat = addressesWithCoordinates.map(
-        (address, index) => {
+    const addressesWithFormat = userAddresses
+        .map((address, index) => {
+            if (
+                config.deliveryZones.deliveryPriceType === "areaPrice" &&
+                !address.coordinates
+            ) {
+                return null;
+            }
             let formateAddress;
             if (!address.formate) {
                 formateAddress = address.street + ", д. " + address.home;
@@ -80,8 +76,8 @@ const UserAddressesList = ({
                     }
                 />
             );
-        }
-    );
+        })
+        .filter((el) => el);
 
     const firstAddresses = addressesWithFormat.slice(0, 5);
 
