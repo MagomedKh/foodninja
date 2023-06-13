@@ -167,7 +167,9 @@ export default function Checkout() {
     );
     const [deliveryAddress, setDeliveryAddress] = useState(null);
     const [selfDeliveryAddress, setSelfDeliveryAddress] = useState("main");
-    const [activeGateway, setActiveGateway] = useState(gateways[0].id);
+    const [activeGateway, setActiveGateway] = useState(
+        Array.isArray(gateways) && gateways.length ? gateways[0].id : false
+    );
     const [openAlert, setOpenAlert] = useState(false);
     const [preorderDate, setPreorderDate] = useState(null);
     const [preorderTime, setPreorderTime] = useState("");
@@ -1757,7 +1759,7 @@ export default function Checkout() {
 
                                 <hr className="checkout--total-panel--separator" />
 
-                                {gateways && (
+                                {Array.isArray(gateways) && gateways.length && (
                                     <div className="checkout--gateways">
                                         <h4>Способ оплаты</h4>
                                         <ToggleButtonGroup
