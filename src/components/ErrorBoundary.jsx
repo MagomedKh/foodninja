@@ -36,7 +36,7 @@ export class ErrorBoundary extends React.Component {
                     </h4>
                     <Button
                         onClick={this.refreshHandler}
-                        className="btn--action"
+                        className="btn--outline-dark"
                         variant="contained"
                     >
                         Обновить данные
