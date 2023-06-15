@@ -29,6 +29,7 @@ export default function Product({ product, disabled }) {
         productLayout,
         fullWidthImage,
         imageBgColor,
+        discountStickerDisalbed,
     } = useSelector(({ cart, config }) => {
         return {
             cartProducts: cart.items,
@@ -37,6 +38,8 @@ export default function Product({ product, disabled }) {
             productLayout: config.data.CONFIG_type_products,
             fullWidthImage: config.data.CONFIG_product_image_fullwidth,
             imageBgColor: config.data.CONFIG_product_background_color,
+            discountStickerDisalbed:
+                config.data.CONFIG_product_sticker_sale === "disable",
         };
     });
 
@@ -74,7 +77,8 @@ export default function Product({ product, disabled }) {
         >
             <div className="product product-item">
                 <div className="product--labels-wrapper">
-                    {parseInt(product.options._regular_price) >
+                    {!discountStickerDisalbed &&
+                    parseInt(product.options._regular_price) >
                         parseInt(product.options._price) &&
                     product.type === "simple" &&
                     Math.round(
