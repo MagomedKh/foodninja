@@ -44,7 +44,7 @@ function MobileMiniCart() {
     };
 
     const handleOpenMiniCart = () => {
-        window.location.hash = "minicart";
+        window.location.hash = "minicart-sidebar";
         dispatch(openMiniCart());
     };
 
