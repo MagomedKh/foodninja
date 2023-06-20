@@ -542,7 +542,9 @@ export default function Checkout() {
                 .then((resp) => {
                     setLoading(false);
                     if (resp.data.status === "success") {
-                        dispatch(saveAddresses(resp.data.user.addresses));
+                        if (resp.data.user?.addresses) {
+                            dispatch(saveAddresses(resp.data.user.addresses));
+                        }
                         window.scrollTo(0, 0);
                         navigate("/order-complete", { replace: true });
                     } else if (resp.data.status === "need_payment") {
