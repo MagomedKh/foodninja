@@ -201,6 +201,16 @@ export default function Checkout() {
         });
 
     useEffect(() => {
+        if ("scrollRestoration" in window.history) {
+            window.history.scrollRestoration = "manual";
+        }
+        window.scrollTo(0, 0);
+        return () => {
+            window.history.scrollRestoration = "auto";
+        };
+    }, []);
+
+    useEffect(() => {
         if (usedBonuses > maxBonuses) {
             handleChangeCheckoutBonus(maxBonuses);
         }
