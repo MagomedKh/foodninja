@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { _isMobile, _getDomain, _getPlatform } from "./helpers.js";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -24,6 +24,10 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 export default function AuthModal() {
+    const firstInput = useRef();
+    const secondInput = useRef();
+    const thirdInput = useRef();
+    const fourthInput = useRef();
     const dispatch = useDispatch();
     const { pathname } = useLocation();
 
@@ -182,7 +186,14 @@ export default function AuthModal() {
         setAuthPhoneCode(!authPhoneCode);
     };
 
-    const handleEnterCode = (e, field) => {
+    const handleEnterSymbol = (e, field) => {
+        const nextSibling = field?.current.nextSibling;
+        if (nextSibling !== null && e.target.value) {
+            nextSibling.focus();
+        }
+    };
+
+    const handleEnterLastSymbol = (e, field) => {
         const codeInputs = document.querySelectorAll(
             ".phone-auth-wrapper .verify-code"
         );
@@ -190,13 +201,6 @@ export default function AuthModal() {
             (codeSum, element) => codeSum + element.value.toString(),
             ""
         );
-
-        const nextSibling = document.querySelector(
-            ".code-" + (code.length + 1)
-        );
-        if (nextSibling !== null) {
-            nextSibling.focus();
-        }
 
         if (code.length === 4) {
             const phone = getNumbersValue(authPhone);
@@ -402,9 +406,10 @@ export default function AuthModal() {
                                     <input
                                         type={_isMobile() ? "number" : "text"}
                                         className="verify-code code-1"
-                                        ref={inputCode[1]}
-                                        onKeyUp={(e) =>
-                                            handleEnterCode(e, inputCode[1])
+                                        ref={firstInput}
+                                        maxlength={1}
+                                        onChange={(e) =>
+                                            handleEnterSymbol(e, firstInput)
                                         }
                                         data-code-number="1"
                                         autoComplete="off"
@@ -413,9 +418,10 @@ export default function AuthModal() {
                                     <input
                                         type={_isMobile() ? "number" : "text"}
                                         className="verify-code code-2"
-                                        ref={inputCode[2]}
-                                        onKeyUp={(e) =>
-                                            handleEnterCode(e, inputCode[2])
+                                        ref={secondInput}
+                                        maxlength={1}
+                                        onChange={(e) =>
+                                            handleEnterSymbol(e, secondInput)
                                         }
                                         data-code-number="2"
                                         autoComplete="off"
@@ -424,9 +430,10 @@ export default function AuthModal() {
                                     <input
                                         type={_isMobile() ? "number" : "text"}
                                         className="verify-code code-3"
-                                        ref={inputCode[3]}
-                                        onKeyUp={(e) =>
-                                            handleEnterCode(e, inputCode[3])
+                                        ref={thirdInput}
+                                        maxlength={1}
+                                        onChange={(e) =>
+                                            handleEnterSymbol(e, thirdInput)
                                         }
                                         data-code-number="3"
                                         autoComplete="off"
@@ -435,9 +442,13 @@ export default function AuthModal() {
                                     <input
                                         type={_isMobile() ? "number" : "text"}
                                         className="verify-code code-4"
-                                        ref={inputCode[4]}
-                                        onKeyUp={(e) =>
-                                            handleEnterCode(e, inputCode[4])
+                                        ref={fourthInput}
+                                        maxlength={1}
+                                        onChange={(e) =>
+                                            handleEnterLastSymbol(
+                                                e,
+                                                fourthInput
+                                            )
                                         }
                                         data-code-number="4"
                                         autoComplete="off"
