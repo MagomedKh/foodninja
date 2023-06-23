@@ -3,14 +3,17 @@
     position: relative;
     width: 400px;
 }
+
 .auth-modal .auth-modal--title {
     margin: 0 0 20px 0;
     line-height: 1;
 }
+
 .recall-timout,
 .resms-timout {
     margin-left: 5px;
 }
+
 .auth-modal--footer {
     padding: 0.75rem 2rem 0;
     border-top: 1px solid #dee2e6;
@@ -19,36 +22,77 @@
     margin-top: 16px;
     font-size: 14px;
 }
+
 .phone-input {
     width: 100% !important;
 }
+
 label.Mui-focused {
     color: var(--main-color) !important;
 }
+
 div.Mui-focused fieldset {
     border-color: var(--main-color) !important;
 }
+
 .auth-btn {
     display: block;
     width: 100%;
     margin: 15px 0 !important;
     height: 55px;
 }
+
 .auth-modal--info {
     font-size: 14px;
     font-weight: 400;
     margin-top: 16px;
     text-align: center;
 }
+
+.auth-modal--secondary-text {
+    font-size: 20px;
+    text-align: center;
+}
+
+.vkid-auth-wrapper {
+    /* transition: all ease-in-out .3s;
+    transition: margin-bottom ease-in-out .3s, opacity ease-in-out .3s, transform ease-in-out .3s; */
+    margin-bottom: -10px;
+}
+
+/* .vkid-auth-wrapper--hidden {
+    opacity: 0;
+    height: 0;
+    margin-bottom: 0;
+    transform: translateY(-30%)
+} */
+.vkid-btn-loader {
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    position: absolute;
+    margin-top: 15px;
+}
+
+.vkid-auth-btn {
+    /* display: block; */
+    /* width: 100%; */
+    /* margin: 15px 0 !important; */
+    /* height: 55px; */
+}
+
 .phone-auth-wrapper {
     position: relative;
 }
+
 .phone-auth--code {
     margin: 15px 0;
     display: flex;
     justify-content: center;
 }
-.phone-auth--code > .verify-code {
+
+.phone-auth--code>.verify-code {
     width: 55px;
     height: 55px;
     margin: 0 5px 0 5px;
@@ -57,20 +101,24 @@ div.Mui-focused fieldset {
     border: 1px solid #ccc;
     border-radius: 12px;
 }
-.phone-auth--code > .verify-code:focus {
+
+.phone-auth--code>.verify-code:focus {
     border: 2px solid var(--main-color) !important;
     outline: none;
 }
+
 .phone-auth--change-number {
     position: absolute !important;
     top: 8px;
     right: 10px;
 }
+
 @media (max-width: 899px) {
     .auth-modal {
         padding: 20px;
         width: auto;
     }
+
     .auth-modal .auth-modal--title {
         text-align: center;
     }
