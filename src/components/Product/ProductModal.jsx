@@ -142,7 +142,6 @@ export default function ProductModal() {
         const urlParams = new URL(window.location.href).searchParams;
         const paramsProductID = urlParams.get("product_id");
         if (paramsProductID) {
-            console.log(paramsProductID);
             const product = products[paramsProductID];
             if (product && !openProductModal) {
                 dispatch(setModalProduct({ ...product }));

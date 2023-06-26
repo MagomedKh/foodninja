@@ -53,11 +53,13 @@ export default function Sales() {
                                                 justifyContent: "start",
                                             }}
                                         >
-                                            <CardMedia
-                                                component="img"
-                                                image={sale.saleImg}
-                                                alt={sale.saleTitle}
-                                            />
+                                            {sale.saleImg ? (
+                                                <CardMedia
+                                                    component="img"
+                                                    image={sale.saleImg}
+                                                    alt={sale.saleTitle}
+                                                />
+                                            ) : null}
                                             <CardContent sx={{ flexGrow: 1 }}>
                                                 <div className="sale--content-inner-wrapper">
                                                     <Typography

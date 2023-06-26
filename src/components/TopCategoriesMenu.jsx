@@ -165,6 +165,8 @@ export default function TopCategoriesMenu() {
                                             smooth={true}
                                             offset={-70}
                                             duration={500}
+                                            hashSpy={true}
+                                            spyThrottle={500}
                                         >
                                             {item.name}
                                         </AnimateLink>

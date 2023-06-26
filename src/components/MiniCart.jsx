@@ -75,7 +75,10 @@ function MiniCart() {
     const { miniCartOpen } = useSelector((state) => state.miniCart);
 
     const hashEventListener = (event) => {
-        if (!window.location.hash && event.oldURL.includes("#minicart")) {
+        if (
+            window.location.hash !== "minicart-sidebar" &&
+            event.oldURL.includes("#minicart-sidebar")
+        ) {
             handleCloseMiniCart();
         }
     };
@@ -87,7 +90,7 @@ function MiniCart() {
         };
     }, []);
 
-    if (!miniCartOpen && window.location.hash === "minicart") {
+    if (!miniCartOpen && window.location.hash === "minicart-sidebar") {
         window.history.replaceState(
             "",
             document.title,
@@ -96,12 +99,12 @@ function MiniCart() {
     }
 
     const handleOpenMiniCart = () => {
-        window.location.hash = "minicart";
+        window.location.hash = "minicart-sidebar";
         dispatch(openMiniCart());
     };
 
     const handleCloseMiniCart = () => {
-        if (window.location.hash === "#minicart") {
+        if (window.location.hash === "#minicart-sidebar") {
             window.history.replaceState(
                 "",
                 document.title,
