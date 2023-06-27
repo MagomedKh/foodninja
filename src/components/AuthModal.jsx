@@ -194,37 +194,20 @@ export default function AuthModal() {
 
    useEffect(() => {
       if (openModalAuth) {
-         setTimeout(() => {
-            const inputPhoneHtmlEl = inputPhone.current.children[1].children[0];
-            if (!inputPhoneHtmlEl.value.length && !isVKPhoneReject.current) {
-               bridge
-                  .send("VKWebAppGetPhoneNumber", {})
-                  .then((res) => {
-                     handlePhoneInput({
-                        target: {
-                           value: res.phone_number,
-                           selectionStart: 11,
-                        },
-                     });
-                     phoneLoginBtn.current.click();
-                  })
-                  .catch((er) => {
-                     if (er.error_data.error_reason === "User denied") {
-                        isVKPhoneReject.current = true;
-                     }
-                  });
-            }
-         });
+         // setTimeout(() => {
+         //    const inputPhoneHtmlEl = inputPhone.current.children[1].children[0];
+         //    if (!inputPhoneHtmlEl.value.length && !isVKPhoneReject.current) {
+         //       bridge.send("VKWebAppGetPhoneNumber").then((res) => {});
+         //    }
+         // });
       } else setIsVKBtnRendered(false);
-
-      if (!isVKBtnRendered) {
+      console.log(oneTapButton.getFrame());
+      if (!isVKBtnRendered && openModalAuth) {
          setTimeout(() => {
-            VKIDAuthWrapper.current?.append(oneTapButton.getFrame());
             if (VKIDAuthWrapper.current) {
+               VKIDAuthWrapper.current.innerHTML = "";
+               VKIDAuthWrapper.current.append(oneTapButton.getFrame());
                oneTapButton.authReadyPromise.then(() => {
-                  VKIDAuthWrapper.current?.classList.remove(
-                     "vkid-auth-wrapper--hidden"
-                  );
                   setIsVKBtnRendered(true);
                });
             }
@@ -237,17 +220,17 @@ export default function AuthModal() {
          oneTapButton.getFrame().remove();
          setIsVKBtnRendered(false);
       } else {
-         setTimeout(() => {
-            VKIDAuthWrapper.current?.append(oneTapButton.getFrame());
-            if (VKIDAuthWrapper.current) {
-               oneTapButton.authReadyPromise.then(() => {
-                  VKIDAuthWrapper.current.classList.remove(
-                     "vkid-auth-wrapper--hidden"
-                  );
-                  setIsVKBtnRendered(true);
-               });
-            }
-         });
+         if (!isVKBtnRendered) {
+            setTimeout(() => {
+               if (VKIDAuthWrapper.current) {
+                  VKIDAuthWrapper.current.innerHTML = "";
+                  VKIDAuthWrapper.current.append(oneTapButton.getFrame());
+                  oneTapButton.authReadyPromise.then(() => {
+                     setIsVKBtnRendered(true);
+                  });
+               }
+            });
+         }
       }
    }, [isAuthPhoneCode]);
 
@@ -494,7 +477,7 @@ export default function AuthModal() {
                                                 key: "notificationsPermission",
                                              });
                                        });
-                                 }, 1000);
+                                 }, 2000);
                            });
                      }
                   } else
@@ -675,19 +658,14 @@ export default function AuthModal() {
                         >
                            Войти
                         </Button>
-                        <div
-                           id="vkid-wrapper"
-                           ref={VKIDAuthWrapper}
-                           className="vkid-auth-wrapper vkid-auth-wrapper--hidden"
-                        >
+                        <div className="vkid-auth-wrapper">
                            <p className="auth-modal--secondary-text">или</p>
-                           {!isVKBtnRendered && (
-                              <div>
-                                 <CircularProgress
-                                    className="vkid-btn-loader"
-                                    color="vk"
-                                 />
-                              </div>
+                           <div ref={VKIDAuthWrapper}></div>
+                           {isVKBtnRendered && (
+                              <CircularProgress
+                                 className="vkid-btn-loader"
+                                 color="vk"
+                              />
                            )}
                         </div>
                      </div>

@@ -268,6 +268,7 @@ function App() {
          }
       }
    }, [sales, saleOpenModal]);
+
    useEffect(() => {
       Config.init({
          appId: 51684328,
@@ -314,10 +315,6 @@ function App() {
 
          navigate(VKPageUrlHash, { replace: true });
 
-         bridge.send("VKWebAppAllowMessagesFromGroup", {
-            group_id: window.vkGroupId,
-         });
-
          // Меняем хэш на странице vk-mini-app при изменении url внутри react app
          setInterval(() => {
             let reactAppUrlWithoutBaseUrl = window.location.href
@@ -331,29 +328,40 @@ function App() {
 
                VKPageUrlHash = reactAppUrlWithoutBaseUrl;
             }
-         }, 600);
+         }, 500);
 
-         //          VKWebAppAllowMessagesFromGroup without again ask permission after user reject
-         //  bridge
-         //  .send("VKWebAppStorageGet", {
-         //     keys: ["messagesFromGroupPermission"],
-         //  })
-         //  .then((data) => {
-         //     if (data.keys[0].key !== "messagesFromGroupPermission") {
-         //        setTimeout(() => {
-         //           bridge
-         //              .send("VKWebAppAllowMessagesFromGroup", {
-         //                 group_id: window.vkGroupId,
-         //              })
-         //              .then((data) => {
-         //                 data.result &&
-         //                    bridge.send("VKWebAppStorageSet", {
-         //                       key: "messagesFromGroupPermission",
-         //                    });
-         //              });
-         //        }, 1000);
-         //     }
-         //  });
+         // allow messages from group
+         bridge
+            .send("VKWebAppStorageGet", {
+               keys: ["messagesFromGroupPermission"],
+            })
+            .then((data) => {
+               const numOfAsking = +data.keys[0].value;
+               if (
+                  data.keys[0].value !== "granted" &&
+                  (!numOfAsking || numOfAsking <= 2)
+               ) {
+                  setTimeout(() => {
+                     bridge
+                        .send("VKWebAppAllowMessagesFromGroup", {
+                           group_id: window.vkGroupId,
+                        })
+                        .then((data) => {
+                           data.result &&
+                              bridge.send("VKWebAppStorageSet", {
+                                 key: "messagesFromGroupPermission",
+                                 value: "granted",
+                              });
+                        })
+                        .catch(() => {
+                           bridge.send("VKWebAppStorageSet", {
+                              key: "messagesFromGroupPermission",
+                              value: `${numOfAsking + 1}`,
+                           });
+                        });
+                  }, 150);
+               }
+            });
       }
    }, []);
 
