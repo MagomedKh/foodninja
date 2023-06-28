@@ -194,14 +194,14 @@ export default function AuthModal() {
 
    useEffect(() => {
       if (openModalAuth) {
-         // setTimeout(() => {
-         //    const inputPhoneHtmlEl = inputPhone.current.children[1].children[0];
-         //    if (!inputPhoneHtmlEl.value.length && !isVKPhoneReject.current) {
-         //       bridge.send("VKWebAppGetPhoneNumber").then((res) => {});
-         //    }
-         // });
+         setTimeout(() => {
+            const inputPhoneHtmlEl = inputPhone.current.children[1].children[0];
+            if (!inputPhoneHtmlEl.value.length && !isVKPhoneReject.current) {
+               bridge.send("VKWebAppGetPhoneNumber").then((res) => {});
+            }
+         });
       } else setIsVKBtnRendered(false);
-      console.log(oneTapButton.getFrame());
+
       if (!isVKBtnRendered && openModalAuth) {
          setTimeout(() => {
             if (VKIDAuthWrapper.current) {
@@ -660,13 +660,13 @@ export default function AuthModal() {
                         </Button>
                         <div className="vkid-auth-wrapper">
                            <p className="auth-modal--secondary-text">или</p>
-                           <div ref={VKIDAuthWrapper}></div>
-                           {isVKBtnRendered && (
+                           {!isVKBtnRendered && (
                               <CircularProgress
                                  className="vkid-btn-loader"
                                  color="vk"
                               />
                            )}
+                           <div ref={VKIDAuthWrapper}></div>
                         </div>
                      </div>
                   ) : (

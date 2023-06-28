@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import {
@@ -79,6 +79,7 @@ import "./fonts/cera/CeraRoundProBold.woff2";
 import "./App.css";
 import bridge from "@vkontakte/vk-bridge";
 import { Config, Connect, ConnectEvents } from "@vkontakte/superappkit";
+import { clearModificators } from "./redux/actions/modificators";
 
 const MainTheme = createGlobalStyle`
 	:root {
@@ -131,6 +132,7 @@ function App() {
       (state) => state.cart,
       shallowEqual
    );
+   const { openProductModal } = useSelector((state) => state.productModal);
 
    const sales = useSelector(({ pages }) => pages.sales);
 
@@ -301,6 +303,14 @@ function App() {
 
          if (oneTapButton) {
             document.body.appendChild(oneTapButton.getFrame());
+            setTimeout(() => {
+               if (oneTapButton.getFrame()) {
+                  oneTapButton.getFrame().style.transition =
+                     "opacity ease-in-out .3s ";
+                  oneTapButton.getFrame().style.opacity = 0;
+                  setTimeout(() => oneTapButton.getFrame().remove(), 500);
+               }
+            }, 30000);
          }
          //   if (!window.location.href.includes("product_id")) {
          //   dispatch(clearModalProduct());
@@ -362,6 +372,34 @@ function App() {
                   }, 150);
                }
             });
+      }
+   }, []);
+
+   useEffect(() => {
+      if (openProductModal) {
+         setTimeout(() => {
+            window.addEventListener("click", closeModal);
+         });
+      } else {
+         window.removeEventListener("click", closeModal);
+      }
+   }, [openProductModal]);
+
+   const closeModal = useCallback((e, type) => {
+      if (!e.target.closest(".product-modal")) {
+         let url = new URL(window.location.href);
+         if (url.searchParams.has("product_id")) {
+            url.searchParams.delete("product_id");
+            window.history.replaceState(
+               "",
+               document.title,
+               window.location.pathname
+            );
+         }
+
+         dispatch(clearModalProduct());
+         dispatch(clearModificators());
+         dispatch(setOpenModal(false));
       }
    }, []);
 
