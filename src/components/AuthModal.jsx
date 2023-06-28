@@ -252,6 +252,24 @@ export default function AuthModal() {
       });
    }, []);
 
+   useEffect(() => {
+      openModalAuth
+         ? setTimeout(() => {
+              window.addEventListener("click", closeModalOnOutClick);
+           })
+         : window.removeEventListener("click", closeModalOnOutClick);
+   }, [openModalAuth]);
+
+   const closeModalOnOutClick = useCallback((e) => {
+      console.log(e);
+      if (
+         !e.target.closest(".auth-modal") &&
+         !e.target.className.includes("phone-auth--change-number")
+      ) {
+         handleClose();
+      }
+   }, []);
+
    const startRecallTimer = () => {
       stopRecallTimer();
       setRecallActive(true);

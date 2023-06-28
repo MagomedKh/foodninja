@@ -132,7 +132,6 @@ function App() {
       (state) => state.cart,
       shallowEqual
    );
-   const { openProductModal } = useSelector((state) => state.productModal);
 
    const sales = useSelector(({ pages }) => pages.sales);
 
@@ -372,34 +371,6 @@ function App() {
                   }, 150);
                }
             });
-      }
-   }, []);
-
-   useEffect(() => {
-      if (openProductModal) {
-         setTimeout(() => {
-            window.addEventListener("click", closeModal);
-         });
-      } else {
-         window.removeEventListener("click", closeModal);
-      }
-   }, [openProductModal]);
-
-   const closeModal = useCallback((e, type) => {
-      if (!e.target.closest(".product-modal")) {
-         let url = new URL(window.location.href);
-         if (url.searchParams.has("product_id")) {
-            url.searchParams.delete("product_id");
-            window.history.replaceState(
-               "",
-               document.title,
-               window.location.pathname
-            );
-         }
-
-         dispatch(clearModalProduct());
-         dispatch(clearModificators());
-         dispatch(setOpenModal(false));
       }
    }, []);
 
