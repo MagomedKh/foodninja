@@ -13,6 +13,7 @@ import {
    Dialog,
    Slide,
    TextField,
+   ClickAwayListener,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import "../css/auth-modal.css";
@@ -197,7 +198,22 @@ export default function AuthModal() {
          setTimeout(() => {
             const inputPhoneHtmlEl = inputPhone.current.children[1].children[0];
             if (!inputPhoneHtmlEl.value.length && !isVKPhoneReject.current) {
-               bridge.send("VKWebAppGetPhoneNumber").then((res) => {});
+               bridge
+                  .send("VKWebAppGetPhoneNumber", {})
+                  .then((res) => {
+                     handlePhoneInput({
+                        target: {
+                           value: res.phone_number,
+                           selectionStart: 11,
+                        },
+                     });
+                     phoneLoginBtn.current.click();
+                  })
+                  .catch((er) => {
+                     if (er.error_data.error_reason === "User denied") {
+                        isVKPhoneReject.current = true;
+                     }
+                  });
             }
          });
       } else setIsVKBtnRendered(false);
@@ -250,24 +266,6 @@ export default function AuthModal() {
          console.log("setVKUserData - ", existingVkData);
          setVKUserData(existingVkData);
       });
-   }, []);
-
-   useEffect(() => {
-      openModalAuth
-         ? setTimeout(() => {
-              window.addEventListener("click", closeModalOnOutClick);
-           })
-         : window.removeEventListener("click", closeModalOnOutClick);
-   }, [openModalAuth]);
-
-   const closeModalOnOutClick = useCallback((e) => {
-      console.log(e);
-      if (
-         !e.target.closest(".auth-modal") &&
-         !e.target.className.includes("phone-auth--change-number")
-      ) {
-         handleClose();
-      }
    }, []);
 
    const startRecallTimer = () => {
@@ -606,203 +604,206 @@ export default function AuthModal() {
             },
          }}
       >
-         <div className="auth-modal">
-            {loading && (
-               <div className="loader-wrapper">
-                  <CircularProgress variant="determinate" />
-               </div>
-            )}
-            <h2 className="auth-modal--title">Авторизация</h2>
-            {config.CONFIG_auth_type === "noauth" ? null : (
-               <GoogleReCaptcha
-                  onVerify={onVerify}
-                  refreshReCaptcha={refreshReCaptcha}
-               />
-            )}
-            <IconButton
-               edge="start"
-               color="inherit"
-               onClick={handleClose}
-               aria-label="close"
-               className="modal-close"
-            >
-               <CloseIcon />
-            </IconButton>
-
-            {error && (
-               <Alert severity="error" sx={{ mb: 2 }}>
-                  <div>{error.message}</div>
-                  {error?.status === "error_captcha" ? (
-                     <Button
-                        variant="button"
-                        className=" btn--action"
-                        onClick={() => window.location.reload()}
-                        sx={{
-                           width: "100%",
-                           maxHeight: "34px",
-                           mt: "8px",
-                        }}
-                     >
-                        Обновить
-                     </Button>
-                  ) : null}
-               </Alert>
-            )}
-
-            {authType === "verify-code" ? (
-               <div className="phone-auth-wrapper">
-                  <TextField
-                     disabled={isAuthPhoneCode}
-                     onKeyDown={handlePhoneKeyDown}
-                     onInput={handlePhoneInput}
-                     onPaste={handlePhonePaste}
-                     label="Номер телефона"
-                     className="phone-input phone-mask"
-                     value={authPhone ? authPhone : ""}
-                     type={_isMobile() ? "text" : "text"}
-                     id="user-phone"
-                     ref={inputPhone}
+         <ClickAwayListener onClickAway={() => handleClose()}>
+            <div className="auth-modal">
+               {loading && (
+                  <div className="loader-wrapper">
+                     <CircularProgress variant="determinate" />
+                  </div>
+               )}
+               <h2 className="auth-modal--title">Авторизация</h2>
+               {config.CONFIG_auth_type === "noauth" ? null : (
+                  <GoogleReCaptcha
+                     onVerify={onVerify}
+                     refreshReCaptcha={refreshReCaptcha}
                   />
-                  {!isAuthPhoneCode ? (
-                     <div id="recaptcha-container">
+               )}
+               <IconButton
+                  edge="start"
+                  color="inherit"
+                  onClick={handleClose}
+                  aria-label="close"
+                  className="modal-close"
+               >
+                  <CloseIcon />
+               </IconButton>
+
+               {error && (
+                  <Alert severity="error" sx={{ mb: 2 }}>
+                     <div>{error.message}</div>
+                     {error?.status === "error_captcha" ? (
                         <Button
                            variant="button"
-                           onClick={handleAuth}
-                           className="btn--action auth-btn"
-                           disabled={
-                              !verifyPhone || error?.status === "error_captcha"
-                           }
-                           ref={phoneLoginBtn}
+                           className=" btn--action"
+                           onClick={() => window.location.reload()}
+                           sx={{
+                              width: "100%",
+                              maxHeight: "34px",
+                              mt: "8px",
+                           }}
                         >
-                           Войти
+                           Обновить
                         </Button>
-                        <div className="vkid-auth-wrapper">
-                           <p className="auth-modal--secondary-text">или</p>
-                           {!isVKBtnRendered && (
-                              <CircularProgress
-                                 className="vkid-btn-loader"
-                                 color="vk"
+                     ) : null}
+                  </Alert>
+               )}
+
+               {authType === "verify-code" ? (
+                  <div className="phone-auth-wrapper">
+                     <TextField
+                        disabled={isAuthPhoneCode}
+                        onKeyDown={handlePhoneKeyDown}
+                        onInput={handlePhoneInput}
+                        onPaste={handlePhonePaste}
+                        label="Номер телефона"
+                        className="phone-input phone-mask"
+                        value={authPhone ? authPhone : ""}
+                        type={_isMobile() ? "text" : "text"}
+                        id="user-phone"
+                        ref={inputPhone}
+                     />
+                     {!isAuthPhoneCode ? (
+                        <div id="recaptcha-container">
+                           <Button
+                              variant="button"
+                              onClick={handleAuth}
+                              className="btn--action auth-btn"
+                              disabled={
+                                 !verifyPhone ||
+                                 error?.status === "error_captcha"
+                              }
+                              ref={phoneLoginBtn}
+                           >
+                              Войти
+                           </Button>
+                           <div className="vkid-auth-wrapper">
+                              <p className="auth-modal--secondary-text">или</p>
+                              {!isVKBtnRendered && (
+                                 <CircularProgress
+                                    className="vkid-btn-loader"
+                                    color="vk"
+                                 />
+                              )}
+                              <div ref={VKIDAuthWrapper}></div>
+                           </div>
+                        </div>
+                     ) : (
+                        <div>
+                           <div className="auth-modal--info">
+                              На ваш номер будет совершен звонок. Для входа
+                              введите 4 последние цифры этого номера.
+                           </div>
+
+                           <Button
+                              variant="text"
+                              onClick={handleChangeNumber}
+                              className="phone-auth--change-number btn--action"
+                           >
+                              Изменить
+                           </Button>
+                           <div className="phone-auth--code">
+                              <input
+                                 type={_isMobile() ? "number" : "text"}
+                                 className="verify-code code-1"
+                                 ref={(ref) => (inputCode.current[0] = ref)}
+                                 onChange={(e) => handleCodeChange(e, 0)}
+                                 value={authPhoneCode[0]}
+                                 onKeyDown={(e) => handleEnterCode(e, 0)}
+                                 autoComplete="off"
+                                 name="code-1"
+                                 autoFocus
                               />
-                           )}
-                           <div ref={VKIDAuthWrapper}></div>
-                        </div>
-                     </div>
-                  ) : (
-                     <div>
-                        <div className="auth-modal--info">
-                           На ваш номер будет совершен звонок. Для входа введите
-                           4 последние цифры этого номера.
-                        </div>
+                              <input
+                                 type={_isMobile() ? "number" : "text"}
+                                 className="verify-code code-2"
+                                 ref={(ref) => (inputCode.current[1] = ref)}
+                                 onChange={(e) => handleCodeChange(e, 1)}
+                                 value={authPhoneCode[1]}
+                                 onKeyDown={(e) => handleEnterCode(e, 1)}
+                                 autoComplete="off"
+                                 name="code-2"
+                              />
+                              <input
+                                 type={_isMobile() ? "number" : "text"}
+                                 className="verify-code code-3"
+                                 ref={(ref) => (inputCode.current[2] = ref)}
+                                 onChange={(e) => handleCodeChange(e, 2)}
+                                 value={authPhoneCode[2]}
+                                 onKeyDown={(e) => handleEnterCode(e, 2)}
+                                 autoComplete="off"
+                                 name="code-3"
+                              />
+                              <input
+                                 type={_isMobile() ? "number" : "text"}
+                                 className="verify-code code-4"
+                                 ref={(ref) => (inputCode.current[3] = ref)}
+                                 onChange={(e) => handleCodeChange(e, 3)}
+                                 value={authPhoneCode[3]}
+                                 onKeyDown={(e) => handleEnterCode(e, 3)}
+                                 autoComplete="off"
+                                 name="code-4"
+                              />
+                           </div>
 
-                        <Button
-                           variant="text"
-                           onClick={handleChangeNumber}
-                           className="phone-auth--change-number btn--action"
-                        >
-                           Изменить
-                        </Button>
-                        <div className="phone-auth--code">
-                           <input
-                              type={_isMobile() ? "number" : "text"}
-                              className="verify-code code-1"
-                              ref={(ref) => (inputCode.current[0] = ref)}
-                              onChange={(e) => handleCodeChange(e, 0)}
-                              value={authPhoneCode[0]}
-                              onKeyDown={(e) => handleEnterCode(e, 0)}
-                              autoComplete="off"
-                              name="code-1"
-                              autoFocus
-                           />
-                           <input
-                              type={_isMobile() ? "number" : "text"}
-                              className="verify-code code-2"
-                              ref={(ref) => (inputCode.current[1] = ref)}
-                              onChange={(e) => handleCodeChange(e, 1)}
-                              value={authPhoneCode[1]}
-                              onKeyDown={(e) => handleEnterCode(e, 1)}
-                              autoComplete="off"
-                              name="code-2"
-                           />
-                           <input
-                              type={_isMobile() ? "number" : "text"}
-                              className="verify-code code-3"
-                              ref={(ref) => (inputCode.current[2] = ref)}
-                              onChange={(e) => handleCodeChange(e, 2)}
-                              value={authPhoneCode[2]}
-                              onKeyDown={(e) => handleEnterCode(e, 2)}
-                              autoComplete="off"
-                              name="code-3"
-                           />
-                           <input
-                              type={_isMobile() ? "number" : "text"}
-                              className="verify-code code-4"
-                              ref={(ref) => (inputCode.current[3] = ref)}
-                              onChange={(e) => handleCodeChange(e, 3)}
-                              value={authPhoneCode[3]}
-                              onKeyDown={(e) => handleEnterCode(e, 3)}
-                              autoComplete="off"
-                              name="code-4"
-                           />
-                        </div>
-
-                        <Button
-                           variant="button"
-                           disabled={recallActive}
-                           onClick={handleRecall}
-                           className="phone-auth--recall btn--action"
-                           sx={{ width: 1 }}
-                        >
-                           Повторный звонок
-                           {recallActive && (
-                              <span className="recall-timout">
-                                 через {recallTimer} сек.
-                              </span>
-                           )}
-                        </Button>
-
-                        <div className="auth-modal--info">
-                           <b>Не поступил звонок?</b>
-                           <br />
-                           Проверьте правильность номера телефона.
-                        </div>
-
-                        {config.CONFIG_auth_type === "robocallwithsms" ? (
                            <Button
                               variant="button"
                               disabled={recallActive}
-                              onClick={handleResms}
-                              className="phone-auth--resms btn--gray"
-                              sx={{ width: 1, mt: 2 }}
+                              onClick={handleRecall}
+                              className="phone-auth--recall btn--action"
+                              sx={{ width: 1 }}
                            >
-                              Запросить смс
+                              Повторный звонок
                               {recallActive && (
-                                 <span className="resms-timout">
+                                 <span className="recall-timout">
                                     через {recallTimer} сек.
                                  </span>
                               )}
                            </Button>
-                        ) : null}
-                     </div>
-                  )}
-               </div>
-            ) : (
-               authType === "" && <div className="code-auth-wrapper"></div>
-            )}
 
-            <div className="auth-modal--footer">
-               <small>
-                  Используя сервис, вы принимаете правила{" "}
-                  <a href="/privacy" target="_blank">
-                     политики конфиденциальности
-                  </a>{" "}
-                  и{" "}
-                  <a href="/offert" target="_blank">
-                     договора публичной оферты
-                  </a>
-                  .
-               </small>
+                           <div className="auth-modal--info">
+                              <b>Не поступил звонок?</b>
+                              <br />
+                              Проверьте правильность номера телефона.
+                           </div>
+
+                           {config.CONFIG_auth_type === "robocallwithsms" ? (
+                              <Button
+                                 variant="button"
+                                 disabled={recallActive}
+                                 onClick={handleResms}
+                                 className="phone-auth--resms btn--gray"
+                                 sx={{ width: 1, mt: 2 }}
+                              >
+                                 Запросить смс
+                                 {recallActive && (
+                                    <span className="resms-timout">
+                                       через {recallTimer} сек.
+                                    </span>
+                                 )}
+                              </Button>
+                           ) : null}
+                        </div>
+                     )}
+                  </div>
+               ) : (
+                  authType === "" && <div className="code-auth-wrapper"></div>
+               )}
+
+               <div className="auth-modal--footer">
+                  <small>
+                     Используя сервис, вы принимаете правила{" "}
+                     <a href="/privacy" target="_blank">
+                        политики конфиденциальности
+                     </a>{" "}
+                     и{" "}
+                     <a href="/offert" target="_blank">
+                        договора публичной оферты
+                     </a>
+                     .
+                  </small>
+               </div>
             </div>
-         </div>
+         </ClickAwayListener>
       </Dialog>
    );
 }

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from "react";
-import { Dialog, IconButton, Slide } from "@mui/material";
+import { ClickAwayListener, Dialog, IconButton, Slide } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { _getPlatform, _isMobile } from "./helpers";
 import "../css/sale.css";
@@ -30,20 +30,6 @@ const SaleModal = ({ saleOpenModal, activeSale, handleCloseSaleModal }) => {
          window.removeEventListener("popstate", urlChangeEventListener);
       };
    }, [saleOpenModal]);
-
-   useEffect(() => {
-      saleOpenModal
-         ? setTimeout(() => {
-              window.addEventListener("click", closeModalOnOutClick);
-           })
-         : window.removeEventListener("click", closeModalOnOutClick);
-   }, [saleOpenModal]);
-
-   const closeModalOnOutClick = useCallback((e) => {
-      if (!e.target.closest(".sale-modal")) {
-         handleCloseSaleModal();
-      }
-   }, []);
 
    if (!activeSale) {
       return null;
@@ -81,18 +67,20 @@ const SaleModal = ({ saleOpenModal, activeSale, handleCloseSaleModal }) => {
          >
             <CloseIcon />
          </IconButton>
-         <div className="sale-modal--container">
-            <div className="sale-modal">
-               <h2 className="sale-modal--title">{activeSale.saleTitle}</h2>
+         <ClickAwayListener onClickAway={() => handleCloseSaleModal()}>
+            <div className="sale-modal--container">
+               <div className="sale-modal">
+                  <h2 className="sale-modal--title">{activeSale.saleTitle}</h2>
 
-               <div
-                  className="sale--content"
-                  dangerouslySetInnerHTML={{
-                     __html: activeSale.saleContent,
-                  }}
-               ></div>
+                  <div
+                     className="sale--content"
+                     dangerouslySetInnerHTML={{
+                        __html: activeSale.saleContent,
+                     }}
+                  ></div>
+               </div>
             </div>
-         </div>
+         </ClickAwayListener>
       </Dialog>
    );
 };
