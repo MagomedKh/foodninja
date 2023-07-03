@@ -68,7 +68,8 @@ export default function AuthModal() {
             return;
          }
          console.log(event.payload);
-         switch (type) {
+         switch (
+            type
             // case ConnectEvents.OneTapAuthEventsSDK.LOGIN_SUCCESS: // = 'VKSDKOneTapAuthLoginSuccess'
             //    return;
             //    setLoading(true);
@@ -156,25 +157,7 @@ export default function AuthModal() {
             //          setLoading(false);
             //       });
             //    return;
-            // Для этих событий нужно открыть полноценный VK ID чтобы
-            // пользователь дорегистрировался или подтвердил телефон
-            case ConnectEvents.OneTapAuthEventsSDK.FULL_AUTH_NEEDED: //  = 'VKSDKOneTapAuthFullAuthNeeded'
-            case ConnectEvents.OneTapAuthEventsSDK.PHONE_VALIDATION_NEEDED: // = 'VKSDKOneTapAuthPhoneValidationNeeded'
-            case ConnectEvents.ButtonOneTapAuthEventsSDK.SHOW_LOGIN: // = 'VKSDKButtonOneTapAuthShowLogin'
-            // url - строка с url, на который будет произведён редирект после авторизации.
-            // state - состояние вашего приложение или любая произвольная строка, которая будет добавлена к url после авторизации.
-            // return Connect.redirectAuth({
-            //    url: "https://...",
-            //    state: "dj29fnsadjsd82...",
-            // });
-            // Пользователь перешел по кнопке "Войти другим способом"
-            case ConnectEvents.ButtonOneTapAuthEventsSDK.SHOW_LOGIN_OPTIONS: // = 'VKSDKButtonOneTapAuthShowLoginOptions'
-               // Параметр screen: phone позволяет сразу открыть окно ввода телефона в VK ID
-               // Параметр url: ссылка для перехода после авторизации. Должен иметь https схему. Обязательный параметр.
-               return Connect.redirectAuth({
-                  screen: "phone",
-                  url: "https://...",
-               });
+         ) {
          }
 
          return;
@@ -263,7 +246,6 @@ export default function AuthModal() {
          existingVkData.dayBirthday = vkUserInfo.bdate?.split(".")[0] || "";
          existingVkData.monthBirthday = vkUserInfo.bdate?.split(".")[1] || "";
 
-         console.log("setVKUserData - ", existingVkData);
          setVKUserData(existingVkData);
       });
    }, []);
@@ -313,7 +295,7 @@ export default function AuthModal() {
                   token +
                   "&platform=" +
                   _getPlatform() +
-                  "&test=1",
+                  "&fnCheckerPhone=1",
                { mode: "no-cors" }
             )
             .then((resp) => {
@@ -433,7 +415,8 @@ export default function AuthModal() {
                      "&code=" +
                      newData.join("") +
                      "&platform=" +
-                     _getPlatform(),
+                     _getPlatform() +
+                     "&test=1",
                   { mode: "no-cors" }
                )
                .then((resp) => {
@@ -604,7 +587,7 @@ export default function AuthModal() {
             },
          }}
       >
-         <ClickAwayListener onClickAway={() => handleClose()}>
+         <ClickAwayListener onClickAway={() => _isMobile() || handleClose()}>
             <div className="auth-modal">
                {loading && (
                   <div className="loader-wrapper">
@@ -661,6 +644,8 @@ export default function AuthModal() {
                         type={_isMobile() ? "text" : "text"}
                         id="user-phone"
                         ref={inputPhone}
+                        autoComplete={"off"}
+                        autoFocus
                      />
                      {!isAuthPhoneCode ? (
                         <div id="recaptcha-container">
