@@ -271,52 +271,6 @@ function App() {
    }, [sales, saleOpenModal]);
 
    useEffect(() => {
-      Config.init({
-         appId: 51684328,
-      });
-      if (!user.token) {
-         const oneTapButton = Connect.floatingOneTapAuth({
-            callback: (event) => {
-               const { type } = event;
-               console.log(event);
-               if (!type) {
-                  return;
-               }
-
-               switch (type) {
-                  case ConnectEvents.OneTapAuthEventsSDK.LOGIN_SUCCESS:
-                     oneTapButton.getFrame().remove();
-                  default:
-                  // Обработка остальных событий.
-               }
-
-               return;
-            },
-            options: {
-               styles: {
-                  zIndex: 999,
-               },
-               skipSuccess: false,
-            },
-         });
-
-         if (oneTapButton) {
-            document.body.appendChild(oneTapButton.getFrame());
-            setTimeout(() => {
-               if (oneTapButton.getFrame()) {
-                  oneTapButton.getFrame().style.transition =
-                     "opacity ease-in-out .3s ";
-                  oneTapButton.getFrame().style.opacity = 0;
-                  setTimeout(() => oneTapButton.getFrame().remove(), 500);
-               }
-            }, 30000);
-         }
-         //   if (!window.location.href.includes("product_id")) {
-         //   dispatch(clearModalProduct());
-         //   dispatch(clearModificators());
-         //   dispatch(setOpenModal(false));
-         //   }
-      }
       if (_getPlatform() === "vk") {
          let VKPageUrlHash = window.location.hash
             .replace("#", "")
@@ -342,35 +296,59 @@ function App() {
          // allow messages from group
          bridge
             .send("VKWebAppStorageGet", {
-               keys: ["messagesFromGroupPermission"],
+               keys: ["messagesFromGroupLastRequest"],
             })
             .then((data) => {
-               const numOfAsking = +data.keys[0].value;
-               if (
-                  data.keys[0].value !== "granted" &&
-                  (!numOfAsking || numOfAsking <= 2)
-               ) {
+               const lastRequestTime = +data.keys[0].value;
+               if (Date.now() - lastRequestTime > 1000 * 3600 * 24 * 7) {
                   setTimeout(() => {
                      bridge
                         .send("VKWebAppAllowMessagesFromGroup", {
                            group_id: window.vkGroupId,
                         })
-                        .then((data) => {
-                           data.result &&
-                              bridge.send("VKWebAppStorageSet", {
-                                 key: "messagesFromGroupPermission",
-                                 value: "granted",
-                              });
-                        })
                         .catch(() => {
                            bridge.send("VKWebAppStorageSet", {
-                              key: "messagesFromGroupPermission",
-                              value: `${numOfAsking + 1}`,
+                              key: "messagesFromGroupLastRequest",
+                              value: `${Date.now()}`,
                            });
                         });
-                  }, 150);
+                  }, 15000);
                }
             });
+      }
+
+      // vkid btn
+      Config.init({
+         appId: 51684328,
+      });
+      if (!user.token) {
+         const oneTapButton = Connect.floatingOneTapAuth({
+            callback: (event) => {
+               console.log(event);
+               if (
+                  event.type === ConnectEvents.OneTapAuthEventsSDK.LOGIN_SUCCESS
+               ) {
+                  oneTapButton.getFrame().remove();
+               }
+            },
+            options: {
+               styles: {
+                  zIndex: 999,
+               },
+            },
+         });
+
+         if (oneTapButton) {
+            document.body.appendChild(oneTapButton.getFrame());
+            setTimeout(() => {
+               if (oneTapButton.getFrame()) {
+                  oneTapButton.getFrame().style.transition =
+                     "opacity ease-in-out .3s ";
+                  oneTapButton.getFrame().style.opacity = 0;
+                  setTimeout(() => oneTapButton.getFrame().remove(), 500);
+               }
+            }, 30000);
+         }
       }
    }, []);
 
