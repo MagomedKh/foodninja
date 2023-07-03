@@ -140,7 +140,7 @@ export default function ProductModal() {
       const paramsProductID = urlParams.get("product_id");
       if (paramsProductID) {
          const product = products[paramsProductID];
-         if (product && !openProductModal) {
+         if (product) {
             dispatch(setModalProduct({ ...product }));
             dispatch(setOpenModal(true));
          } else if (!product && openProductModal) {
