@@ -18,7 +18,6 @@ import { _getPlatform, _isMobile } from "../helpers";
 import "../../css/product.css";
 import soon from "../../img/photo-soon.svg";
 import clsx from "clsx";
-// import bridge from "@vkontakte/vk-bridge";
 
 export default function Product({ product, disabled }) {
    const dispatch = useDispatch();
@@ -49,10 +48,6 @@ export default function Product({ product, disabled }) {
       if (!url.searchParams.has("product_id")) {
          url.searchParams.append("product_id", product.id);
          window.history.pushState({}, "", url.href);
-
-         //  bridge.send("VKWebAppSetLocation", {
-         //     location: url.href.slice(url.href.indexOf("?")),
-         //  });
       }
       dispatch(
          setModalProduct({

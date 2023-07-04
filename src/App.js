@@ -258,25 +258,13 @@ function App() {
    }, [dispatch]);
 
    useEffect(() => {
-      const urlParams = new URL(window.location.href).searchParams;
-      const paramsSaleID = urlParams.get("sale_id");
-      if (paramsSaleID) {
-         const sale = sales.find((sale) => sale.saleID == paramsSaleID);
-         if (sale) {
-            handleSetActiveSale(sale);
-         } else if (!sale && saleOpenModal) {
-            handleCloseSaleModal();
-         }
-      }
-   }, [sales, saleOpenModal]);
-
-   useEffect(() => {
       if (_getPlatform() === "vk") {
-         let VKPageUrlHash = window.location.hash
-            .replace("#", "")
-            .replace("*", "#");
+         let VKPageUrlHash = window.location.hash;
+         if (window.location.href.includes("vk_access_token_settings")) {
+            VKPageUrlHash = VKPageUrlHash.replace("#", "").replace("*", "#");
 
-         navigate(VKPageUrlHash, { replace: true });
+            navigate(VKPageUrlHash, { replace: true });
+         }
 
          // Меняем хэш на странице vk-mini-app при изменении url внутри react app
          setInterval(() => {
@@ -351,6 +339,19 @@ function App() {
          }
       }
    }, []);
+
+   useEffect(() => {
+      const urlParams = new URL(window.location.href).searchParams;
+      const paramsSaleID = urlParams.get("sale_id");
+      if (paramsSaleID) {
+         const sale = sales.find((sale) => sale.saleID == paramsSaleID);
+         if (sale) {
+            handleSetActiveSale(sale);
+         } else if (!sale && saleOpenModal) {
+            handleCloseSaleModal();
+         }
+      }
+   }, [sales, saleOpenModal]);
 
    const mainColor = config
       ? config.CONFIG_main_color !== undefined

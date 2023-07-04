@@ -136,11 +136,18 @@ export default function ProductModal() {
    }, []);
 
    useEffect(() => {
+      const VKUrlProductId =
+         _getPlatform() === "vk" &&
+         new URL(
+            window.location.origin +
+               window.location.hash.replace("#", "").replace("*", "#")
+         ).searchParams.get("product_id");
+
       const urlParams = new URL(window.location.href).searchParams;
-      const paramsProductID = urlParams.get("product_id");
+      const paramsProductID = VKUrlProductId || urlParams.get("product_id");
       if (paramsProductID) {
          const product = products[paramsProductID];
-         if (product) {
+         if (product && !openProductModal) {
             dispatch(setModalProduct({ ...product }));
             dispatch(setOpenModal(true));
          } else if (!product && openProductModal) {
