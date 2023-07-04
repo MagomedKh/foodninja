@@ -13,7 +13,10 @@ import {
     setDeliveryZone,
     setOpenDeliveryModal,
 } from "../redux/actions/deliveryAddressModal";
-import { saveAddresses } from "../redux/actions/user";
+import {
+    saveAddresses,
+    saveAddressesWithRedirect,
+} from "../redux/actions/user";
 import { getItemTotalPrice } from "../redux/reducers/cart";
 import { Link, useNavigate } from "react-router-dom";
 import { YMaps } from "react-yandex-maps";
@@ -191,6 +194,7 @@ export default function Checkout() {
     const [openBeforePaymentModal, setOpenBeforePaymentModal] = useState(false);
     const [yandexApiError, setYandexApiError] = useState(false);
     const [choosenAddress, setChoosenAddress] = useState(null);
+    const [redirect, setRedirect] = useState(null);
 
     const { autoDiscountAmount, autoDiscount } = useAutoDiscount(typeDelivery);
 
@@ -199,6 +203,12 @@ export default function Checkout() {
             typeDelivery,
             deliveryZone,
         });
+
+    useEffect(() => {
+        if (redirect && user.updated) {
+            window.location.href = redirect;
+        }
+    }, [redirect, user]);
 
     useEffect(() => {
         if ("scrollRestoration" in window.history) {
@@ -257,7 +267,7 @@ export default function Checkout() {
                 setDeliveryAddress("new");
             }
         }
-    }, [typeDelivery, config.deliveryZones.deliveryPriceType]);
+    }, [typeDelivery, config.deliveryZones.deliveryPriceType, user.addresses]);
 
     // Блокируем предзаказ на все даты если в корзине есть товар с ограничением по вермени/дням недели
     const limitedCategories = categories.filter(
@@ -556,12 +566,26 @@ export default function Checkout() {
                             dispatch(saveAddresses(resp.data.user.addresses));
                         }
                         window.scrollTo(0, 0);
-                        navigate("/order-complete", { replace: true });
+                        navigate("/order-complete", {
+                            replace: true,
+                        });
                     } else if (resp.data.status === "need_payment") {
-                        window.location.href = resp.data.redirect;
+                        if (resp.data.user?.addresses) {
+                            dispatch(
+                                saveAddressesWithRedirect(
+                                    resp.data.user.addresses
+                                )
+                            );
+                            setRedirect(resp.data.redirect);
+                        } else {
+                            window.location.href = resp.data.redirect;
+                        }
                     } else {
                         // Всплывающй алерт
                         setError(resp.data.text);
+                        if (resp.data.user?.addresses) {
+                            dispatch(saveAddresses(resp.data.user.addresses));
+                        }
                     }
                 });
         }

@@ -1,18 +1,24 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import Container from "@mui/material/Container";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Box, Skeleton } from "@mui/material";
 import axios from "axios";
 import { _getDomain } from "../components/helpers.js";
 import { Header, Footer } from "../components";
 
 export default function Page() {
+    const navigate = useNavigate();
+
     const { mainLoading } = useSelector(({ config }) => {
         return {
             mainLoading: config.status,
         };
     });
+
+    const redirectToMainPage = useSelector(
+        (state) => state.config.data.CONFIG_empty_page_redirect === "on"
+    );
 
     const [pageStatus, setPageStatus] = React.useState("loading");
     const [pageTitle, setPageTitle] = React.useState();
@@ -36,7 +42,13 @@ export default function Page() {
                         setPageTitle(resp.data.pageTitle);
                         setpageContent(resp.data.pageContent);
                         setPageStatus("loaded");
-                    } else setPageStatus("error");
+                    } else {
+                        if (redirectToMainPage) {
+                            navigate("/");
+                        } else {
+                            setPageStatus("error");
+                        }
+                    }
                 });
         }
     }, [mainLoading, currentUrl]);

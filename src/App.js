@@ -22,11 +22,7 @@ import {
 import { setStories } from "./redux/actions/stories";
 import { setAutoDiscounts } from "./redux/actions/autoDiscounts";
 import { updateAlerts } from "./redux/actions/systemAlerts";
-import {
-   clearModalProduct,
-   setModalProduct,
-   setOpenModal,
-} from "./redux/actions/productModal";
+import { setModalProduct, setOpenModal } from "./redux/actions/productModal";
 import {
    ProductModal,
    AuthModal,
@@ -51,6 +47,7 @@ import {
    Product,
    CategoryPage,
    SearchPage,
+   NotFound,
 } from "./pages";
 import axios from "axios";
 import { createGlobalStyle, css } from "styled-components";
@@ -79,7 +76,6 @@ import "./fonts/cera/CeraRoundProBold.woff2";
 import "./App.css";
 import bridge from "@vkontakte/vk-bridge";
 import { Config, Connect, ConnectEvents } from "@vkontakte/superappkit";
-import { clearModificators } from "./redux/actions/modificators";
 
 const MainTheme = createGlobalStyle`
 	:root {
@@ -478,6 +474,7 @@ function App() {
                            path="/category/:categoryName"
                            element={<CategoryPage />}
                         />
+                        <Route exact path="/not-found" element={<NotFound />} />
                         <Route path="*" element={<Page />} />
                      </Routes>
                      <AuthModal />
@@ -494,7 +491,8 @@ function App() {
                      )}
                      {config.towns !== undefined &&
                      config.towns.length &&
-                     _getPlatform() !== "vk" ? (
+                     _getPlatform() !== "vk" &&
+                     _getPlatform() !== "tg" ? (
                         <ChooseTown />
                      ) : (
                         ""

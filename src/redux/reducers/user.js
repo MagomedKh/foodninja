@@ -46,6 +46,15 @@ const user = (state = initialState, action) => {
                 user: newUser,
             };
         }
+        case "SAVE_ADDRESSES_WITH_REDIRECT": {
+            const newUser = _clone(state.user);
+            newUser.addresses = action.payload;
+            newUser.updated = true;
+            return {
+                ...state,
+                user: newUser,
+            };
+        }
         default:
             return state;
     }

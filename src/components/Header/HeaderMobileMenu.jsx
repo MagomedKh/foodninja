@@ -92,7 +92,8 @@ const HeaderMobileMenu = ({
 
                     {config.towns &&
                     config.towns.length &&
-                    _getPlatform() !== "vk" ? (
+                    _getPlatform() !== "vk" &&
+                    _getPlatform() !== "tg" ? (
                         <>
                             <div
                                 className="mobile-menu--choose-town"

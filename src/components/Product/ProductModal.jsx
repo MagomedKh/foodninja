@@ -15,7 +15,6 @@ import {
    clearModalProduct,
    setOpenModal,
 } from "../../redux/actions/productModal";
-import { clearModificators } from "../../redux/actions/modificators";
 import AddonProductModal from "../../components/Product/AddonProductModal";
 import { BootstrapTooltip } from "../index";
 import ModificatorCategory from "./ModificatorCategory.jsx";
@@ -34,6 +33,7 @@ import {
    Zoom,
    Grid,
 } from "@mui/material";
+import useModificators from "../../hooks/useModificators.js";
 import ClickAwayListener from "@mui/base/ClickAwayListener";
 import CloseIcon from "@mui/icons-material/Close";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
@@ -47,34 +47,38 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function ProductModal() {
    const dispatch = useDispatch();
 
-   const { productModal, openProductModal, addon_products, cartProducts } =
-      useSelector(({ productModal, products, cart }) => {
-         return {
-            productModal: productModal.productModal,
-            openProductModal: productModal.openProductModal,
-            addon_products: products.addon_items,
-            cartProducts: cart.items,
-         };
-      });
+    const { productModal, openProductModal, addon_products } = useSelector(
+        ({ productModal, products, cart }) => {
+            return {
+                productModal: productModal.productModal,
+                openProductModal: productModal.openProductModal,
+                addon_products: products.addon_items,
+            };
+        }
+    );
 
    const categories = useSelector((state) => state.products.categories);
    const products = useSelector((state) => state.products.items);
 
-   const {
-      choosenModificators,
-      emptyModificatorCategories,
-      modificatorsAmount,
-      modificatorsCondition,
-   } = useSelector((state) => state.modificators);
-   const { config } = useSelector(({ config }) => {
-      return {
-         config: config.data,
-      };
-   });
-   const [choosenAttributes, setChoosenAttributes] = useState({});
-   const [activeVariant, setActiveVariant] = useState(false);
-   const [wrongVariant, setWrongVariant] = useState(false);
-   const [tooltipOpen, setTooltipOpen] = useState(false);
+    const {
+        choosenModificators,
+        modificatorsAmount,
+        modificatorsCondition,
+        addEmptyRequiredCategory,
+        deleteEmptyRequiredCategory,
+        addProductModificator,
+        decreaseProductModificator,
+    } = useModificators(productModal?.id);
+
+    const { config } = useSelector(({ config }) => {
+        return {
+            config: config.data,
+        };
+    });
+    const [choosenAttributes, setChoosenAttributes] = useState({});
+    const [activeVariant, setActiveVariant] = useState(false);
+    const [wrongVariant, setWrongVariant] = useState(false);
+    const [tooltipOpen, setTooltipOpen] = useState(false);
 
    const disabled = !!productModal.categories?.find((productCategoryId) => {
       const category = categories.find(
@@ -179,53 +183,50 @@ export default function ProductModal() {
       else setWrongVariant(true);
    };
 
-   const handleClose = () => {
-      let url = new URL(window.location.href);
-      if (url.searchParams.has("product_id")) {
-         url.searchParams.delete("product_id");
-         window.history.replaceState(
-            "",
-            document.title,
-            window.location.pathname
-         );
-      }
-      dispatch(clearModalProduct());
-      dispatch(clearModificators());
-      setActiveVariant(false);
-      setWrongVariant(false);
-      setTooltipOpen(false);
-      dispatch(setOpenModal(false));
-   };
-   const handleAddProduct = () => {
-      let product = _clone(productModal);
-      dispatch(
-         addProductToCart({
-            ...product,
-            choosenModificators: choosenModificators,
+    const handleClose = () => {
+        let url = new URL(window.location.href);
+        if (url.searchParams.has("product_id")) {
+            url.searchParams.delete("product_id");
+            window.history.replaceState(
+                "",
+                document.title,
+                window.location.pathname
+            );
+        }
+        dispatch(clearModalProduct());
+        setActiveVariant(false);
+        setWrongVariant(false);
+        setTooltipOpen(false);
+        dispatch(setOpenModal(false));
+    };
+    const handleAddProduct = () => {
+        let product = _clone(productModal);
+        dispatch(
+            addProductToCart({
+                ...product,
+                choosenModificators: choosenModificators,
 
-            modificatorsAmount: modificatorsAmount,
-         })
-      );
-      dispatch(clearModificators());
-      handleClose();
-   };
-   const handleAddVariantProduct = () => {
-      let product = _clone(productModal);
-      product.options._price = activeVariant.price;
-      product.variant = activeVariant;
-      dispatch(
-         addProductToCart({
-            ...product,
-            choosenModificators: choosenModificators,
-            modificatorsAmount: modificatorsAmount,
-         })
-      );
-      dispatch(clearModificators());
-      handleClose();
-   };
-   const handleDecreaseProduct = (productModal) => {
-      dispatch(decreaseProductInCart(productModal));
-   };
+                modificatorsAmount: modificatorsAmount,
+            })
+        );
+        handleClose();
+    };
+    const handleAddVariantProduct = () => {
+        let product = _clone(productModal);
+        product.options._price = activeVariant.price;
+        product.variant = activeVariant;
+        dispatch(
+            addProductToCart({
+                ...product,
+                choosenModificators: choosenModificators,
+                modificatorsAmount: modificatorsAmount,
+            })
+        );
+        handleClose();
+    };
+    const handleDecreaseProduct = (productModal) => {
+        dispatch(decreaseProductInCart(productModal));
+    };
 
    let dialogProps = {
       open: openProductModal,
@@ -331,81 +332,83 @@ export default function ProductModal() {
       }
    };
 
-   return (
-      <Dialog
-         {...dialogProps}
-         className={"product-modal-dialog"}
-         onClose={(event, reason) => {
-            if (reason === "escapeKeyDown") {
-               handleClose();
-            }
-         }}
-      >
-         {" "}
-         {productModal ? (
-            <ClickAwayListener onClickAway={() => handleClose()}>
-               <div className="product-modal-wrapper">
-                  <IconButton
-                     edge="start"
-                     color="inherit"
-                     onClick={handleClose}
-                     aria-label="close"
-                     className={`modal-close ${
-                        _getPlatform() === "vk" ? "vk" : ""
-                     }`}
-                     sx={{ zIndex: 1 }}
-                  >
-                     <CloseIcon />
-                  </IconButton>
-                  <div className="product-modal">
-                     <div className="product-modal--image">
-                        <Zoom in={true}>
-                           <img
-                              src={
-                                 activeVariant && activeVariant.img
-                                    ? activeVariant.img
-                                    : productModal.img
-                                    ? productModal.img
-                                    : soon
-                              }
-                              alt={productModal.title}
-                              style={{
-                                 filter: disabled ? "grayscale(1)" : "",
-                              }}
-                           />
-                        </Zoom>
-                     </div>
-                     <div className="product-modal--info">
-                        <div className="product-modal--scrolling">
-                           <div className="product-modal--title-container">
-                              <h2 className="product-modal--title">
-                                 {productModal.title}
-                              </h2>
-                              {renderTooltipContent() && (
-                                 <ClickAwayListener
-                                    onClickAway={() => setTooltipOpen(false)}
-                                 >
-                                    <div>
-                                       <BootstrapTooltip
-                                          placement="bottom-end"
-                                          title={renderTooltipContent()}
-                                          disableTouchListener
-                                          disableHoverListener
-                                          open={tooltipOpen}
-                                       >
-                                          <InfoOutlinedIcon
-                                             className="product-modal--title-info"
-                                             onClick={() =>
-                                                setTooltipOpen(
-                                                   (state) => !state
-                                                )
-                                             }
-                                          />
-                                       </BootstrapTooltip>
-                                    </div>
-                                 </ClickAwayListener>
-                              )}
-                           </div>
+    return (
+        <Dialog
+            {...dialogProps}
+            className={"product-modal-dialog"}
+            onClose={(event, reason) => {
+                if (reason === "escapeKeyDown") {
+                    handleClose();
+                }
+            }}
+        >
+            {productModal ? (
+                 <ClickAwayListener onClickAway={() => handleClose()}>
+                <div className="product-modal-wrapper">
+                    <IconButton
+                        edge="start"
+                        color="inherit"
+                        onClick={handleClose}
+                        aria-label="close"
+                        className={`modal-close ${
+                            _getPlatform() === "vk" ? "vk" : ""
+                        }`}
+                        sx={{ zIndex: 1 }}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+                    <div className="product-modal">
+                        <div className="product-modal--image">
+                            <Zoom in={true}>
+                                <img
+                                    src={
+                                        activeVariant && activeVariant.img
+                                            ? activeVariant.img
+                                            : productModal.img
+                                            ? productModal.img
+                                            : soon
+                                    }
+                                    alt={productModal.title}
+                                    style={{
+                                        filter: disabled ? "grayscale(1)" : "",
+                                    }}
+                                />
+                            </Zoom>
+                        </div>
+                        <div className="product-modal--info">
+                            <div className="product-modal--scrolling">
+                                <div className="product-modal--title-container">
+                                    <h2 className="product-modal--title">
+                                        {productModal.title}
+                                    </h2>
+                                    {renderTooltipContent() && (
+                                        <ClickAwayListener
+                                            onClickAway={() =>
+                                                setTooltipOpen(false)
+                                            }
+                                        >
+                                            <div>
+                                                <BootstrapTooltip
+                                                    placement="bottom-end"
+                                                    title={renderTooltipContent()}
+                                                    disableTouchListener
+                                                    disableHoverListener
+                                                    open={tooltipOpen}
+                                                >
+                                                    <InfoOutlinedIcon
+                                                        className="product-modal--title-info"
+                                                        onClick={() =>
+                                                            setTooltipOpen(
+                                                                (state) =>
+                                                                    !state
+                                                            )
+                                                        }
+                                                    />
+                                                </BootstrapTooltip>
+                                            </div>
+                                        </ClickAwayListener>
+                                    )}
+                                </div>
 
                            {productModal.type === "variations" ? (
                               <>
@@ -514,6 +517,21 @@ export default function ProductModal() {
                               <ModificatorCategory
                                  category={category}
                                  key={category.category_id}
+                                            choosenModificators={
+                                                choosenModificators
+                                            }
+                                            addEmptyRequiredCategory={
+                                                addEmptyRequiredCategory
+                                            }
+                                            deleteEmptyRequiredCategory={
+                                                deleteEmptyRequiredCategory
+                                            }
+                                            addProductModificator={
+                                                addProductModificator
+                                            }
+                                            decreaseProductModificator={
+                                                decreaseProductModificator
+                                            }
                               />
                            ))}
 

@@ -1,9 +1,5 @@
 import React, { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-    addEmptyRequiredCategory,
-    deleteEmptyRequiredCategory,
-} from "../../redux/actions/modificators";
 import { Alert, Collapse, Grid } from "@mui/material";
 import "../../css/product.css";
 import "../../css/addon-product.css";
@@ -11,11 +7,15 @@ import soon from "../../img/photo-soon.svg";
 import ModificatorProduct from "./ModificatorProduct";
 import { useEffect } from "react";
 
-const ModificatorCategory = ({ category, handleSetModificatorsCondition }) => {
-    const dispatch = useDispatch();
+const ModificatorCategory = ({
+    category,
+    choosenModificators,
+    addEmptyRequiredCategory,
+    deleteEmptyRequiredCategory,
+    addProductModificator,
+    decreaseProductModificator,
+}) => {
     const { items: products } = useSelector((state) => state.products);
-
-    const { choosenModificators } = useSelector((state) => state.modificators);
 
     const modificatorProducts = [].concat.apply(
         [],
@@ -55,9 +55,9 @@ const ModificatorCategory = ({ category, handleSetModificatorsCondition }) => {
 
     useEffect(() => {
         if (isRequiredCategoryEmpty) {
-            dispatch(addEmptyRequiredCategory(category.category_id));
+            addEmptyRequiredCategory(category.category_id);
         } else if (!isRequiredCategoryEmpty && category.required === "yes") {
-            dispatch(deleteEmptyRequiredCategory(category.category_id));
+            deleteEmptyRequiredCategory(category.category_id);
         }
     }, [isRequiredCategoryEmpty]);
 
@@ -98,6 +98,15 @@ const ModificatorCategory = ({ category, handleSetModificatorsCondition }) => {
                             product={product}
                             category={category}
                             disabledAddButton={disabledAddButton}
+                            choosenModificators={choosenModificators}
+                            addEmptyRequiredCategory={addEmptyRequiredCategory}
+                            deleteEmptyRequiredCategory={
+                                deleteEmptyRequiredCategory
+                            }
+                            addProductModificator={addProductModificator}
+                            decreaseProductModificator={
+                                decreaseProductModificator
+                            }
                         />
                     </Grid>
                 ))}

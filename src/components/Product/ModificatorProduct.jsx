@@ -1,19 +1,18 @@
 import React, { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-    addProductModificator,
-    decreaseProductModificator,
-} from "../../redux/actions/modificators";
+
 import Button from "@mui/material/Button";
 import "../../css/product.css";
 import "../../css/addon-product.css";
 import soon from "../../img/photo-soon.svg";
 
-const ModificatorProduct = ({ product, disabledAddButton }) => {
-    const dispatch = useDispatch();
-
-    const { choosenModificators } = useSelector((state) => state.modificators);
-
+const ModificatorProduct = ({
+    product,
+    choosenModificators,
+    disabledAddButton,
+    addProductModificator,
+    decreaseProductModificator,
+}) => {
     const existModificator = useMemo(
         () => choosenModificators.find((el) => el.id === product.id),
         [choosenModificators]
@@ -23,10 +22,10 @@ const ModificatorProduct = ({ product, disabledAddButton }) => {
         if (disabledAddButton) {
             return;
         }
-        dispatch(addProductModificator({ ...product, count: 1 }));
+        addProductModificator({ ...product, count: 1 });
     };
     const handleDecreaseModificator = () => {
-        dispatch(decreaseProductModificator(product));
+        decreaseProductModificator(product);
     };
 
     return (

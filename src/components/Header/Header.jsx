@@ -114,7 +114,8 @@ function Header() {
                                         {config.towns &&
                                         config.towns.length &&
                                         config.towns.length > 1 &&
-                                        _getPlatform() !== "vk" ? (
+                                        _getPlatform() !== "vk" &&
+                                        _getPlatform() !== "tg" ? (
                                             <div className="title">
                                                 Ваш город{" "}
                                                 <b

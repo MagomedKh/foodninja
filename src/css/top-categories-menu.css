@@ -173,6 +173,23 @@
         background-color: var(--sec-color);
         color: #fff !important;
     }
+
+    /* Кнпока меню в списке категорий */
+    .sticked-top-bar ul.categories-menu li a.menu-icon {
+        display: flex;
+        align-items: center;
+        padding: 0 10px;
+        margin-right: -44px;
+        transform: translateX(-60px);
+        will-change: margin-right, transform;
+        transition-property: margin-right, transform;
+        transition-duration: 150ms;
+        transition-timing-function: ease-out;
+    }
+    .sticked-top-bar.sticked ul.categories-menu li a.menu-icon {
+        margin-right: 15px;
+        transform: translateX(0px);
+    }
     .modal-close {
         position: absolute !important;
         right: auto;

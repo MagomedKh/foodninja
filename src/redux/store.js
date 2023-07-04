@@ -14,7 +14,6 @@ import bonusesProductsModalReducer from "./reducers/bonusesProductsModal";
 import search from "./reducers/serach";
 import header from "./reducers/header";
 import miniCart from "./reducers/miniCart";
-import modificators from "./reducers/modificators";
 import deliveryAddressModal from "./reducers/deliveryAddressModal";
 import stories from "./reducers/stories";
 import autoDiscounts from "./reducers/autoDiscounts";
@@ -35,7 +34,6 @@ const rootReducer = combineReducers({
     search: search,
     header: header,
     miniCart: miniCart,
-    modificators: modificators,
     deliveryAddressModal: deliveryAddressModal,
     stories: stories,
     autoDiscounts: autoDiscounts,
@@ -56,6 +54,23 @@ const loadState = () => {
 
         if (!serialisedState) return undefined;
         serialisedState.config.status = false;
+
+        // Закрываем открытые модалки
+        if (serialisedState.productModal?.openProductModal) {
+            serialisedState.productModal.openProductModal = false;
+            serialisedState.productModal.productModal = false;
+        }
+        if (serialisedState.miniCart?.miniCartOpen) {
+            serialisedState.miniCart.miniCartOpen = false;
+        }
+        if (serialisedState.bonusesProductsModal?.openBonusesProductsModal) {
+            serialisedState.bonusesProductsModal.openBonusesProductsModal = false;
+        }
+        if (serialisedState.user?.openModalAuth) {
+            serialisedState.user.openModalAuth = false;
+        }
+
+        console.log(serialisedState);
         return serialisedState;
     } catch (err) {
         return undefined;

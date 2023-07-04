@@ -26,3 +26,8 @@ export const saveAddresses = (addresses) => ({
     type: "SAVE_ADDRESSES",
     payload: addresses,
 });
+
+export const saveAddressesWithRedirect = (addresses) => ({
+    type: "SAVE_ADDRESSES_WITH_REDIRECT",
+    payload: addresses,
+});

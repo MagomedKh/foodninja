@@ -56,7 +56,11 @@ const CategoryPage = () => {
     }, [currentCategory]);
 
     if (!currentCategory) {
-        navigate("/");
+        if (config.CONFIG_empty_page_redirect === "on") {
+            navigate("/");
+        } else {
+            navigate("/not-found");
+        }
         return null;
     }
 
