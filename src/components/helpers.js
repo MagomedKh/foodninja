@@ -10,7 +10,6 @@ import {
    set,
    startOfDay,
 } from "date-fns";
-import bridge from "@vkontakte/vk-bridge";
 
 export const _declension = (value, words) => {
    value = Math.abs(value) % 100;
@@ -28,13 +27,11 @@ export const _isMobile = () => {
 export const _getDomain = () => {
    return window.location.hostname === "localhost" ||
       window.location.hostname === "192.168.2.48"
-      ? "demo.foodninja.pro"
+      ? "dev.foodninja.pro"
       : window.location.hostname;
 };
 
 export const _getPlatform = () => {
-   //    return "site";
-   return window.pl;
    return window.currentPlatform !== undefined
       ? window.currentPlatform
       : "site";

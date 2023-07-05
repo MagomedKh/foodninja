@@ -13,7 +13,6 @@ import {
    Dialog,
    Slide,
    TextField,
-   ClickAwayListener,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import "../css/auth-modal.css";
@@ -45,7 +44,7 @@ export default function AuthModal() {
    const inputPhone = React.useRef();
    const isVKPhoneReject = React.useRef(false);
    const phoneLoginBtn = React.useRef();
-   const VKIDAuthWrapper = React.useRef();
+   // const VKIDAuthWrapper = React.useRef();
    const [loading, setLoading] = React.useState();
    const [error, setError] = React.useState(null);
    const [authPhone, setAuthPhone] = React.useState();
@@ -57,130 +56,132 @@ export default function AuthModal() {
    const [recallActive, setRecallActive] = React.useState(false);
    const [token, setToken] = React.useState("");
    const [refreshReCaptcha, setRefreshReCaptcha] = useState(false);
-   const [VKUserData, setVKUserData] = useState({});
-   const [isVKBtnRendered, setIsVKBtnRendered] = useState(false);
+   // const [VKUserData, setVKUserData] = useState({});
+   // const [isVKBtnRendered, setIsVKBtnRendered] = useState(false);
 
-   const oneTapButton = Connect.buttonOneTapAuth({
-      callback: (event) => {
-         const { type } = event;
+   // const oneTapButton = Connect.buttonOneTapAuth({
+   //    callback: (event) => {
+   //       const { type } = event;
 
-         if (!type) {
-            return;
-         }
-         console.log(event.payload);
-         switch (
-            type
-            // case ConnectEvents.OneTapAuthEventsSDK.LOGIN_SUCCESS: // = 'VKSDKOneTapAuthLoginSuccess'
-            //    return;
-            //    setLoading(true);
-            //    axios
-            //       .get(
-            //          "https://" +
-            //             _getDomain() +
-            //             "/?rest-api=loginByPhoneCode&phone=" +
-            //             phone +
-            //             "&code=" +
-            //             code +
-            //             "&platform=" +
-            //             _getPlatform(),
-            //          { mode: "no-cors" }
-            //       )
-            //       .then((resp) => {
-            //          console.log(resp.data);
-            //          if (resp.data.status === "success") {
-            //             dispatch(login(resp.data.user));
-            //             setError(null);
-            //             if (pathname === "/cart" || miniCartOpen) {
-            //                navigate("/checkout", { replace: true });
-            //             }
-            //             dispatch(closeMiniCart());
-            //             dispatch(setOpenModalAuth(false));
-            //             dispatch(closeMobileMenu());
+   //       if (!type) {
+   //          return;
+   //       }
+   //       console.log(event.payload);
+   //       switch (
+   //          type
+   //          // case ConnectEvents.OneTapAuthEventsSDK.LOGIN_SUCCESS: // = 'VKSDKOneTapAuthLoginSuccess'
+   //          //    return;
+   //          //    setLoading(true);
+   //          //    axios
+   //          //       .get(
+   //          //          "https://" +
+   //          //             _getDomain() +
+   //          //             "/?rest-api=loginByPhoneCode&phone=" +
+   //          //             phone +
+   //          //             "&code=" +
+   //          //             code +
+   //          //             "&platform=" +
+   //          //             _getPlatform(),
+   //          //          { mode: "no-cors" }
+   //          //       )
+   //          //       .then((resp) => {
+   //          //          console.log(resp.data);
+   //          //          if (resp.data.status === "success") {
+   //          //             dispatch(login(resp.data.user));
+   //          //             setError(null);
+   //          //             if (pathname === "/cart" || miniCartOpen) {
+   //          //                navigate("/checkout", { replace: true });
+   //          //             }
+   //          //             dispatch(closeMiniCart());
+   //          //             dispatch(setOpenModalAuth(false));
+   //          //             dispatch(closeMobileMenu());
 
-            //             if (
-            // !resp.data.user.name ||
-            //    !resp.data.user.vk ||
-            //    !resp.data.user.dayBirthday ||
-            //    !resp.data.user.monthBirthday)
-            // {
-            //                axios
-            //                   .post(
-            //                      "https://" +
-            //                         _getDomain() +
-            //                         "/?rest-api=saveLogin",
-            //                      {
-            //                         ...resp.data.user,
+   //          //             if (
+   //          // !resp.data.user.name ||
+   //          //    !resp.data.user.vk ||
+   //          //    !resp.data.user.dayBirthday ||
+   //          //    !resp.data.user.monthBirthday)
+   //          // {
+   //          //                axios
+   //          //                   .post(
+   //          //                      "https://" +
+   //          //                         _getDomain() +
+   //          //                         "/?rest-api=saveLogin",
+   //          //                      {
+   //          //                         ...resp.data.user,
 
-            //                         name:
-            //                            resp.data.user.name || VKUserData.name,
-            //                         vk: resp.data.user.vk || VKUserData.vk,
-            //                         dayBirthday:
-            //                            resp.data.user.dayBirthday ||
-            //                            VKUserData.dayBirthday,
-            //                         monthBirthday:
-            //                            resp.data.user.monthBirthday ||
-            //                            VKUserData.monthBirthday,
-            //                      }
-            //                   )
-            //                   .then((resp) => {
-            //                      console.log(resp);
-            //                      dispatch(saveLogin(resp.data.user));
-            //                   });
+   //          //                         name:
+   //          //                            resp.data.user.name || VKUserData.name,
+   //          //                         vk: resp.data.user.vk || VKUserData.vk,
+   //          //                         dayBirthday:
+   //          //                            resp.data.user.dayBirthday ||
+   //          //                            VKUserData.dayBirthday,
+   //          //                         monthBirthday:
+   //          //                            resp.data.user.monthBirthday ||
+   //          //                            VKUserData.monthBirthday,
+   //          //                      }
+   //          //                   )
+   //          //                   .then((resp) => {
+   //          //                      console.log(resp);
+   //          //                      dispatch(saveLogin(resp.data.user));
+   //          //                   });
 
-            //                bridge
-            //                   .send("VKWebAppStorageGet", {
-            //                      keys: ["notificationsPermission"],
-            //                   })
-            //                   .then((data) => {
-            //                      data.keys[0].key ===
-            //                         "notificationsPermission" ||
-            //                         setTimeout(() => {
-            //                            bridge
-            //                               .send("VKWebAppAllowNotifications")
-            //                               .then((data) => {
-            //                                  data.result &&
-            //                                     bridge.send(
-            //                                        "VKWebAppStorageSet",
-            //                                        {
-            //                                           key: "notificationsPermission",
-            //                                        }
-            //                                     );
-            //                               });
-            //                         }, 1000);
-            //                   });
-            //             }
-            //          } else
-            //             setError({
-            //                status: resp.data.status,
-            //                message: resp.data.text,
-            //             });
-            //          setLoading(false);
-            //       });
-            //    return;
-         ) {
-         }
+   //          //                bridge
+   //          //                   .send("VKWebAppStorageGet", {
+   //          //                      keys: ["notificationsPermission"],
+   //          //                   })
+   //          //                   .then((data) => {
+   //          //                      data.keys[0].key ===
+   //          //                         "notificationsPermission" ||
+   //          //                         setTimeout(() => {
+   //          //                            bridge
+   //          //                               .send("VKWebAppAllowNotifications")
+   //          //                               .then((data) => {
+   //          //                                  data.result &&
+   //          //                                     bridge.send(
+   //          //                                        "VKWebAppStorageSet",
+   //          //                                        {
+   //          //                                           key: "notificationsPermission",
+   //          //                                        }
+   //          //                                     );
+   //          //                               });
+   //          //                         }, 1000);
+   //          //                   });
+   //          //             }
+   //          //          } else
+   //          //             setError({
+   //          //                status: resp.data.status,
+   //          //                message: resp.data.text,
+   //          //             });
+   //          //          setLoading(false);
+   //          //       });
+   //          //    return;
+   //       ) {
+   //       }
 
-         return;
-      },
+   //       return;
+   //    },
 
-      options: {
-         showAlternativeLogin: false,
-         showAgreements: true,
-         displayMode: "default",
-         langId: 0,
-         buttonSkin: "primary",
-         buttonStyles: {
-            borderRadius: 20,
-            height: 55,
-         },
-      },
-   });
+   //    options: {
+   //       showAlternativeLogin: false,
+   //       showAgreements: true,
+   //       displayMode: "default",
+   //       langId: 0,
+   //       buttonSkin: "primary",
+   //       buttonStyles: {
+   //          borderRadius: 20,
+   //          height: 55,
+   //       },
+   //    },
+   // });
 
    useEffect(() => {
-      if (openModalAuth) {
+      if (openModalAuth && _getPlatform() === "vk") {
          setTimeout(() => {
-            const inputPhoneHtmlEl = inputPhone.current.children[1].children[0];
-            if (!inputPhoneHtmlEl.value.length && !isVKPhoneReject.current) {
+            if (
+               !inputPhone.current.children[1].children[0].value.length &&
+               !isVKPhoneReject.current
+            ) {
                bridge
                   .send("VKWebAppGetPhoneNumber", {})
                   .then((res) => {
@@ -199,56 +200,57 @@ export default function AuthModal() {
                   });
             }
          });
-      } else setIsVKBtnRendered(false);
+      } // else setIsVKBtnRendered(false);
 
-      if (!isVKBtnRendered && openModalAuth) {
-         setTimeout(() => {
-            if (VKIDAuthWrapper.current) {
-               VKIDAuthWrapper.current.innerHTML = "";
-               VKIDAuthWrapper.current.append(oneTapButton.getFrame());
-               oneTapButton.authReadyPromise.then(() => {
-                  setIsVKBtnRendered(true);
-               });
-            }
-         });
-      }
+      // if (!isVKBtnRendered && openModalAuth) {
+      //    setTimeout(() => {
+      //       if (VKIDAuthWrapper.current) {
+      //          VKIDAuthWrapper.current.innerHTML = "";
+      //          VKIDAuthWrapper.current.append(oneTapButton.getFrame());
+      //          oneTapButton.authReadyPromise.then(() => {
+      //             setIsVKBtnRendered(true);
+      //          });
+      //       }
+      //    });
+      // }
    }, [openModalAuth]);
 
-   useEffect(() => {
-      if (isAuthPhoneCode) {
-         oneTapButton.getFrame().remove();
-         setIsVKBtnRendered(false);
-      } else {
-         if (!isVKBtnRendered) {
-            setTimeout(() => {
-               if (VKIDAuthWrapper.current) {
-                  VKIDAuthWrapper.current.innerHTML = "";
-                  VKIDAuthWrapper.current.append(oneTapButton.getFrame());
-                  oneTapButton.authReadyPromise.then(() => {
-                     setIsVKBtnRendered(true);
-                  });
-               }
-            });
-         }
-      }
-   }, [isAuthPhoneCode]);
+   // useEffect(() => {
+   //    if (isAuthPhoneCode) {
+   //       oneTapButton.getFrame().remove();
+   //       setIsVKBtnRendered(false);
+   //    } else {
+   //       if (!isVKBtnRendered) {
+   //          setTimeout(() => {
+   //             if (VKIDAuthWrapper.current) {
+   //                VKIDAuthWrapper.current.innerHTML = "";
+   //                VKIDAuthWrapper.current.append(oneTapButton.getFrame());
+   //                oneTapButton.authReadyPromise.then(() => {
+   //                   setIsVKBtnRendered(true);
+   //                });
+   //             }
+   //          });
+   //       }
+   //    }
+   // }, [isAuthPhoneCode]);
 
-   useEffect(() => {
-      bridge.send("VKWebAppGetUserInfo").then((vkUserInfo) => {
-         const existingVkData = {};
+   // useEffect(() => {
+   //    if (_getPlatform() === "vk") {
+   //       bridge.send("VKWebAppGetUserInfo").then((VKUserInfo) => {
+   //          const existingVkData = {};
 
-         existingVkData.name = vkUserInfo.first_name || "";
+   //          existingVkData.name = VKUserInfo.first_name || "";
+   //          existingVkData.vk = VKUserInfo.id
+   //             ? "https://vk.com/id" + VKUserInfo.id
+   //             : "";
+   //          existingVkData.dayBirthday = VKUserInfo.bdate?.split(".")[0] || "";
+   //          existingVkData.monthBirthday =
+   //             VKUserInfo.bdate?.split(".")[1] || "";
 
-         existingVkData.vk = vkUserInfo.id
-            ? "https://vk.com/id" + vkUserInfo.id
-            : "";
-
-         existingVkData.dayBirthday = vkUserInfo.bdate?.split(".")[0] || "";
-         existingVkData.monthBirthday = vkUserInfo.bdate?.split(".")[1] || "";
-
-         setVKUserData(existingVkData);
-      });
-   }, []);
+   //          setVKUserData(existingVkData);
+   //       });
+   //    }
+   // }, []);
 
    const startRecallTimer = () => {
       stopRecallTimer();
@@ -294,8 +296,7 @@ export default function AuthModal() {
                   "&recaptchaResponse=" +
                   token +
                   "&platform=" +
-                  _getPlatform() +
-                  "&fnCheckerPhone=1",
+                  _getPlatform(),
                { mode: "no-cors" }
             )
             .then((resp) => {
@@ -391,9 +392,9 @@ export default function AuthModal() {
          (authPhoneCode[inputIndex] + value).length === 1 &&
          !loading
       ) {
-         const newData = [...authPhoneCode];
-         newData[inputIndex] = value;
-         setAuthPhoneCode(newData);
+         const newAuthPhoneCode = [...authPhoneCode];
+         newAuthPhoneCode[inputIndex] = value;
+         setAuthPhoneCode(newAuthPhoneCode);
 
          const nextSibling = inputCode.current.find(
             (input) => input.value === ""
@@ -403,7 +404,7 @@ export default function AuthModal() {
             nextSibling.focus();
          }
 
-         if (newData.every((value) => value !== "")) {
+         if (newAuthPhoneCode.every((value) => value !== "")) {
             const phone = getNumbersValue(authPhone);
             setLoading(true);
             axios
@@ -413,14 +414,12 @@ export default function AuthModal() {
                      "/?rest-api=loginByPhoneCode&phone=" +
                      phone +
                      "&code=" +
-                     newData.join("") +
+                     newAuthPhoneCode.join("") +
                      "&platform=" +
-                     _getPlatform() +
-                     "&test=1",
+                     _getPlatform(),
                   { mode: "no-cors" }
                )
                .then((resp) => {
-                  console.log(resp.data);
                   if (resp.data.status === "success") {
                      dispatch(login(resp.data.user));
                      setError(null);
@@ -431,54 +430,53 @@ export default function AuthModal() {
                      dispatch(setOpenModalAuth(false));
                      dispatch(closeMobileMenu());
 
-                     if (
-                        _getPlatform() === "vk" &&
-                        (!resp.data.user.name ||
-                           !resp.data.user.vk ||
-                           !resp.data.user.dayBirthday ||
-                           !resp.data.user.monthBirthday)
-                     ) {
-                        axios
-                           .post(
-                              "https://" +
-                                 _getDomain() +
-                                 "/?rest-api=saveLogin",
-                              {
-                                 ...resp.data.user,
+                     // if (
+                     //    _getPlatform() === "vk" &&
+                     //    (!resp.data.user.name ||
+                     //       !resp.data.user.vk ||
+                     //       !resp.data.user.dayBirthday ||
+                     //       !resp.data.user.monthBirthday)
+                     // ) {
+                     //    axios
+                     //       .post(
+                     //          "https://" +
+                     //             _getDomain() +
+                     //             "/?rest-api=saveLogin",
+                     //          {
+                     //             ...resp.data.user,
 
-                                 name: resp.data.user.name || VKUserData.name,
-                                 vk: resp.data.user.vk || VKUserData.vk,
-                                 dayBirthday:
-                                    resp.data.user.dayBirthday ||
-                                    VKUserData.dayBirthday,
-                                 monthBirthday:
-                                    resp.data.user.monthBirthday ||
-                                    VKUserData.monthBirthday,
-                              }
-                           )
-                           .then((resp) => {
-                              console.log(resp);
-                              dispatch(saveLogin(resp.data.user));
-                           });
+                     //             name: resp.data.user.name || VKUserData.name,
+                     //             vk: resp.data.user.vk || VKUserData.vk,
+                     //             dayBirthday:
+                     //                resp.data.user.dayBirthday ||
+                     //                VKUserData.dayBirthday,
+                     //             monthBirthday:
+                     //                resp.data.user.monthBirthday ||
+                     //                VKUserData.monthBirthday,
+                     //          }
+                     //       )
+                     //       .then((resp) => {
+                     //          dispatch(saveLogin(resp.data.user));
+                     //       });
 
-                        bridge
-                           .send("VKWebAppStorageGet", {
-                              keys: ["notificationsPermission"],
-                           })
-                           .then((data) => {
-                              data.keys[0].key === "notificationsPermission" ||
-                                 setTimeout(() => {
-                                    bridge
-                                       .send("VKWebAppAllowNotifications")
-                                       .then((data) => {
-                                          data.result &&
-                                             bridge.send("VKWebAppStorageSet", {
-                                                key: "notificationsPermission",
-                                             });
-                                       });
-                                 }, 2000);
-                           });
-                     }
+                     //    bridge
+                     //       .send("VKWebAppStorageGet", {
+                     //          keys: ["notificationsPermission"],
+                     //       })
+                     //       .then((data) => {
+                     //          data.keys[0].key === "notificationsPermission" ||
+                     //             setTimeout(() => {
+                     //                bridge
+                     //                   .send("VKWebAppAllowNotifications")
+                     //                   .then((data) => {
+                     //                      data.result &&
+                     //                         bridge.send("VKWebAppStorageSet", {
+                     //                            key: "notificationsPermission",
+                     //                         });
+                     //                   });
+                     //             }, 2000);
+                     //       });
+                     // }
                   } else
                      setError({
                         status: resp.data.status,
@@ -499,9 +497,9 @@ export default function AuthModal() {
          const previousInput = inputCode.current[inputIndex - 1];
          previousInput.focus();
 
-         const newData = [...authPhoneCode];
-         newData[inputIndex - 1] = "";
-         setAuthPhoneCode(newData);
+         const newAuthPhoneCode = [...authPhoneCode];
+         newAuthPhoneCode[inputIndex - 1] = "";
+         setAuthPhoneCode(newAuthPhoneCode);
       }
    };
 
@@ -587,81 +585,78 @@ export default function AuthModal() {
             },
          }}
       >
-         <ClickAwayListener onClickAway={() => _isMobile() || handleClose()}>
-            <div className="auth-modal">
-               {loading && (
-                  <div className="loader-wrapper">
-                     <CircularProgress variant="determinate" />
-                  </div>
-               )}
-               <h2 className="auth-modal--title">Авторизация</h2>
-               {config.CONFIG_auth_type === "noauth" ? null : (
-                  <GoogleReCaptcha
-                     onVerify={onVerify}
-                     refreshReCaptcha={refreshReCaptcha}
-                  />
-               )}
-               <IconButton
-                  edge="start"
-                  color="inherit"
-                  onClick={handleClose}
-                  aria-label="close"
-                  className="modal-close"
-               >
-                  <CloseIcon />
-               </IconButton>
+         <div className="auth-modal">
+            {loading && (
+               <div className="loader-wrapper">
+                  <CircularProgress variant="determinate" />
+               </div>
+            )}
+            <h2 className="auth-modal--title">Авторизация</h2>
+            {config.CONFIG_auth_type === "noauth" ? null : (
+               <GoogleReCaptcha
+                  onVerify={onVerify}
+                  refreshReCaptcha={refreshReCaptcha}
+               />
+            )}
+            <IconButton
+               edge="start"
+               color="inherit"
+               onClick={handleClose}
+               aria-label="close"
+               className="modal-close"
+            >
+               <CloseIcon />
+            </IconButton>
 
-               {error && (
-                  <Alert severity="error" sx={{ mb: 2 }}>
-                     <div>{error.message}</div>
-                     {error?.status === "error_captcha" ? (
+            {error && (
+               <Alert severity="error" sx={{ mb: 2 }}>
+                  <div>{error.message}</div>
+                  {error?.status === "error_captcha" ? (
+                     <Button
+                        variant="button"
+                        className=" btn--action"
+                        onClick={() => window.location.reload()}
+                        sx={{
+                           width: "100%",
+                           maxHeight: "34px",
+                           mt: "8px",
+                        }}
+                     >
+                        Обновить
+                     </Button>
+                  ) : null}
+               </Alert>
+            )}
+
+            {authType === "verify-code" ? (
+               <div className="phone-auth-wrapper">
+                  <TextField
+                     disabled={isAuthPhoneCode}
+                     onKeyDown={handlePhoneKeyDown}
+                     onInput={handlePhoneInput}
+                     onPaste={handlePhonePaste}
+                     label="Номер телефона"
+                     className="phone-input phone-mask"
+                     value={authPhone ? authPhone : ""}
+                     type={_isMobile() ? "text" : "text"}
+                     id="user-phone"
+                     ref={inputPhone}
+                     autoFocus
+                  />
+                  {!isAuthPhoneCode ? (
+                     <div id="recaptcha-container">
                         <Button
                            variant="button"
-                           className=" btn--action"
-                           onClick={() => window.location.reload()}
-                           sx={{
-                              width: "100%",
-                              maxHeight: "34px",
-                              mt: "8px",
-                           }}
+                           onClick={handleAuth}
+                           className="btn--action auth-btn"
+                           disabled={
+                              !verifyPhone || error?.status === "error_captcha"
+                           }
+                           ref={phoneLoginBtn}
                         >
-                           Обновить
+                           Войти
                         </Button>
-                     ) : null}
-                  </Alert>
-               )}
-
-               {authType === "verify-code" ? (
-                  <div className="phone-auth-wrapper">
-                     <TextField
-                        disabled={isAuthPhoneCode}
-                        onKeyDown={handlePhoneKeyDown}
-                        onInput={handlePhoneInput}
-                        onPaste={handlePhonePaste}
-                        label="Номер телефона"
-                        className="phone-input phone-mask"
-                        value={authPhone ? authPhone : ""}
-                        type={_isMobile() ? "text" : "text"}
-                        id="user-phone"
-                        ref={inputPhone}
-                        autoComplete={"off"}
-                        autoFocus
-                     />
-                     {!isAuthPhoneCode ? (
-                        <div id="recaptcha-container">
-                           <Button
-                              variant="button"
-                              onClick={handleAuth}
-                              className="btn--action auth-btn"
-                              disabled={
-                                 !verifyPhone ||
-                                 error?.status === "error_captcha"
-                              }
-                              ref={phoneLoginBtn}
-                           >
-                              Войти
-                           </Button>
-                           <div className="vkid-auth-wrapper">
+                        {/* <div className="vkid-auth-wrapper">
                               <p className="auth-modal--secondary-text">или</p>
                               {!isVKBtnRendered && (
                                  <CircularProgress
@@ -670,125 +665,124 @@ export default function AuthModal() {
                                  />
                               )}
                               <div ref={VKIDAuthWrapper}></div>
-                           </div>
+                           </div> */}
+                     </div>
+                  ) : (
+                     <div>
+                        <div className="auth-modal--info">
+                           На ваш номер будет совершен звонок. Для входа введите
+                           4 последние цифры этого номера.
                         </div>
-                     ) : (
-                        <div>
-                           <div className="auth-modal--info">
-                              На ваш номер будет совершен звонок. Для входа
-                              введите 4 последние цифры этого номера.
-                           </div>
 
-                           <Button
-                              variant="text"
-                              onClick={handleChangeNumber}
-                              className="phone-auth--change-number btn--action"
-                           >
-                              Изменить
-                           </Button>
-                           <div className="phone-auth--code">
-                              <input
-                                 type={_isMobile() ? "number" : "text"}
-                                 className="verify-code code-1"
-                                 ref={(ref) => (inputCode.current[0] = ref)}
-                                 onChange={(e) => handleCodeChange(e, 0)}
-                                 value={authPhoneCode[0]}
-                                 onKeyDown={(e) => handleEnterCode(e, 0)}
-                                 autoComplete="off"
-                                 name="code-1"
-                                 autoFocus
-                              />
-                              <input
-                                 type={_isMobile() ? "number" : "text"}
-                                 className="verify-code code-2"
-                                 ref={(ref) => (inputCode.current[1] = ref)}
-                                 onChange={(e) => handleCodeChange(e, 1)}
-                                 value={authPhoneCode[1]}
-                                 onKeyDown={(e) => handleEnterCode(e, 1)}
-                                 autoComplete="off"
-                                 name="code-2"
-                              />
-                              <input
-                                 type={_isMobile() ? "number" : "text"}
-                                 className="verify-code code-3"
-                                 ref={(ref) => (inputCode.current[2] = ref)}
-                                 onChange={(e) => handleCodeChange(e, 2)}
-                                 value={authPhoneCode[2]}
-                                 onKeyDown={(e) => handleEnterCode(e, 2)}
-                                 autoComplete="off"
-                                 name="code-3"
-                              />
-                              <input
-                                 type={_isMobile() ? "number" : "text"}
-                                 className="verify-code code-4"
-                                 ref={(ref) => (inputCode.current[3] = ref)}
-                                 onChange={(e) => handleCodeChange(e, 3)}
-                                 value={authPhoneCode[3]}
-                                 onKeyDown={(e) => handleEnterCode(e, 3)}
-                                 autoComplete="off"
-                                 name="code-4"
-                              />
-                           </div>
+                        <Button
+                           variant="text"
+                           onClick={handleChangeNumber}
+                           className="phone-auth--change-number btn--action"
+                        >
+                           Изменить
+                        </Button>
+                        <div className="phone-auth--code">
+                           <input
+                              type={_isMobile() ? "number" : "text"}
+                              className="verify-code code-1"
+                              ref={(ref) => (inputCode.current[0] = ref)}
+                              onChange={(e) => handleCodeChange(e, 0)}
+                              value={authPhoneCode[0]}
+                              onKeyDown={(e) => handleEnterCode(e, 0)}
+                              autoComplete="off"
+                              name="code-1"
+                              autoFocus
+                           />
+                           <input
+                              type={_isMobile() ? "number" : "text"}
+                              className="verify-code code-2"
+                              ref={(ref) => (inputCode.current[1] = ref)}
+                              onChange={(e) => handleCodeChange(e, 1)}
+                              value={authPhoneCode[1]}
+                              onKeyDown={(e) => handleEnterCode(e, 1)}
+                              autoComplete="off"
+                              name="code-2"
+                           />
+                           <input
+                              type={_isMobile() ? "number" : "text"}
+                              className="verify-code code-3"
+                              ref={(ref) => (inputCode.current[2] = ref)}
+                              onChange={(e) => handleCodeChange(e, 2)}
+                              value={authPhoneCode[2]}
+                              onKeyDown={(e) => handleEnterCode(e, 2)}
+                              autoComplete="off"
+                              name="code-3"
+                           />
+                           <input
+                              type={_isMobile() ? "number" : "text"}
+                              className="verify-code code-4"
+                              ref={(ref) => (inputCode.current[3] = ref)}
+                              onChange={(e) => handleCodeChange(e, 3)}
+                              value={authPhoneCode[3]}
+                              onKeyDown={(e) => handleEnterCode(e, 3)}
+                              autoComplete="off"
+                              name="code-4"
+                           />
+                        </div>
 
+                        <Button
+                           variant="button"
+                           disabled={recallActive}
+                           onClick={handleRecall}
+                           className="phone-auth--recall btn--action"
+                           sx={{ width: 1 }}
+                        >
+                           Повторный звонок
+                           {recallActive && (
+                              <span className="recall-timout">
+                                 через {recallTimer} сек.
+                              </span>
+                           )}
+                        </Button>
+
+                        <div className="auth-modal--info">
+                           <b>Не поступил звонок?</b>
+                           <br />
+                           Проверьте правильность номера телефона.
+                        </div>
+
+                        {config.CONFIG_auth_type === "robocallwithsms" ? (
                            <Button
                               variant="button"
                               disabled={recallActive}
-                              onClick={handleRecall}
-                              className="phone-auth--recall btn--action"
-                              sx={{ width: 1 }}
+                              onClick={handleResms}
+                              className="phone-auth--resms btn--gray"
+                              sx={{ width: 1, mt: 2 }}
                            >
-                              Повторный звонок
+                              Запросить смс
                               {recallActive && (
-                                 <span className="recall-timout">
+                                 <span className="resms-timout">
                                     через {recallTimer} сек.
                                  </span>
                               )}
                            </Button>
-
-                           <div className="auth-modal--info">
-                              <b>Не поступил звонок?</b>
-                              <br />
-                              Проверьте правильность номера телефона.
-                           </div>
-
-                           {config.CONFIG_auth_type === "robocallwithsms" ? (
-                              <Button
-                                 variant="button"
-                                 disabled={recallActive}
-                                 onClick={handleResms}
-                                 className="phone-auth--resms btn--gray"
-                                 sx={{ width: 1, mt: 2 }}
-                              >
-                                 Запросить смс
-                                 {recallActive && (
-                                    <span className="resms-timout">
-                                       через {recallTimer} сек.
-                                    </span>
-                                 )}
-                              </Button>
-                           ) : null}
-                        </div>
-                     )}
-                  </div>
-               ) : (
-                  authType === "" && <div className="code-auth-wrapper"></div>
-               )}
-
-               <div className="auth-modal--footer">
-                  <small>
-                     Используя сервис, вы принимаете правила{" "}
-                     <a href="/privacy" target="_blank">
-                        политики конфиденциальности
-                     </a>{" "}
-                     и{" "}
-                     <a href="/offert" target="_blank">
-                        договора публичной оферты
-                     </a>
-                     .
-                  </small>
+                        ) : null}
+                     </div>
+                  )}
                </div>
+            ) : (
+               authType === "" && <div className="code-auth-wrapper"></div>
+            )}
+
+            <div className="auth-modal--footer">
+               <small>
+                  Используя сервис, вы принимаете правила{" "}
+                  <a href="/privacy" target="_blank">
+                     политики конфиденциальности
+                  </a>{" "}
+                  и{" "}
+                  <a href="/offert" target="_blank">
+                     договора публичной оферты
+                  </a>
+                  .
+               </small>
             </div>
-         </ClickAwayListener>
+         </div>
       </Dialog>
    );
 }

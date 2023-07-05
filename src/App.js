@@ -277,18 +277,18 @@ function App() {
             }
          }, 500);
 
-         // allow messages from group
+         // Запрос на разрешение сообщений от группы
          bridge
             .send("VKWebAppStorageGet", {
                keys: ["messagesFromGroupLastRequest"],
             })
             .then((data) => {
                const lastRequestTime = +data.keys[0].value;
-               if (Date.now() - lastRequestTime > 1000 * 3600 * 24 * 7) {
+               if (Date.now() - lastRequestTime > 1000 * 3600 * 24 * 5) {
                   setTimeout(() => {
                      bridge
                         .send("VKWebAppAllowMessagesFromGroup", {
-                           group_id: window.vkGroupId,
+                           group_id: config.CONFIG_vk_group_id,
                         })
                         .catch(() => {
                            bridge.send("VKWebAppStorageSet", {
@@ -301,39 +301,39 @@ function App() {
             });
       }
 
-      // vkid btn
-      Config.init({
-         appId: 51684328,
-      });
-      if (!user.token) {
-         const oneTapButton = Connect.floatingOneTapAuth({
-            callback: (event) => {
-               console.log(event);
-               if (
-                  event.type === ConnectEvents.OneTapAuthEventsSDK.LOGIN_SUCCESS
-               ) {
-                  oneTapButton.getFrame().remove();
-               }
-            },
-            options: {
-               styles: {
-                  zIndex: 999,
-               },
-            },
-         });
+      // // vkid btn
+      // Config.init({
+      //    appId: 51684328,
+      // });
+      // if (!user.token) {
+      //    const oneTapButton = Connect.floatingOneTapAuth({
+      //       callback: (event) => {
+      //          console.log(event);
+      //          if (
+      //             event.type === ConnectEvents.OneTapAuthEventsSDK.LOGIN_SUCCESS
+      //          ) {
+      //             oneTapButton.getFrame().remove();
+      //          }
+      //       },
+      //       options: {
+      //          styles: {
+      //             zIndex: 999,
+      //          },
+      //       },
+      //    });
 
-         if (oneTapButton) {
-            document.body.appendChild(oneTapButton.getFrame());
-            setTimeout(() => {
-               if (oneTapButton.getFrame()) {
-                  oneTapButton.getFrame().style.transition =
-                     "opacity ease-in-out .3s ";
-                  oneTapButton.getFrame().style.opacity = 0;
-                  setTimeout(() => oneTapButton.getFrame().remove(), 500);
-               }
-            }, 30000);
-         }
-      }
+      //    if (oneTapButton) {
+      //       document.body.appendChild(oneTapButton.getFrame());
+      //       setTimeout(() => {
+      //          if (oneTapButton.getFrame()) {
+      //             oneTapButton.getFrame().style.transition =
+      //                "opacity ease-in-out .3s ";
+      //             oneTapButton.getFrame().style.opacity = 0;
+      //             setTimeout(() => oneTapButton.getFrame().remove(), 500);
+      //          }
+      //       }, 30000);
+      //    }
+      // }
    }, []);
 
    useEffect(() => {

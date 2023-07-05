@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from "react";
-import { ClickAwayListener, Dialog, IconButton, Slide } from "@mui/material";
+import { Dialog, IconButton, Slide } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { _getPlatform, _isMobile } from "./helpers";
 import "../css/sale.css";
@@ -67,20 +67,18 @@ const SaleModal = ({ saleOpenModal, activeSale, handleCloseSaleModal }) => {
          >
             <CloseIcon />
          </IconButton>
-         <ClickAwayListener onClickAway={() => handleCloseSaleModal()}>
-            <div className="sale-modal--container">
-               <div className="sale-modal">
-                  <h2 className="sale-modal--title">{activeSale.saleTitle}</h2>
+         <div className="sale-modal--container">
+            <div className="sale-modal">
+               <h2 className="sale-modal--title">{activeSale.saleTitle}</h2>
 
-                  <div
-                     className="sale--content"
-                     dangerouslySetInnerHTML={{
-                        __html: activeSale.saleContent,
-                     }}
-                  ></div>
-               </div>
+               <div
+                  className="sale--content"
+                  dangerouslySetInnerHTML={{
+                     __html: activeSale.saleContent,
+                  }}
+               ></div>
             </div>
-         </ClickAwayListener>
+         </div>
       </Dialog>
    );
 };
