@@ -183,19 +183,40 @@ export default function AuthModal() {
                !isVKPhoneReject.current
             ) {
                bridge
-                  .send("VKWebAppGetPhoneNumber", {})
-                  .then((res) => {
-                     handlePhoneInput({
-                        target: {
-                           value: res.phone_number,
-                           selectionStart: 11,
-                        },
-                     });
-                     phoneLoginBtn.current.click();
-                  })
-                  .catch((er) => {
-                     if (er.error_data.error_reason === "User denied") {
-                        isVKPhoneReject.current = true;
+                  .send("VKWebAppStorageGet", { keys: ["userPhone"] })
+                  .then((data) => {
+                     let phoneNumber = data.keys[0].value;
+                     if (phoneNumber) {
+                        handlePhoneInput({
+                           target: {
+                              value: phoneNumber,
+                              selectionStart: 11,
+                           },
+                        });
+                        phoneLoginBtn.current.click();
+                     } else {
+                        bridge
+                           .send("VKWebAppGetPhoneNumber")
+                           .then((res) => {
+                              handlePhoneInput({
+                                 target: {
+                                    value: res.phone_number,
+                                    selectionStart: 11,
+                                 },
+                              });
+                              phoneLoginBtn.current.click();
+                              bridge.send("VKWebAppStorageSet", {
+                                 key: "userPhone",
+                                 value: res.phone_number,
+                              });
+                           })
+                           .catch((er) => {
+                              if (
+                                 er.error_data.error_reason === "User denied"
+                              ) {
+                                 isVKPhoneReject.current = true;
+                              }
+                           });
                      }
                   });
             }

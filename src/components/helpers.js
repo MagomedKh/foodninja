@@ -10,6 +10,7 @@ import {
    set,
    startOfDay,
 } from "date-fns";
+import bridge from "@vkontakte/vk-bridge";
 
 export const _declension = (value, words) => {
    value = Math.abs(value) % 100;
@@ -1052,4 +1053,28 @@ export const _checkAutoDiscount = (
    }
 
    return true;
+};
+
+export const clearVKStorage = (key = "all") => {
+   if (key === "all") {
+      bridge
+         .send("VKWebAppStorageGetKeys", {
+            count: 1000,
+            offset: 0,
+         })
+         .then((data) => {
+            console.log(data);
+            data.keys.forEach((key) => {
+               bridge.send("VKWebAppStorageSet", {
+                  key,
+                  value: "",
+               });
+            });
+         });
+   } else {
+      bridge.send("VKWebAppStorageSet", {
+         key,
+         value: "",
+      });
+   }
 };
