@@ -387,30 +387,6 @@ const UserSettings = () => {
                         sx={{ width: 1, mb: 4 }}
                     />
                 </Grid>
-
-                {config.CONFIG_bonuses_program_status && (
-                    <Grid item sm={12} md={5}>
-                        <div className="user-bonuses-info">
-                            <h2>Бонусы</h2>
-                            <p>
-                                На вашем счету{" "}
-                                <span className="main-color">
-                                    {user.bonuses}
-                                </span>{" "}
-                                бонусов.
-                                <br />1 бонус ={" "}
-                                <span className="main-color">1 &#8381;</span>
-                            </p>
-                            <p>
-                                Вы можете оплатить ими до{" "}
-                                <span className="main-color">
-                                    {config.CONFIG_bonus_program_order_limit}%
-                                </span>{" "}
-                                от общей суммы заказа.
-                            </p>
-                        </div>
-                    </Grid>
-                )}
             </Grid>
 
             <div className="button-group">

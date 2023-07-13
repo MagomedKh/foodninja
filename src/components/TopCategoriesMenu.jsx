@@ -6,7 +6,7 @@ import { IntersectionObserverWrapper, MiniCart } from "../components";
 import Container from "@mui/material/Container";
 import Skeleton from "@mui/material/Skeleton";
 import { Link as AnimateLink } from "react-scroll";
-import { _isMobile } from "../components/helpers.js";
+import { _isCategoryDisabled, _isMobile } from "../components/helpers.js";
 import smoothscroll from "smoothscroll-polyfill";
 import MenuIcon from "@mui/icons-material/Menu";
 import clsx from "clsx";
@@ -32,12 +32,18 @@ export default function TopCategoriesMenu() {
     const { mobileMenuOpen } = useSelector((state) => state.header);
 
     const [sticked, setSticked] = useState(false);
-    const [categoriesWithProducts, setCategoriesWithProducts] = useState(null);
+    const [availableCategories, setAvailableCategories] = useState(null);
 
     useEffect(() => {
         if (categories) {
             const temp = categories
                 .map((item) => {
+                    if (
+                        _isCategoryDisabled(item).disabled &&
+                        item.limit_type !== "block"
+                    ) {
+                        return null;
+                    }
                     if (
                         Object.values(products).find((product) =>
                             product.categories.includes(item.term_id)
@@ -47,7 +53,7 @@ export default function TopCategoriesMenu() {
                     }
                 })
                 .filter((item) => item);
-            setCategoriesWithProducts(temp);
+            setAvailableCategories(temp);
         }
     }, [categories, products]);
 
@@ -105,7 +111,7 @@ export default function TopCategoriesMenu() {
                     ref={stickedBarRef}
                 >
                     <Container className="inner-wrapper">
-                        {categoriesWithProducts ? (
+                        {availableCategories ? (
                             <ul
                                 className="categories-menu"
                                 ref={categoriesMenuRef}
@@ -119,7 +125,7 @@ export default function TopCategoriesMenu() {
                                         </a>
                                     </li>
                                 ) : null}
-                                {categoriesWithProducts.map((item) => {
+                                {availableCategories.map((item) => {
                                     return (
                                         <li
                                             key={item.term_id}
@@ -181,9 +187,9 @@ export default function TopCategoriesMenu() {
                 ref={stickedBarRef}
             >
                 <Container className="inner-wrapper">
-                    {categoriesWithProducts ? (
+                    {availableCategories ? (
                         <IntersectionObserverWrapper ref={categoriesMenuRef}>
-                            {categoriesWithProducts.map((item) => {
+                            {availableCategories.map((item) => {
                                 return (
                                     <li
                                         key={item.term_id}

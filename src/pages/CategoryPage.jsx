@@ -44,6 +44,10 @@ const CategoryPage = () => {
         return el.slug === params.categoryName;
     });
 
+    const isCategoryDisabledResult = currentCategory
+        ? _isCategoryDisabled(currentCategory)
+        : {};
+
     useEffect(() => {
         if (currentCategory) {
             const temp = [].concat
@@ -55,7 +59,11 @@ const CategoryPage = () => {
         }
     }, [currentCategory]);
 
-    if (!currentCategory) {
+    if (
+        !currentCategory ||
+        (isCategoryDisabledResult.disabled &&
+            currentCategory.limit_type !== "block")
+    ) {
         if (config.CONFIG_empty_page_redirect === "on") {
             navigate("/");
         } else {
@@ -84,18 +92,6 @@ const CategoryPage = () => {
         setActiveCategoryTags(tmpArray);
     };
 
-    const getDisabledCategoryAlert = () => {
-        const result = _isCategoryDisabled(currentCategory);
-        if (result.disabled) {
-            return (
-                <Alert severity="error" sx={{ mb: 1 }}>
-                    {result.message}
-                </Alert>
-            );
-        }
-        return null;
-    };
-
     return (
         <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
             <Header />
@@ -110,7 +106,11 @@ const CategoryPage = () => {
                         handleFilter={handleFilter}
                     />
                 )}
-                {getDisabledCategoryAlert()}
+                {isCategoryDisabledResult.disabled ? (
+                    <Alert severity="error" sx={{ mb: 1 }}>
+                        {isCategoryDisabledResult.message}
+                    </Alert>
+                ) : null}
                 {Object.values(currentCategory.tags).length ? (
                     <Box
                         className="product--category-tags-container"

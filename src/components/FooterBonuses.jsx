@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import FooterBonusesGift from "../img/footer-bonuses-gift.svg";
+import soon from "../img/photo-soon.svg";
 import { _isMobile } from "./helpers";
 import "../css/footer-bonuses.css";
 import useBonusProducts from "../hooks/useBonusProducts";
@@ -293,7 +294,11 @@ export default function BonusesProductsModal() {
                                                         }}
                                                     >
                                                         <img
-                                                            src={item.img}
+                                                            src={
+                                                                item.img
+                                                                    ? item.img
+                                                                    : soon
+                                                            }
                                                             alt={item.title}
                                                         />
                                                     </div>

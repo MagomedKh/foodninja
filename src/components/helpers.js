@@ -845,19 +845,27 @@ export const _checkWorkingInterval = (startTime, endTime) => {
    }
 };
 
-export const _checkAutoDiscount = (
+export const _checkAutoDiscount = ({
    discount,
    cartProducts,
    cartTotal,
    promocode,
    bonusProduct,
-   typeDelivery
-) => {
+   typeDelivery,
+}) => {
    const cartProductsArray = Object.values(cartProducts);
 
    // Проверяем включена ли автоскидка
    if (discount.status !== "on") {
       return false;
+   }
+
+   // Проверка платформы
+   if (discount.platforms) {
+      const currentPlatform = _getPlatform();
+      if (discount.platforms[currentPlatform] !== "on") {
+         return false;
+      }
    }
 
    // Проверка на возможность использовать с промокодом
@@ -879,8 +887,8 @@ export const _checkAutoDiscount = (
       return false;
    }
 
-   // Проверка категорий
-   if (discount.categories?.length && discount.categoriesHardmode === "yes") {
+   // Проверка категорий (только для фиксированной скидки)
+   if (discount.categories?.length && discount.type === "fixed") {
       // Проверяем есть ли в корзине запрещенная категория
       if (discount.excludeCategories) {
          let hasExcludeCategory = false;
@@ -923,7 +931,7 @@ export const _checkAutoDiscount = (
    }
 
    // Проверка на товары по скидке
-   if (discount.excludeSaleProduct && discount.categoriesHardmode === "yes") {
+   if (discount.excludeSaleProduct !== "yes" && discount.type === "fixed") {
       let hasSaleProduct = false;
       cartProductsArray.forEach((product) => {
          // Если промокод добавляет товар по скидке, исключаем его из проверки
@@ -940,6 +948,9 @@ export const _checkAutoDiscount = (
             hasSaleProduct = true;
          }
       });
+      if (hasSaleProduct) {
+         return false;
+      }
    }
 
    // Проверка времени
@@ -1053,6 +1064,26 @@ export const _checkAutoDiscount = (
    }
 
    return true;
+};
+
+//Функция для определения есть ли в корзине товар по скидке
+//Принимает массив товаров и действующий промокод, если такой есть
+export const _cartHasDiscountProduct = (cartProducts, promocode) => {
+   return cartProducts.find((product) => {
+      // Если промокод добавляет товар по скидке, исключаем его из проверки
+      if (
+         product.items[0].id == promocode?.promocodeProducts?.id &&
+         product.items.length === 1
+      ) {
+         return false;
+      }
+      if (
+         product.items[0].options._sale_price ||
+         product.items[0].variant?._sale_price
+      ) {
+         return true;
+      }
+   });
 };
 
 export const clearVKStorage = (key = "all") => {

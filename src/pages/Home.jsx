@@ -76,18 +76,6 @@ export default function Home() {
             });
     }, [products, config.CONFIG_searching_disable]);
 
-    const getDisabledCategoryAlert = (category) => {
-        const result = _isCategoryDisabled(category);
-        if (result.disabled) {
-            return (
-                <Alert severity="error" sx={{ mb: 1 }}>
-                    {result.message}
-                </Alert>
-            );
-        }
-        return null;
-    };
-
     return (
         <>
             <Header />
@@ -116,6 +104,19 @@ export default function Home() {
                             ) {
                                 return;
                             }
+
+                            // Проверяем доступность категории
+                            const isCategoryDisabledResult =
+                                _isCategoryDisabled(item);
+
+                            // Скрываем недоступную категорию
+                            if (
+                                isCategoryDisabledResult.disabled &&
+                                item.limit_type !== "block"
+                            ) {
+                                return null;
+                            }
+
                             return (
                                 <div
                                     key={`container-category-${item.term_id}`}
@@ -126,7 +127,11 @@ export default function Home() {
                                         {item.name}
                                     </h2>
 
-                                    {getDisabledCategoryAlert(item)}
+                                    {isCategoryDisabledResult.disabled ? (
+                                        <Alert severity="error" sx={{ mb: 1 }}>
+                                            {isCategoryDisabledResult.message}
+                                        </Alert>
+                                    ) : null}
 
                                     {Object.values(item.tags).length ? (
                                         <Box
@@ -220,10 +225,7 @@ export default function Home() {
                                                                         product
                                                                     }
                                                                     disabled={
-                                                                        _isCategoryDisabled(
-                                                                            item
-                                                                        )
-                                                                            .disabled
+                                                                        isCategoryDisabledResult.disabled
                                                                     }
                                                                 />
                                                             ) : (
@@ -237,9 +239,7 @@ export default function Home() {
                                                                 }
                                                                 category={item}
                                                                 disabled={
-                                                                    _isCategoryDisabled(
-                                                                        item
-                                                                    ).disabled
+                                                                    isCategoryDisabledResult.disabled
                                                                 }
                                                             />
                                                         )

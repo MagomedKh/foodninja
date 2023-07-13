@@ -9,15 +9,13 @@ import { TabContext, TabList, TabPanel } from "@mui/lab";
 import Orders from "./Orders";
 import UserSettings from "./UserSettings";
 import MyAddresses from "./MyAddresses";
+import UserBonuses from "./UserBonuses";
 
 export default function Account() {
     const dispatch = useDispatch();
 
-    const { user } = useSelector(({ user }) => {
-        return {
-            user: user.user,
-        };
-    }, shallowEqual);
+    const user = useSelector(({ user }) => user.user, shallowEqual);
+    const config = useSelector(({ config }) => config.data);
 
     const [activeTab, setActiveTab] = useState("settings");
 
@@ -58,6 +56,16 @@ export default function Account() {
                                 label="Мои адреса"
                                 value="addresses"
                             />
+                            {(config.CONFIG_frontpad_integration === "on" &&
+                                config.CONFIG_bonuses_program_status ===
+                                    "on") ||
+                            config.bonusProgramm?.status === "active" ? (
+                                <Tab
+                                    disableRipple
+                                    label="Бонусы"
+                                    value="bonuses"
+                                />
+                            ) : null}
                         </TabList>
 
                         <TabPanel
@@ -90,6 +98,20 @@ export default function Account() {
                         >
                             <MyAddresses />
                         </TabPanel>
+                        {(config.CONFIG_frontpad_integration === "on" &&
+                            config.CONFIG_bonuses_program_status === "on") ||
+                        config.bonusProgramm?.status === "active" ? (
+                            <TabPanel
+                                value="bonuses"
+                                sx={{
+                                    boxShadow: "0 0 20px rgb(0 0 0 / 10%)",
+                                    borderRadius: "10px",
+                                    bgcolor: "#fff",
+                                }}
+                            >
+                                <UserBonuses />
+                            </TabPanel>
+                        ) : null}
                     </TabContext>
                 ) : (
                     <div className="auth">

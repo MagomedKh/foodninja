@@ -48,6 +48,7 @@ import {
    CategoryPage,
    SearchPage,
    NotFound,
+   BonusesPage,
 } from "./pages";
 import axios from "axios";
 import { createGlobalStyle, css } from "styled-components";
@@ -475,6 +476,11 @@ function App() {
                            element={<CategoryPage />}
                         />
                         <Route exact path="/not-found" element={<NotFound />} />
+                        <Route
+                           exact
+                           path="/bonuses"
+                           element={<BonusesPage />}
+                        />
                         <Route path="*" element={<Page />} />
                      </Routes>
                      <AuthModal />

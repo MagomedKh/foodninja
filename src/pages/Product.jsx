@@ -57,7 +57,9 @@ export default function Product() {
     const [wrongVariant, setWrongVariant] = useState(false);
     const [disabledProductCategory, setDisabledProductCategory] =
         useState(null);
+
     let productSlug = window.location.pathname.split("/");
+
     const [product] = useState(
         Object.values(products).find((item) => item.slug === productSlug[2])
     );
@@ -101,35 +103,39 @@ export default function Product() {
         return;
     }, [product]);
 
-    // Создаем массив недоступных на данное время категорий
+    // Проверяем категории товара на доступность
     useEffect(() => {
-        if (categories) {
-            const disabledCategoriesResults = categories
-                .map((category) => {
-                    const result = _isCategoryDisabled(category);
-                    if (result.disabled) {
-                        return { category: category, message: result.message };
-                    } else {
-                        return null;
-                    }
-                })
-                .filter((el) => el);
-            // Если одна из категорий товара недоступна по времени, блокируем товар
-            if (disabledCategoriesResults.length) {
-                const disabledCategoryResult = disabledCategoriesResults.find(
-                    (result) =>
-                        product.categories.includes(result.category.term_id)
+        if (product && product.categories && categories) {
+            let isDisabledCategoryFind = false;
+
+            product.categories.forEach((productCategoryId) => {
+                const category = categories.find(
+                    (category) => category.term_id === productCategoryId
                 );
-                if (disabledCategoryResult) {
-                    setDisabledProductCategory(disabledCategoryResult);
+                if (category) {
+                    const isCategoryDisabledResult =
+                        _isCategoryDisabled(category);
+                    if (isCategoryDisabledResult.disabled) {
+                        isDisabledCategoryFind = true;
+                        setDisabledProductCategory({
+                            ...category,
+                            message: isCategoryDisabledResult.message,
+                        });
+                    }
                 }
-            } else {
+            });
+
+            if (!isDisabledCategoryFind && disabledProductCategory) {
                 setDisabledProductCategory(null);
             }
         }
-    }, [categories]);
+    }, [product, categories]);
 
-    if (!product) {
+    if (
+        !product ||
+        (disabledProductCategory &&
+            disabledProductCategory.limit_type !== "block")
+    ) {
         if (config.CONFIG_empty_page_redirect === "on") {
             navigate("/");
         } else {

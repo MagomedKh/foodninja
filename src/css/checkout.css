@@ -89,21 +89,6 @@
     align-items: center;
 }
 
-.checkout--auto-discount-name span {
-    margin-right: 4px;
-}
-
-.checkout--auto-discount-name svg {
-    width: 0.75em;
-    height: 0.75em;
-    margin-top: 2px;
-    cursor: pointer;
-}
-
-.checkout--auto-discount-name svg:hover {
-    color: var(--main-color);
-}
-
 .checkout--subtotal-price .checkout--promocode-total .checkout--promocode-name {
     display: flex;
     align-items: center;
@@ -174,17 +159,31 @@
     display: flex;
     justify-content: space-between;
 }
+.checkout-result-total-divider:first-child {
+    display: none;
+}
 .checkout--user-bonuses {
     margin-top: 0.5rem;
 }
 .checkout--user-bonuses-info {
     margin-bottom: 0.5rem;
 }
+.checkout--accrue-bonuses-info {
+    display: flex;
+    white-space: pre-wrap;
+    align-items: center;
+}
+
 .checkout--bonuses-payming {
     font-size: 16px;
     display: flex;
     justify-content: space-between;
     margin-bottom: 0.5rem;
+}
+
+.checkout--payming-bonuses-info {
+    display: flex;
+    align-items: center;
 }
 .bonuses-price {
     font-weight: bold;
@@ -348,4 +347,16 @@
         margin-right: 0;
         margin-bottom: 16px;
     }
+}
+
+.checkout--info-icon {
+    width: 0.75em !important;
+    height: 0.75em !important;
+    margin-top: 2px;
+    margin-left: 4px;
+    cursor: pointer;
+}
+
+.checkout--info-icon:hover {
+    color: var(--main-color);
 }

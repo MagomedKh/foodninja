@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { Container } from "@mui/material";
 import { Swiper, SwiperSlide } from "swiper/react/swiper-react";
-import { Autoplay, Navigation, Pagination, EffectCoverflow } from "swiper";
+import { Autoplay, Navigation, Pagination } from "swiper";
 import useActiveSale from "../hooks/useActiveSale";
 import { SaleModal } from "./";
 import { _isMobile } from "./helpers.js";
@@ -70,18 +70,8 @@ export default function Footer() {
     if (_isMobile()) {
         if (bannerType === "fullwidth") {
             swiperProps.spaceBetween = 15;
-            swiperProps.modules.push(EffectCoverflow);
-            swiperProps.effect = "coverflow";
-            swiperProps.coverflowEffect = {
-                rotate: 0,
-                stretch: 25,
-                scale: 0.85,
-                depth: 0,
-                modifier: 1,
-                slideShadows: false,
-            };
         } else {
-            swiperProps.spaceBetween = 30;
+            swiperProps.spaceBetween = 32;
         }
         if (bannersMobile.autoplay) {
             swiperProps.autoplay = {
@@ -97,17 +87,7 @@ export default function Footer() {
             };
         }
         if (bannerType === "fullwidth") {
-            swiperProps.modules.push(EffectCoverflow);
-            swiperProps.speed = 500;
-            swiperProps.effect = "coverflow";
-            swiperProps.coverflowEffect = {
-                rotate: 0,
-                stretch: 0,
-                scale: 0.85,
-                depth: 0,
-                modifier: 1,
-                slideShadows: false,
-            };
+            swiperProps.spaceBetween = 32;
         }
     }
 

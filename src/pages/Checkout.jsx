@@ -80,6 +80,7 @@ import onlineCreditCard from "../img/online-credit-card.svg";
 import "../css/checkout.css";
 import useAutoDiscount from "../hooks/useAutoDiscount";
 import useBonuses from "../hooks/useBonuses";
+import CheckoutUserBonuses from "../components/CheckoutUserBonuses";
 
 const formatingStrPhone = (inputNumbersValue) => {
     var formattedPhone = "";
@@ -196,13 +197,10 @@ export default function Checkout() {
     const [choosenAddress, setChoosenAddress] = useState(null);
     const [redirect, setRedirect] = useState(null);
 
-    const { autoDiscountAmount, autoDiscount } = useAutoDiscount(typeDelivery);
-
-    const { userBonuses, useBonusesLimit, maxBonuses, orderBonusesLimit } =
-        useBonuses({
-            typeDelivery,
-            deliveryZone,
-        });
+    const { autoDiscountAmount, autoDiscount } = useAutoDiscount(
+        typeDelivery,
+        usedBonuses
+    );
 
     useEffect(() => {
         if (redirect && user.updated) {
@@ -219,12 +217,6 @@ export default function Checkout() {
             window.history.scrollRestoration = "auto";
         };
     }, []);
-
-    useEffect(() => {
-        if (usedBonuses > maxBonuses) {
-            handleChangeCheckoutBonus(maxBonuses);
-        }
-    }, [maxBonuses]);
 
     const handleAlertClose = () => {
         setOpenAlert(false);
@@ -766,7 +758,7 @@ export default function Checkout() {
         setTypeDelivery("self");
     };
 
-    const handleChangeCheckoutBonus = (value) => {
+    const handleChangeUsedBonuses = (value) => {
         setUsedBonuses(value);
     };
 
@@ -1646,7 +1638,11 @@ export default function Checkout() {
 
                                 <hr className="checkout--total-panel--separator" />
 
-                                {cart.discount || autoDiscountAmount ? (
+                                {cart.discount ||
+                                autoDiscountAmount ||
+                                (typeDelivery === "delivery" &&
+                                    deliveryZone &&
+                                    !yandexApiError) ? (
                                     <div className="checkout--subtotal-price">
                                         Сумма заказа
                                         <span className="money">
@@ -1658,48 +1654,47 @@ export default function Checkout() {
                                     </div>
                                 ) : null}
 
-                                {promocode.code && cart.discount ? (
-                                    <div className="checkout--promocode-total">
-                                        <div className="checkout--promocode-name">
-                                            Промокод{" "}
-                                            <span className="main-color">
-                                                {promocode.code}
+                                <div className="checkout--total-panel--result">
+                                    {promocode.code && cart.discount ? (
+                                        <div className="checkout--promocode-total">
+                                            <div className="checkout--promocode-name">
+                                                Промокод{" "}
+                                                <span className="main-color">
+                                                    {promocode.code}
+                                                </span>
+                                            </div>
+
+                                            <span className="money main-color">
+                                                -
+                                                {cart.discount.toLocaleString(
+                                                    "ru-RU"
+                                                )}{" "}
+                                                &#8381;
                                             </span>
                                         </div>
+                                    ) : null}
 
-                                        <span className="money main-color">
-                                            -
-                                            {cart.discount.toLocaleString(
-                                                "ru-RU"
-                                            )}{" "}
-                                            &#8381;
-                                        </span>
-                                    </div>
-                                ) : null}
+                                    {autoDiscount && autoDiscountAmount ? (
+                                        <div className="checkout--auto-discount-container">
+                                            <div className="checkout--auto-discount-name">
+                                                <span>Скидка</span>
+                                                <BootstrapTooltip
+                                                    placement="top"
+                                                    title={autoDiscount.name}
+                                                >
+                                                    <InfoOutlinedIcon className="checkout--info-icon" />
+                                                </BootstrapTooltip>
+                                            </div>
 
-                                {autoDiscount && autoDiscountAmount ? (
-                                    <div className="checkout--auto-discount-container">
-                                        <div className="checkout--auto-discount-name">
-                                            <span>Скидка</span>
-                                            <BootstrapTooltip
-                                                placement="top"
-                                                title={autoDiscount.name}
-                                            >
-                                                <InfoOutlinedIcon />
-                                            </BootstrapTooltip>
+                                            <span className="checkout--auto-discount-amount main-color">
+                                                -
+                                                {autoDiscountAmount.toLocaleString(
+                                                    "ru-RU"
+                                                )}{" "}
+                                                &#8381;
+                                            </span>
                                         </div>
-
-                                        <span className="checkout--auto-discount-amount main-color">
-                                            -
-                                            {autoDiscountAmount.toLocaleString(
-                                                "ru-RU"
-                                            )}{" "}
-                                            &#8381;
-                                        </span>
-                                    </div>
-                                ) : null}
-
-                                <div className="checkout--total-panel--result">
+                                    ) : null}
                                     {typeDelivery === "delivery" &&
                                     deliveryZone &&
                                     !yandexApiError ? (
@@ -1734,6 +1729,10 @@ export default function Checkout() {
                                             </span>
                                         </div>
                                     ) : null}
+                                    <Divider
+                                        sx={{ my: "20px", borderColor: "#ccc" }}
+                                        className="checkout-result-total-divider"
+                                    />
                                     <div className="result-total">
                                         <span className="price-title">
                                             Итого
@@ -1747,51 +1746,20 @@ export default function Checkout() {
                                     </div>
                                 </div>
 
-                                {config.CONFIG_bonuses_program_status ===
-                                    "on" && (
-                                    <div className="checkout--user-bonuses">
-                                        <div className="checkout--user-bonuses-info">
-                                            У вас{" "}
-                                            <span className="main-color">{`${userBonuses} ${_declension(
-                                                userBonuses,
-                                                ["бонус", "бонуса", "бонусов"]
-                                            )}`}</span>
-                                        </div>
-
-                                        <BonusesSlider
-                                            maxValue={maxBonuses}
-                                            orderBonusesLimit={
-                                                orderBonusesLimit
-                                            }
-                                            usedBonuses={usedBonuses}
-                                            handleChangeUsedBonuses={
-                                                handleChangeCheckoutBonus
-                                            }
-                                        />
-
-                                        <div className="checkout--bonuses-payming">
-                                            <span className="title">
-                                                Оплата бонусами
-                                            </span>
-                                            <span className="bonuses-price">
-                                                <span className="money">
-                                                    {usedBonuses.toLocaleString(
-                                                        "ru-RU"
-                                                    )}
-                                                </span>{" "}
-                                                &#8381;
-                                            </span>
-                                        </div>
-
-                                        <small>
-                                            Бонусами можно оплатить до{" "}
-                                            <span className="main-color">
-                                                {useBonusesLimit}%
-                                            </span>{" "}
-                                            от общей суммы заказа.
-                                        </small>
-                                    </div>
-                                )}
+                                {(config.CONFIG_frontpad_integration === "on" &&
+                                    config.CONFIG_bonuses_program_status ===
+                                        "on") ||
+                                config.bonusProgramm.status === "active" ? (
+                                    <CheckoutUserBonuses
+                                        usedBonuses={usedBonuses}
+                                        handleChangeUsedBonuses={
+                                            handleChangeUsedBonuses
+                                        }
+                                        typeDelivery={typeDelivery}
+                                        deliveryZone={deliveryZone}
+                                        autoDiscountAmount={autoDiscountAmount}
+                                    />
+                                ) : null}
 
                                 <hr className="checkout--total-panel--separator" />
 

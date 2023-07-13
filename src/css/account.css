@@ -214,12 +214,11 @@
     clip-path: inset(-50px -56px 0px -73px);
 }
 
-@media (max-width: 370px) {
-    .account--tab-list .Mui-selected {
-        box-shadow: none;
-    }
+@media (max-width: 500px) {
     .account--tab-list .MuiTabs-scroller {
         overflow: auto !important;
         margin-right: 10px;
+        margin-top: -20px;
+        padding-top: 20px;
     }
 }

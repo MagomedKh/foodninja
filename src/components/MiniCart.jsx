@@ -12,14 +12,14 @@ import {
 import { openMiniCart, closeMiniCart } from "../redux/actions/miniCart";
 import { getItemTotalPrice } from "../redux/reducers/cart";
 import { useNavigate } from "react-router-dom";
-import { Alert, Button, Drawer, IconButton } from "@mui/material";
+import { Alert, Button, Divider, Drawer, IconButton } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import CloseIcon from "@mui/icons-material/Close";
 import MiniCartProduct from "../components/Product/MiniCartProduct";
 import MiniCartBonusProduct from "../components/Product/MiniCartBonusProduct";
 import MiniCartFreeAddons from "./Product/MiniCartFreeAddons";
-import { Promocode } from "../components";
+import { MiniCartBonuses, Promocode } from "../components";
 import MiniCartReccomends from "./MiniCartRecommends";
 import CartBonusesProducts from "./CartBonusesProducts";
 import {
@@ -374,6 +374,7 @@ function MiniCart() {
 
                             <MiniCartReccomends />
                         </div>
+
                         <div className="minicart--total-wrapper">
                             {config.CONFIG_disable_promocodes !== "on" && (
                                 <div className="minicart--promocode">
@@ -381,37 +382,45 @@ function MiniCart() {
                                 </div>
                             )}
 
-                            {cart.discount ? (
-                                <div className="minicart--subtotal-price">
-                                    <div className="price">
-                                        Сумма заказа{" "}
-                                        <span className="money">
-                                            {cart.subTotalPrice.toLocaleString(
-                                                "ru-RU"
-                                            )}{" "}
-                                            &#8381;
-                                        </span>
-                                    </div>
-                                    <div className="promocode">
-                                        <span>
-                                            Промокод{" "}
-                                            <span className="main-color">
-                                                {promocode.code}
+                            <div className="minicart--subtotal-price">
+                                {cart.discount ? (
+                                    <>
+                                        <div className="price">
+                                            Сумма заказа{" "}
+                                            <span className="money">
+                                                {cart.subTotalPrice.toLocaleString(
+                                                    "ru-RU"
+                                                )}{" "}
+                                                &#8381;
                                             </span>
-                                        </span>
+                                        </div>
+                                        <div className="promocode">
+                                            <span>
+                                                Промокод{" "}
+                                                <span className="main-color">
+                                                    {promocode.code}
+                                                </span>
+                                            </span>
 
-                                        <span className="money main-color">
-                                            -
-                                            {cart.discount.toLocaleString(
-                                                "ru-RU"
-                                            )}{" "}
-                                            &#8381;
-                                        </span>
-                                    </div>
-                                </div>
-                            ) : (
-                                ""
-                            )}
+                                            <span className="money main-color">
+                                                -
+                                                {cart.discount.toLocaleString(
+                                                    "ru-RU"
+                                                )}{" "}
+                                                &#8381;
+                                            </span>
+                                        </div>
+                                    </>
+                                ) : null}
+                                {config.bonusProgramm?.status === "active" ? (
+                                    <MiniCartBonuses />
+                                ) : null}
+                            </div>
+
+                            <Divider
+                                className="minicart--total-divider"
+                                sx={{ mb: "10px" }}
+                            />
 
                             <div className="minicart--total-block">
                                 <span className="minicart--total-title">

@@ -47,3 +47,4 @@ export { default as AccountUserAddress } from "./AccountUserAddress.jsx";
 export { default as ContactsZonesInfo } from "./ContactsZonesInfo.jsx";
 export { default as CheckoutConfirmButtons } from "./CheckoutConfirmButtons.jsx";
 export { default as BonusesSlider } from "./BonusesSlider.jsx";
+export { default as MiniCartBonuses } from "./MiniCartBonuses.jsx";

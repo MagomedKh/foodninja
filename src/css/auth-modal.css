@@ -3,17 +3,14 @@
     position: relative;
     width: 400px;
 }
-
 .auth-modal .auth-modal--title {
     margin: 0 0 20px 0;
     line-height: 1;
 }
-
 .recall-timout,
 .resms-timout {
     margin-left: 5px;
 }
-
 .auth-modal--footer {
     padding: 0.75rem 2rem 0;
     border-top: 1px solid #dee2e6;
@@ -22,42 +19,34 @@
     margin-top: 16px;
     font-size: 14px;
 }
-
 .phone-input {
     width: 100% !important;
 }
-
 label.Mui-focused {
     color: var(--main-color) !important;
 }
-
 div.Mui-focused fieldset {
     border-color: var(--main-color) !important;
 }
-
 .auth-btn {
     display: block;
     width: 100%;
     margin: 15px 0 !important;
     height: 55px;
 }
-
 .auth-modal--info {
     font-size: 14px;
     font-weight: 400;
     margin-top: 16px;
     text-align: center;
 }
-
 .auth-modal--secondary-text {
     font-size: 20px;
     text-align: center;
 }
-
 .vkid-auth-wrapper {
     margin-bottom: -10px;
 }
-
 .vkid-btn-loader {
     margin-left: auto;
     margin-right: auto;
@@ -66,18 +55,15 @@ div.Mui-focused fieldset {
     position: absolute;
     margin-top: 15px;
 }
-
 .phone-auth-wrapper {
     position: relative;
 }
-
 .phone-auth--code {
     margin: 15px 0;
     display: flex;
     justify-content: center;
 }
-
-.phone-auth--code>.verify-code {
+.phone-auth--code > .verify-code {
     width: 55px;
     height: 55px;
     margin: 0 5px 0 5px;
@@ -86,25 +72,32 @@ div.Mui-focused fieldset {
     border: 1px solid #ccc;
     border-radius: 12px;
 }
-
-.phone-auth--code>.verify-code:focus {
+.phone-auth--code > .verify-code:focus {
     border: 2px solid var(--main-color) !important;
     outline: none;
 }
-
 .phone-auth--change-number {
     position: absolute !important;
     top: 8px;
     right: 10px;
 }
-
 @media (max-width: 899px) {
     .auth-modal {
         padding: 20px;
         width: auto;
     }
-
+    .auth-modal .modal-close {
+        left: auto;
+        right: 6px;
+    }
     .auth-modal .auth-modal--title {
-        text-align: center;
+        text-align: start;
+    }
+    .auth-modal.vk .modal-close {
+        left: 17px;
+        right: auto;
+    }
+    .auth-modal.vk .auth-modal--title {
+        text-align: end;
     }
 }

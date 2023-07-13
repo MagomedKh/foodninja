@@ -69,8 +69,6 @@ const loadState = () => {
         if (serialisedState.user?.openModalAuth) {
             serialisedState.user.openModalAuth = false;
         }
-
-        console.log(serialisedState);
         return serialisedState;
     } catch (err) {
         return undefined;

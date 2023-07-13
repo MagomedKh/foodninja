@@ -12,3 +12,4 @@ export { default as Page } from "./Page.jsx";
 export { default as Product } from "./Product.jsx";
 export { default as CategoryPage } from "./CategoryPage.jsx";
 export { default as SearchPage } from "./SearchPage.jsx";
+export { default as BonusesPage } from "./BonusesPage.jsx";

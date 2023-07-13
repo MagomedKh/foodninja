@@ -99,6 +99,7 @@
 .bonuses-modal--inner-wrapper {
     overflow-y: scroll;
     padding: 0 50px;
+    width: 100%;
 }
 .bonuses-modal--inner-wrapper::-webkit-scrollbar {
     width: 6px;

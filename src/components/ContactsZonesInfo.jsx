@@ -4,12 +4,21 @@ import { Divider, Grid } from "@mui/material";
 
 const ContactsZonesInfo = () => {
     const zones = useSelector(({ config }) => config.data.deliveryZones?.zones);
+    const showZonesInfo = useSelector(
+        ({ config }) =>
+            config.data.CONFIG_contact_map_show_deliveryZones === "active"
+    );
 
     const contactsMapType = useSelector(
         ({ config }) => config.data.CONFIG_contact_map_type
     );
 
-    if (contactsMapType !== "deliveryZones" || !zones || !zones.length) {
+    if (
+        contactsMapType !== "deliveryZones" ||
+        !zones ||
+        !zones.length ||
+        !showZonesInfo
+    ) {
         return null;
     }
 

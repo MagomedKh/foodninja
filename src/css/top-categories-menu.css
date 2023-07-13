@@ -116,7 +116,7 @@
 .sticked-top-bar.sticked ul.categories-menu li a {
     color: black;
 }
-.sticked-top-bar.sticked.filled ul.categories-menu li a {
+.sticked-top-bar.sticked.filled ul.categories-menu > li a {
     color: #fff;
 }
 @media (max-width: 899px) {

@@ -20,6 +20,7 @@ import axios from "axios";
 import { GoogleReCaptcha } from "react-google-recaptcha-v3";
 import bridge from "@vkontakte/vk-bridge";
 import { Connect, ConnectEvents } from "@vkontakte/superappkit";
+import clsx from "clsx";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
    return <Slide direction="up" ref={ref} {...props} />;
@@ -606,7 +607,7 @@ export default function AuthModal() {
             },
          }}
       >
-         <div className="auth-modal">
+         <div className={clsx("auth-modal", _getPlatform() === "vk" && "vk")}>
             {loading && (
                <div className="loader-wrapper">
                   <CircularProgress variant="determinate" />
@@ -659,7 +660,7 @@ export default function AuthModal() {
                      label="Номер телефона"
                      className="phone-input phone-mask"
                      value={authPhone ? authPhone : ""}
-                     type={_isMobile() ? "text" : "text"}
+                     type={"tel"}
                      id="user-phone"
                      ref={inputPhone}
                      autoFocus
