@@ -1,6 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { _isMobile, _getDomain, _getPlatform } from "./helpers.js";
+import {
+   _isMobile,
+   _getDomain,
+   _getPlatform,
+   clearVKStorage,
+} from "./helpers.js";
 import { useNavigate, useLocation } from "react-router-dom";
 import { setOpenModalAuth, login, saveLogin } from "../redux/actions/user";
 import { closeMobileMenu } from "../redux/actions/header";
@@ -97,57 +102,9 @@ export default function AuthModal() {
    //          //             dispatch(setOpenModalAuth(false));
    //          //             dispatch(closeMobileMenu());
 
-   //          //             if (
-   //          // !resp.data.user.name ||
-   //          //    !resp.data.user.vk ||
-   //          //    !resp.data.user.dayBirthday ||
-   //          //    !resp.data.user.monthBirthday)
-   //          // {
-   //          //                axios
-   //          //                   .post(
-   //          //                      "https://" +
-   //          //                         _getDomain() +
-   //          //                         "/?rest-api=saveLogin",
-   //          //                      {
-   //          //                         ...resp.data.user,
-
-   //          //                         name:
-   //          //                            resp.data.user.name || VKUserData.name,
-   //          //                         vk: resp.data.user.vk || VKUserData.vk,
-   //          //                         dayBirthday:
-   //          //                            resp.data.user.dayBirthday ||
-   //          //                            VKUserData.dayBirthday,
-   //          //                         monthBirthday:
-   //          //                            resp.data.user.monthBirthday ||
-   //          //                            VKUserData.monthBirthday,
-   //          //                      }
-   //          //                   )
-   //          //                   .then((resp) => {
-   //          //                      console.log(resp);
-   //          //                      dispatch(saveLogin(resp.data.user));
-   //          //                   });
-
-   //          //                bridge
-   //          //                   .send("VKWebAppStorageGet", {
-   //          //                      keys: ["notificationsPermission"],
-   //          //                   })
-   //          //                   .then((data) => {
-   //          //                      data.keys[0].key ===
-   //          //                         "notificationsPermission" ||
-   //          //                         setTimeout(() => {
-   //          //                            bridge
-   //          //                               .send("VKWebAppAllowNotifications")
-   //          //                               .then((data) => {
-   //          //                                  data.result &&
-   //          //                                     bridge.send(
-   //          //                                        "VKWebAppStorageSet",
-   //          //                                        {
-   //          //                                           key: "notificationsPermission",
-   //          //                                        }
-   //          //                                     );
-   //          //                               });
-   //          //                         }, 1000);
-   //          //                   });
+   // if (_getPlatform() === "vk") {
+   //    VKAppSaveUserData(resp.data);
+   // }
    //          //             }
    //          //          } else
    //          //             setError({
@@ -175,8 +132,14 @@ export default function AuthModal() {
    //       },
    //    },
    // });
-
+   let isAuthAlt;
    useEffect(() => {
+      if (window.location.hash.includes("alt")) {
+         isAuthAlt = true;
+      }
+      if (window.location.hash.includes("clear")) {
+         clearVKStorage("userPhone");
+      }
       if (openModalAuth && _getPlatform() === "vk") {
          setTimeout(() => {
             if (
@@ -187,7 +150,12 @@ export default function AuthModal() {
                   .send("VKWebAppStorageGet", { keys: ["userPhone"] })
                   .then((data) => {
                      let phoneNumber = data.keys[0].value;
-                     if (phoneNumber) {
+                     if (
+                        (window.location.hash.includes("alt")
+                           ? !phoneNumber
+                           : phoneNumber) &&
+                        phoneNumber !== ""
+                     ) {
                         handlePhoneInput({
                            target: {
                               value: phoneNumber,
@@ -304,11 +272,62 @@ export default function AuthModal() {
       dispatch(setOpenModalAuth(false));
    };
 
+   useEffect(() => {
+      token && console.log("RECAPTCHA_TOKEN: ", token.slice(0, 6));
+   }, [token]);
+
    const handleAuth = (e) => {
       if (verifyPhone) {
          const phone = getNumbersValue(authPhone);
 
          setLoading(true);
+         if (
+            _getPlatform() === "vk" &&
+            config.CONFIG_auth_vk_noverify === "active" &&
+            window.location.hash.includes("skip")
+         ) {
+            console.log(
+               "https://" +
+                  _getDomain() +
+                  "?rest-api=verifyPhoneFromVkApp&phone=" +
+                  phone +
+                  "&platform=" +
+                  _getPlatform()
+            );
+            axios
+               .get(
+                  "https://" +
+                     _getDomain() +
+                     "?rest-api=verifyPhoneFromVkApp&phone=" +
+                     phone +
+                     "&platform=" +
+                     _getPlatform(),
+                  { mode: "no-cors" }
+               )
+               .then((resp) => {
+                  if (resp.data.status === "success") {
+                     dispatch(login(resp.data.user));
+                     setError(null);
+                     if (pathname === "/cart" || miniCartOpen) {
+                        navigate("/checkout", { replace: true });
+                     }
+                     dispatch(closeMiniCart());
+                     dispatch(setOpenModalAuth(false));
+                     dispatch(closeMobileMenu());
+
+                     if (_getPlatform() === "vk") {
+                        VKAppSaveUserData(resp.data);
+                     }
+                  } else
+                     setError({
+                        status: resp.data.status,
+                        message: resp.data.text,
+                     });
+                  setLoading(false);
+               });
+            return;
+         }
+         console.log("token in request moment: ", token.slice(0, 6));
          axios
             .get(
                "https://" +
@@ -332,10 +351,49 @@ export default function AuthModal() {
                      message: resp.data.text,
                   });
                setLoading(false);
-            });
+            })
+            .catch((er) => console.error("request verifyCode", er));
          setRefreshReCaptcha((r) => !r);
       } else {
       }
+   };
+
+   const VKAppSaveUserData = (savedData) => {
+      // if (
+      //    !savedData.user.name ||
+      //    !savedData.user.vk ||
+      //    !savedData.user.dayBirthday ||
+      //    !savedData.user.monthBirthday
+      // ) {
+      //    axios
+      //       .post("https://" + _getDomain() + "/?rest-api=saveLogin", {
+      //          ...savedData.user,
+      //          name: savedData.user.name || VKUserData.name,
+      //          vk: savedData.user.vk || VKUserData.vk,
+      //          dayBirthday:
+      //             savedData.user.dayBirthday || VKUserData.dayBirthday,
+      //          monthBirthday:
+      //             savedData.user.monthBirthday || VKUserData.monthBirthday,
+      //       })
+      //       .then((resp) => {
+      //          dispatch(saveLogin(resp.data.user));
+      //       });
+      //    bridge
+      //       .send("VKWebAppStorageGet", {
+      //          keys: ["notificationsPermission"],
+      //       })
+      //       .then((data) => {
+      //          data.keys[0].key === "notificationsPermission" ||
+      //             setTimeout(() => {
+      //                bridge.send("VKWebAppAllowNotifications").then((data) => {
+      //                   data.result &&
+      //                      bridge.send("VKWebAppStorageSet", {
+      //                         key: "notificationsPermission",
+      //                      });
+      //                });
+      //             }, 2000);
+      //       });
+      // }
    };
 
    const handleRecall = (e) => {
@@ -452,53 +510,9 @@ export default function AuthModal() {
                      dispatch(setOpenModalAuth(false));
                      dispatch(closeMobileMenu());
 
-                     // if (
-                     //    _getPlatform() === "vk" &&
-                     //    (!resp.data.user.name ||
-                     //       !resp.data.user.vk ||
-                     //       !resp.data.user.dayBirthday ||
-                     //       !resp.data.user.monthBirthday)
-                     // ) {
-                     //    axios
-                     //       .post(
-                     //          "https://" +
-                     //             _getDomain() +
-                     //             "/?rest-api=saveLogin",
-                     //          {
-                     //             ...resp.data.user,
-
-                     //             name: resp.data.user.name || VKUserData.name,
-                     //             vk: resp.data.user.vk || VKUserData.vk,
-                     //             dayBirthday:
-                     //                resp.data.user.dayBirthday ||
-                     //                VKUserData.dayBirthday,
-                     //             monthBirthday:
-                     //                resp.data.user.monthBirthday ||
-                     //                VKUserData.monthBirthday,
-                     //          }
-                     //       )
-                     //       .then((resp) => {
-                     //          dispatch(saveLogin(resp.data.user));
-                     //       });
-
-                     //    bridge
-                     //       .send("VKWebAppStorageGet", {
-                     //          keys: ["notificationsPermission"],
-                     //       })
-                     //       .then((data) => {
-                     //          data.keys[0].key === "notificationsPermission" ||
-                     //             setTimeout(() => {
-                     //                bridge
-                     //                   .send("VKWebAppAllowNotifications")
-                     //                   .then((data) => {
-                     //                      data.result &&
-                     //                         bridge.send("VKWebAppStorageSet", {
-                     //                            key: "notificationsPermission",
-                     //                         });
-                     //                   });
-                     //             }, 2000);
-                     //       });
-                     // }
+                     if (_getPlatform() === "vk") {
+                        VKAppSaveUserData(resp.data);
+                     }
                   } else
                      setError({
                         status: resp.data.status,
@@ -596,6 +610,7 @@ export default function AuthModal() {
 
    const onVerify = useCallback((token) => {
       setToken(token);
+      console.log("onVerify - setToken:", token.slice(0, 6));
    }, []);
 
    return (
