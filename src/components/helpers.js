@@ -38,7 +38,7 @@ export const _getPlatform = () => {
       ? window.currentPlatform
       : "site";
 };
-
+console.log(_getPlatform());
 export const _getMobileType = () => {
    return window.mobileType !== undefined ? window.mobileType : "android";
 };
