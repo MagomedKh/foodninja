@@ -284,16 +284,8 @@ export default function AuthModal() {
          if (
             _getPlatform() === "vk" &&
             config.CONFIG_auth_vk_noverify === "active" &&
-            window.location.hash.includes("skip")
+            !window.location.hash.includes("noskip")
          ) {
-            console.log(
-               "https://" +
-                  _getDomain() +
-                  "?rest-api=verifyPhoneFromVkApp&phone=" +
-                  phone +
-                  "&platform=" +
-                  _getPlatform()
-            );
             axios
                .get(
                   "https://" +
