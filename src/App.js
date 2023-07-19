@@ -350,10 +350,6 @@ function App() {
       }
    }, [sales, saleOpenModal]);
 
-   useEffect(() => {
-      console.log("window.recaptchaToken - ", window.recaptchaToken);
-   }, []);
-
    const mainColor = config
       ? config.CONFIG_main_color !== undefined
          ? config.CONFIG_main_color

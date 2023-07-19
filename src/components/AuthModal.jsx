@@ -272,10 +272,6 @@ export default function AuthModal() {
       dispatch(setOpenModalAuth(false));
    };
 
-   useEffect(() => {
-      token && console.log("RECAPTCHA_TOKEN: ", token.slice(0, 6));
-   }, [token]);
-
    const handleAuth = (e) => {
       if (verifyPhone) {
          const phone = getNumbersValue(authPhone);
@@ -283,8 +279,7 @@ export default function AuthModal() {
          setLoading(true);
          if (
             _getPlatform() === "vk" &&
-            config.CONFIG_auth_vk_noverify === "active" &&
-            !window.location.hash.includes("noskip")
+            config.CONFIG_auth_vk_noverify === "active"
          ) {
             axios
                .get(
@@ -319,7 +314,7 @@ export default function AuthModal() {
                });
             return;
          }
-         console.log("token in request moment: ", token.slice(0, 6));
+
          axios
             .get(
                "https://" +
