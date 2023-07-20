@@ -1,11 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-   _isMobile,
-   _getDomain,
-   _getPlatform,
-   clearVKStorage,
-} from "./helpers.js";
+import { _isMobile, _getDomain, _getPlatform } from "./helpers.js";
 import { useNavigate, useLocation } from "react-router-dom";
 import { setOpenModalAuth, login, saveLogin } from "../redux/actions/user";
 import { closeMobileMenu } from "../redux/actions/header";
@@ -132,14 +127,8 @@ export default function AuthModal() {
    //       },
    //    },
    // });
-   let isAuthAlt;
+
    useEffect(() => {
-      if (window.location.hash.includes("alt")) {
-         isAuthAlt = true;
-      }
-      if (window.location.hash.includes("clear")) {
-         clearVKStorage("userPhone");
-      }
       if (openModalAuth && _getPlatform() === "vk") {
          setTimeout(() => {
             if (
@@ -150,12 +139,7 @@ export default function AuthModal() {
                   .send("VKWebAppStorageGet", { keys: ["userPhone"] })
                   .then((data) => {
                      let phoneNumber = data.keys[0].value;
-                     if (
-                        (window.location.hash.includes("alt")
-                           ? !phoneNumber
-                           : phoneNumber) &&
-                        phoneNumber !== ""
-                     ) {
+                     if (phoneNumber) {
                         handlePhoneInput({
                            target: {
                               value: phoneNumber,
@@ -338,8 +322,7 @@ export default function AuthModal() {
                      message: resp.data.text,
                   });
                setLoading(false);
-            })
-            .catch((er) => console.error("request verifyCode", er));
+            });
          setRefreshReCaptcha((r) => !r);
       } else {
       }
@@ -597,7 +580,6 @@ export default function AuthModal() {
 
    const onVerify = useCallback((token) => {
       setToken(token);
-      console.log("onVerify - setToken:", token.slice(0, 6));
    }, []);
 
    return (
